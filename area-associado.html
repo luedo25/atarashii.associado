@@ -47,21 +47,54 @@
 
         .container {
             max-width: 1200px;
-            margin: 40px auto;
-            padding: 0 20px;
+            margin: 30px auto;
+            padding: 0 15px;
         }
 
         .welcome-box {
             background: white;
-            padding: 30px;
+            padding: 25px;
             border-radius: 8px;
             box-shadow: 0 2px 10px rgba(0,0,0,0.05);
             margin-bottom: 20px;
         }
 
+        /* SEÇÃO DO VISUALIZADOR DE PDF DIMENSIONADO */
+        .pdf-section {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            margin-bottom: 25px;
+            width: 100%;
+        }
+
+        .pdf-section h3 {
+            margin-bottom: 15px;
+            color: #2c3e50;
+        }
+
+        .pdf-container {
+            position: relative;
+            width: 100%;
+            /* Ocupa 75% da altura da tela visível do aparelho de forma dinâmica */
+            height: 75vh; 
+            border: 2px solid #34495e;
+            border-radius: 6px;
+            overflow: hidden;
+            background-color: #e4e7e6;
+        }
+
+        .pdf-container object, 
+        .pdf-container iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+
         .content-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
             gap: 20px;
         }
 
@@ -77,11 +110,11 @@
             color: #2c3e50;
         }
 
-        /* REGRAS RESPONSIVAS PARA O PAINEL (ATÉ 768px de largura) */
+        /* REGRAS DE COMPATIBILIDADE PARA SMARTPHONES */
         @media (max-width: 768px) {
             header {
                 padding: 15px 20px;
-                flex-direction: column; /* Alinha Título e Botão na vertical no mobile */
+                flex-direction: column;
                 gap: 12px;
                 text-align: center;
             }
@@ -91,20 +124,27 @@
             }
 
             .btn-logout {
-                width: 100%; /* Botão "Sair" ocupa a largura inteira para facilitar o toque */
+                width: 100%;
                 padding: 10px;
             }
 
             .container {
-                margin: 20px auto; /* Reduz as margens externas no mobile */
+                margin: 15px auto;
+                padding: 0 10px;
             }
 
-            .welcome-box {
-                padding: 20px; /* Reduz o espaçamento interno do bloco de boas-vindas */
+            .welcome-box, .pdf-section {
+                padding: 15px;
+                margin-bottom: 15px;
+            }
+
+            /* Mantém uma excelente proporção de leitura vertical no celular */
+            .pdf-container {
+                height: 70vh; 
             }
 
             .content-grid {
-                grid-template-columns: 1fr; /* Força os cards a ficarem um embaixo do outro */
+                grid-template-columns: 1fr;
             }
         }
     </style>
@@ -118,47 +158,122 @@
 
     <div class="container">
         <div class="welcome-box">
-    <h2 id="welcomeNome">Olá, Associado!</h2> <p>Bem-vindo ao seu painel exclusivo...</p>
-</div>
-
+            <h2 id="welcomeNome">Olá, Associado!</h2>
+            <p>Bem-vindo ao seu painel exclusivo. Veja abaixo o conteúdo liberado para você hoje.</p>
+        </div>
+		
+        <div class="container">
+		<div class="card">
+		<div class="table-section">
+            <h3>Exame de Faixa</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>FAIXA</th>
+                        <th>Ano</th>
+                        <th>KIHON</th>
+                        <th>KATA</th>
+                        <th>KUMITE</th>
+                        <th>Perguntas</th>
+                        <th>TOTAL</th>
+                        <th>MÉDIA FINAL</th>
+                    </tr>
+                </thead>
+                <tbody id="corpoTabelaNotas">
+                    </tbody>
+            </table>
+        </div>
+    </div>
+	
+	<script>
+        const scriptUsuarios = document.createElement('script');
+        const timestamp = new Date().getTime();
+        scriptUsuarios.src = 'usuarios.js?v=' + timestamp;
+        document.head.appendChild(scriptUsuarios);
+    </script>
+	<p> *</p>
         <div class="content-grid">
             <div class="card">
-                <h3>Exame de Faixa</h3>
-                <p>Acesse aqui as suas notas.</p>
-            </div>
-            <div class="card">
                 <h3>Comunicados</h3>
-                <p>Fique por dentro das últimas atualizações e avisos importantes da associação.</p>
+                <p>Fique por dentro das últimas atualizações e avisos importantes.</p>
             </div>
             <div class="card">
-                <h3>E-book</h3>
-                <p>Acesse o E-book da Associação.</p>
+                <h3>Galeria</h3>
+                <p>Visualize as fotos da Associação.</p>
             </div>
         </div>
     </div>
+	
+    <div class="container">
+	  <div class="pdf-section">
+            <h3>E-book / Conteúdo Exclusivo</h3>
+            <div class="pdf-container">
+                <object data="documento.pdf#view=FitH" type="application/pdf">
+                    <iframe src="documento.pdf#view=FitH" frameborder="0">
+                        <p>Seu navegador não possui suporte para visualizar este PDF. 
+                           <a href="documento.pdf" target="_blank">Clique aqui para baixar o arquivo.</a>
+                        </p>
+                    </iframe>
+                </object>
+            </div>
+        </div>
+
+   <script>
+        const scriptUsuarios = document.createElement('script');
+        const timestamp = new Date().getTime();
+        scriptUsuarios.src = 'usuarios.js?v=' + timestamp;
+        document.head.appendChild(scriptUsuarios);
+    </script>
 
     <script>
-        // Validação de Segurança: Se não estiver logado, volta para o login
+        // Verificação de segurança de login
         if (localStorage.getItem('associadoAutenticado') !== 'true') {
             alert('Acesso negado. Por favor, faça login.');
             window.location.href = 'index.html';
         }
 
-        // Pega o nome do aluno que salvamos no login e exibe na tela
+        // Altera o nome de boas-vindas
         const nomeDoAluno = localStorage.getItem('nomeAlunoLogado') || 'Associado';
-        // Altera o texto do h2 de boas-vindas (adicione um id="welcomeNome" no seu h2 se quiser)
-        // Exemplo: <h2 id="welcomeNome">Olá, Associado!</h2>
-        const welcomeH2 = document.getElementById('welcomeNome');
-        if (welcomeH2) {
-            welcomeH2.textContent = `Olá, ${nomeDoAluno}!`;
-        }
+        document.getElementById('welcomeNome').textContent = `Olá, ${nomeDoAluno}!`;
 
-      // Função de Logout atualizada
+        // Executa a montagem da tabela assim que o arquivo usuarios.js terminar de carregar
+        scriptUsuarios.onload = function() {
+            const usuarioAtivo = localStorage.getItem('usuarioAtivo');
+            
+            // Busca os dados completos do aluno logado dentro do array que está no usuarios.js
+            const dadosAluno = listaAlunos.find(u => u.usuario === usuarioAtivo);
+            const tabelaBody = document.getElementById('corpoTabelaNotas');
+
+            if (dadosAluno && dadosAluno.historico) {
+                // Limpa a tabela antes de preencher
+                tabelaBody.innerHTML = "";
+
+                // Percorre o histórico de exames do aluno e cria as linhas dinamicamente
+                dadosAluno.historico.forEach(exame => {
+                    const linha = document.createElement('tr');
+
+                    linha.innerHTML = `
+                        <td style="background-color: ${exame.corFaixa}; color: ${exame.corTexto};">${exame.faixa}</td>
+                        <td>${exame.ano}</td>
+                        <td>${exame.kihon.toFixed(1)}</td>
+                        <td>${exame.kata.toFixed(1)}</td>
+                        <td>${exame.kumite.toFixed(1)}</td>
+                        <td>${exame.perguntas.toFixed(1)}</td>
+                        <td class="col-total">${exame.total.toFixed(1)}</td>
+                        <td class="col-media">${exame.media.toFixed(1)}</td>
+                    `;
+                    tabelaBody.appendChild(linha);
+                });
+            } else {
+                tabelaBody.innerHTML = `<tr><td colspan="8">Nenhum registro de notas encontrado.</td></tr>`;
+            }
+        };
+
+        // Função de Logout
         document.getElementById('logoutBtn').addEventListener('click', function() {
             localStorage.removeItem('associadoAutenticado');
             localStorage.removeItem('nomeAlunoLogado');
-            
-            // Força um redirecionamento limpando o cache da página de destino
+            localStorage.removeItem('usuarioAtivo');
             window.location.replace('index.html');
         });
     </script>
