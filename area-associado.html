@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Painel do Associado</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background: #f4f7f6;
+            color: #333;
+        }
+
+        header {
+            background-color: #2c3e50;
+            color: white;
+            padding: 20px 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        header h1 {
+            font-size: 24px;
+        }
+
+        .btn-logout {
+            background-color: #e74c3c;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: background 0.3s;
+        }
+
+        .btn-logout:hover {
+            background-color: #c0392b;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 40px auto;
+            padding: 0 20px;
+        }
+
+        .welcome-box {
+            background: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            margin-bottom: 20px;
+        }
+
+        .content-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+        }
+
+        .card {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+
+        .card h3 {
+            margin-bottom: 10px;
+            color: #2c3e50;
+        }
+
+        /* REGRAS RESPONSIVAS PARA O PAINEL (ATÉ 768px de largura) */
+        @media (max-width: 768px) {
+            header {
+                padding: 15px 20px;
+                flex-direction: column; /* Alinha Título e Botão na vertical no mobile */
+                gap: 12px;
+                text-align: center;
+            }
+
+            header h1 {
+                font-size: 20px;
+            }
+
+            .btn-logout {
+                width: 100%; /* Botão "Sair" ocupa a largura inteira para facilitar o toque */
+                padding: 10px;
+            }
+
+            .container {
+                margin: 20px auto; /* Reduz as margens externas no mobile */
+            }
+
+            .welcome-box {
+                padding: 20px; /* Reduz o espaçamento interno do bloco de boas-vindas */
+            }
+
+            .content-grid {
+                grid-template-columns: 1fr; /* Força os cards a ficarem um embaixo do outro */
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>Área do Associado</h1>
+        <button class="btn-logout" id="logoutBtn">Sair</button>
+    </header>
+
+    <div class="container">
+        <div class="welcome-box">
+    <h2 id="welcomeNome">Olá, Associado!</h2> <p>Bem-vindo ao seu painel exclusivo...</p>
+</div>
+
+        <div class="content-grid">
+            <div class="card">
+                <h3>Meus Cursos</h3>
+                <p>Acesse aqui o material das suas aulas e cronogramas.</p>
+            </div>
+            <div class="card">
+                <h3>Comunicados</h3>
+                <p>Fique por dentro das últimas atualizações e avisos importantes da associação.</p>
+            </div>
+            <div class="card">
+                <h3>Financeiro</h3>
+                <p>Visualize seu histórico de mensalidades e emissão de boletos.</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Validação de Segurança: Se não estiver logado, volta para o login
+        if (localStorage.getItem('associadoAutenticado') !== 'true') {
+            alert('Acesso negado. Por favor, faça login.');
+            window.location.href = 'index.html';
+        }
+
+        // Pega o nome do aluno que salvamos no login e exibe na tela
+        const nomeDoAluno = localStorage.getItem('nomeAlunoLogado') || 'Associado';
+        // Altera o texto do h2 de boas-vindas (adicione um id="welcomeNome" no seu h2 se quiser)
+        // Exemplo: <h2 id="welcomeNome">Olá, Associado!</h2>
+        const welcomeH2 = document.getElementById('welcomeNome');
+        if (welcomeH2) {
+            welcomeH2.textContent = `Olá, ${nomeDoAluno}!`;
+        }
+
+      // Função de Logout atualizada
+        document.getElementById('logoutBtn').addEventListener('click', function() {
+            localStorage.removeItem('associadoAutenticado');
+            localStorage.removeItem('nomeAlunoLogado');
+            
+            // Força um redirecionamento limpando o cache da página de destino
+            window.location.replace('index.html');
+        });
+    </script>
+</body>
+</html>
