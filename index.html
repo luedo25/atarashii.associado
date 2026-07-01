@@ -166,7 +166,7 @@
             if (alunoLogado) {
                 localStorage.setItem('associadoAutenticado', 'true');
                 localStorage.setItem('nomeAlunoLogado', alunoLogado.nome);
-                
+                localStorage.setItem('usuarioAtivo', alunoLogado.usuario);
                 window.location.href = 'area-associado.html';
             } else {
                 errorMessage.style.display = 'block';
