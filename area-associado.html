@@ -288,18 +288,17 @@
             window.location.replace('index.html');
         });
 		
-		function buscarSaldoMercadoPago() {
+	function buscarSaldoMercadoPago() {
     const elementoSaldo = document.getElementById('textoSaldo');
     elementoSaldo.textContent = "Carregando...";
 
-    // Substitua pelo endereço do seu servidor configurado no Passo 2 (ex: no Render ou Railway)
+    // COLE AQUI O LINK QUE O RENDER TE DEU acompanhado de '/api/saldo' no final:
     const URL_DO_SEU_SERVIDOR = "https://api-associacao-mp.onrender.com/api/saldo";
 
     fetch(URL_DO_SEU_SERVIDOR)
         .then(response => response.json())
         .then(data => {
             if (data.saldo !== undefined) {
-                // Formata o número recebido para o padrão de moeda Real (R$)
                 elementoSaldo.textContent = data.saldo.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
             } else {
                 elementoSaldo.textContent = "Erro ao carregar";
@@ -310,7 +309,7 @@
         });
 }
 
-// Executa automaticamente assim que o aluno entra na página
+// Roda a busca automaticamente quando carregar a página
 window.addEventListener('DOMContentLoaded', buscarSaldoMercadoPago);
 
     </script>
