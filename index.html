@@ -184,48 +184,87 @@
             }
         });
     </script>
-	
-	<script>
-   let disparadorInstalacao = null;
-const botaoInstalar = document.getElementById('btnInstalarApp');
 
-window.addEventListener('beforeinstallprompt', (e) => {
-    // Impede o navegador de tentar mostrar o banner padrão dele
-    e.preventDefault();
-    
-    // Guarda o evento para usarmos no clique do botão
-    disparadorInstalacao = e;
-
-    // Como o site é instalável, mostramos o nosso botão customizado na tela
-    if (botaoInstalar) {
-        botaoInstalar.style.display = 'block';
+<script>
+    // 1. Registra o Service Worker obrigatorio
+    if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.register('sw.js')
+            .then(() => console.log('Service Worker ativo.'))
+            .catch((err) => console.log('Erro no SW:', err));
     }
-});
 
-// Programando o clique do nosso botão customizado
-if (botaoInstalar) {
-    botaoInstalar.addEventListener('click', async () => {
-        if (!disparadorInstalacao) return;
+    // CONTROLE - ANDROID (Botao de clique)
+    let disparadorInstalacao = null;
+    const botaoInstalarAndroid = document.getElementById('btnInstalarApp');
 
-        // Abre a caixinha oficial do sistema perguntando "Deseja instalar?"
-        disparadorInstalacao.prompt();
-
-        // Espera a resposta do usuário
-        const { outcome } = await disparadorInstalacao.userChoice;
-        console.log(`Usuário escolheu: ${outcome}`);
-
-        // Limpa o disparador pois ele só pode ser usado uma vez
-        disparadorInstalacao = null;
-        
-        // Esconde o botão novamente
-        botaoInstalar.style.display = 'none';
+    window.addEventListener('beforeinstallprompt', (e) => {
+        e.preventDefault();
+        disparadorInstalacao = e;
+        // Mostra o botao verde apenas no Android
+        if (botaoInstalarAndroid) {
+            botaoInstalarAndroid.style.display = 'block';
+        }
     });
-}
 
-// Garante que o botão suma se o usuário já estiver navegando de dentro do App instalado
-if (window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true) {
-    if (botaoInstalar) botaoInstalar.style.display = 'none';
-}
+    if (botaoInstalarAndroid) {
+        botaoInstalarAndroid.addEventListener('click', async () => {
+            if (!disparadorInstalacao) return;
+            disparadorInstalacao.prompt();
+            const { outcome } = await disparadorInstalacao.userChoice;
+            disparadorInstalacao = null;
+            botaoInstalarAndroid.style.display = 'none';
+        });
+    }
+
+    // CONTROLE - IOS / IPHONE (Mensagem explicativa)
+    function gerenciarPromptIOS() {
+        // Detecta se eh um dispositivo iOS (iPhone, iPad, iPod)
+        const ehIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+        
+        // Detecta se o site ja esta rodando como aplicativo instalado
+        const jaEstaInstalado = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
+
+        // Se for iPhone e ainda nao estiver instalado, mostra o guia visual
+        if (ehIOS && !jaEstaInstalado) {
+            const promptIOS = document.getElementById('iosPrompt');
+            if (promptIOS) {
+                // Aguarda 3 segundos para a pagina carregar antes de mostrar o aviso suavemente
+                setTimeout(() => {
+                    promptIOS.style.display = 'block';
+                }, 3000);
+            }
+        }
+    }
+
+    // Executa a checagem do iOS assim que a pagina carrega
+    window.addEventListener('DOMContentLoaded', gerenciarPromptIOS);
+
+    // Garante que tudo suma se o app ja estiver aberto em modo tela cheia
+    if (window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true) {
+        if (botaoInstalarAndroid) botaoInstalarAndroid.style.display = 'none';
+        const promptIOS = document.getElementById('iosPrompt');
+        if (promptIOS) promptIOS.style.display = 'none';
+    }
 </script>
+	<!-- Pop-up customizado exclusivo para iPhones -->
+<div id="iosPrompt" style="display: none; position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); width: 90%; max-width: 360px; background-color: #ffffff; color: #333333; padding: 16px; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.15); z-index: 10000; border: 1px solid #e0e0e0; animation: slideUpIOS 0.4s ease;">
+    <div style="display: flex; align-items: flex-start; gap: 12px;">
+        <span style="font-size: 30px;">📲</span>
+        <div>
+            <h4 style="margin: 0 0 4px 0; color: #2c3e50; font-size: 15px;">Instalar no seu iPhone</h4>
+            <p style="margin: 0; font-size: 13px; color: #555; line-height: 1.4;">
+                Toque no ícone de <strong>Compartilhar</strong> <span style="font-size: 16px;">⎋</span> (na barra inferior do navegador) e depois selecione <strong>"Adicionar à Tela de Início"</strong>.
+            </p>
+        </div>
+        <button onclick="document.getElementById('iosPrompt').style.display='none'" style="background: none; border: none; color: #999; font-size: 18px; cursor: pointer; padding: 0 5px;">✕</button>
+    </div>
+</div>
+
+<style>
+@keyframes slideUpIOS {
+    from { opacity: 0; transform: translate(-50__, 20px); }
+    to { opacity: 1; transform: translate(-50__, 0); }
+}
+</style>
 </body>
 </html>
