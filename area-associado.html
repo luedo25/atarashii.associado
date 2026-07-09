@@ -251,38 +251,48 @@
             </div>
         </div>
 
-        <!-- SEÇÃO 2: COMUNICADOS -->
-     <!-- SEÇÃO 2: AVISOS (COM TERMO DE ACEITE OBRIGATÓRIO) -->
+        <!-- SEÇÃO 2: AVISOS (COM OCULTAÇÃO AUTOMÁTICA PÓS-ACEITE) -->
 <div id="comunicados" class="tab-content">
-    <h2>📢 Comunicados</h2>
     <h3>📢 Regras e Normas da Associação</h3>
-    <p style="font-size: 14px; color: #666; margin-bottom: 12px;">
-        Por favor, leia atentamente o documento abaixo antes de confirmar o seu aceite obrigatório.
-    </p>
+    
+    <!-- BLOCO A: CONTEÚDO PARA QUEM AINDA NÃO ACEITOU -->
+    <div id="blocoTermoPendente">
+        <p style="font-size: 14px; color: #666; margin-bottom: 12px;">
+            Por favor, leia atentamente o documento abaixo antes de confirmar o seu aceite obrigatório.
+        </p>
 
-    <!-- Visualizador de PDF preparado para celulares/computadores -->
-    <div style="width: 100%; height: 280px; border: 1px solid #ccc; border-radius: 6px; overflow: hidden; background: #eee; margin-bottom: 15px;">
-        <iframe src=".\regras-associacao.pdf#view=FitH" style="width: 100%; height: 100%; border: none;"></iframe>
+        <!-- Visualizador de PDF -->
+        <div style="width: 100%; height: 280px; border: 1px solid #ccc; border-radius: 6px; overflow: hidden; background: #eee; margin-bottom: 15px;">
+            <iframe src="regras-associacao.pdf#view=FitH" style="width: 100%; height: 100%; border: none;"></iframe>
+        </div>
+
+        <!-- Botão Auxiliar Mobile -->
+        <div style="text-align: center; margin-bottom: 15px;">
+            <a href="regras-associacao.pdf" target="_blank" style="font-size: 13px; color: #3498db; font-weight: bold; text-decoration: none;">
+                🔍 Não conseguiu ler acima? Clique aqui para abrir o PDF completo
+            </a>
+        </div>
+
+        <!-- Formulário de Aceite -->
+        <div style="background-color: #f8f9fa; border: 1px solid #e0e0e0; padding: 15px; border-radius: 6px;">
+            <label style="display: flex; align-items: flex-start; gap: 10px; cursor: pointer; font-size: 14px; font-weight: bold; line-height: 1.4;">
+                <input type="checkbox" id="checkAceite" onchange="alternarBotaoAceite()" style="width: 18px; height: 18px; margin-top: 2px;">
+                <span>Declaro que li, compreendi e concordo integralmente com todas as Regras, Normas e Termos estabelecidos pela Associação.</span>
+            </label>
+
+            <button id="btnEnviarAceite" disabled onclick="enviarEmailAceite()" style="width: 100%; margin-top: 15px; padding: 14px; background-color: #95a5a6; color: white; border: none; border-radius: 6px; font-weight: bold; font-size: 15px; cursor: not-allowed; transition: background 0.3s;">
+                🔒 Aceitar Termos e Enviar Comprovante
+            </button>
+        </div>
     </div>
 
-    <!-- Botão Auxiliar para celulares que não renderizam PDF dentro da caixinha -->
-    <div style="text-align: center; margin-bottom: 15px;">
-        <a href="regras-associacao.pdf" target="_blank" style="font-size: 13px; color: #3498db; font-weight: bold; text-decoration: none;">
-            🔍 Não conseguiu ler acima? Clique aqui para abrir o PDF completo
-        </a>
-    </div>
-
-    <!-- Área do Formulário de Aceite -->
-    <div style="background-color: #f8f9fa; border: 1px solid #e0e0e0; padding: 15px; border-radius: 6px;">
-        <label style="display: flex; align-items: flex-start; gap: 10px; cursor: pointer; font-size: 14px; font-weight: bold; line-height: 1.4;">
-            <input type="checkbox" id="checkAceite" onchange="alternarBotaoAceite()" style="width: 18px; height: 18px; margin-top: 2px;">
-            <span>Declaro que li, compreendi e concordo integralmente com todas as Regras, Normas e Termos estabelecidos pela Associação.</span>
-        </label>
-
-        <!-- Botão de Envio (Começa desativado e cinza) -->
-        <button id="btnEnviarAceite" disabled onclick="enviarEmailAceite()" style="width: 100%; margin-top: 15px; padding: 14px; background-color: #95a5a6; color: white; border: none; border-radius: 6px; font-weight: bold; font-size: 15px; cursor: not-allowed; transition: background 0.3s;">
-            🔒 Aceitar Termos e Enviar Comprovante
-        </button>
+    <!-- BLOCO B: MENSAGEM QUE APARECE SE JÁ TIVER ACEITO -->
+    <div id="blocoTermoAceito" style="display: none; text-align: center; padding: 30px 15px; background-color: #e8f5e9; border: 1px solid #c8e6c9; border-radius: 8px; margin-top: 10px;">
+        <span style="font-size: 45px;">✅</span>
+        <h4 style="color: #2e7d32; margin: 15px 0 5px 0; font-size: 18px;">Termos Aceitos com Sucesso!</h4>
+        <p style="font-size: 14px; color: #43a047; line-height: 1.4;" id="textoDataAceite">
+            O seu comprovante de leitura e concordância já foi registrado e enviado para a Associação.
+        </p>
     </div>
 </div>
 
@@ -361,52 +371,106 @@
 
         const nomeDoAluno = localStorage.getItem('nomeAlunoLogado') || 'Associado';
         document.getElementById('welcomeNome').textContent = `Olá, ${nomeDoAluno}!`;
-// Função que ativa o botão apenas se a caixinha estiver marcada
+        
+// 1. Função executada automaticamente ao carregar ou mudar para a aba de avisos
+function verificarStatusAceite() {
+    const usuarioAtivo = localStorage.getItem('usuarioAtivo') || 'comum';
+    
+    // Criamos uma chave única de aceite por usuário (ex: termo_aceito_aluno1)
+    const jaAceitou = localStorage.getItem(`termo_aceito_${usuarioAtivo}`);
+    const dataAceite = localStorage.getItem(`data_aceite_${usuarioAtivo}`);
+
+    const blocoPendente = document.getElementById('blocoTermoPendente');
+    const blocoAceito = document.getElementById('blocoTermoAceito');
+
+    if (jaAceitou === 'true') {
+        // Se já aceitou, esconde o PDF/botão e mostra a mensagem verde de sucesso
+        if (blocoPendente) blocoPendente.style.display = 'none';
+        if (blocoAceito) {
+            blocoAceito.style.display = 'block';
+            document.getElementById('textoDataAceite').innerHTML = `O seu comprovante de leitura e concordância foi registrado com sucesso em: <br><strong>${dataAceite}</strong>`;
+        }
+    } else {
+        // Se não aceitou, garante que o documento seja exibido para leitura
+        if (blocoPendente) blocoPendente.style.display = 'block';
+        if (blocoAceito) blocoAceito.style.display = 'none';
+    }
+}
+
+// 2. Controla a ativação visual do botão verde
 function alternarBotaoAceite() {
     const checkbox = document.getElementById('checkAceite');
     const botao = document.getElementById('btnEnviarAceite');
 
-    if (checkbox.checked) {
+    if (checkbox && checkbox.checked) {
         botao.disabled = false;
-        botao.style.backgroundColor = '#27ae60'; // Fica verde quando destrava
+        botao.style.backgroundColor = '#27ae60';
         botao.style.cursor = 'pointer';
-    } else {
+    } else if (botao) {
         botao.disabled = true;
-        botao.style.backgroundColor = '#95a5a6'; // Fica cinza quando trava
+        botao.style.backgroundColor = '#95a5a6';
         botao.style.cursor = 'not-allowed';
     }
 }
 
-// Função que monta o mailto dinâmico e dispara o aplicativo de e-mail
+// 3. Salva o aceite na memória e dispara o e-mail
 function enviarEmailAceite() {
-    // Coleta as informações do aluno salvas no login
     const nomeAluno = localStorage.getItem('nomeAlunoLogado') || 'Nome Não Identificado';
-    const usuarioAluno = localStorage.getItem('usuarioAtivo') || 'ID_Não_Identificado';
+    const usuarioAtivo = localStorage.getItem('usuarioAtivo') || 'ID_Não_Identificado';
+    const dataHoraAtual = new Date().toLocaleString('pt-BR');
     
-    // Configurações dos destinatários e textos
     const emailDestinatarioPrincipal = "luedo25@msn.com"; 
     const assunto = encodeURIComponent(`CONFIRMAÇÃO DE ACEITE: Regras da Associação - ${nomeAluno}`);
     
-    // Mensagem formatada que irá no corpo do e-mail
     const corpoEmail = encodeURIComponent(
         `Prezada Diretoria,\n\n` +
         `Por meio deste e-mail, confirmo que li e aceito voluntariamente todos os termos, regras e normas da Associação.\n\n` +
         `DADOS DO ASSOCIADO:\n` +
         `Nome completo: ${nomeAluno}\n` +
-        `Usuário do sistema: ${usuarioAluno}\n` +
-        `Data/Hora do Aceite: ${new Date().toLocaleString('pt-BR')}\n\n` +
+        `Usuário do sistema: ${usuarioAtivo}\n` +
+        `Data/Hora do Aceite: ${dataHoraAtual}\n\n` +
         `Este e-mail serve como registro e comprovante digital do meu aceite obrigatório.`
     );
 
-    // Monta a URL mágica do mailto
-    // Ela envia o e-mail PARA a associação e coloca o próprio fluxo aberto no app de e-mail do aluno
-    const mailtoUrl = `mailto:${emailDestinatarioPrincipal}?subject=${assunto}&body=${corpoEmail}`;
+    // Grava de forma permanente na memória do celular que ESSE usuário logado já aceitou os termos
+    localStorage.setItem(`termo_aceito_${usuarioAtivo}`, 'true');
+    localStorage.setItem(`data_aceite_${usuarioAtivo}`, dataHoraAtual);
 
-    // Dispara a abertura do aplicativo de e-mail (Gmail, Outlook, Mail do iOS, etc)
+    // Atualiza a tela imediatamente para sumir com o PDF antes mesmo de abrir o app de e-mail
+    verificarStatusAceite();
+
+    // Abre o aplicativo de e-mail nativo
+    const mailtoUrl = `mailto:${emailDestinatarioPrincipal}?subject=${assunto}&body=${corpoEmail}`;
     window.location.href = mailtoUrl;
-    
-    alert("Seu aplicativo de e-mail foi aberto! Por favor, revise a mensagem e clique em 'Enviar' para concluir o registro.");
 }
+        function mudarAba(idDaAba, botaoClicado) {
+    const secoes = document.querySelectorAll('.tab-content');
+    secoes.forEach(secao => secao.classList.remove('active'));
+
+    const botoes = document.querySelectorAll('.nav-btn');
+    botoes.forEach(btn => btn.classList.remove('active'));
+
+    document.getElementById(idDaAba).classList.add('active');
+    botaoClicado.classList.add('active');
+
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+
+    // NOVO: Se ele clicou em Avisos (comunicados), roda a checagem do PDF na hora
+    if (idDaAba === 'comunicados') {
+        verificarStatusAceite();
+    }
+
+    if (idDaAba === 'saldo') {
+        buscarSaldoMercadoPago();
+    }
+}
+        document.addEventListener('DOMContentLoaded', () => {
+    const primeiroBotao = document.querySelector('.nav-btn');
+    mudarAba('exame', primeiroBotao);
+    
+    // Verifica o status do termo em segundo plano assim que o aluno faz login
+    verificarStatusAceite(); 
+});
         // ALTERNADOR DE ABAS MOBILE
         function mudarAba(idDaAba, botaoClicado) {
             const secoes = document.querySelectorAll('.tab-content');
