@@ -2,6 +2,236 @@
 <html lang="pt-BR">
 <head>
 <link rel="manifest" href="./manifest.json">
+
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Painel Aluno">
+<link rel="apple-touch-icon" href="icone-192.png">
+
+<meta name="mobile-web-app-capable" content="yes">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - Área do Associado</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background: #f4f7f6;
+            display: flex;
+            flex-direction: column; /* Alinha os elementos em coluna no mobile */
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px; /* Evita que o conteúdo cole nas bordas do celular */
+        }
+
+    /* CONFIGURAÇÃO DO LOGO CENTRALIZADO */
+        .logo-associacao {
+            width: 360px;         /* Tamanho do seu GIF */
+            height: auto;
+            margin: 0 auto 60px auto; /* Centraliza horizontalmente e dá espaço para o título abaixo */
+            display: block;
+        }
+
+        .login-container {
+            background-color: #ffffff;
+            padding: 40px;
+            border-radius: 8px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 400px;
+        }
+
+        .login-container h2 {
+            text-align: center;
+            margin-bottom: 24px;
+            color: #333;
+        }
+
+        .input-group {
+            margin-bottom: 20px;
+        }
+
+        .input-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: #666;
+            font-size: 14px;
+        }
+
+        .input-group input {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+
+        .input-group input:focus {
+            border-color: #007bff;
+            outline: none;
+        }
+
+        .btn-login {
+            width: 100%;
+            padding: 12px;
+            background-color: #007bff;
+            border: none;
+            border-radius: 4px;
+            color: white;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        .btn-login:hover {
+            background-color: #0056b3;
+        }
+
+        .error-message {
+            color: #dc3545;
+            font-size: 14px;
+            margin-top: 10px;
+            text-align: center;
+            display: none;
+        }
+
+        /* REGRAS EXCLUSIVAS PARA TELAS DE CELULAR (ATÉ 600px de largura) */
+        @media (max-width: 600px) {
+            body {
+                justify-content: flex-start; /* Joga o conteúdo um pouco para cima */
+                padding-top: 140px; /* Abre espaço para o GIF no topo */
+            }
+
+            .logo-associacao {
+                position: absolute;
+                left: 50%;
+                transform: translateX(-50%); /* Centraliza o GIF perfeitamente na tela */
+                top: 20px;
+                width: 100px; /* Reduz ligeiramente o tamanho no celular */
+            }
+
+            .login-container {
+                padding: 25px 20px; /* Diminui os espaçamentos internos para caber melhor */
+            }
+        }
+    </style>
+</head>
+<body>
+    <img src="ASSOCIAÇÃO-ATARASHII.gif" alt="Logo Associação Atarashii" class="logo-associacao">
+	
+	<button id="btnInstalarApp" style="display: none; width: 100%; margin-top: 15px; padding: 12px; background-color: #27ae60; color: white; border: none; border-radius: 6px; font-weight: bold; cursor: pointer;">
+    📲 Instalar Aplicativo na Tela Inicial
+</button>
+	
+    <div class="login-container">
+        <h2>Área do Associado</h2>
+        <form id="loginForm">
+            <div class="input-group">
+                <label for="username">Usuário</label>
+                <input type="text" id="username" required placeholder="Digite seu usuário">
+            </div>
+            <div class="input-group">
+                <label for="password">Senha</label>
+                <input type="password" id="password" required placeholder="Digite sua senha">
+            </div>
+            <button type="submit" class="btn-login">Entrar</button>
+            <div id="errorMessage" class="error-message">Usuário ou senha incorretos.</div>
+        </form>
+    </div>
+	
+<script>
+        const scriptUsuarios = document.createElement('script');
+        const timestamp = new Date().getTime();
+        
+        // Carrega o arquivo com o marcador de tempo na URL
+        scriptUsuarios.src = 'usuarios.js?v=' + timestamp;
+        
+        document.head.appendChild(scriptUsuarios);
+    </script>
+
+    <script>
+        document.getElementById('loginForm').addEventListener('submit', function(event) {
+            event.preventDefault(); 
+            
+            const usuarioInput = document.getElementById('username').value;
+            const senhaInput = document.getElementById('password').value;
+            const errorMessage = document.getElementById('errorMessage');
+
+            // Proteção extra: verifica se o arquivo usuarios.js já carregou na página
+            if (typeof autenticarUsuarioDireto !== 'function') {
+                alert('Carregando sistema de segurança... Por favor, tente novamente em um segundo.');
+                return;
+            }
+
+            // Valida comparando direto com o arquivo limpo vindo do GitHub
+            const alunoLogado = autenticarUsuarioDireto(usuarioInput, senhaInput);
+
+            if (alunoLogado) {
+                localStorage.setItem('associadoAutenticado', 'true');
+                localStorage.setItem('nomeAlunoLogado', alunoLogado.nome);
+                localStorage.setItem('usuarioAtivo', alunoLogado.usuario);
+                window.location.href = 'area-associado.html';
+            } else {
+                errorMessage.style.display = 'block';
+            }
+        });
+    </script>
+	
+	<script>
+   let disparadorInstalacao = null;
+const botaoInstalar = document.getElementById('btnInstalarApp');
+
+window.addEventListener('beforeinstallprompt', (e) => {
+    // Impede o navegador de tentar mostrar o banner padrão dele
+    e.preventDefault();
+    
+    // Guarda o evento para usarmos no clique do botão
+    disparadorInstalacao = e;
+
+    // Como o site é instalável, mostramos o nosso botão customizado na tela
+    if (botaoInstalar) {
+        botaoInstalar.style.display = 'block';
+    }
+});
+
+// Programando o clique do nosso botão customizado
+if (botaoInstalar) {
+    botaoInstalar.addEventListener('click', async () => {
+        if (!disparadorInstalacao) return;
+
+        // Abre a caixinha oficial do sistema perguntando "Deseja instalar?"
+        disparadorInstalacao.prompt();
+
+        // Espera a resposta do usuário
+        const { outcome } = await disparadorInstalacao.userChoice;
+        console.log(`Usuário escolheu: ${outcome}`);
+
+        // Limpa o disparador pois ele só pode ser usado uma vez
+        disparadorInstalacao = null;
+        
+        // Esconde o botão novamente
+        botaoInstalar.style.display = 'none';
+    });
+}
+
+// Garante que o botão suma se o usuário já estiver navegando de dentro do App instalado
+if (window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true) {
+    if (botaoInstalar) botaoInstalar.style.display = 'none';
+}
+</script>
+</body>
+</html><!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<link rel="manifest" href="./manifest.json">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="Painel Aluno">
