@@ -2,12 +2,10 @@
 <html lang="pt-BR">
 <head>
 <link rel="manifest" href="manifest.json">
-
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="Painel Aluno">
 <link rel="apple-touch-icon" href="icone-192.png">
-
 <meta name="mobile-web-app-capable" content="yes">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -143,36 +141,6 @@
             <div id="errorMessage" class="error-message">Usuário ou senha incorretos.</div>
         </form>
     </div>
-
-<script>
-    // 1. Registra o Service Worker obrigatório
-    if ('serviceWorker' in navigator) {
-        navigator.serviceWorker.register('sw.js')
-            .then(() => console.log('Service Worker ativo com sucesso.'))
-            .catch((err) => console.log('Erro ao registrar Service Worker:', err));
-    }
-
-    // 2. Captura o evento de instalação do Android
-    let disparadorInstalacao = null;
-
-    window.addEventListener('beforeinstallprompt', (e) => {
-        // Impede que o navegador mostre o banner padrão feio imediatamente
-        e.preventDefault();
-        disparadorInstalacao = e;
-
-        // Criar um aviso ou botão personalizado na sua tela de login se quiser
-        // Exemplo: Mostrar um banner escrito "Instalar Aplicativo na Tela Inicial"
-        console.log("O sistema está pronto para ser instalado como App no Android!");
-        
-        // Se você quiser disparar a instalação via clique de algum botão seu, use:
-        // disparadorInstalacao.prompt();
-    });
-
-    // 3. Detectar se o usuário já está acessando de dentro do App instalado
-    if (window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true) {
-        console.log("Usuário já está navegando em modo Aplicativo Sem Barras!");
-    }
-</script>
 	
 <script>
         const scriptUsuarios = document.createElement('script');
@@ -211,5 +179,35 @@
             }
         });
     </script>
+	
+	<script>
+    // 1. Registra o Service Worker obrigatório
+    if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.register('sw.js')
+            .then(() => console.log('Service Worker ativo com sucesso.'))
+            .catch((err) => console.log('Erro ao registrar Service Worker:', err));
+    }
+
+    // 2. Captura o evento de instalação do Android
+    let disparadorInstalacao = null;
+
+    window.addEventListener('beforeinstallprompt', (e) => {
+        // Impede que o navegador mostre o banner padrão feio imediatamente
+        e.preventDefault();
+        disparadorInstalacao = e;
+
+        // Criar um aviso ou botão personalizado na sua tela de login se quiser
+        // Exemplo: Mostrar um banner escrito "Instalar Aplicativo na Tela Inicial"
+        console.log("O sistema está pronto para ser instalado como App no Android!");
+        
+        // Se você quiser disparar a instalação via clique de algum botão seu, use:
+        // disparadorInstalacao.prompt();
+    });
+
+    // 3. Detectar se o usuário já está acessando de dentro do App instalado
+    if (window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true) {
+        console.log("Usuário já está navegando em modo Aplicativo Sem Barras!");
+    }
+</script>
 </body>
 </html>
