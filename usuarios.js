@@ -13,9 +13,9 @@ const listaAlunos = [
             { faixa: "Verde/Roxa", corFaixa: "#673ab7", corTexto: "#fff", ano: "Junho / 2024", kihon: 7.8, kata: 7.8, kumite: 8.0, perguntas: 0.5, total: 24.1, media: 8.0 }
         ]	
 	},
-    { usuario: "edson.fernandez", 
+    { usuario: "luiz.costa", 
 	senha: "123456", 
-	nome: "Edson Fernandez" 
+	nome: "Luiz Costa" 
 	},
     { usuario: "luiz.guilherme", 
 	senha: "123456", 
