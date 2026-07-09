@@ -2,269 +2,355 @@
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Painel do Associado</title>
     <style>
         * {
             box-sizing: border-box;
             margin: 0;
             padding: 0;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, Roboto, Helvetica, Arial, sans-serif;
+            /* Remove o efeito de clique cinza nativo do Safari no iOS */
+            -webkit-tap-highlight-color: transparent; 
         }
 
         body {
             background: #f4f7f6;
             color: #333;
+            /* Garante que o conteúdo role perfeitamente sem sumir atrás do menu inferior */
+            padding-bottom: 100px; 
         }
 
         header {
             background-color: #2c3e50;
             color: white;
-            padding: 20px 40px;
+            padding: 15px 20px;
             display: flex;
             justify-content: space-between;
             align-items: center;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
         }
 
         header h1 {
-            font-size: 24px;
+            font-size: 20px;
         }
 
         .btn-logout {
             background-color: #e74c3c;
             color: white;
             border: none;
-            padding: 8px 16px;
+            padding: 6px 12px;
             border-radius: 4px;
             cursor: pointer;
             font-weight: bold;
-            transition: background 0.3s;
-        }
-
-        .btn-logout:hover {
-            background-color: #c0392b;
+            font-size: 14px;
         }
 
         .container {
             max-width: 1200px;
-            margin: 30px auto;
-            padding: 0 15px;
+            margin: 15px auto;
+            padding: 0 12px;
         }
 
         .welcome-box {
             background: white;
-            padding: 25px;
-            border-radius: 8px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
-            margin-bottom: 20px;
-        }
-
-        /* SEÇÃO DO VISUALIZADOR DE PDF DIMENSIONADO */
-        .pdf-section {
-            background: white;
             padding: 20px;
             border-radius: 8px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
-            margin-bottom: 25px;
-            width: 100%;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+            margin-bottom: 15px;
         }
 
-        .pdf-section h3 {
+        .welcome-box h2 {
+            font-size: 20px;
+            margin-bottom: 4px;
+        }
+
+        .welcome-box p {
+            font-size: 14px;
+            color: #666;
+        }
+
+        /* CONFIGURAÇÃO DAS SEÇÕES DINÂMICAS */
+        .tab-content {
+            display: none; 
+            background: white;
+            padding: 20px 15px;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+            margin-bottom: 20px;
+            animation: slideUp 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .tab-content h3 {
+            font-size: 18px;
+            color: #2c3e50;
             margin-bottom: 15px;
+            border-bottom: 2px solid #ecf0f1;
+            padding-bottom: 8px;
+        }
+
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(15px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* EXAME DE FAIXA: TABELA RESPONSIVA PARA SMARTPHONES */
+        .table-container {
+            width: 100%;
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch; /* Rolagem por toque super lisa no iOS */
+            border: 1px solid #ddd;
+            border-radius: 6px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 650px; /* Força a tabela a manter tamanho legível sem esmagar números */
+            text-align: center;
+            font-size: 14px;
+        }
+
+        th, td {
+            border: none;
+            border-bottom: 1px solid #ddd;
+            padding: 12px 6px;
+            font-weight: bold;
+        }
+
+        th {
+            background-color: #f8f9fa;
             color: #2c3e50;
         }
 
-        .pdf-container {
-            position: relative;
-            width: 100%;
-            /* Ocupa 75% da altura da tela visível do aparelho de forma dinâmica */
-            height: 75vh; 
-            border: 2px solid #34495e;
-            border-radius: 6px;
-            overflow: hidden;
-            background-color: #e4e7e6;
+        .col-total, .col-media {
+            background-color: #e8f5e9;
+            color: #2e7d32;
         }
 
-        .pdf-container object, 
+        /* VISUALIZADOR DE PDF PREPARADO PARA TELAS PEQUENAS */
+        .pdf-container {
+            width: 100%;
+            height: 60vh; 
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            overflow: hidden;
+            background-color: #333;
+        }
+
         .pdf-container iframe {
             width: 100%;
             height: 100%;
             border: none;
         }
 
-        .content-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 20px;
+        /* BARRA DE NAVEGAÇÃO ESTILO APP DE CELULAR (FIXADA NO RODAPÉ) */
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background-color: #ffffff;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px 4px calc(8px + env(safe-area-inset-bottom)); /* Suporte para a barra inferior do iPhone */
+            box-shadow: 0 -3px 12px rgba(0,0,0,0.08);
+            z-index: 9999;
+            border-top: 1px solid #eec;
         }
 
-        .card {
-            background: white;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        .nav-btn {
+            background: none;
+            border: none;
+            color: #7f8c8d;
+            font-size: 10px;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 4px;
+            flex: 1;
+            min-width: 0;
+            padding: 6px 2px;
+            transition: all 0.2s;
         }
 
-        .card h3 {
-            margin-bottom: 10px;
-            color: #2c3e50;
+        /* Visual ativo do botão clicado */
+        .nav-btn.active {
+            color: #27ae60;
+            transform: scale(1.05);
         }
 
-        /* REGRAS DE COMPATIBILIDADE PARA SMARTPHONES */
-        @media (max-width: 768px) {
-            header {
-                padding: 15px 20px;
-                flex-direction: column;
-                gap: 12px;
-                text-align: center;
-            }
+        .nav-btn .icon {
+            font-size: 22px;
+            transition: transform 0.2s;
+        }
 
-            header h1 {
-                font-size: 20px;
-            }
+        .nav-btn.active .icon {
+            transform: translateY(-2px);
+        }
 
-            .btn-logout {
-                width: 100%;
-                padding: 10px;
-            }
-
-            .container {
-                margin: 15px auto;
-                padding: 0 10px;
-            }
-
-            .welcome-box, .pdf-section {
-                padding: 15px;
-                margin-bottom: 15px;
-            }
-
-            /* Mantém uma excelente proporção de leitura vertical no celular */
-            .pdf-container {
-                height: 70vh; 
-            }
-
-            .content-grid {
-                grid-template-columns: 1fr;
-            }
+        /* MEDIA QUERIES PARA ADAPTAÇÃO EXTREMA (CELULARES PEQUENOS) */
+        @media (max-width: 480px) {
+            header h1 { font-size: 18px; }
+            .btn-logout { padding: 4px 10px; font-size: 13px; }
+            .nav-btn { font-size: 9px; }
+            .nav-btn .icon { font-size: 20px; }
+            .tab-content { padding: 15px 10px; }
         }
     </style>
 </head>
 <body>
 
     <header>
-        <h1>Área do Associado</h1>
+        <h1>Painel do Aluno</h1>
         <button class="btn-logout" id="logoutBtn">Sair</button>
     </header>
 
     <div class="container">
+        <!-- Boas-Vindas fixa -->
         <div class="welcome-box">
             <h2 id="welcomeNome">Olá, Associado!</h2>
-            <p>Bem-vindo ao seu painel exclusivo. Veja abaixo o conteúdo liberado para você hoje.</p>
+            <p>Toque nas opções do menu inferior para navegar pelo seu painel.</p>
         </div>
-		
-        <div class="container">
-		<div class="card">
-		<div class="table-section">
-            <h3>Exame de Faixa</h3>
-            <table>
-                <thead>
-                    <tr>
-                        <th>FAIXA</th>
-                        <th>Ano</th>
-                        <th>KIHON</th>
-                        <th>KATA</th>
-                        <th>KUMITE</th>
-                        <th>Perguntas</th>
-                        <th>TOTAL</th>
-                        <th>MÉDIA FINAL</th>
-                    </tr>
-                </thead>
-                <tbody id="corpoTabelaNotas">
+
+        <!-- SEÇÃO 1: EXAME DE FAIXA -->
+        <div id="exame" class="tab-content">
+            <h3>Exames de Faixa</h3>
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>FAIXA</th>
+                            <th>Ano</th>
+                            <th>KIHON</th>
+                            <th>KATA</th>
+                            <th>KUMITE</th>
+                            <th>Perguntas</th>
+                            <th>TOTAL</th>
+                            <th>MÉDIA FINAL</th>
+                        </tr>
+                    </thead>
+                    <tbody id="corpoTabelaNotas">
+                        <!-- Gerado via JavaScript -->
                     </tbody>
-            </table>
-        </div>
-    </div>
-	
-	<script>
-        const scriptUsuarios = document.createElement('script');
-        const timestamp = new Date().getTime();
-        scriptUsuarios.src = 'usuarios.js?v=' + timestamp;
-        document.head.appendChild(scriptUsuarios);
-    </script>
-	<p> *</p>
-        <div class="content-grid">
-		<div class="welcome-box" style="display: flex; justify-content: space-between; align-items: center;">
-    <div>
-        <h3>Meu Saldo em Conta</h3>
-        <p style="font-size: 24px; font-weight: bold; color: #2ecc71; margin-top: 5px;" id="textoSaldo">
-            R$ --,--
-        </p>
-    </div>
-    <button onclick="buscarSaldoMercadoPago()" style="padding: 8px 12px; background: #3498db; color: white; border: none; border-radius: 4px; cursor: pointer;">
-        Atualizar Saldo
-    </button>
-</div>
-            <div class="card">
-                <h3>Comunicados</h3>
-                <p>Fique por dentro das últimas atualizações e avisos importantes.</p>
-            </div>
-            <div class="card">
-                <h3>Galeria</h3>
-                <p>Visualize as fotos da Associação.</p>
-            </div>
-        </div>
-    </div>
-	
-    <div class="container">
-	  <div class="pdf-section">
-            <h3>E-book / Conteúdo Exclusivo</h3>
-            <div class="pdf-container">
-                <object data="documento.pdf#view=FitH" type="application/pdf">
-                    <iframe src="documento.pdf#view=FitH" frameborder="0">
-                        <p>Seu navegador não possui suporte para visualizar este PDF. 
-                           <a href="documento.pdf" target="_blank">Clique aqui para baixar o arquivo.</a>
-                        </p>
-                    </iframe>
-                </object>
+                </table>
             </div>
         </div>
 
-   <script>
+        <!-- SEÇÃO 2: COMUNICADOS -->
+        <div id="comunicados" class="tab-content">
+            <h3>📢 Comunicados</h3>
+            <p>Nenhum comunicado pendente no momento. Volte mais tarde para novas atualizações!</p>
+        </div>
+
+        <!-- SEÇÃO 3: GALERIA -->
+        <div id="galeria" class="tab-content">
+            <h3>📸 Galeria de Fotos</h3>
+            <p>Em breve serão adicionadas as fotos oficiais dos últimos exames e seminários aqui.</p>
+        </div>
+
+        <!-- SEÇÃO 4: E-BOOK -->
+        <div id="ebook" class="tab-content">
+            <h3>📚 E-Book</h3>
+            <div class="pdf-container">
+                <iframe src="documento.pdf#view=FitH"></iframe>
+            </div>
+        </div>
+
+        <!-- SEÇÃO 5: SALDO -->
+        <div id="saldo" class="tab-content">
+            <h3>💰 Meu Saldo em Conta</h3>
+            <p style="font-size: 32px; font-weight: bold; color: #27ae60; margin: 15px 0 20px 0;" id="textoSaldo">R$ --,--</p>
+            <button onclick="buscarSaldoMercadoPago()" style="width: 100%; padding: 14px; background: #3498db; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: bold; font-size: 15px;">
+                🔄 Atualizar Saldo
+            </button>
+        </div>
+
+    </div>
+
+    <!-- MENU DE BOTÕES ESTILO APP MÓVEL -->
+    <div class="bottom-nav">
+        <button class="nav-btn" onclick="mudarAba('exame', this)">
+            <span class="icon">🏆</span>
+            Exame
+        </button>
+        <button class="nav-btn" onclick="mudarAba('comunicados', this)">
+            <span class="icon">📢</span>
+            Avisos
+        </button>
+        <button class="nav-btn" onclick="mudarAba('galeria', this)">
+            <span class="icon">📸</span>
+            Galeria
+        </button>
+        <button class="nav-btn" onclick="mudarAba('ebook', this)">
+            <span class="icon">📚</span>
+            E-book
+        </button>
+        <button class="nav-btn" onclick="mudarAba('saldo', this)">
+            <span class="icon">💰</span>
+            Saldo
+        </button>
+    </div>
+
+    <script>
         const scriptUsuarios = document.createElement('script');
-        const timestamp = new Date().getTime();
-        scriptUsuarios.src = 'usuarios.js?v=' + timestamp;
+        scriptUsuarios.src = 'usuarios.js?v=' + new Date().getTime();
         document.head.appendChild(scriptUsuarios);
     </script>
 
     <script>
-        // Verificação de segurança de login
         if (localStorage.getItem('associadoAutenticado') !== 'true') {
             alert('Acesso negado. Por favor, faça login.');
             window.location.href = 'index.html';
         }
 
-        // Altera o nome de boas-vindas
         const nomeDoAluno = localStorage.getItem('nomeAlunoLogado') || 'Associado';
         document.getElementById('welcomeNome').textContent = `Olá, ${nomeDoAluno}!`;
 
-        // Executa a montagem da tabela assim que o arquivo usuarios.js terminar de carregar
+        // ALTERNADOR DE ABAS MOBILE
+        function mudarAba(idDaAba, botaoClicado) {
+            const secoes = document.querySelectorAll('.tab-content');
+            secoes.forEach(secao => secao.classList.remove('active'));
+
+            const botoes = document.querySelectorAll('.nav-btn');
+            botoes.forEach(btn => btn.classList.remove('active'));
+
+            document.getElementById(idDaAba).classList.add('active');
+            botaoClicado.classList.add('active');
+
+            // Rolagem suave automática para o início do conteúdo ao clicar no botão
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+
+            if (idDaAba === 'saldo') {
+                buscarSaldoMercadoPago();
+            }
+        }
+
+        // Carrega a aba "Exame" como padrão inicial na tela do aluno
+        document.addEventListener('DOMContentLoaded', () => {
+            const primeiroBotao = document.querySelector('.nav-btn');
+            mudarAba('exame', primeiroBotao);
+        });
+
         scriptUsuarios.onload = function() {
             const usuarioAtivo = localStorage.getItem('usuarioAtivo');
-            
-            // Busca os dados completos do aluno logado dentro do array que está no usuarios.js
             const dadosAluno = listaAlunos.find(u => u.usuario === usuarioAtivo);
             const tabelaBody = document.getElementById('corpoTabelaNotas');
 
             if (dadosAluno && dadosAluno.historico) {
-                // Limpa a tabela antes de preencher
                 tabelaBody.innerHTML = "";
-
-                // Percorre o histórico de exames do aluno e cria as linhas dinamicamente
                 dadosAluno.historico.forEach(exame => {
                     const linha = document.createElement('tr');
-
                     linha.innerHTML = `
-                        <td style="background-color: ${exame.corFaixa}; color: ${exame.corTexto};">${exame.faixa}</td>
+                        <td style="background-color: ${exame.corFaixa}; color: ${exame.corTexto}; border-radius: 4px;">${exame.faixa}</td>
                         <td>${exame.ano}</td>
                         <td>${exame.kihon.toFixed(1)}</td>
                         <td>${exame.kata.toFixed(1)}</td>
@@ -276,44 +362,36 @@
                     tabelaBody.appendChild(linha);
                 });
             } else {
-                tabelaBody.innerHTML = `<tr><td colspan="8">Nenhum registro de notas encontrado.</td></tr>`;
+                tabelaBody.innerHTML = `<tr><td colspan="8">Nenhum registro encontrado.</td></tr>`;
             }
         };
 
-        // Função de Logout
+        function buscarSaldoMercadoPago() {
+            const elementoSaldo = document.getElementById('textoSaldo');
+            elementoSaldo.textContent = "Carregando...";
+
+            const URL_DO_SEU_SERVIDOR = "https://api-associacao-mp.onrender.com/api/saldo";
+
+            fetch(URL_DO_SEU_SERVIDOR)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.saldo !== undefined) {
+                        elementoSaldo.textContent = data.saldo.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+                    } else {
+                        elementoSaldo.textContent = "Erro ao carregar";
+                    }
+                })
+                .catch(() => {
+                    elementoSaldo.textContent = "Erro de conexão";
+                });
+        }
+
         document.getElementById('logoutBtn').addEventListener('click', function() {
             localStorage.removeItem('associadoAutenticado');
             localStorage.removeItem('nomeAlunoLogado');
             localStorage.removeItem('usuarioAtivo');
             window.location.replace('index.html');
         });
-		
-	function buscarSaldoMercadoPago() {
-    const elementoSaldo = document.getElementById('textoSaldo');
-    elementoSaldo.textContent = "Carregando...";
-
-    // COLE AQUI O LINK QUE O RENDER TE DEU acompanhado de '/api/saldo' no final:
-    const URL_DO_SEU_SERVIDOR = "https://api-associacao-mp.onrender.com/api/saldo";
-
-    fetch(URL_DO_SEU_SERVIDOR)
-        .then(response => response.json())
-        .then(data => {
-            if (data.saldo !== undefined) {
-                elementoSaldo.textContent = data.saldo.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
-            } else {
-                elementoSaldo.textContent = "Erro ao carregar";
-            }
-        })
-        .catch(() => {
-            elementoSaldo.textContent = "Erro de conexão";
-        });
-}
-
-// Roda a busca automaticamente quando carregar a página
-window.addEventListener('DOMContentLoaded', buscarSaldoMercadoPago);
-
     </script>
-	
-	
 </body>
 </html>
