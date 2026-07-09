@@ -1,10 +1,20 @@
 // sw.js
-const CACHE_NAME = 'associado-cache-v1';
+const CACHE_NAME = 'associado-cache-v2';
 
-self.addEventListener('install', (e) => {
-  // Opcional: Você pode colocar arquivos para funcionar offline aqui no futuro
+// Força o PWA a se ativar imediatamente sem esperar o usuário fechar a aba
+self.addEventListener('install', (event) => {
+    self.skipWaiting();
 });
 
+self.addEventListener('activate', (event) => {
+    event.waitUntil(clients.claim());
+});
+
+// Responde às requisições da página (obrigatório para validar o PWA no celular)
 self.addEventListener('fetch', (event) => {
-  // Monitora as requisições (obrigatório para o PWA funcionar)
+    event.respondWith(
+        fetch(event.request).catch(() => {
+            return caches.match(event.request);
+        })
+    );
 });
