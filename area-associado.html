@@ -277,28 +277,24 @@
 
         <!-- SEÇÃO 2: AVISOS (COM OCULTAÇÃO AUTOMÁTICA PÓS-ACEITE) -->
 <div id="comunicados" class="tab-content">
-    <h2>📢 Comunicados</h2>
-    <h3>Regras e Normas da Associação</h3>
     
-    <!-- BLOCO A: CONTEÚDO PARA QUEM AINDA NÃO ACEITOU -->
+    <h3 style="margin-bottom: 12px;">📢 Regras e Normas da Associação</h3>
+    
     <div id="blocoTermoPendente">
         <p style="font-size: 14px; color: #666; margin-bottom: 12px;">
             Por favor, leia atentamente o documento abaixo antes de confirmar o seu aceite obrigatório.
         </p>
 
-        <!-- Visualizador de PDF -->
         <div style="width: 100%; height: 280px; border: 1px solid #ccc; border-radius: 6px; overflow: hidden; background: #eee; margin-bottom: 15px;">
             <iframe src="regras-associacao.pdf#view=FitH" style="width: 100%; height: 100%; border: none;"></iframe>
         </div>
 
-        <!-- Botão Auxiliar Mobile -->
         <div style="text-align: center; margin-bottom: 15px;">
             <a href="regras-associacao.pdf" target="_blank" style="font-size: 13px; color: #3498db; font-weight: bold; text-decoration: none;">
                 🔍 Não conseguiu ler acima? Clique aqui para abrir o PDF completo
             </a>
         </div>
 
-        <!-- Formulário de Aceite -->
         <div style="background-color: #f8f9fa; border: 1px solid #e0e0e0; padding: 15px; border-radius: 6px;">
             <label style="display: flex; align-items: flex-start; gap: 10px; cursor: pointer; font-size: 14px; font-weight: bold; line-height: 1.4;">
                 <input type="checkbox" id="checkAceite" onchange="alternarBotaoAceite()" style="width: 18px; height: 18px; margin-top: 2px;">
@@ -311,14 +307,48 @@
         </div>
     </div>
 
-    <!-- BLOCO B: MENSAGEM QUE APARECE SE JÁ TIVER ACEITO -->
-    <div id="blocoTermoAceito" style="display: none; text-align: center; padding: 30px 15px; background-color: #e8f5e9; border: 1px solid #c8e6c9; border-radius: 8px; margin-top: 10px;">
-        <span style="font-size: 45px;">✅</span>
-        <h4 style="color: #2e7d32; margin: 15px 0 5px 0; font-size: 18px;">Termos Aceitos com Sucesso!</h4>
-        <p style="font-size: 14px; color: #43a047; line-height: 1.4;" id="textoDataAceite">
+    <div id="blocoTermoAceito" style="display: none; text-align: center; padding: 25px 15px; background-color: #e8f5e9; border: 1px solid #c8e6c9; border-radius: 8px; margin-bottom: 20px;">
+        <span style="font-size: 35px;">✅</span>
+        <h4 style="color: #2e7d32; margin: 10px 0 5px 0; font-size: 16px;">Termos Aceitos com Sucesso!</h4>
+        <p style="font-size: 13px; color: #43a047; line-height: 1.4;" id="textoDataAceite">
             O seu comprovante de leitura e concordância já foi registrado e enviado para a Associação.
         </p>
     </div>
+
+    <hr style="border: 0; height: 1px; background: #e0e0e0; margin: 30px 0;">
+
+    <div style="margin-bottom: 25px;">
+        <h3 style="margin-bottom: 15px; display: flex; align-items: center; gap: 8px;">🥋 Próximos Treinamentos</h3>
+        
+        <div style="display: flex; align-items: center; background-color: #fff; border: 1px solid #e0e0e0; border-left: 5px solid #3498db; border-radius: 6px; padding: 15px; box-shadow: 0 2px 4px rgba(0,0,0,0.02);">
+            <div style="text-align: center; padding-right: 15px; border-right: 1px solid #eee; min-width: 70px;">
+                <span style="display: block; font-size: 24px; font-weight: bold; color: #2980b9;">26</span>
+                <span style="display: block; font-size: 12px; font-weight: bold; color: #7f8c8d; text-transform: uppercase;">JUL</span>
+            </div>
+            <div style="padding-left: 15px;">
+                <span style="display: block; font-size: 12px; color: #e67e22; font-weight: bold; text-transform: uppercase; margin-bottom: 2px;">Workshop Especial</span>
+                <span style="display: block; font-size: 16px; font-weight: bold; color: #2c3e50;">Workshop com Brenda Padilha</span>
+            </div>
+        </div>
+    </div>
+
+    <div style="margin-bottom: 15px;">
+        <h3 style="margin-bottom: 15px; display: flex; align-items: center; gap: 8px;">🏆 Próximos Campeonatos</h3>
+        
+        <div style="display: flex; align-items: center; background-color: #fff; border: 1px solid #e0e0e0; border-left: 5px solid #e74c3c; border-radius: 6px; padding: 15px; box-shadow: 0 2px 4px rgba(0,0,0,0.02);">
+            <div style="text-align: center; padding-right: 15px; border-right: 1px solid #eee; min-width: 70px;">
+                <span style="display: block; font-size: 24px; font-weight: bold; color: #c0392b;">23</span>
+                <span style="display: block; font-size: 12px; font-weight: bold; color: #7f8c8d; text-transform: uppercase;">AGO</span>
+            </div>
+            <div style="padding-left: 15px;">
+                <span style="display: block; font-size: 16px; font-weight: bold; color: #2c3e50; margin-bottom: 4px;">7ª Etapa ACAK</span>
+                <span style="display: flex; align-items: center; gap: 4px; font-size: 13px; color: #7f8c8d;">
+                    📍 Cidade: Valinhos - SP
+                </span>
+            </div>
+        </div>
+    </div>
+
 </div>
 
         <!-- SEÇÃO 3: GALERIA -->
