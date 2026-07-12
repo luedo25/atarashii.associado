@@ -221,8 +221,13 @@
 
     <header>
         <h1>Painel do Aluno</h1>
-<div style="display: flex; align-items: center; gap: 15px;">
-        <div id="wrapperSininho" onclick="irParaAvisos()" style="position: relative; cursor: pointer; font-size: 22px; padding: 5px; transition: transform 0.2s;">
+<div style="display: flex; align-items: center; gap: 18px;">
+        
+        <div onclick="atualizarPainel()" title="Atualizar painel" style="cursor: pointer; font-size: 20px; padding: 5px; transition: transform 0.2s; user-select: none;" onmousedown="this.style.transform='scale(0.85)'" onmouseup="this.style.transform='scale(1)'">
+            🔄
+        </div>
+
+        <div id="wrapperSininho" onclick="irParaAvisos()" style="position: relative; cursor: pointer; font-size: 22px; padding: 5px; transition: transform 0.2s; user-select: none;">
             🔔
             <span id="badgeNotificacao" style="display: none; position: absolute; top: 0; right: 0; background-color: #e74c3c; color: white; font-size: 11px; font-weight: bold; border-radius: 50%; width: 18px; height: 18px; display: flex; align-items: center; justify-content: center; border: 2px solid #2c3e50;">
                 1
@@ -457,7 +462,12 @@
                 mudarAba('comunicados', botaoAvisosMenu);
             }
         }
-
+    
+    // FUNÇÃO PARA ATUALIZAR O PAINEL SEM PRECISAR DE LOGOUT
+function atualizarPainel() {
+    // Recarrega a página atual limpando o cache básico do navegador
+    window.location.reload();
+}
         // 6. ALTERNADOR DE BOTÃO DE ACEITE
         function alternarBotaoAceite() {
             const checkbox = document.getElementById('checkAceite');
