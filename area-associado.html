@@ -371,222 +371,153 @@
         </button>
     </div>
 
-    <script>
+<script>
+        // 1. CARREGAMENTO DINÂMICO DE USUÁRIOS
         const scriptUsuarios = document.createElement('script');
         scriptUsuarios.src = 'usuarios.js?v=' + new Date().getTime();
         document.head.appendChild(scriptUsuarios);
-    </script>
 
-    <script>
+        // 2. PROTEÇÃO DE ACESSO
         if (localStorage.getItem('associadoAutenticado') !== 'true') {
             alert('Acesso negado. Por favor, faça login.');
             window.location.href = 'index.html';
         }
 
+        // 3. CONFIGURAÇÕES E VARIÁVEIS GLOBAIS
         const nomeDoAluno = localStorage.getItem('nomeAlunoLogado') || 'Associado';
+        const usuarioAtivo = localStorage.getItem('usuarioAtivo');
+        const URL_API_SERVIDOR = "https://api-associacao-mp.onrender.com";
+
         document.getElementById('welcomeNome').textContent = `Olá, ${nomeDoAluno}!`;
-        
-// URL BASE DA SUA API NO RENDER (Ajuste se o endereço for diferente)
-const URL_API_SERVIDOR = "https://api-associacao-mp.onrender.com";
 
-// 1. ATUALIZADA: CONSULTA O STATUS DO TERMO E ATUALIZA O SININHO
-function verificarStatusAceite() {
-    const usuarioAtivo = localStorage.getItem('usuarioAtivo');
-    if (!usuarioAtivo) return;
+        // 4. CONSULTA O STATUS DO TERMO E ATUALIZA O SININHO (ANTI-TRAVAMENTO)
+        function verificarStatusAceite() {
+            if (!usuarioAtivo) return;
 
-    const blocoPendente = document.getElementById('blocoTermoPendente');
-    const blocoAceito = document.getElementById('blocoTermoAceito');
-    const badge = document.getElementById('badgeNotificacao');
-    const sininho = document.getElementById('wrapperSininho');
+            const blocoPendente = document.getElementById('blocoTermoPendente');
+            const blocoAceito = document.getElementById('blocoTermoAceito');
+            const badge = document.getElementById('badgeNotificacao');
+            const sininho = document.getElementById('wrapperSininho');
 
-    // Criamos um controlador para abortar a requisição se o Render demorar mais de 4 segundos
-    const controller = new AbortController();
-    const timeoutId = setTimeout(() => controller.abort(), 4000);
+            const controller = new AbortController();
+            const timeoutId = setTimeout(() => controller.abort(), 4000);
 
-    fetch(`${URL_API_SERVIDOR}/api/status-termo/${usuarioAtivo}`, { signal: controller.signal })
-        .then(response => {
-            clearTimeout(timeoutId); // Cancela o timeout se respondeu a tempo
-            return response.json();
-        })
-        .then(data => {
-            if (data && data.aceitou === true) {
-                if (blocoPendente) blocoPendente.style.display = 'none';
-                if (blocoAceito) {
-                    blocoAceito.style.display = 'block';
-                    document.getElementById('textoDataAceite').innerHTML = `O seu comprovante de leitura e concordância foi registrado globalmente em: <br><strong>${data.data}</strong>`;
-                }
-                if (badge) badge.style.display = 'none';
-                if (sininho) { sininho.style.animation = 'none'; sininho.title = "Nenhum aviso pendente"; }
-            } else {
-                // Se não aceitou, exibe o termo normalmente
-                aplicarLayoutPendente(blocoPendente, blocoAceito, badge, sininho);
-            }
-        })
-        .catch(err => {
-            clearTimeout(timeoutId);
-            console.warn("API demorou ou falhou. Ativando Modo de Contingência Local seguro:", err);
-            
-            // PLANO B SEGURO: Se o Render falhar ou estiver offline, o app NÃO TRAVA. 
-            // Ele assume temporariamente o valor salvo no próprio celular do aluno.
-            const jaAceitouLocal = localStorage.getItem(`termo_aceito_${usuarioAtivo}`);
-            const dataAceiteLocal = localStorage.getItem(`data_aceite_${usuarioAtivo}`) || '';
-            
-            if (jaAceitouLocal === 'true') {
-                if (blocoPendente) blocoPendente.style.display = 'none';
-                if (blocoAceito) {
-                    blocoAceito.style.display = 'block';
-                    document.getElementById('textoDataAceite').innerHTML = `Confirmado localmente (Modo Offline) em: <br><strong>${dataAceiteLocal}</strong>`;
-                }
-                if (badge) badge.style.display = 'none';
-                if (sininho) { sininho.style.animation = 'none'; }
-            } else {
-                aplicarLayoutPendente(blocoPendente, blocoAceito, badge, sininho);
-            }
-        });
-}
-
-// Função auxiliar para evitar repetição de código
-function aplicarLayoutPendente(blocoPendente, blocoAceito, badge, sininho) {
-    if (blocoPendente) blocoPendente.style.display = 'block';
-    if (blocoAceito) blocoAceito.style.display = 'none';
-    if (badge) badge.style.display = 'flex';
-    if (sininho) {
-        sininho.style.animation = 'balancoSininho 0.5s ease-in-out infinite alternate';
-    }
-}
-// 2. NOVA: ATALHO INTELIGENTE AO CLICAR NO SININHO
-function irParaAvisos() {
-    // Procura pelo botão físico "Avisos" na sua barra inferior do app
-    // Nota: O segundo botão do menu geralmente corresponde a 'comunicados'
-    const botaoAvisosMenu = document.querySelectorAll('.nav-btn')[1]; 
-    
-    if (botaoAvisosMenu) {
-        // Simula o clique do usuário mudando para a aba correta automaticamente
-        mudarAba('comunicados', botaoAvisosMenu);
-    }
-}
-    // Faz uma requisição para o Render perguntando o status real do usuário atual
-    fetch(`${URL_API_SERVIDOR}/api/status-termo/${usuarioAtivo}`)
-        .then(response => response.json())
-        .then(data => {
-            if (data.aceitou === true) {
-                // Se o servidor confirmar o aceite, esconde o termo imediatamente
-                if (blocoPendente) blocoPendente.style.display = 'none';
-                if (blocoAceito) {
-                    blocoAceito.style.display = 'block';
-                    document.getElementById('textoDataAceite').innerHTML = `O seu comprovante de leitura e concordância foi registrado globalmente em: <br><strong>${data.data}</strong>`;
-                }
-            } else {
-                // Se o servidor disser que não aceitou, exibe o PDF para leitura
-                if (blocoPendente) blocoPendente.style.display = 'block';
-                if (blocoAceito) blocoAceito.style.display = 'none';
-            }
-        })
-        .catch(err => {
-            console.error("Erro ao consultar status do termo no servidor:", err);
-            // Plano B de contingência: Se o servidor falhar, tenta ler o localStorage local
-            const jaAceitouLocal = localStorage.getItem(`termo_aceito_${usuarioAtivo}`);
-            if (jaAceitouLocal === 'true') {
-                if (blocoPendente) blocoPendente.style.display = 'none';
-                if (blocoAceito) blocoAceito.style.display = 'block';
-            }
-        });
-}
-
-// 2. Controla a ativação visual do botão verde
-function alternarBotaoAceite() {
-    const checkbox = document.getElementById('checkAceite');
-    const botao = document.getElementById('btnEnviarAceite');
-
-    if (checkbox && checkbox.checked) {
-        botao.disabled = false;
-        botao.style.backgroundColor = '#27ae60';
-        botao.style.cursor = 'pointer';
-    } else if (botao) {
-        botao.disabled = true;
-        botao.style.backgroundColor = '#95a5a6';
-        botao.style.cursor = 'not-allowed';
-    }
-}
-
-// 2. ENVIA O ACEITE PARA O SERVIDOR E DISPARA O EMAIL
-function enviarEmailAceite() {
-    const nomeAluno = localStorage.getItem('nomeAlunoLogado') || 'Nome Não Identificado';
-    const usuarioAtivo = localStorage.getItem('usuarioAtivo') || 'ID_Não_Identificado';
-    const dataHoraAtual = new Date().toLocaleString('pt-BR');
-    
-    const emailDestinatarioPrincipal = "luedo25@msn.com"; 
-    const assunto = encodeURIComponent(`CONFIRMAÇÃO DE ACEITE: Regras da Associação - ${nomeAluno}`);
-    
-    const corpoEmail = encodeURIComponent(
-        `Prezada Diretoria,\n\n` +
-        `Por meio deste e-mail, confirmo que li e aceito voluntariamente todos os termos, regras e normas da Associação.\n\n` +
-        `DADOS DO ASSOCIADO:\n` +
-        `Nome completo: ${nomeAluno}\n` +
-        `Usuário do sistema: ${usuarioAtivo}\n` +
-        `Data/Hora do Aceite: ${dataHoraAtual}\n\n` +
-        `Este e-mail serve como registro e comprovante digital do meu aceite obrigatório.`
-    );
-
-    // [NOVO] Salva primeiro no Banco/Servidor do Render via método POST
-    fetch(`${URL_API_SERVIDOR}/api/aceitar-termo`, {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ usuario: usuarioAtivo })
-    })
-    .then(response => response.json())
-    .then(data => {
-        if (data.sucesso) {
-            // Guarda também no local por segurança imediata
-            localStorage.setItem(`termo_aceito_${usuarioAtivo}`, 'true');
-            localStorage.setItem(`data_aceite_${usuarioAtivo}`, dataHoraAtual);
-            
-            // Atualiza a interface sumindo com o PDF
-            verificarStatusAceite();
-
-            // Abre o aplicativo de e-mail do smartphone
-            const mailtoUrl = `mailto:${emailDestinatarioPrincipal}?subject=${assunto}&body=${corpoEmail}`;
-            window.location.href = mailtoUrl;
-        } else {
-            alert("Não foi possível registrar o aceite no servidor. Tente novamente.");
+            fetch(`${URL_API_SERVIDOR}/api/status-termo/${usuarioAtivo}`, { signal: controller.signal })
+                .then(response => {
+                    clearTimeout(timeoutId);
+                    return response.json();
+                })
+                .then(data => {
+                    if (data && data.aceitou === true) {
+                        if (blocoPendente) blocoPendente.style.display = 'none';
+                        if (blocoAceito) {
+                            blocoAceito.style.display = 'block';
+                            document.getElementById('textoDataAceite').innerHTML = `O seu comprovante de leitura e concordância foi registrado globalmente em: <br><strong>${data.data}</strong>`;
+                        }
+                        if (badge) badge.style.display = 'none';
+                        if (sininho) { sininho.style.animation = 'none'; sininho.title = "Nenhum aviso pendente"; }
+                    } else {
+                        aplicarLayoutPendente(blocoPendente, blocoAceito, badge, sininho);
+                    }
+                })
+                .catch(err => {
+                    clearTimeout(timeoutId);
+                    console.warn("API demorou ou falhou. Ativando Modo de Contingência Local seguro:", err);
+                    
+                    const jaAceitouLocal = localStorage.getItem(`termo_aceito_${usuarioAtivo}`);
+                    const dataAceiteLocal = localStorage.getItem(`data_aceite_${usuarioAtivo}`) || '';
+                    
+                    if (jaAceitouLocal === 'true') {
+                        if (blocoPendente) blocoPendente.style.display = 'none';
+                        if (blocoAceito) {
+                            blocoAceito.style.display = 'block';
+                            document.getElementById('textoDataAceite').innerHTML = `Confirmado localmente (Modo Offline) em: <br><strong>${dataAceiteLocal}</strong>`;
+                        }
+                        if (badge) badge.style.display = 'none';
+                        if (sininho) { sininho.style.animation = 'none'; }
+                    } else {
+                        aplicarLayoutPendente(blocoPendente, blocoAceito, badge, sininho);
+                    }
+                });
         }
-    })
-    .catch(err => {
-        alert("Erro de conexão com o servidor. Verifique sua internet.");
-        console.error(err);
-    });
-}
-        function mudarAba(idDaAba, botaoClicado) {
-    const secoes = document.querySelectorAll('.tab-content');
-    secoes.forEach(secao => secao.classList.remove('active'));
 
-    const botoes = document.querySelectorAll('.nav-btn');
-    botoes.forEach(btn => btn.classList.remove('active'));
+        function aplicarLayoutPendente(blocoPendente, blocoAceito, badge, sininho) {
+            if (blocoPendente) blocoPendente.style.display = 'block';
+            if (blocoAceito) blocoAceito.style.display = 'none';
+            if (badge) badge.style.display = 'flex';
+            if (sininho) {
+                sininho.style.animation = 'balancoSininho 0.5s ease-in-out infinite alternate';
+            }
+        }
 
-    document.getElementById(idDaAba).classList.add('active');
-    botaoClicado.classList.add('active');
+        // 5. ATALHO CLIQUE NO SININHO
+        function irParaAvisos() {
+            const botaoAvisosMenu = document.querySelectorAll('.nav-btn')[1]; 
+            if (botaoAvisosMenu) {
+                mudarAba('comunicados', botaoAvisosMenu);
+            }
+        }
 
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+        // 6. ALTERNADOR DE BOTÃO DE ACEITE
+        function alternarBotaoAceite() {
+            const checkbox = document.getElementById('checkAceite');
+            const botao = document.getElementById('btnEnviarAceite');
 
-    // NOVO: Se ele clicou em Avisos (comunicados), roda a checagem do PDF na hora
-    if (idDaAba === 'comunicados') {
-        verificarStatusAceite();
-    }
+            if (checkbox && checkbox.checked) {
+                botao.disabled = false;
+                botao.style.backgroundColor = '#27ae60';
+                botao.style.cursor = 'pointer';
+            } else if (botao) {
+                botao.disabled = true;
+                botao.style.backgroundColor = '#95a5a6';
+                botao.style.cursor = 'not-allowed';
+            }
+        }
 
-    if (idDaAba === 'saldo') {
-        buscarSaldoMercadoPago();
-    }
-}
-        document.addEventListener('DOMContentLoaded', () => {
-    const primeiroBotao = document.querySelector('.nav-btn');
-    mudarAba('exame', primeiroBotao);
-    
-    // Verifica o status do termo em segundo plano assim que o aluno faz login
-    verificarStatusAceite(); 
-});
-        // ALTERNADOR DE ABAS MOBILE
+        // 7. ENVIA O ACEITE PARA O SERVIDOR E EMITE MAILTO
+        function enviarEmailAceite() {
+            const nomeAluno = localStorage.getItem('nomeAlunoLogado') || 'Nome Não Identificado';
+            const dataHoraAtual = new Date().toLocaleString('pt-BR');
+            
+            const emailDestinatarioPrincipal = "luedo25@msn.com"; 
+            const assunto = encodeURIComponent(`CONFIRMAÇÃO DE ACEITE: Regras da Associação - ${nomeAluno}`);
+            
+            const corpoEmail = encodeURIComponent(
+                `Prezada Diretoria,\n\n` +
+                `Por meio deste e-mail, confirmo que li e aceito voluntariamente todos os termos, regras e normas da Associação.\n\n` +
+                `DADOS DO ASSOCIADO:\n` +
+                `Nome completo: ${nomeAluno}\n` +
+                `Usuário do sistema: ${usuarioAtivo}\n` +
+                `Data/Hora do Aceite: ${dataHoraAtual}\n\n` +
+                `Este e-mail serve como registro e comprovante digital do meu aceite obrigatório.`
+            );
+
+            fetch(`${URL_API_SERVIDOR}/api/aceitar-termo`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ usuario: usuarioAtivo })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.sucesso) {
+                    localStorage.setItem(`termo_aceito_${usuarioAtivo}`, 'true');
+                    localStorage.setItem(`data_aceite_${usuarioAtivo}`, dataHoraAtual);
+                    
+                    verificarStatusAceite();
+
+                    const mailtoUrl = `mailto:${emailDestinatarioPrincipal}?subject=${assunto}&body=${corpoEmail}`;
+                    window.location.href = mailtoUrl;
+                } else {
+                    alert("Não foi possível registrar o aceite no servidor. Tente novamente.");
+                }
+            })
+            .catch(err => {
+                alert("Erro de conexão com o servidor. Verifique sua internet.");
+                console.error(err);
+            });
+        }
+
+        // 8. ALTERNADOR DE ABAS (ÚNICO E CORRIGIDO)
         function mudarAba(idDaAba, botaoClicado) {
             const secoes = document.querySelectorAll('.tab-content');
             secoes.forEach(secao => secao.classList.remove('active'));
@@ -594,27 +525,28 @@ function enviarEmailAceite() {
             const botoes = document.querySelectorAll('.nav-btn');
             botoes.forEach(btn => btn.classList.remove('active'));
 
-            document.getElementById(idDaAba).classList.add('active');
-            botaoClicado.classList.add('active');
+            const elementoAba = document.getElementById(idDaAba);
+            if (elementoAba) elementoAba.classList.add('active');
+            if (botaoClicado) botaoClicado.classList.add('active');
 
-            // Rolagem suave automática para o início do conteúdo ao clicar no botão
             window.scrollTo({ top: 0, behavior: 'smooth' });
+
+            if (idDaAba === 'comunicados') {
+                verificarStatusAceite();
+            }
 
             if (idDaAba === 'saldo') {
                 buscarSaldoMercadoPago();
             }
         }
 
-        // Carrega a aba "Exame" como padrão inicial na tela do aluno
-        document.addEventListener('DOMContentLoaded', () => {
-            const primeiroBotao = document.querySelector('.nav-btn');
-            mudarAba('exame', primeiroBotao);
-        });
-
+        // 9. EVENTO DE CARREGAMENTO DAS NOTAS (SCRIPT DE USUÁRIOS)
         scriptUsuarios.onload = function() {
-            const usuarioAtivo = localStorage.getItem('usuarioAtivo');
+            if (typeof listaAlunos === 'undefined') return;
             const dadosAluno = listaAlunos.find(u => u.usuario === usuarioAtivo);
             const tabelaBody = document.getElementById('corpoTabelaNotas');
+
+            if (!tabelaBody) return;
 
             if (dadosAluno && dadosAluno.historico) {
                 tabelaBody.innerHTML = "";
@@ -637,13 +569,14 @@ function enviarEmailAceite() {
             }
         };
 
+        // 10. BUSCA DE SALDO DO MERCADO PAGO
         function buscarSaldoMercadoPago() {
             const elementoSaldo = document.getElementById('textoSaldo');
+            if (!elementoSaldo) return;
+            
             elementoSaldo.textContent = "Carregando...";
 
-            const URL_DO_SEU_SERVIDOR = "https://api-associacao-mp.onrender.com/api/saldo";
-
-            fetch(URL_DO_SEU_SERVIDOR)
+            fetch(`${URL_API_SERVIDOR}/api/saldo`)
                 .then(response => response.json())
                 .then(data => {
                     if (data.saldo !== undefined) {
@@ -657,6 +590,7 @@ function enviarEmailAceite() {
                 });
         }
 
+        // 11. EVENTO DE LOGOUT
         document.getElementById('logoutBtn').addEventListener('click', function() {
             localStorage.removeItem('associadoAutenticado');
             localStorage.removeItem('nomeAlunoLogado');
@@ -664,24 +598,22 @@ function enviarEmailAceite() {
             window.location.replace('index.html');
         });
 
-        // Inicialização do Painel corrigida
-document.addEventListener('DOMContentLoaded', () => {
-    try {
-        // 1. Abre a primeira aba nativa imediatamente (Garante o funcionamento visual instantâneo)
-        const primeiroBotao = document.querySelector('.nav-btn');
-        if (primeiroBotao) {
-            mudarAba('exame', primeiroBotao);
-        }
-        
-        // 2. Executa a checagem do termo em segundo plano sem bloquear a tela
-        setTimeout(() => {
-            verificarStatusAceite();
-        }, 300);
-        
-    } catch (error) {
-        console.error("Erro crítico contido na inicialização:", error);
-    }
-});
+        // 12. INICIALIZAÇÃO SEGURA DO PAINEL
+        document.addEventListener('DOMContentLoaded', () => {
+            try {
+                const primeiroBotao = document.querySelector('.nav-btn');
+                if (primeiroBotao) {
+                    mudarAba('exame', primeiroBotao);
+                }
+                
+                setTimeout(() => {
+                    verificarStatusAceite();
+                }, 300);
+                
+            } catch (error) {
+                console.error("Erro crítico contido na inicialização:", error);
+            }
+        });
     </script>
 </body>
 </html>
