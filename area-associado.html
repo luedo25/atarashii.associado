@@ -373,29 +373,44 @@
         const nomeDoAluno = localStorage.getItem('nomeAlunoLogado') || 'Associado';
         document.getElementById('welcomeNome').textContent = `Olá, ${nomeDoAluno}!`;
         
-// 1. Função executada automaticamente ao carregar ou mudar para a aba de avisos
+// URL BASE DA SUA API NO RENDER (Ajuste se o endereço for diferente)
+const URL_API_SERVIDOR = "https://api-associacao-mp.onrender.com";
+
+// 1. CONSULTA O SERVIDOR PARA SABER SE ESCONDE O PDF
 function verificarStatusAceite() {
-    const usuarioAtivo = localStorage.getItem('usuarioAtivo') || 'comum';
+    const usuarioAtivo = localStorage.getItem('usuarioAtivo');
     
-    // Criamos uma chave única de aceite por usuário (ex: termo_aceito_aluno1)
-    const jaAceitou = localStorage.getItem(`termo_aceito_${usuarioAtivo}`);
-    const dataAceite = localStorage.getItem(`data_aceite_${usuarioAtivo}`);
+    if (!usuarioAtivo) return;
 
     const blocoPendente = document.getElementById('blocoTermoPendente');
     const blocoAceito = document.getElementById('blocoTermoAceito');
 
-    if (jaAceitou === 'true') {
-        // Se já aceitou, esconde o PDF/botão e mostra a mensagem verde de sucesso
-        if (blocoPendente) blocoPendente.style.display = 'none';
-        if (blocoAceito) {
-            blocoAceito.style.display = 'block';
-            document.getElementById('textoDataAceite').innerHTML = `O seu comprovante de leitura e concordância foi registrado com sucesso em: <br><strong>${dataAceite}</strong>`;
-        }
-    } else {
-        // Se não aceitou, garante que o documento seja exibido para leitura
-        if (blocoPendente) blocoPendente.style.display = 'block';
-        if (blocoAceito) blocoAceito.style.display = 'none';
-    }
+    // Faz uma requisição para o Render perguntando o status real do usuário atual
+    fetch(`${URL_API_SERVIDOR}/api/status-termo/${usuarioAtivo}`)
+        .then(response => response.json())
+        .then(data => {
+            if (data.aceitou === true) {
+                // Se o servidor confirmar o aceite, esconde o termo imediatamente
+                if (blocoPendente) blocoPendente.style.display = 'none';
+                if (blocoAceito) {
+                    blocoAceito.style.display = 'block';
+                    document.getElementById('textoDataAceite').innerHTML = `O seu comprovante de leitura e concordância foi registrado globalmente em: <br><strong>${data.data}</strong>`;
+                }
+            } else {
+                // Se o servidor disser que não aceitou, exibe o PDF para leitura
+                if (blocoPendente) blocoPendente.style.display = 'block';
+                if (blocoAceito) blocoAceito.style.display = 'none';
+            }
+        })
+        .catch(err => {
+            console.error("Erro ao consultar status do termo no servidor:", err);
+            // Plano B de contingência: Se o servidor falhar, tenta ler o localStorage local
+            const jaAceitouLocal = localStorage.getItem(`termo_aceito_${usuarioAtivo}`);
+            if (jaAceitouLocal === 'true') {
+                if (blocoPendente) blocoPendente.style.display = 'none';
+                if (blocoAceito) blocoAceito.style.display = 'block';
+            }
+        });
 }
 
 // 2. Controla a ativação visual do botão verde
@@ -414,7 +429,7 @@ function alternarBotaoAceite() {
     }
 }
 
-// 3. Salva o aceite na memória e dispara o e-mail
+// 2. ENVIA O ACEITE PARA O SERVIDOR E DISPARA O EMAIL
 function enviarEmailAceite() {
     const nomeAluno = localStorage.getItem('nomeAlunoLogado') || 'Nome Não Identificado';
     const usuarioAtivo = localStorage.getItem('usuarioAtivo') || 'ID_Não_Identificado';
@@ -433,16 +448,35 @@ function enviarEmailAceite() {
         `Este e-mail serve como registro e comprovante digital do meu aceite obrigatório.`
     );
 
-    // Grava de forma permanente na memória do celular que ESSE usuário logado já aceitou os termos
-    localStorage.setItem(`termo_aceito_${usuarioAtivo}`, 'true');
-    localStorage.setItem(`data_aceite_${usuarioAtivo}`, dataHoraAtual);
+    // [NOVO] Salva primeiro no Banco/Servidor do Render via método POST
+    fetch(`${URL_API_SERVIDOR}/api/aceitar-termo`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ usuario: usuarioAtivo })
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.sucesso) {
+            // Guarda também no local por segurança imediata
+            localStorage.setItem(`termo_aceito_${usuarioAtivo}`, 'true');
+            localStorage.setItem(`data_aceite_${usuarioAtivo}`, dataHoraAtual);
+            
+            // Atualiza a interface sumindo com o PDF
+            verificarStatusAceite();
 
-    // Atualiza a tela imediatamente para sumir com o PDF antes mesmo de abrir o app de e-mail
-    verificarStatusAceite();
-
-    // Abre o aplicativo de e-mail nativo
-    const mailtoUrl = `mailto:${emailDestinatarioPrincipal}?subject=${assunto}&body=${corpoEmail}`;
-    window.location.href = mailtoUrl;
+            // Abre o aplicativo de e-mail do smartphone
+            const mailtoUrl = `mailto:${emailDestinatarioPrincipal}?subject=${assunto}&body=${corpoEmail}`;
+            window.location.href = mailtoUrl;
+        } else {
+            alert("Não foi possível registrar o aceite no servidor. Tente novamente.");
+        }
+    })
+    .catch(err => {
+        alert("Erro de conexão com o servidor. Verifique sua internet.");
+        console.error(err);
+    });
 }
         function mudarAba(idDaAba, botaoClicado) {
     const secoes = document.querySelectorAll('.tab-content');
