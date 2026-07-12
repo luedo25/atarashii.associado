@@ -187,7 +187,11 @@
             padding: 6px 2px;
             transition: all 0.2s;
         }
-
+/* Animação opcional que faz o sininho balançar levemente se houver aviso */
+@keyframes balancoSininho {
+    0% { transform: rotate(-10deg); }
+    100% { transform: rotate(10deg); }
+}
         /* Visual ativo do botão clicado */
         .nav-btn.active {
             color: #27ae60;
@@ -217,7 +221,16 @@
 
     <header>
         <h1>Painel do Aluno</h1>
+<div style="display: flex; align-items: center; gap: 15px;">
+        <div id="wrapperSininho" onclick="irParaAvisos()" style="position: relative; cursor: pointer; font-size: 22px; padding: 5px; transition: transform 0.2s;">
+            🔔
+            <span id="badgeNotificacao" style="display: none; position: absolute; top: 0; right: 0; background-color: #e74c3c; color: white; font-size: 11px; font-weight: bold; border-radius: 50%; width: 18px; height: 18px; display: flex; align-items: center; justify-content: center; border: 2px solid #2c3e50;">
+                1
+            </span>
+        </div>
+
         <button class="btn-logout" id="logoutBtn">Sair</button>
+    </div>
     </header>
 
     <div class="container">
@@ -376,15 +389,61 @@
 // URL BASE DA SUA API NO RENDER (Ajuste se o endereço for diferente)
 const URL_API_SERVIDOR = "https://api-associacao-mp.onrender.com";
 
-// 1. CONSULTA O SERVIDOR PARA SABER SE ESCONDE O PDF
+// 1. ATUALIZADA: CONSULTA O STATUS DO TERMO E ATUALIZA O SININHO
 function verificarStatusAceite() {
     const usuarioAtivo = localStorage.getItem('usuarioAtivo');
-    
     if (!usuarioAtivo) return;
 
     const blocoPendente = document.getElementById('blocoTermoPendente');
     const blocoAceito = document.getElementById('blocoTermoAceito');
+    const badge = document.getElementById('badgeNotificacao');
+    const sininho = document.getElementById('wrapperSininho');
 
+    fetch(`${URL_API_SERVIDOR}/api/status-termo/${usuarioAtivo}`)
+        .then(response => response.json())
+        .then(data => {
+            if (data.aceitou === true) {
+                // ALUNO JÁ LEU E ACEITOU:
+                if (blocoPendente) blocoPendente.style.display = 'none';
+                if (blocoAceito) {
+                    blocoAceito.style.display = 'block';
+                    document.getElementById('textoDataAceite').innerHTML = `O seu comprovante de leitura e concordância foi registrado globalmente em: <br><strong>${data.data}</strong>`;
+                }
+                
+                // Apaga a bolinha vermelha do sininho e remove animações
+                if (badge) badge.style.display = 'none';
+                if (sininho) {
+                    sininho.style.animation = 'none';
+                    sininho.title = "Nenhum aviso pendente";
+                }
+            } else {
+                // ALUNO TEM AVISO PENDENTE:
+                if (blocoPendente) blocoPendente.style.display = 'block';
+                if (blocoAceito) blocoAceito.style.display = 'none';
+                
+                // Ativa a bolinha vermelha indicando "1" recado não lido
+                if (badge) badge.style.display = 'flex';
+                if (sininho) {
+                    sininho.style.animation = 'balancoSininho 0.5s ease-in-out infinite alternate';
+                    sininho.title = "Você tem 1 aviso importante não lido!";
+                }
+            }
+        })
+        .catch(err => {
+            console.error("Erro ao consultar status no sininho:", err);
+        });
+}
+// 2. NOVA: ATALHO INTELIGENTE AO CLICAR NO SININHO
+function irParaAvisos() {
+    // Procura pelo botão físico "Avisos" na sua barra inferior do app
+    // Nota: O segundo botão do menu geralmente corresponde a 'comunicados'
+    const botaoAvisosMenu = document.querySelectorAll('.nav-btn')[1]; 
+    
+    if (botaoAvisosMenu) {
+        // Simula o clique do usuário mudando para a aba correta automaticamente
+        mudarAba('comunicados', botaoAvisosMenu);
+    }
+}
     // Faz uma requisição para o Render perguntando o status real do usuário atual
     fetch(`${URL_API_SERVIDOR}/api/status-termo/${usuarioAtivo}`)
         .then(response => response.json())
