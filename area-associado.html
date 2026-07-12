@@ -399,39 +399,60 @@ function verificarStatusAceite() {
     const badge = document.getElementById('badgeNotificacao');
     const sininho = document.getElementById('wrapperSininho');
 
-    fetch(`${URL_API_SERVIDOR}/api/status-termo/${usuarioAtivo}`)
-        .then(response => response.json())
+    // Criamos um controlador para abortar a requisição se o Render demorar mais de 4 segundos
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 4000);
+
+    fetch(`${URL_API_SERVIDOR}/api/status-termo/${usuarioAtivo}`, { signal: controller.signal })
+        .then(response => {
+            clearTimeout(timeoutId); // Cancela o timeout se respondeu a tempo
+            return response.json();
+        })
         .then(data => {
-            if (data.aceitou === true) {
-                // ALUNO JÁ LEU E ACEITOU:
+            if (data && data.aceitou === true) {
                 if (blocoPendente) blocoPendente.style.display = 'none';
                 if (blocoAceito) {
                     blocoAceito.style.display = 'block';
                     document.getElementById('textoDataAceite').innerHTML = `O seu comprovante de leitura e concordância foi registrado globalmente em: <br><strong>${data.data}</strong>`;
                 }
-                
-                // Apaga a bolinha vermelha do sininho e remove animações
                 if (badge) badge.style.display = 'none';
-                if (sininho) {
-                    sininho.style.animation = 'none';
-                    sininho.title = "Nenhum aviso pendente";
-                }
+                if (sininho) { sininho.style.animation = 'none'; sininho.title = "Nenhum aviso pendente"; }
             } else {
-                // ALUNO TEM AVISO PENDENTE:
-                if (blocoPendente) blocoPendente.style.display = 'block';
-                if (blocoAceito) blocoAceito.style.display = 'none';
-                
-                // Ativa a bolinha vermelha indicando "1" recado não lido
-                if (badge) badge.style.display = 'flex';
-                if (sininho) {
-                    sininho.style.animation = 'balancoSininho 0.5s ease-in-out infinite alternate';
-                    sininho.title = "Você tem 1 aviso importante não lido!";
-                }
+                // Se não aceitou, exibe o termo normalmente
+                aplicarLayoutPendente(blocoPendente, blocoAceito, badge, sininho);
             }
         })
         .catch(err => {
-            console.error("Erro ao consultar status no sininho:", err);
+            clearTimeout(timeoutId);
+            console.warn("API demorou ou falhou. Ativando Modo de Contingência Local seguro:", err);
+            
+            // PLANO B SEGURO: Se o Render falhar ou estiver offline, o app NÃO TRAVA. 
+            // Ele assume temporariamente o valor salvo no próprio celular do aluno.
+            const jaAceitouLocal = localStorage.getItem(`termo_aceito_${usuarioAtivo}`);
+            const dataAceiteLocal = localStorage.getItem(`data_aceite_${usuarioAtivo}`) || '';
+            
+            if (jaAceitouLocal === 'true') {
+                if (blocoPendente) blocoPendente.style.display = 'none';
+                if (blocoAceito) {
+                    blocoAceito.style.display = 'block';
+                    document.getElementById('textoDataAceite').innerHTML = `Confirmado localmente (Modo Offline) em: <br><strong>${dataAceiteLocal}</strong>`;
+                }
+                if (badge) badge.style.display = 'none';
+                if (sininho) { sininho.style.animation = 'none'; }
+            } else {
+                aplicarLayoutPendente(blocoPendente, blocoAceito, badge, sininho);
+            }
         });
+}
+
+// Função auxiliar para evitar repetição de código
+function aplicarLayoutPendente(blocoPendente, blocoAceito, badge, sininho) {
+    if (blocoPendente) blocoPendente.style.display = 'block';
+    if (blocoAceito) blocoAceito.style.display = 'none';
+    if (badge) badge.style.display = 'flex';
+    if (sininho) {
+        sininho.style.animation = 'balancoSininho 0.5s ease-in-out infinite alternate';
+    }
 }
 // 2. NOVA: ATALHO INTELIGENTE AO CLICAR NO SININHO
 function irParaAvisos() {
@@ -642,6 +663,25 @@ function enviarEmailAceite() {
             localStorage.removeItem('usuarioAtivo');
             window.location.replace('index.html');
         });
+
+        // Inicialização do Painel corrigida
+document.addEventListener('DOMContentLoaded', () => {
+    try {
+        // 1. Abre a primeira aba nativa imediatamente (Garante o funcionamento visual instantâneo)
+        const primeiroBotao = document.querySelector('.nav-btn');
+        if (primeiroBotao) {
+            mudarAba('exame', primeiroBotao);
+        }
+        
+        // 2. Executa a checagem do termo em segundo plano sem bloquear a tela
+        setTimeout(() => {
+            verificarStatusAceite();
+        }, 300);
+        
+    } catch (error) {
+        console.error("Erro crítico contido na inicialização:", error);
+    }
+});
     </script>
 </body>
 </html>
