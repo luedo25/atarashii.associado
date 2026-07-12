@@ -280,22 +280,20 @@
     
     <h3 style="margin-bottom: 12px;">📢 Regras e Normas da Associação</h3>
     
-    <div id="blocoTermoPendente">
-        <p style="font-size: 14px; color: #666; margin-bottom: 12px;">
-            Por favor, leia atentamente o documento abaixo antes de confirmar o seu aceite obrigatório.
+  <div id="blocoTermoPendente">
+        <p style="font-size: 14px; color: #666; margin-bottom: 15px;">
+            Por favor, toque no botão abaixo para abrir, ler o documento completo de regras e depois confirmar o seu aceite obrigatório.
         </p>
 
-        <div style="width: 100%; height: 280px; border: 1px solid #ccc; border-radius: 6px; overflow: hidden; background: #eee; margin-bottom: 15px;">
-            <iframe src="regras-associacao.pdf#view=FitH" style="width: 100%; height: 100%; border: none;"></iframe>
-        </div>
-
-        <div style="text-align: center; margin-bottom: 15px;">
-            <a href="regras-associacao.pdf" target="_blank" style="font-size: 13px; color: #3498db; font-weight: bold; text-decoration: none;">
-                🔍 Não conseguiu ler acima? Clique aqui para abrir o PDF completo
+        <!-- BOTÃO PRINCIPAL DE LEITURA (SOLUÇÃO DE COMPATIBILIDADE PARA IOS/ANDROID) -->
+        <div style="margin-bottom: 20px;">
+            <a href="regras-associacao.pdf" target="_blank" style="display: flex; align-items: center; justify-content: center; gap: 10px; background-color: #34495e; color: white; padding: 14px; border-radius: 8px; text-decoration: none; font-weight: bold; font-size: 15px; text-align: center; box-shadow: 0 3px 6px rgba(0,0,0,0.1); transition: background 0.2s;" onmouseover="this.style.backgroundColor='#2c3e50'" onmouseout="this.style.backgroundColor='#34495e'">
+                📖 Abrir Regras e Normas da Associação (PDF)
             </a>
         </div>
 
-        <div style="background-color: #f8f9fa; border: 1px solid #e0e0e0; padding: 15px; border-radius: 6px;">
+        <!-- Formulário de Aceite -->
+        <div style="background-color: #f8f9fa; border: 1px solid #e0e0e0; padding: 15px; border-radius: 6px; margin-bottom: 20px;">
             <label style="display: flex; align-items: flex-start; gap: 10px; cursor: pointer; font-size: 14px; font-weight: bold; line-height: 1.4;">
                 <input type="checkbox" id="checkAceite" onchange="alternarBotaoAceite()" style="width: 18px; height: 18px; margin-top: 2px;">
                 <span>Declaro que li, compreendi e concordo integralmente com todas as Regras, Normas e Termos estabelecidos pela Associação.</span>
