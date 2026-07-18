@@ -514,7 +514,7 @@
 
         document.getElementById('welcomeNome').textContent = `Olá, ${nomeDoAluno}!`;
 
-        // 4. CONSULTA O STATUS DO TERMO E ATUALIZA O SININHO (CORRIGIDO: VALIDAÇÃO LOCAL SEVERA)
+        // 4. CONSULTA O STATUS DO TERMO E ATUALIZA O SININHO (PRIORIDADE TOTAL PARA A API)
         function verificarStatusAceite() {
             if (!usuarioAtivo) return;
 
@@ -523,37 +523,38 @@
             const badge = document.getElementById('badgeNotificacao');
             const sininho = document.getElementById('wrapperSininho');
 
-            // [CHECAGEM PRIORITÁRIA] Se já aceitou no celular, força o layout aceito na hora
-            const jaAceitouLocal = localStorage.getItem(`termo_aceito_${usuarioAtivo}`);
-            const dataAceiteLocal = localStorage.getItem(`data_aceite_${usuarioAtivo}`) || '';
-
-            if (jaAceitouLocal === 'true') {
-                aplicarLayoutAceito(blocoPendente, blocoAceito, badge, sininho, dataAceiteLocal, false);
-                // Não cancelamos o fetch para deixar que ele atualize o servidor se estiver lento
-            }
-
             const controller = new AbortController();
-            const timeoutId = setTimeout(() => controller.abort(), 4000);
+            const timeoutId = setTimeout(() => controller.abort(), 5000); // 5 segundos de tolerância para o Render acordar
 
+            // Consulta primeiramente o servidor remoto para checar múltiplos dispositivos
             fetch(`${URL_API_SERVIDOR}/api/status-termo/${usuarioAtivo}`, { signal: controller.signal })
                 .then(response => {
                     clearTimeout(timeoutId);
                     return response.json();
                 })
                 .then(data => {
-                    // Se a API diz que aceitou, ou se o local já estava gravado, mantém aceito
-                    if ((data && data.aceitou === true) || localStorage.getItem(`termo_aceito_${usuarioAtivo}`) === 'true') {
-                        const dataExibir = (data && data.data) ? data.data : dataAceiteLocal;
-                        aplicarLayoutAceito(blocoPendente, blocoAceito, badge, sininho, dataExibir, (data && data.aceitou === true));
+                    if (data && data.aceitou === true) {
+                        // API confirmou o aceite: Atualiza o dispositivo atual e renderiza sucesso global
+                        localStorage.setItem(`termo_aceito_${usuarioAtivo}`, 'true');
+                        if (data.data) localStorage.setItem(`data_aceite_${usuarioAtivo}`, data.data);
+                        
+                        aplicarLayoutAceito(blocoPendente, blocoAceito, badge, sininho, data.data || '', true);
                     } else {
+                        // API retornou falso explicitamente: Usuário realmente não aceitou em lugar nenhum
+                        localStorage.removeItem(`termo_aceito_${usuarioAtivo}`);
+                        localStorage.removeItem(`data_aceite_${usuarioAtivo}`);
                         aplicarLayoutPendente(blocoPendente, blocoAceito, badge, sininho);
                     }
                 })
                 .catch(err => {
                     clearTimeout(timeoutId);
-                    console.warn("API demorou ou falhou. Mantendo Modo de Contingência Local:", err);
+                    console.warn("API offline ou em hibernação. Recorrendo ao espelho do LocalStorage dispositivo:", err);
                     
-                    if (localStorage.getItem(`termo_aceito_${usuarioAtivo}`) === 'true') {
+                    // CONTINGÊNCIA: Se o servidor falhar por rede, verifica se este aparelho específico tem o registro
+                    const jaAceitouLocal = localStorage.getItem(`termo_aceito_${usuarioAtivo}`);
+                    const dataAceiteLocal = localStorage.getItem(`data_aceite_${usuarioAtivo}`) || '';
+                    
+                    if (jaAceitouLocal === 'true') {
                         aplicarLayoutAceito(blocoPendente, blocoAceito, badge, sininho, dataAceiteLocal, false);
                     } else {
                         aplicarLayoutPendente(blocoPendente, blocoAceito, badge, sininho);
@@ -566,7 +567,7 @@
             if (blocoPendente) blocoPendente.style.display = 'none';
             if (blocoAceito) {
                 blocoAceito.style.display = 'block';
-                const tipoSinc = ehGlobal ? "registrado globalmente em:" : "confirmado localmente (Modo Offline) em:";
+                const tipoSinc = ehGlobal ? "registrado na nuvem em:" : "confirmado em Modo Offline (Dispositivo) em:";
                 document.getElementById('textoDataAceite').innerHTML = `O seu comprovante de leitura e concordância foi ${tipoSinc} <br><strong>${dataRegistro}</strong>`;
             }
             if (badge) badge.style.display = 'none';
@@ -614,7 +615,7 @@
             }
         }
 
-        // 7. ENVIA O ACEITE (CORRIGIDO: SALVAMENTO IMEDIATO E PREVENÇÃO DE LOOP)
+        // 7. ENVIA O ACEITE (ENVIA À API PRIMEIRO PARA GRAVAÇÃO NA NUVEM)
         function enviarEmailAceite() {
             const nomeAluno = localStorage.getItem('nomeAlunoLogado') || 'Nome Não Identificado';
             const dataHoraAtual = new Date().toLocaleString('pt-BR');
@@ -632,15 +633,9 @@
                 `Este e-mail serve como registro e comprovante digital do meu aceite obrigatório.`
             );
 
-            // Grava no dispositivo no exato momento do clique
-            localStorage.setItem(`termo_aceito_${usuarioAtivo}`, 'true');
-            localStorage.setItem(`data_aceite_${usuarioAtivo}`, dataHoraAtual);
-
-            // renderiza o painel como aceito instantaneamente
-            verificarStatusAceite();
-
             const mailtoUrl = `mailto:${emailDestinatarioPrincipal}?subject=${assunto}&body=${corpoEmail}`;
             
+            // Força a gravação persistente na API do Render antes de liberar a tela
             fetch(`${URL_API_SERVIDOR}/api/aceitar-termo`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
@@ -648,13 +643,22 @@
             })
             .then(response => response.json())
             .then(data => {
-                if (data.sucesso) {
-                    console.log("Sincronizado com o servidor com sucesso.");
-                }
+                // Sincroniza localmente para backup rápido caso falte internet depois
+                localStorage.setItem(`termo_aceito_${usuarioAtivo}`, 'true');
+                localStorage.setItem(`data_aceite_${usuarioAtivo}`, dataHoraAtual);
+                
+                // Força a interface a atualizar os blocos baseada no sucesso da requisição externa
+                verificarStatusAceite();
                 window.location.href = mailtoUrl;
             })
             .catch(err => {
-                console.warn("Servidor instável. Cadastro mantido localmente de forma segura.", err);
+                console.warn("Falha crítica de rede ao sincronizar termo centralizado. Salvando em fallback local.", err);
+                
+                // Grava localmente apenas para o painel não travar se a internet cair na hora
+                localStorage.setItem(`termo_aceito_${usuarioAtivo}`, 'true');
+                localStorage.setItem(`data_aceite_${usuarioAtivo}`, dataHoraAtual);
+                
+                verificarStatusAceite();
                 window.location.href = mailtoUrl;
             });
         }
@@ -748,6 +752,7 @@
                     mudarAba('exame', primeiroBotao);
                 }
                 
+                // Dá um pequeno tempo de 300ms para carregar o DOM perfeitamente e dispara a checagem na nuvem
                 setTimeout(() => {
                     verificarStatusAceite();
                 }, 300);
