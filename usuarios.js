@@ -19,7 +19,21 @@ const listaAlunos = [
 	},
     { usuario: "luiz.guilherme", 
 	senha: "123456", 
-	nome: "Luiz Guilherme" }
+	nome: "Luiz Guilherme" 
+	},
+    { usuario: "arthur.penna", senha: "Kumite963", nome: "Arthur Penna" },
+    { usuario: "benicio.barbosa", senha: "Oss296", nome: "Benicio Barbosa" },
+    { usuario: "cleber.oliveira", senha: "Treino300", nome: "Cleber Oliveira" },
+    { usuario: "davi.pereira", senha: "Treino994", nome: "Davi Pereira" },
+    { usuario: "ederson.santos", senha: "Foco667", nome: "Ederson Santos" },
+    { usuario: "edson.fernandes", senha: "Oss897", nome: "Edson Fernandes" },
+    { usuario: "kiara.dominique", senha: "Treino298", nome: "Kiara Dominique" },
+    { usuario: "klara.pereira", senha: "Oss230", nome: "Klara Pereira" },
+    { usuario: "lucia.costa", senha: "Garra084", nome: "Lucia Costa" },
+    { usuario: "mauricio.pires", senha: "Kata968", nome: "Mauricio Pires" },
+    { usuario: "sofia.ferreira", senha: "Dojo496", nome: "Sofia Ferreira" },
+    { usuario: "tamires.noa", senha: "Foco231", nome: "Tamires Noa" },
+    { usuario: "watson.moura", senha: "Foco849", nome: "Watson Moura" }
 ];
 
 /**
