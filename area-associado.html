@@ -514,7 +514,7 @@
 
         document.getElementById('welcomeNome').textContent = `Olá, ${nomeDoAluno}!`;
 
-        // 4. CONSULTA O STATUS DO TERMO E ATUALIZA O SININHO (PRIORIDADE TOTAL PARA A API)
+        // 4. CONSULTA O STATUS DO TERMO E ATUALIZA O SININHO (TIMEOUT EXPANDIDO PARA HIBERNAÇÃO DO RENDER)
         function verificarStatusAceite() {
             if (!usuarioAtivo) return;
 
@@ -523,10 +523,20 @@
             const badge = document.getElementById('badgeNotificacao');
             const sininho = document.getElementById('wrapperSininho');
 
-            const controller = new AbortController();
-            const timeoutId = setTimeout(() => controller.abort(), 5000); // 5 segundos de tolerância para o Render acordar
+            // [CHECAGEM RÁPIDA LOCAL] Se já tiver aceitado neste aparelho, mostra temporariamente 
+            // para o aluno não ver o termo piscando enquanto o Render acorda.
+            const jaAceitouLocal = localStorage.getItem(`termo_aceito_${usuarioAtivo}`);
+            const dataAceiteLocal = localStorage.getItem(`data_aceite_${usuarioAtivo}`) || '';
+            
+            if (jaAceitouLocal === 'true') {
+                aplicarLayoutAceito(blocoPendente, blocoAceito, badge, sininho, dataAceiteLocal, false);
+            }
 
-            // Consulta primeiramente o servidor remoto para checar múltiplos dispositivos
+            const controller = new AbortController();
+            // AJUSTE: 90000ms (90 segundos) para dar tempo total do Render sair do modo de descanso
+            const timeoutId = setTimeout(() => controller.abort(), 90000); 
+
+            // Consulta o servidor remoto para validação definitiva (multi-dispositivo)
             fetch(`${URL_API_SERVIDOR}/api/status-termo/${usuarioAtivo}`, { signal: controller.signal })
                 .then(response => {
                     clearTimeout(timeoutId);
@@ -534,13 +544,13 @@
                 })
                 .then(data => {
                     if (data && data.aceitou === true) {
-                        // API confirmou o aceite: Atualiza o dispositivo atual e renderiza sucesso global
+                        // API confirmou o aceite: Atualiza o dispositivo atual com o carimbo global da nuvem
                         localStorage.setItem(`termo_aceito_${usuarioAtivo}`, 'true');
                         if (data.data) localStorage.setItem(`data_aceite_${usuarioAtivo}`, data.data);
                         
                         aplicarLayoutAceito(blocoPendente, blocoAceito, badge, sininho, data.data || '', true);
                     } else {
-                        // API retornou falso explicitamente: Usuário realmente não aceitou em lugar nenhum
+                        // API retornou falso: O usuário realmente não assinou em nenhum lugar
                         localStorage.removeItem(`termo_aceito_${usuarioAtivo}`);
                         localStorage.removeItem(`data_aceite_${usuarioAtivo}`);
                         aplicarLayoutPendente(blocoPendente, blocoAceito, badge, sininho);
@@ -548,13 +558,10 @@
                 })
                 .catch(err => {
                     clearTimeout(timeoutId);
-                    console.warn("API offline ou em hibernação. Recorrendo ao espelho do LocalStorage dispositivo:", err);
+                    console.warn("API offline ou tempo limite esgotado. Mantendo espelho local:", err);
                     
-                    // CONTINGÊNCIA: Se o servidor falhar por rede, verifica se este aparelho específico tem o registro
-                    const jaAceitouLocal = localStorage.getItem(`termo_aceito_${usuarioAtivo}`);
-                    const dataAceiteLocal = localStorage.getItem(`data_aceite_${usuarioAtivo}`) || '';
-                    
-                    if (jaAceitouLocal === 'true') {
+                    // FALLBACK: Caso a rede falhe ou expire, mantém o status baseado no dispositivo atual
+                    if (localStorage.getItem(`termo_aceito_${usuarioAtivo}`) === 'true') {
                         aplicarLayoutAceito(blocoPendente, blocoAceito, badge, sininho, dataAceiteLocal, false);
                     } else {
                         aplicarLayoutPendente(blocoPendente, blocoAceito, badge, sininho);
@@ -643,18 +650,17 @@
             })
             .then(response => response.json())
             .then(data => {
-                // Sincroniza localmente para backup rápido caso falte internet depois
+                // Sincroniza localmente para backup rápido caso mude de aba depois
                 localStorage.setItem(`termo_aceito_${usuarioAtivo}`, 'true');
                 localStorage.setItem(`data_aceite_${usuarioAtivo}`, dataHoraAtual);
                 
-                // Força a interface a atualizar os blocos baseada no sucesso da requisição externa
                 verificarStatusAceite();
                 window.location.href = mailtoUrl;
             })
             .catch(err => {
-                console.warn("Falha crítica de rede ao sincronizar termo centralizado. Salvando em fallback local.", err);
+                console.warn("Falha de rede ao gravar termo. Salvando em contingência local.", err);
                 
-                // Grava localmente apenas para o painel não travar se a internet cair na hora
+                // Grava localmente se a internet falhar por completo na hora do envio
                 localStorage.setItem(`termo_aceito_${usuarioAtivo}`, 'true');
                 localStorage.setItem(`data_aceite_${usuarioAtivo}`, dataHoraAtual);
                 
@@ -752,7 +758,7 @@
                     mudarAba('exame', primeiroBotao);
                 }
                 
-                // Dá um pequeno tempo de 300ms para carregar o DOM perfeitamente e dispara a checagem na nuvem
+                // Dispara a checagem com 300ms de folga para renderização suave da interface
                 setTimeout(() => {
                     verificarStatusAceite();
                 }, 300);
