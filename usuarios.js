@@ -98,7 +98,7 @@ const listaAlunos = [
 	},
     { usuario: "tamires.noa", senha: "Foco231", nome: "Tamires Noa",
 	historico: [
-            { faixa: "Preta", corFaixa: "#000000", corTexto: "#ffffff", ano: "Dezembro / 2023", kihon: 7.4, kata: 7.3, kumite: 7.5, perguntas: #, total: 22.2, media: 7.4 },
+            { faixa: "Preta", corFaixa: "#000000", corTexto: "#ffffff", ano: "Dezembro / 2023", kihon: 7.4, kata: 7.3, kumite: 7.5, perguntas: 0.0, total: 22.2, media: 7.4 },
 	 ]	
 	},
 	{ usuario: "sarah.vargas", senha: "Foco238", nome: "Sarah Vargas",
