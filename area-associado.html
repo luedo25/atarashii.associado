@@ -603,49 +603,56 @@ function atualizarPainel() {
             }
         }
 
-        // 7. ENVIA O ACEITE PARA O SERVIDOR E EMITE MAILTO
-        function enviarEmailAceite() {
-            const nomeAluno = localStorage.getItem('nomeAlunoLogado') || 'Nome Não Identificado';
-            const dataHoraAtual = new Date().toLocaleString('pt-BR');
-            
-            const emailDestinatarioPrincipal = "luedo25@msn.com"; 
-            const assunto = encodeURIComponent(`CONFIRMAÇÃO DE ACEITE: Regras da Associação - ${nomeAluno}`);
-            
-            const corpoEmail = encodeURIComponent(
-                `Prezada Diretoria,\n\n` +
-                `Por meio deste e-mail, confirmo que li e aceito voluntariamente todos os termos, regras e normas da Associação.\n\n` +
-                `DADOS DO ASSOCIADO:\n` +
-                `Nome completo: ${nomeAluno}\n` +
-                `Usuário do sistema: ${usuarioAtivo}\n` +
-                `Data/Hora do Aceite: ${dataHoraAtual}\n\n` +
-                `Este e-mail serve como registro e comprovante digital do meu aceite obrigatório.`
-            );
+    // 7. ENVIA O ACEITE (CORRIGIDO: BLINDAGEM ANTI-RESET OFFLINE)
+function enviarEmailAceite() {
+    const nomeAluno = localStorage.getItem('nomeAlunoLogado') || 'Nome Não Identificado';
+    const dataHoraAtual = new Date().toLocaleString('pt-BR');
+    
+    const emailDestinatarioPrincipal = "luedo25@msn.com"; 
+    const assunto = encodeURIComponent(`CONFIRMAÇÃO DE ACEITE: Regras da Associação - ${nomeAluno}`);
+    
+    const corpoEmail = encodeURIComponent(
+        `Prezada Diretoria,\n\n` +
+        `Por meio deste e-mail, confirmo que li e aceito voluntariamente todos os termos, regras e normas da Associação.\n\n` +
+        `DADOS DO ASSOCIADO:\n` +
+        `Nome completo: ${nomeAluno}\n` +
+        `Usuário do sistema: ${usuarioAtivo}\n` +
+        `Data/Hora do Aceite: ${dataHoraAtual}\n\n` +
+        `Este e-mail serve como registro e comprovante digital do meu aceite obrigatório.`
+    );
 
-            fetch(`${URL_API_SERVIDOR}/api/aceitar-termo`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ usuario: usuarioAtivo })
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.sucesso) {
-                    localStorage.setItem(`termo_aceito_${usuarioAtivo}`, 'true');
-                    localStorage.setItem(`data_aceite_${usuarioAtivo}`, dataHoraAtual);
-                    
-                    verificarStatusAceite();
+    // [PASSO CRÍTICO] Grava IMEDIATAMENTE no navegador para evitar que o reset aconteça ao atualizar
+    localStorage.setItem(`termo_aceito_${usuarioAtivo}`, 'true');
+    localStorage.setItem(`data_aceite_${usuarioAtivo}`, dataHoraAtual);
 
-                    const mailtoUrl = `mailto:${emailDestinatarioPrincipal}?subject=${assunto}&body=${corpoEmail}`;
-                    window.location.href = mailtoUrl;
-                } else {
-                    alert("Não foi possível registrar o aceite no servidor. Tente novamente.");
-                }
-            })
-            .catch(err => {
-                alert("Erro de conexão com o servidor. Verifique sua internet.");
-                console.error(err);
-            });
+    // Atualiza a tela na hora para o modo "Aceito" (Melhoria de UX)
+    verificarStatusAceite();
+
+    // Abre o cliente de e-mail do aluno para envio do comprovante formal
+    const mailtoUrl = `mailto:${emailDestinatarioPrincipal}?subject=${assunto}&body=${corpoEmail}`;
+    
+    // Dispara a tentativa de gravação no servidor remoto em segundo plano
+    fetch(`${URL_API_SERVIDOR}/api/aceitar-termo`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ usuario: usuarioAtivo })
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.sucesso) {
+            console.log("Sincronizado com o servidor com sucesso.");
+        } else {
+            console.warn("Servidor recusou o registro, mas mantido localmente.");
         }
-
+        // Redireciona para o mailto após a resposta da API
+        window.location.href = mailtoUrl;
+    })
+    .catch(err => {
+        console.warn("Servidor offline/lento. Aceite protegido em modo de contingência local.", err);
+        // Mesmo com erro de rede, o e-mail abre e o app não vai resetar o aviso
+        window.location.href = mailtoUrl;
+    });
+}
         // 8. ALTERNADOR DE ABAS (ÚNICO E CORRIGIDO)
         function mudarAba(idDaAba, botaoClicado) {
             const secoes = document.querySelectorAll('.tab-content');
