@@ -102,6 +102,45 @@
             display: none;
         }
 
+		.btn-guia-estudo {
+        position: absolute; /* Alinha com base no topo da página */
+        top: 20px;
+        left: 20px;
+        display: inline-flex;
+        align-items: center;
+        padding: 10px 16px;
+        background-color: #2c3e50; /* Cor escura elegante (combina com sistemas de artes marciais) */
+        color: #ffffff;
+        text-decoration: none;
+        font-family: sans-serif;
+        font-size: 14px;
+        font-weight: bold;
+        border-radius: 6px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        transition: all 0.2s ease-in-out;
+        z-index: 9999; /* Garante que ele fique por cima de qualquer fundo */
+    }
+
+    .btn-guia-estudo:hover {
+        background-color: #34495e;
+        transform: translateY(-2px); /* Efeito sutil de flutuar ao passar o mouse */
+        box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+    }
+
+    /* Ajuste para telas pequenas (celular) não cobrir o conteúdo central */
+    @media (max-width: 600px) {
+        .btn-guia-estudo {
+            position: relative;
+            display: flex;
+            justify-content: center;
+            top: 0;
+            left: 0;
+            margin: 15px auto;
+            width: calc(100% - 40px);
+            box-sizing: border-box;
+        }
+    }
+
         /* REGRAS EXCLUSIVAS PARA TELAS DE CELULAR (ATÉ 600px de largura) */
         @media (max-width: 600px) {
             body {
@@ -124,6 +163,14 @@
     </style>
 </head>
 <body>
+	<!-- Botão Guia de Estudo no canto superior esquerdo -->
+<a href="https://adrianomiguell-collab.github.io/App-Karate/prototype/" class="btn-guia-estudo">
+    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16" style="margin-right: 8px; vertical-align: middle;">
+        <path d="M1 2.828c.885-.37 2.154-.769 3.388-.893 1.33-.134 2.458.063 3.112.752v9.746c-.935-.53-2.12-.603-3.213-.493-1.18.12-2.37.461-3.287.811zm7.5-.141c.654-.689 1.782-.886 3.112-.752 1.234.124 2.503.523 3.388.893v9.923c-.918-.35-2.107-.692-3.287-.81-1.094-.111-2.278-.039-3.213.492zM8 1.783C7.015.936 5.587.81 4.287.94c-1.514.153-3.042.672-3.994 1.105A.5.5 0 0 0 0 2.5v11a.5.5 0 0 0 .707.455c.882-.4 2.303-.881 3.68-1.02 1.409-.142 2.59.087 3.223.877a.5.5 0 0 0 .78 0c.633-.79 1.814-1.019 3.222-.877 1.378.139 2.8.62 3.681 1.02A.5.5 0 0 0 16 13.5v-11a.5.5 0 0 0-.293-.455c-.952-.433-2.48-.952-3.994-1.105C10.413.809 8.985.936 8 1.783"/>
+    </svg>
+    Guia de Estudo
+</a>
+	
     <img src="ASSOCIAÇÃO-ATARASHII.gif" alt="Logo Associação Atarashii" class="logo-associacao">
 	
 	<button id="btnInstalarApp" style="display: none; width: 100%; margin-top: 15px; padding: 12px; background-color: #27ae60; color: white; border: none; border-radius: 6px; font-weight: bold; cursor: pointer;">
