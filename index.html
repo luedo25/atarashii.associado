@@ -1,13 +1,13 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-<link rel="manifest" href="./manifest.json">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apple-mobile-web-app-title" content="Painel do Aluno">
-<link rel="apple-touch-icon" href="./atarashii-192.png">
+    <link rel="manifest" href="./manifest.json">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Painel do Aluno">
+    <link rel="apple-touch-icon" href="./atarashii-192.png">
 
-<meta name="mobile-web-app-capable" content="yes">
+    <meta name="mobile-web-app-capable" content="yes">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login - Área do Associado</title>
@@ -29,7 +29,7 @@
             padding: 20px; /* Evita que o conteúdo cole nas bordas do celular */
         }
 
-    /* CONFIGURAÇÃO DO LOGO CENTRALIZADO */
+        /* CONFIGURAÇÃO DO LOGO CENTRALIZADO */
         .logo-associacao {
             width: 360px;         /* Tamanho do seu GIF */
             height: auto;
@@ -102,44 +102,31 @@
             display: none;
         }
 
-		.btn-guia-estudo {
-        position: absolute; /* Alinha com base no topo da página */
-        top: 20px;
-        left: 20px;
-        display: inline-flex;
-        align-items: center;
-        padding: 10px 16px;
-        background-color: #2c3e50; /* Cor escura elegante (combina com sistemas de artes marciais) */
-        color: #ffffff;
-        text-decoration: none;
-        font-family: sans-serif;
-        font-size: 14px;
-        font-weight: bold;
-        border-radius: 6px;
-        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-        transition: all 0.2s ease-in-out;
-        z-index: 9999; /* Garante que ele fique por cima de qualquer fundo */
-    }
-
-    .btn-guia-estudo:hover {
-        background-color: #34495e;
-        transform: translateY(-2px); /* Efeito sutil de flutuar ao passar o mouse */
-        box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
-    }
-
-    /* Ajuste para telas pequenas (celular) não cobrir o conteúdo central */
-    @media (max-width: 600px) {
+        /* ESTILIZAÇÃO DO BOTÃO GUIA DE ESTUDO */
         .btn-guia-estudo {
-            position: relative;
-            display: flex;
-            justify-content: center;
-            top: 0;
-            left: 0;
-            margin: 15px auto;
-            width: calc(100% - 40px);
-            box-sizing: border-box;
+            position: absolute; /* Alinha com base no topo da página */
+            top: 20px;
+            left: 20px;
+            display: inline-flex;
+            align-items: center;
+            padding: 10px 16px;
+            background-color: #2c3e50; /* Cor escura elegante (combina com sistemas de artes marciais) */
+            color: #ffffff;
+            text-decoration: none;
+            font-family: sans-serif;
+            font-size: 14px;
+            font-weight: bold;
+            border-radius: 6px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            transition: all 0.2s ease-in-out;
+            z-index: 9999; /* Garante que ele fique por cima de qualquer fundo */
         }
-    }
+
+        .btn-guia-estudo:hover {
+            background-color: #34495e;
+            transform: translateY(-2px); /* Efeito sutil de flutuar ao passar o mouse */
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+        }
 
         /* REGRAS EXCLUSIVAS PARA TELAS DE CELULAR (ATÉ 600px de largura) */
         @media (max-width: 600px) {
@@ -148,11 +135,22 @@
                 padding-top: 140px; /* Abre espaço para o GIF no topo */
             }
 
+            .btn-guia-estudo {
+                position: relative;
+                display: flex;
+                justify-content: center;
+                top: 0;
+                left: 0;
+                margin: 15px auto;
+                width: calc(100% - 40px);
+                box-sizing: border-box;
+            }
+
             .logo-associacao {
                 position: absolute;
                 left: 50%;
                 transform: translateX(-50%); /* Centraliza o GIF perfeitamente na tela */
-                top: 10px;
+                top: 70px; /* Ajustado ligeiramente para acomodar o botão mobile sem colar */
                 width: 200px; /* Reduz ligeiramente o tamanho no celular */
             }
 
@@ -163,20 +161,20 @@
     </style>
 </head>
 <body>
-	<!-- Botão Guia de Estudo no canto superior esquerdo -->
-<a href="https://adrianomiguell-collab.github.io/App-Karate/prototype/" class="btn-guia-estudo">
-    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16" style="margin-right: 8px; vertical-align: middle;">
-        <path d="M1 2.828c.885-.37 2.154-.769 3.388-.893 1.33-.134 2.458.063 3.112.752v9.746c-.935-.53-2.12-.603-3.213-.493-1.18.12-2.37.461-3.287.811zm7.5-.141c.654-.689 1.782-.886 3.112-.752 1.234.124 2.503.523 3.388.893v9.923c-.918-.35-2.107-.692-3.287-.81-1.094-.111-2.278-.039-3.213.492zM8 1.783C7.015.936 5.587.81 4.287.94c-1.514.153-3.042.672-3.994 1.105A.5.5 0 0 0 0 2.5v11a.5.5 0 0 0 .707.455c.882-.4 2.303-.881 3.68-1.02 1.409-.142 2.59.087 3.223.877a.5.5 0 0 0 .78 0c.633-.79 1.814-1.019 3.222-.877 1.378.139 2.8.62 3.681 1.02A.5.5 0 0 0 16 13.5v-11a.5.5 0 0 0-.293-.455c-.952-.433-2.48-.952-3.994-1.105C10.413.809 8.985.936 8 1.783"/>
-    </svg>
-    Guia de Estudo
-</a>
-	
+    <!-- Botão Guia de Estudo no canto superior esquerdo -->
+    <a href="https://adrianomiguell-collab.github.io/App-Karate/prototype/" class="btn-guia-estudo">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16" style="margin-right: 8px; vertical-align: middle;">
+            <path d="M1 2.828c.885-.37 2.154-.769 3.388-.893 1.33-.134 2.458.063 3.112.752v9.746c-.935-.53-2.12-.603-3.213-.493-1.18.12-2.37.461-3.287.811zm7.5-.141c.654-.689 1.782-.886 3.112-.752 1.234.124 2.503.523 3.388.893v9.923c-.918-.35-2.107-.692-3.287-.81-1.094-.111-2.278-.039-3.213.492zM8 1.783C7.015.936 5.587.81 4.287.94c-1.514.153-3.042.672-3.994 1.105A.5.5 0 0 0 0 2.5v11a.5.5 0 0 0 .707.455c.882-.4 2.303-.881 3.68-1.02 1.409-.142 2.59.087 3.223.877a.5.5 0 0 0 .78 0c.633-.79 1.814-1.019 3.222-.877 1.378.139 2.8.62 3.681 1.02A.5.5 0 0 0 16 13.5v-11a.5.5 0 0 0-.293-.455c-.952-.433-2.48-.952-3.994-1.105C10.413.809 8.985.936 8 1.783"/>
+        </svg>
+        Guia de Estudo
+    </a>
+        
     <img src="ASSOCIAÇÃO-ATARASHII.gif" alt="Logo Associação Atarashii" class="logo-associacao">
-	
-	<button id="btnInstalarApp" style="display: none; width: 100%; margin-top: 15px; padding: 12px; background-color: #27ae60; color: white; border: none; border-radius: 6px; font-weight: bold; cursor: pointer;">
-    📲 Instalar Aplicativo na Tela Inicial
-</button>
-	
+        
+    <button id="btnInstalarApp" style="display: none; width: 100%; max-width: 400px; margin: 0 auto 15px auto; padding: 12px; background-color: #27ae60; color: white; border: none; border-radius: 6px; font-weight: bold; cursor: pointer;">
+        📲 Instalar Aplicativo na Tela Inicial
+    </button>
+        
     <div class="login-container">
         <h2>Área do Associado</h2>
         <form id="loginForm">
@@ -192,8 +190,8 @@
             <div id="errorMessage" class="error-message">Usuário ou senha incorretos.</div>
         </form>
     </div>
-	
-<script>
+        
+    <script>
         const scriptUsuarios = document.createElement('script');
         const timestamp = new Date().getTime();
         
@@ -231,86 +229,87 @@
         });
     </script>
 
-<script>
-    // 1. Registra o Service Worker obrigatorio
-    if ('serviceWorker' in navigator) {
-        navigator.serviceWorker.register('sw.js')
-            .then(() => console.log('Service Worker ativo.'))
-            .catch((err) => console.log('Erro no SW:', err));
-    }
-
-    // CONTROLE - ANDROID (Botao de clique)
-    let disparadorInstalacao = null;
-    const botaoInstalarAndroid = document.getElementById('btnInstalarApp');
-
-    window.addEventListener('beforeinstallprompt', (e) => {
-        e.preventDefault();
-        disparadorInstalacao = e;
-        // Mostra o botao verde apenas no Android
-        if (botaoInstalarAndroid) {
-            botaoInstalarAndroid.style.display = 'block';
+    <script>
+        // 1. Registra o Service Worker obrigatorio
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('sw.js')
+                .then(() => console.log('Service Worker ativo.'))
+                .catch((err) => console.log('Erro no SW:', err));
         }
-    });
 
-    if (botaoInstalarAndroid) {
-        botaoInstalarAndroid.addEventListener('click', async () => {
-            if (!disparadorInstalacao) return;
-            disparadorInstalacao.prompt();
-            const { outcome } = await disparadorInstalacao.userChoice;
-            disparadorInstalacao = null;
-            botaoInstalarAndroid.style.display = 'none';
+        // CONTROLE - ANDROID (Botao de clique)
+        let disparadorInstalacao = null;
+        const botaoInstalarAndroid = document.getElementById('btnInstalarApp');
+
+        window.addEventListener('beforeinstallprompt', (e) => {
+            e.preventDefault();
+            disparadorInstalacao = e;
+            // Mostra o botao verde apenas no Android
+            if (botaoInstalarAndroid) {
+                botaoInstalarAndroid.style.display = 'block';
+            }
         });
-    }
 
-    // CONTROLE - IOS / IPHONE (Mensagem explicativa)
-    function gerenciarPromptIOS() {
-        // Detecta se eh um dispositivo iOS (iPhone, iPad, iPod)
-        const ehIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
-        
-        // Detecta se o site ja esta rodando como aplicativo instalado
-        const jaEstaInstalado = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
+        if (botaoInstalarAndroid) {
+            botaoInstalarAndroid.addEventListener('click', async () => {
+                if (!disparadorInstalacao) return;
+                disparadorInstalacao.prompt();
+                const { outcome } = await disparadorInstalacao.userChoice;
+                disparadorInstalacao = null;
+                botaoInstalarAndroid.style.display = 'none';
+            });
+        }
 
-        // Se for iPhone e ainda nao estiver instalado, mostra o guia visual
-        if (ehIOS && !jaEstaInstalado) {
-            const promptIOS = document.getElementById('iosPrompt');
-            if (promptIOS) {
-                // Aguarda 3 segundos para a pagina carregar antes de mostrar o aviso suavemente
-                setTimeout(() => {
-                    promptIOS.style.display = 'block';
-                }, 3000);
+        // CONTROLE - IOS / IPHONE (Mensagem explicativa)
+        function gerenciarPromptIOS() {
+            // Detecta se eh um dispositivo iOS (iPhone, iPad, iPod)
+            const ehIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+            
+            // Detecta se o site ja esta rodando como aplicativo instalado
+            const jaEstaInstalado = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
+
+            // Se for iPhone e ainda nao estiver instalado, mostra o guia visual
+            if (ehIOS && !jaEstaInstalado) {
+                const promptIOS = document.getElementById('iosPrompt');
+                if (promptIOS) {
+                    // Aguarda 3 segundos para a pagina carregar antes de mostrar o aviso suavemente
+                    setTimeout(() => {
+                        promptIOS.style.display = 'block';
+                    }, 3000);
+                }
             }
         }
-    }
 
-    // Executa a checagem do iOS assim que a pagina carrega
-    window.addEventListener('DOMContentLoaded', gerenciarPromptIOS);
+        // Executa a checagem do iOS assim que a pagina carrega
+        window.addEventListener('DOMContentLoaded', gerenciarPromptIOS);
 
-    // Garante que tudo suma se o app ja estiver aberto em modo tela cheia
-    if (window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true) {
-        if (botaoInstalarAndroid) botaoInstalarAndroid.style.display = 'none';
-        const promptIOS = document.getElementById('iosPrompt');
-        if (promptIOS) promptIOS.style.display = 'none';
-    }
-</script>
-	<!-- Pop-up customizado exclusivo para iPhones -->
-<div id="iosPrompt" style="display: none; position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); width: 90%; max-width: 360px; background-color: #ffffff; color: #333333; padding: 16px; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.15); z-index: 10000; border: 1px solid #e0e0e0; animation: slideUpIOS 0.4s ease;">
-    <div style="display: flex; align-items: flex-start; gap: 12px;">
-        <span style="font-size: 30px;">📲</span>
-        <div>
-            <h4 style="margin: 0 0 4px 0; color: #2c3e50; font-size: 15px;">Instalar no seu iPhone</h4>
-            <p style="margin: 0; font-size: 13px; color: #555; line-height: 1.4;">
-                Toque no ícone de <strong>Compartilhar</strong> <span style="font-size: 16px;">⎋</span> (na barra inferior do navegador clique nos 3 pontinhos ...) e depois selecione <strong>"Adicionar à Tela de Início"</strong>.
-            </p>
+        // Garante que tudo suma se o app ja estiver aberto em modo tela cheia
+        if (window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true) {
+            if (botaoInstalarAndroid) botaoInstalarAndroid.style.display = 'none';
+            const promptIOS = document.getElementById('iosPrompt');
+            if (promptIOS) promptIOS.style.display = 'none';
+        }
+    </script>
+        
+    <!-- Pop-up customizado exclusivo para iPhones -->
+    <div id="iosPrompt" style="display: none; position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); width: 90%; max-width: 360px; background-color: #ffffff; color: #333333; padding: 16px; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.15); z-index: 10000; border: 1px solid #e0e0e0; animation: slideUpIOS 0.4s ease;">
+        <div style="display: flex; align-items: flex-start; gap: 12px;">
+            <span style="font-size: 30px;">📲</span>
+            <div>
+                <h4 style="margin: 0 0 4px 0; color: #2c3e50; font-size: 15px;">Instalar no seu iPhone</h4>
+                <p style="margin: 0; font-size: 13px; color: #555; line-height: 1.4;">
+                    Toque no ícone de <strong>Compartilhar</strong> <span style="font-size: 16px;">⎋</span> (na barra inferior do navegador clique nos 3 pontinhos ...) e depois selecione <strong>"Adicionar à Tela de Início"</strong>.
+                </p>
+            </div>
+            <button onclick="document.getElementById('iosPrompt').style.display='none'" style="background: none; border: none; color: #999; font-size: 18px; cursor: pointer; padding: 0 5px;">✕</button>
         </div>
-        <button onclick="document.getElementById('iosPrompt').style.display='none'" style="background: none; border: none; color: #999; font-size: 18px; cursor: pointer; padding: 0 5px;">✕</button>
     </div>
-</div>
 
-<style>
-@keyframes slideUpIOS {
-    from { opacity: 0; transform: translate(-50__, 20px); }
-    to { opacity: 1; transform: translate(-50__, 0); }
-}
-</style>
+    <style>
+    @keyframes slideUpIOS {
+        from { opacity: 0; transform: translate(-50%, 20px); }
+        to { opacity: 1; transform: translate(-50%, 0); }
+    }
+    </style>
 </body>
 </html>
