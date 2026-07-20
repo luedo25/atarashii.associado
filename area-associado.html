@@ -338,7 +338,7 @@
             <p>Toque nas opções do menu inferior para navegar pelo seu painel.</p>
         </div>
 
-        <!-- SEÇÃO 1: EXAME DE FAIXA (MANTIDA INTEGRALMENTE COM ADIÇÃO DO CONTEÚDO PROGRAMÁTICO ABAIXO DA TABELA) -->
+        <!-- SEÇÃO 1: EXAME DE FAIXA -->
         <div id="exame" class="tab-content">
             <h3>Histórico de Notas</h3>
             <div class="table-container">
@@ -356,12 +356,12 @@
                         </tr>
                     </thead>
                     <tbody id="corpoTabelaNotas">
-                        <!-- Gerado via JavaScript -->
+                        <tr><td colspan="8" style="color:#7f8c8d; font-weight:normal; padding:20px;">Carregando notas...</td></tr>
                     </tbody>
                 </table>
             </div>
 
-            <!-- INSERÇÃO DOS CONTEÚDOS DE EXAMES APENAS AQUI SEM MEXER NAS OUTRAS SEÇÕES -->
+            <!-- CONTEÚDOS DE EXAMES -->
             <h3 style="margin-top: 30px; margin-bottom: 15px;">📖 Conteúdo Programático para Exames</h3>
             
             <!-- FAIXA AZUL PARA AMARELA -->
@@ -502,7 +502,7 @@
                         <tbody>
                             <tr><td>Sambom-Zuki</td><td>Zenkutsu-Dachi</td><td>Avançando cinco Vezes</td></tr>
                             <tr><td>Ague-uke / Guiako-zuki</td><td>Zenkutsu-Dachi</td><td>Recuando cinco Vezes</td></tr>
-                            <tr><td>Mae-Gueri / Guiako-zuki</td><td>Zenkutsu-Dachi</td><td>Avançando cinco Vezes</td></tr>
+                            <tr><td>Mae-gueri / Guiako-zuki</td><td>Zenkutsu-Dachi</td><td>Avançando cinco Vezes</td></tr>
                             <tr><td>Soto-uke / Guiako-zuki</td><td>Zenkutsu-Dachi</td><td>Recuando cinco Vezes</td></tr>
                             <tr><td>Kizame-gueri / Mawachi-Gueri</td><td>Zenkutsu-Dachi</td><td>Avançando cinco Vezes</td></tr>
                             <tr><td>Uchi-uke / Kizame-zuki / Guiako-zuki</td><td>Zenkutsu-Dachi</td><td>Recuando cinco Vezes</td></tr>
@@ -866,9 +866,13 @@
     </div>
 
 <script>
-        // 1. CARREGAMENTO DINÂMICO DE USUÁRIOS
+        // 1. CARREGAMENTO DINÂMICO DE USUÁRIOS COM ASSINCRONISMO CORRIGIDO
         const scriptUsuarios = document.createElement('script');
         scriptUsuarios.src = 'usuarios.js?v=' + new Date().getTime();
+        scriptUsuarios.onload = function() {
+            // Roda a renderização imediatamente no momento exato em que o arquivo é carregado
+            renderizarNotasDoAluno();
+        };
         document.head.appendChild(scriptUsuarios);
 
         // 2. PROTEÇÃO DE ACESSO
@@ -1022,7 +1026,7 @@
             })
             .then(() => {
                 localStorage.setItem(`termo_aceito_${usuarioAtivo}`, 'true');
-                localStorage.setItem(`data_aceite_${usuarioAtivo}`, dataHoraAtual);
+                localStorage.setItem(`data_acetate_${usuarioAtivo}`, dataHoraAtual);
                 verificarStatusAceite();
                 window.location.href = linkMailto;
             })
@@ -1046,13 +1050,14 @@
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
-        // 9. RENDERIZAÇÃO DINÂMICA DAS NOTAS
+        // 9. RENDERIZAÇÃO DINÂMICA DAS NOTAS (Mecanismo de Verificação Corrigido)
         function renderizarNotasDoAluno() {
             const corpoTabela = document.getElementById('corpoTabelaNotas');
             if (!corpoTabela) return;
 
+            // Se o script ainda não carregou a lista global, tenta novamente em intervalos curtos
             if (typeof listaDeUsuariosGlobal === 'undefined') {
-                setTimeout(renderizarNotasDoAluno, 300);
+                setTimeout(renderizarNotasDoAluno, 100);
                 return;
             }
 
@@ -1105,11 +1110,10 @@
             const primeiroBotao = document.querySelector('.nav-btn');
             mudarAba('exame', primeiroBotao);
             
-            setTimeout(() => {
-                verificarStatusAceite();
-                renderizarNotasDoAluno();
-                buscarSaldoMercadoPago();
-            }, 600);
+            // Disparos iniciais de segurança
+            verificarStatusAceite();
+            buscarSaldoMercadoPago();
+            renderizarNotasDoAluno(); 
 
             const btnLogout = document.getElementById('logoutBtn');
             if (btnLogout) {
