@@ -79,7 +79,7 @@
 .nav-btn .icon img.logo-icon {
     width: 24px;   /* Defina a largura desejada, ex: 24px */
     height: 24px;  /* Defina a altura desejada, ex: 24px */
-    object-fit: contain; /* Garante que a imagem não seja distorcida */
+    object-fit: contain; // Garante que a imagem não seja distorcida
     vertical-align: middle; /* Alinha verticalmente com o texto */
     margin-right: 5px; /* Adiciona um pequeno espaço entre o ícone e o texto */
 }
@@ -272,7 +272,7 @@
             padding: 8px 4px calc(8px + env(safe-area-inset-bottom)); /* Suporte para a barra inferior do iPhone */
             box-shadow: 0 -3px 12px rgba(0,0,0,0.08);
             z-index: 9999;
-            border-top: 1px solid #eec;
+            border-top: 1px solid #eee;
         }
 
         .nav-btn {
@@ -326,15 +326,12 @@
 <body>
 
 <header style="display: flex; align-items: center; justify-content: space-between; padding: 10px 15px; background-color: #2c3e50; color: white;">
-    
     <div style="display: flex; align-items: center; gap: 12px;">
         <img src="./logo-associacao.png" alt="Logo Associação Atarashii" style="width: 42px; height: 42px; object-fit: contain; border-radius: 50%; filter: drop-shadow(0px 2px 4px rgba(0,0,0,0.25));">
-        
         <h1 style="margin: 0; font-size: 20px; font-weight: bold; letter-spacing: 0.5px;">Painel do Aluno</h1>
     </div>
     
     <div style="display: flex; align-items: center; gap: 18px;">
-        
         <div onclick="atualizarPainel()" title="Atualizar painel" style="cursor: pointer; font-size: 20px; padding: 5px; transition: transform 0.2s; user-select: none;" onmousedown="this.style.transform='scale(0.85)'" onmouseup="this.style.transform='scale(1)'">
             🔄
         </div>
@@ -780,17 +777,16 @@
             </div>
         </div>
     </div>
-    
 </div>
+
         <!-- SEÇÃO 3: GALERIA -->
   <div id="galeria" class="tab-content">
     <h3 style="margin-bottom: 15px;">📸 Histórico de Troca de Faixas</h3>
     <p style="font-size: 14px; color: #666; margin-bottom: 20px;">
-        Selecione o event desejado abaixo para abrir a pasta de fotos oficial no Google Drive.
+        Selecione o evento desejado abaixo para abrir a pasta de fotos oficial no Google Drive.
     </p>
 
     <div style="display: flex; flex-direction: column; gap: 12px;">
-
         <a href="https://drive.google.com/drive/folders/1rtRaurMIERPIMTR70KxEu5TyhQa9PsHU?usp=drive_link" target="_blank" style="text-decoration: none; color: inherit;">
             <div style="display: flex; align-items: center; justify-content: space-between; padding: 15px; background-color: #f8f9fa; border: 1px solid #e0e0e0; border-radius: 8px; transition: background 0.2s; cursor: pointer;" onmouseover="this.style.backgroundColor='#edf2f7'" onmouseout="this.style.backgroundColor='#f8f9fa'">
                 <div style="display: flex; align-items: center; gap: 12px;">
@@ -870,9 +866,9 @@
                 <span style="color: #7f8c8d; font-size: 14px;">➔</span>
             </div>
         </a>
-
     </div>
 </div>
+
         <!-- SEÇÃO 4: Estudo -->
        <div id="ebook" class="tab-content">
     <h3>📚 E-book</h3>
@@ -889,10 +885,9 @@
             📖 Abrir / Baixar E-book
         </a>
     </div>
-    <div class="pdf-container" style="display: none;">
-        
-        </div>
-               <h3>📚 REGULAMENTO DE COMPETIÇÃO DE KATA</h3>
+    <div class="pdf-container" style="display: none;"></div>
+
+    <h3>📚 REGULAMENTO DE COMPETIÇÃO DE KATA</h3>
     <p style="font-size: 14px; color: #666; margin-bottom: 15px;">
         Acesse o REGULAMENTO DE COMPETIÇÃO DE KATA - WKF.
     </p>
@@ -906,10 +901,9 @@
             📖 Abrir / Baixar
         </a>
     </div>
+    <div class="pdf-container" style="display: none;"></div>
 
-    <div class="pdf-container" style="display: none;">
-        </div>
-             <h3>📚 REGULAMENTO DE COMPETIÇÃO DE KUMITE</h3>
+    <h3>📚 REGULAMENTO DE COMPETIÇÃO DE KUMITE</h3>
     <p style="font-size: 14px; color: #666; margin-bottom: 15px;">
         Acesse o REGULAMENTO DE COMPETIÇÃO DE KUMITE - WKF.
     </p>
@@ -923,10 +917,9 @@
             📖 Abrir / Baixar
         </a>
     </div>
-
-    <div class="pdf-container" style="display: none;">
-        </div>
+    <div class="pdf-container" style="display: none;"></div>
 </div>
+
         <!-- SEÇÃO 5: Atarashii -->
         <div id="saldo" class="tab-content">
             <h3>💰 Saldo em Conta da Associação</h3>
@@ -938,7 +931,6 @@
 
             <h3>🔗 Links e Contatos Oficiais</h3>
             
-            <!-- Botões com texto (WhatsApp) -->
             <div style="display: flex; flex-direction: column; gap: 10px; margin-bottom: 15px;">
                 <!-- Falar com o Sensei -->
                 <a href="https://wa.me/5511988412917" target="_blank" style="display: flex; align-items: center; justify-content: center; gap: 10px; background-color: #25D366; color: white; padding: 12px; border-radius: 6px; text-decoration: none; font-weight: bold; font-size: 15px; text-align: center; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
@@ -958,7 +950,7 @@
             </div>
 
             <!-- Botões apenas com ícones (Facebook e Instagram) -->
-            <div style="display: flex; gap: 10px;">
+            <div style="display: flex; gap: 10px; margin-bottom: 20px;">
                 <!-- Facebook -->
                 <a href="https://www.facebook.com/atarashiishotokan/" target="_blank" style="flex: 1; display: flex; align-items: center; justify-content: center; background-color: #1877F2; padding: 12px; border-radius: 6px; text-decoration: none; box-shadow: 0 2px 4px rgba(0,0,0,0.1);" title="Facebook">
                     <svg style="width: 24px; height: 24px; fill: white;" viewBox="0 0 24 24">
@@ -972,12 +964,11 @@
                         <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.051.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 1 0 0 12.324 6.162 6.162 0 0 0 0-12.324zM12 16a4 4 0 1 1 0-8 4 4 0 0 1 0 8zm6.406-11.845a1.44 1.44 0 1 0 0 2.881 1.44 1.44 0 0 0 0-2.881z"/>
                     </svg>
                 </a>
-        </div>
-             <h3>📜 Certificações Oficiais (Sensei)</h3>
+            </div>
             
-            <!-- Container dos Diplomas (Responsivo) -->
+            <h3>📜 Certificações Oficiais (Sensei)</h3>
+            
             <div style="display: flex; flex-wrap: wrap; gap: 15px; width: 100%;">
-                
                 <!-- Diploma FPK -->
                 <div style="flex: 1; min-width: 280px; background: #fdfdfd; border: 1px solid #e0e0e0; border-radius: 8px; padding: 10px; box-shadow: 0 2px 4px rgba(0,0,0,0.05); text-align: center;">
                     <a href="DIPLOMA.jpeg" target="_blank" style="text-decoration: none; display: block;">
@@ -996,6 +987,9 @@
                             🥇 Diploma CBK - Faixa Preta 1º Dan
                         </span>
                     </a>
+                </div>
+            </div>
+        </div>
     </div>
 
     <!-- MENU DE BOTÕES ESTILO APP MÓVEL -->
@@ -1021,11 +1015,11 @@
             Estudo
         </button>
        <button class="nav-btn" onclick="mudarAba('saldo', this)">
-    <span class="icon">
-        <img src="atarashii-192.png" alt="Logo Associação Atarashii" class="logo-icon">
-    </span>
-    Atarashii
-</button>
+            <span class="icon">
+                <img src="atarashii-192.png" alt="Logo Associação Atarashii" class="logo-icon">
+            </span>
+            Atarashii
+        </button>
     </div>
 
 <script>
@@ -1079,19 +1073,14 @@
                     return response.json();
                 })
                 .then(data => {
-                    // Tratamento flexível do JSON: aceita tanto 'data.aceitou' quanto variações como 'data.sucesso' ou 'data.status'
                     const verificadoNaAPI = (data && (data.aceitou === true || data.sucesso === true || data.status === 'assinado' || data.status === 'aceito'));
                     const dataServidor = data.data || data.dataHora || data.updatedAt || new Date().toLocaleString('pt-BR');
 
                     if (verificadoNaAPI) {
-                        // Sincronização Perfeita: A API confirmou a existência do registro na nuvem. Salva no aparelho atual.
                         localStorage.setItem(`termo_aceito_${usuarioAtivo}`, 'true');
                         localStorage.setItem(`data_aceite_${usuarioAtivo}`, dataServidor);
-                        
                         aplicarLayoutAceito(blocoPendente, blocoAceito, badge, sininho, dataServidor, true);
                     } else {
-                        // A API respondeu com sucesso, mas explicitamente informou que este usuário NÃO assinou em lugar nenhum.
-                        // Só neste caso limpamos o LocalStorage por segurança.
                         localStorage.removeItem(`termo_aceito_${usuarioAtivo}`);
                         localStorage.removeItem(`data_aceite_${usuarioAtivo}`);
                         aplicarLayoutPendente(blocoPendente, blocoAceito, badge, sininho);
@@ -1100,8 +1089,6 @@
                 .catch(err => {
                     clearTimeout(timeoutId);
                     console.warn("[Aviso] Render em hibernação ou offline. Mantendo cache local de segurança para evitar bloqueio precoce.");
-                    
-                    // PASSO 3: Se a API falhar por timeout ou rede, NADA é apagado. O cache local dita a regra de acesso.
                     if (localStorage.getItem(`termo_aceito_${usuarioAtivo}`) === 'true') {
                         aplicarLayoutAceito(blocoPendente, blocoAceito, badge, sininho, dataAceiteLocal, false);
                     } else {
@@ -1163,7 +1150,7 @@
             }
         }
 
-        // 7. ENVIA O ACEITE (ENVIA À API PRIMEIRO PARA GRAVAÇÃO NA NUVEM)
+        // 7. ENVIA O ACEITE
         function enviarEmailAceite() {
             const nomeAluno = localStorage.getItem('nomeAlunoLogado') || 'Nome Não Identificado';
             const dataHoraAtual = new Date().toLocaleString('pt-BR');
@@ -1183,12 +1170,10 @@
 
             const mailtoUrl = `mailto:${emailDestinatarioPrincipal}?subject=${assunto}&body=${corpoEmail}`;
             
-            // Salva de imediato localmente para o app não travar visualmente em conexões lentas
             localStorage.setItem(`termo_aceito_${usuarioAtivo}`, 'true');
             localStorage.setItem(`data_aceite_${usuarioAtivo}`, dataHoraAtual);
             verificarStatusAceite();
 
-            // Envia para a API persistir no banco centralizado do Render
             fetch(`${URL_API_SERVIDOR}/api/aceitar-termo`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
@@ -1196,7 +1181,6 @@
             })
             .then(response => response.json())
             .then(data => {
-                // Força a validação de sincronia final
                 verificarStatusAceite();
                 window.location.href = mailtoUrl;
             })
@@ -1295,7 +1279,6 @@
                     mudarAba('exame', primeiroBotao);
                 }
                 
-                // Dispara a checagem com 300ms de folga
                 setTimeout(() => {
                     verificarStatusAceite();
                 }, 300);
