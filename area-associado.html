@@ -75,7 +75,21 @@
             font-size: 14px;
             color: #666;
         }
+/* Estilo para a imagem dentro do botão */
+.nav-btn .icon img.logo-icon {
+    width: 24px;   /* Defina a largura desejada, ex: 24px */
+    height: 24px;  /* Defina a altura desejada, ex: 24px */
+    object-fit: contain; /* Garante que a imagem não seja distorcida */
+    vertical-align: middle; /* Alinha verticalmente com o texto */
+    margin-right: 5px; /* Adiciona um pequeno espaço entre o ícone e o texto */
+}
 
+/* Garante que o span .icon não tenha estilos que interfiram */
+.nav-btn .icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
         /* CONFIGURAÇÃO DAS SEÇÕES DINÂMICAS */
         .tab-content {
             display: none; 
