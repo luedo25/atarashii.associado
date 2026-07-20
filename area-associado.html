@@ -152,6 +152,23 @@
             color: #2e7d32;
         }
 
+        /* CONTÊINER PARA A TABELA DE CARÊNCIA (IMAGEM ISO LADA) */
+        .container-tabela-carencia {
+            width: 100%;
+            margin-top: 25px;
+            padding-top: 15px;
+            text-align: center;
+        }
+
+        .img-tabela-carencia {
+            max-width: 100%;
+            height: auto;
+            display: inline-block;
+            border-radius: 6px;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.06);
+            border: 1px solid #e0e0e0;
+        }
+
         /* ESTILOS DOS MÓDULOS EXPANSÍVEIS (DETAILS/SUMMARY) */
         .modulo-faixa {
             background: #fff;
@@ -376,13 +393,18 @@
                     </tbody>
                 </table>
             </div>
+            <!-- NOVA SEÇÃO: IMAGEM DA TABELA DE CARÊNCIA MÍNIMA (KYU) -->
+            <div class="container-tabela-carencia">
+                <h3 style="margin-bottom: 15px; border-bottom: 2px solid #ecf0f1; padding-bottom: 8px;">⏳ Tabela de Carência Mínima (Kyu)</h3>
+                <img src="./tabela-carencia.png" alt="Tabela de Carência Mínima para Exame de Faixa" class="img-tabela-carencia">
+            </div>
         </div>
-
-        <!-- SEÇÃO: CONTEÚDO PROGRAMÁTICO DO EXAME (MÓDULOS EXPANSÍVEIS) -->
+        
+        <!-- SEÇÃO EXAME: CONTEÚDO PROGRAMÁTICO DO EXAME (MÓDULOS EXPANSÍVEIS) -->
         <div id="conteudo-programatico" class="tab-content">
             <h3 style="margin-top: 5px; margin-bottom: 15px;">📖 Conteúdo Programático para Exames</h3>
             
-            <!-- FAIXA AZUL PARA AMARELA -->
+            <!-- FAIXA BRANCA PARA AMARELA -->
             <details class="modulo-faixa">
                 <summary class="botao-expandir">
                     <span class="faixa-cor branca"></span>
