@@ -9,7 +9,7 @@
 
     <meta name="mobile-web-app-capable" content="yes">
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Login - Área do Associado</title>
     <style>
         * {
@@ -22,18 +22,18 @@
         body {
             background: #f4f7f6;
             display: flex;
-            flex-direction: column; /* Alinha os elementos em coluna no mobile */
+            flex-direction: column; 
             justify-content: center;
             align-items: center;
             min-height: 100vh;
-            padding: 20px; /* Evita que o conteúdo cole nas bordas do celular */
+            padding: 20px; 
         }
 
         /* CONFIGURAÇÃO DO LOGO CENTRALIZADO */
         .logo-associacao {
-            width: 360px;         /* Tamanho do seu GIF */
+            width: 360px;         
             height: auto;
-            margin: 0 auto 60px auto; /* Centraliza horizontalmente e dá espaço para o título abaixo */
+            margin: 0 auto 40px auto; 
             display: block;
         }
 
@@ -102,15 +102,15 @@
             display: none;
         }
 
-        /* ESTILIZAÇÃO DO BOTÃO GUIA DE ESTUDO */
+        /* BOTÃO GUIA DE ESTUDO FIXO (UNIVERSAL PARA PC/MOBILE) */
         .btn-guia-estudo {
-            position: absolute; /* Alinha com base no topo da página */
+            position: fixed; /* Mantém preso na tela, ignorando outros elementos */
             top: 20px;
             left: 20px;
             display: inline-flex;
             align-items: center;
             padding: 10px 16px;
-            background-color: #2c3e50; /* Cor escura elegante (combina com sistemas de artes marciais) */
+            background-color: #2c3e50; 
             color: #ffffff;
             text-decoration: none;
             font-family: sans-serif;
@@ -119,43 +119,40 @@
             border-radius: 6px;
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
             transition: all 0.2s ease-in-out;
-            z-index: 9999; /* Garante que ele fique por cima de qualquer fundo */
+            z-index: 99999; /* Valor bem alto para garantir que fique acima de tudo */
         }
 
         .btn-guia-estudo:hover {
             background-color: #34495e;
-            transform: translateY(-2px); /* Efeito sutil de flutuar ao passar o mouse */
+            transform: translateY(-2px); 
             box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
         }
 
         /* REGRAS EXCLUSIVAS PARA TELAS DE CELULAR (ATÉ 600px de largura) */
         @media (max-width: 600px) {
             body {
-                justify-content: flex-start; /* Joga o conteúdo um pouco para cima */
-                padding-top: 140px; /* Abre espaço para o GIF no topo */
+                justify-content: flex-start; 
+                padding-top: 180px; /* Espaço seguro para o GIF não cobrir o formulário */
             }
 
+            /* No mobile, recuamos ligeiramente para não colar nas bordas curvas de novos iPhones */
             .btn-guia-estudo {
-                position: relative;
-                display: flex;
-                justify-content: center;
-                top: 0;
-                left: 0;
-                margin: 15px auto;
-                width: calc(100% - 40px);
-                box-sizing: border-box;
+                top: 15px;
+                left: 15px;
+                padding: 8px 12px;
+                font-size: 13px;
             }
 
             .logo-associacao {
                 position: absolute;
                 left: 50%;
-                transform: translateX(-50%); /* Centraliza o GIF perfeitamente na tela */
-                top: 70px; /* Ajustado ligeiramente para acomodar o botão mobile sem colar */
-                width: 200px; /* Reduz ligeiramente o tamanho no celular */
+                transform: translateX(-50%); 
+                top: 65px; 
+                width: 160px; /* Ajuste no tamanho do GIF para o layout mobile respirar */
             }
 
             .login-container {
-                padding: 25px 20px; /* Diminui os espaçamentos internos para caber melhor */
+                padding: 25px 20px; 
             }
         }
     </style>
@@ -194,10 +191,7 @@
     <script>
         const scriptUsuarios = document.createElement('script');
         const timestamp = new Date().getTime();
-        
-        // Carrega o arquivo com o marcador de tempo na URL
         scriptUsuarios.src = 'usuarios.js?v=' + timestamp;
-        
         document.head.appendChild(scriptUsuarios);
     </script>
 
@@ -209,13 +203,11 @@
             const senhaInput = document.getElementById('password').value;
             const errorMessage = document.getElementById('errorMessage');
 
-            // Proteção extra: verifica se o arquivo usuarios.js já carregou na página
             if (typeof autenticarUsuarioDireto !== 'function') {
                 alert('Carregando sistema de segurança... Por favor, tente novamente em um segundo.');
                 return;
             }
 
-            // Valida comparando direto com o arquivo limpo vindo do GitHub
             const alunoLogado = autenticarUsuarioDireto(usuarioInput, senhaInput);
 
             if (alunoLogado) {
@@ -230,21 +222,18 @@
     </script>
 
     <script>
-        // 1. Registra o Service Worker obrigatorio
         if ('serviceWorker' in navigator) {
             navigator.serviceWorker.register('sw.js')
                 .then(() => console.log('Service Worker ativo.'))
                 .catch((err) => console.log('Erro no SW:', err));
         }
 
-        // CONTROLE - ANDROID (Botao de clique)
         let disparadorInstalacao = null;
         const botaoInstalarAndroid = document.getElementById('btnInstalarApp');
 
         window.addEventListener('beforeinstallprompt', (e) => {
             e.preventDefault();
             disparadorInstalacao = e;
-            // Mostra o botao verde apenas no Android
             if (botaoInstalarAndroid) {
                 botaoInstalarAndroid.style.display = 'block';
             }
@@ -260,19 +249,13 @@
             });
         }
 
-        // CONTROLE - IOS / IPHONE (Mensagem explicativa)
         function gerenciarPromptIOS() {
-            // Detecta se eh um dispositivo iOS (iPhone, iPad, iPod)
             const ehIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
-            
-            // Detecta se o site ja esta rodando como aplicativo instalado
             const jaEstaInstalado = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
 
-            // Se for iPhone e ainda nao estiver instalado, mostra o guia visual
             if (ehIOS && !jaEstaInstalado) {
                 const promptIOS = document.getElementById('iosPrompt');
                 if (promptIOS) {
-                    // Aguarda 3 segundos para a pagina carregar antes de mostrar o aviso suavemente
                     setTimeout(() => {
                         promptIOS.style.display = 'block';
                     }, 3000);
@@ -280,10 +263,8 @@
             }
         }
 
-        // Executa a checagem do iOS assim que a pagina carrega
         window.addEventListener('DOMContentLoaded', gerenciarPromptIOS);
 
-        // Garante que tudo suma se o app ja estiver aberto em modo tela cheia
         if (window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true) {
             if (botaoInstalarAndroid) botaoInstalarAndroid.style.display = 'none';
             const promptIOS = document.getElementById('iosPrompt');
@@ -291,14 +272,13 @@
         }
     </script>
         
-    <!-- Pop-up customizado exclusivo para iPhones -->
-    <div id="iosPrompt" style="display: none; position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); width: 90%; max-width: 360px; background-color: #ffffff; color: #333333; padding: 16px; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.15); z-index: 10000; border: 1px solid #e0e0e0; animation: slideUpIOS 0.4s ease;">
+    <div id="iosPrompt" style="display: none; position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); width: 90%; max-width: 360px; background-color: #ffffff; color: #333333; padding: 16px; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.15); z-index: 100000; border: 1px solid #e0e0e0; animation: slideUpIOS 0.4s ease;">
         <div style="display: flex; align-items: flex-start; gap: 12px;">
             <span style="font-size: 30px;">📲</span>
             <div>
                 <h4 style="margin: 0 0 4px 0; color: #2c3e50; font-size: 15px;">Instalar no seu iPhone</h4>
                 <p style="margin: 0; font-size: 13px; color: #555; line-height: 1.4;">
-                    Toque no ícone de <strong>Compartilhar</strong> <span style="font-size: 16px;">⎋</span> (na barra inferior do navegador clique nos 3 pontinhos ...) e depois selecione <strong>"Adicionar à Tela de Início"</strong>.
+                    Toque no ícone de <strong>Compartilhar</strong> <span style="font-size: 16px;">⎋</span> (ou no menu de opções do navegador) e depois selecione <strong>"Adicionar à Tela de Início"</strong>.
                 </p>
             </div>
             <button onclick="document.getElementById('iosPrompt').style.display='none'" style="background: none; border: none; color: #999; font-size: 18px; cursor: pointer; padding: 0 5px;">✕</button>
