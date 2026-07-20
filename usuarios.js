@@ -13,7 +13,9 @@ const listaAlunos = [
 	},
     { usuario: "luiz.costa", senha: "123456", nome: "Luiz Costa" 
 	},
-    { usuario: "luiz.guilherme", senha: "123456", nome: "Luiz Guilherme", 
+	{ usuario: "joaquim.gadelha", senha: "Treino301", nome: "Joaquim Gadelha" 
+	},
+    { usuario: "luiz.guilherme", senha: "Kumite964", nome: "Luiz Guilherme", 
 	historico: [
             { faixa: "Branca/Amarela", corFaixa: "#ffeb3b", corTexto: "#000", ano: "Junho / 2018", kihon: 7.5, kata: 7.0, kumite: 7.5, perguntas: 0, total: 22, media: 7.3 },
             { faixa: "Amarela/Vermelha", corFaixa: "#ff0000", corTexto: "#fff", ano: "Dezembro / 2018", kihon: 7.8, kata: 7.8, kumite: 7.7, perguntas: 0.5, total: 23.8, media: 7.9 },
