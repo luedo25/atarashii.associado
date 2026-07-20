@@ -1,12 +1,12 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-    <link rel="manifest" href="./manifest.json">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <meta name="apple-mobile-web-app-title" content="Painel Aluno">
-    <link rel="apple-touch-icon" href="icone-192.png">
-    <meta name="mobile-web-app-capable" content="yes">
+<link rel="manifest" href="./manifest.json">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Painel Aluno">
+<link rel="apple-touch-icon" href="icone-192.png">
+<meta name="mobile-web-app-capable" content="yes">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Painel do Associado</title>
@@ -16,12 +16,14 @@
             margin: 0;
             padding: 0;
             font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, Roboto, Helvetica, Arial, sans-serif;
+            /* Remove o efeito de clique cinza nativo do Safari no iOS */
             -webkit-tap-highlight-color: transparent; 
         }
 
         body {
             background: #f4f7f6;
             color: #333;
+            /* Garante que o conteúdo role perfeitamente sem sumir atrás do menu inferior */
             padding-bottom: 100px; 
         }
 
@@ -106,128 +108,128 @@
         .table-container {
             width: 100%;
             overflow-x: auto;
-            -webkit-overflow-scrolling: touch;
+            -webkit-overflow-scrolling: touch; /* Rolagem por toque super lisa no iOS */
             border: 1px solid #ddd;
             border-radius: 6px;
-            margin-bottom: 25px;
         }
 
         table {
             width: 100%;
             border-collapse: collapse;
-            min-width: 650px;
-            text-align: left;
+            min-width: 650px; /* Força a tabela a manter tamanho legível sem esmagar números */
+            text-align: center;
             font-size: 14px;
         }
 
         th, td {
             border: none;
             border-bottom: 1px solid #ddd;
-            padding: 12px 10px;
+            padding: 12px 6px;
+            font-weight: bold;
         }
 
         th {
             background-color: #f8f9fa;
             color: #2c3e50;
-            font-weight: bold;
         }
 
         .col-total, .col-media {
             background-color: #e8f5e9;
             color: #2e7d32;
-            font-weight: bold;
-            text-align: center;
         }
 
-        /* ESTILOS EXCLUSIVOS DOS MÓDULOS DE CONTEÚDO (ACCORDION) */
+        /* ESTILOS DOS MÓDULOS EXPANSÍVEIS (DETAILS/SUMMARY) */
         .modulo-faixa {
-            background: #ffffff;
+            background: #fff;
             border: 1px solid #e0e0e0;
             border-radius: 8px;
-            margin-bottom: 15px;
+            margin-bottom: 12px;
             overflow: hidden;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.03);
-            transition: all 0.3s ease;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+            transition: border-color 0.2s;
         }
 
         .modulo-faixa[open] {
-            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+            border-color: #bdc3c7;
         }
 
         .botao-expandir {
-            padding: 15px 20px;
-            font-weight: bold;
-            color: #333;
-            cursor: pointer;
+            padding: 14px 15px;
             display: flex;
             align-items: center;
-            list-style: none;
-            position: relative;
-            user-select: none;
+            font-weight: bold;
             font-size: 15px;
-            background-color: #fff;
+            color: #2c3e50;
+            cursor: pointer;
+            list-style: none; /* Remove a seta nativa do HTML */
+            user-select: none;
+            background: #fafbfc;
         }
 
         .botao-expandir::-webkit-details-marker {
-            display: none;
+            display: none; /* Remove a seta nativa no Safari/Chrome antigo */
         }
 
-        .botao-expandir .seta {
-            position: absolute;
-            right: 20px;
+        /* Indicadores de Cor das Faixas */
+        .faixa-cor {
+            width: 18px;
+            height: 18px;
+            border-radius: 3px;
+            display: inline-block;
+            margin-right: 4px;
+            border: 1px solid rgba(0,0,0,0.15);
+        }
+        .faixa-cor.azul { background-color: #2980b9; }
+        .faixa-cor.amarela { background-color: #f1c40f; }
+        .faixa-cor.vermelha { background-color: #e74c3c; }
+        .faixa-cor.laranja { background-color: #e67e22; }
+        .faixa-cor.verde { background-color: #27ae60; }
+        .faixa-cor.roxa { background-color: #8e44ad; }
+        .faixa-cor.marrom { background-color: #795548; }
+        .faixa-cor.preta { background-color: #2c3e50; margin-right: 10px; }
+
+        .seta {
+            margin-left: auto;
             font-size: 12px;
-            color: #999;
-            transition: transform 0.3s ease;
+            color: #95a5a6;
+            transition: transform 0.2s;
         }
 
-        .modulo-faixa[open] .botao-expandir .seta {
+        .modulo-faixa[open] .seta {
             transform: rotate(180deg);
         }
 
-        .faixa-cor {
-            display: inline-block;
-            width: 18px;
-            height: 18px;
-            border-radius: 4px;
-            margin-right: 6px;
-            border: 1px solid #ccc;
-        }
-
-        .faixa-cor.azul { background-color: #0056b3; }
-        .faixa-cor.amarela { background-color: #ffd700; }
-        .faixa-cor.vermelha { background-color: #cc0000; }
-        .faixa-cor.laranja { background-color: #ff8c00; }
-        .faixa-cor.verde { background-color: #228b22; }
-        .faixa-cor.roxa { background-color: #4b0082; }
-        .faixa-cor.marrom { background-color: #8b4513; }
-        .faixa-cor.preta { background-color: #111111; }
-
+        /* Blocos de Informações Extras e Teoria */
         .bloco-extra {
-            background: #fdfdfd;
+            background-color: #f8f9fa;
             padding: 15px;
-            border-top: 1px dashed #eee;
-            border-left: 4px solid #34495e;
-            font-size: 13.5px;
-            color: #444;
-            line-height: 1.6;
+            border-top: 1px solid #eee;
+            font-size: 14px;
+            color: #333;
+            line-height: 1.5;
         }
 
         .bloco-extra strong {
+            color: #2c3e50;
             display: block;
             margin-top: 10px;
-            color: #2c3e50;
+            margin-bottom: 4px;
         }
         
         .bloco-extra strong:first-child {
             margin-top: 0;
         }
 
+        .bloco-extra p {
+            margin-bottom: 8px;
+        }
+
         .texto-vermelho {
-            color: #cc0000;
+            color: #c0392b;
             font-weight: bold;
         }
 
-        /* VISUALIZADOR DE PDF */
+        /* VISUALIZADOR DE PDF PREPARADO PARA TELAS PEQUENAS */
         .pdf-container {
             width: 100%;
             height: 60vh; 
@@ -243,7 +245,7 @@
             border: none;
         }
 
-        /* BARRA DE NAVEGAÇÃO FIXA NO RODAPÉ */
+        /* BARRA DE NAVEGAÇÃO ESTILO APP DE CELULAR (FIXADA NO RODAPÉ) */
         .bottom-nav {
             position: fixed;
             bottom: 0;
@@ -253,10 +255,10 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 8px 4px calc(8px + env(safe-area-inset-bottom));
+            padding: 8px 4px calc(8px + env(safe-area-inset-bottom)); /* Suporte para a barra inferior do iPhone */
             box-shadow: 0 -3px 12px rgba(0,0,0,0.08);
             z-index: 9999;
-            border-top: 1px solid #eee;
+            border-top: 1px solid #eec;
         }
 
         .nav-btn {
@@ -282,6 +284,7 @@
             100% { transform: rotate(10deg); }
         }
 
+        /* Visual ativo do botão clicado */
         .nav-btn.active {
             color: #27ae60;
             transform: scale(1.05);
@@ -296,26 +299,28 @@
             transform: translateY(-2px);
         }
 
+        /* MEDIA QUERIES PARA ADAPTAÇÃO EXTREMA (CELULARES PEQUENOS) */
         @media (max-width: 480px) {
             header h1 { font-size: 18px; }
             .btn-logout { padding: 4px 10px; font-size: 13px; }
             .nav-btn { font-size: 9px; }
             .nav-btn .icon { font-size: 20px; }
             .tab-content { padding: 15px 10px; }
-            th, td { padding: 10px 6px; font-size: 13px; }
-            .botao-expandir { padding: 12px 15px; font-size: 13.5px; }
         }
     </style>
 </head>
 <body>
 
-<header>
+<header style="display: flex; align-items: center; justify-content: space-between; padding: 10px 15px; background-color: #2c3e50; color: white;">
+    
     <div style="display: flex; align-items: center; gap: 12px;">
         <img src="./logo-associacao.png" alt="Logo Associação Atarashii" style="width: 42px; height: 42px; object-fit: contain; border-radius: 50%; filter: drop-shadow(0px 2px 4px rgba(0,0,0,0.25));">
+        
         <h1 style="margin: 0; font-size: 20px; font-weight: bold; letter-spacing: 0.5px;">Painel do Aluno</h1>
     </div>
     
     <div style="display: flex; align-items: center; gap: 18px;">
+        
         <div onclick="atualizarPainel()" title="Atualizar painel" style="cursor: pointer; font-size: 20px; padding: 5px; transition: transform 0.2s; user-select: none;" onmousedown="this.style.transform='scale(0.85)'" onmouseup="this.style.transform='scale(1)'">
             🔄
         </div>
@@ -340,7 +345,7 @@
 
         <!-- SEÇÃO 1: EXAME DE FAIXA -->
         <div id="exame" class="tab-content">
-            <h3>Histórico de Notas</h3>
+            <h3>Exames de Faixa</h3>
             <div class="table-container">
                 <table>
                     <thead>
@@ -351,18 +356,20 @@
                             <th>KATA</th>
                             <th>KUMITE</th>
                             <th>Perguntas</th>
-                            <th style="text-align:center;">TOTAL</th>
-                            <th style="text-align:center;">MÉDIA FINAL</th>
+                            <th>TOTAL</th>
+                            <th>MÉDIA FINAL</th>
                         </tr>
                     </thead>
                     <tbody id="corpoTabelaNotas">
-                        <tr><td colspan="8" style="color:#7f8c8d; font-weight:normal; padding:20px;">Carregando notas...</td></tr>
+                        <!-- Gerado via JavaScript -->
                     </tbody>
                 </table>
             </div>
+        </div>
 
-            <!-- CONTEÚDOS DE EXAMES -->
-            <h3 style="margin-top: 30px; margin-bottom: 15px;">📖 Conteúdo Programático para Exames</h3>
+        <!-- SEÇÃO: CONTEÚDO PROGRAMÁTICO DO EXAME (MÓDULOS EXPANSÍVEIS) -->
+        <div id="conteudo-programatico" class="tab-content">
+            <h3 style="margin-top: 5px; margin-bottom: 15px;">📖 Conteúdo Programático para Exames</h3>
             
             <!-- FAIXA AZUL PARA AMARELA -->
             <details class="modulo-faixa">
@@ -651,186 +658,191 @@
             </details>
         </div>
 
-        <!-- SEÇÃO 2: AVISOS -->
-        <div id="comunicados" class="tab-content">
-            <h3 style="margin-bottom: 12px;">📢 Regras e Normas da Associação</h3>
-            
-            <div id="blocoTermoPendente">
-                <p style="font-size: 14px; color: #666; margin-bottom: 15px;">
-                    Por favor, toque no botão abaixo para abrir, ler o documento completo de regras e depois confirmar o seu aceite obrigatório.
-                </p>
+        <!-- SEÇÃO 2: AVISOS (COM OCULTAÇÃO AUTOMÁTICA PÓS-ACEITE) -->
+<div id="comunicados" class="tab-content">
+    
+    <h3 style="margin-bottom: 12px;">📢 Regras e Normas da Associação</h3>
+    
+  <div id="blocoTermoPendente">
+        <p style="font-size: 14px; color: #666; margin-bottom: 15px;">
+            Por favor, toque no botão abaixo para abrir, ler o documento completo de regras e depois confirmar o seu aceite obrigatório.
+        </p>
 
-                <div style="margin-bottom: 20px;">
-                    <a href="regras-associacao.pdf" target="_blank" style="display: flex; align-items: center; justify-content: center; gap: 10px; background-color: #34495e; color: white; padding: 14px; border-radius: 8px; text-decoration: none; font-weight: bold; font-size: 15px; text-align: center; box-shadow: 0 3px 6px rgba(0,0,0,0.1); transition: background 0.2s;" onmouseover="this.style.backgroundColor='#2c3e50'" onmouseout="this.style.backgroundColor='#34495e'">
-                        📖 Abrir Regras e Normas da Associação (PDF)
-                    </a>
-                </div>
+        <!-- BOTÃO PRINCIPAL DE LEITURA (SOLUÇÃO DE COMPATIBILIDADE PARA IOS/ANDROID) -->
+        <div style="margin-bottom: 20px;">
+            <a href="regras-associacao.pdf" target="_blank" style="display: flex; align-items: center; justify-content: center; gap: 10px; background-color: #34495e; color: white; padding: 14px; border-radius: 8px; text-decoration: none; font-weight: bold; font-size: 15px; text-align: center; box-shadow: 0 3px 6px rgba(0,0,0,0.1); transition: background 0.2s;" onmouseover="this.style.backgroundColor='#2c3e50'" onmouseout="this.style.backgroundColor='#34495e'">
+                📖 Abrir Regras e Normas da Associação (PDF)
+            </a>
+        </div>
 
-                <div style="background-color: #f8f9fa; border: 1px solid #e0e0e0; padding: 15px; border-radius: 6px; margin-bottom: 20px;">
-                    <label style="display: flex; align-items: flex-start; gap: 10px; cursor: pointer; font-size: 14px; font-weight: bold; line-height: 1.4;">
-                        <input type="checkbox" id="checkAceite" onchange="alternarBotaoAceite()" style="width: 18px; height: 18px; margin-top: 2px;">
-                        <span>Declaro que li, compreendi e concordo integralmente com todas as Regras, Normas e Termos estabelecidos pela Associação.</span>
-                    </label>
+        <!-- Formulário de Aceite -->
+        <div style="background-color: #f8f9fa; border: 1px solid #e0e0e0; padding: 15px; border-radius: 6px; margin-bottom: 20px;">
+            <label style="display: flex; align-items: flex-start; gap: 10px; cursor: pointer; font-size: 14px; font-weight: bold; line-height: 1.4;">
+                <input type="checkbox" id="checkAceite" onchange="alternarBotaoAceite()" style="width: 18px; height: 18px; margin-top: 2px;">
+                <span>Declaro que li, compreendi e concordo integralmente com todas as Regras, Normas e Termos estabelecidos pela Associação.</span>
+            </label>
 
-                    <button id="btnEnviarAceite" disabled onclick="enviarEmailAceite()" style="width: 100%; margin-top: 15px; padding: 14px; background-color: #95a5a6; color: white; border: none; border-radius: 6px; font-weight: bold; font-size: 15px; cursor: not-allowed; transition: background 0.3s;">
-                        🔒 Aceitar Termos e Enviar Comprovante
-                    </button>
-                </div>
+            <button id="btnEnviarAceite" disabled onclick="enviarEmailAceite()" style="width: 100%; margin-top: 15px; padding: 14px; background-color: #95a5a6; color: white; border: none; border-radius: 6px; font-weight: bold; font-size: 15px; cursor: not-allowed; transition: background 0.3s;">
+                🔒 Aceitar Termos e Enviar Comprovante
+            </button>
+        </div>
+    </div>
+
+    <div id="blocoTermoAceito" style="display: none; text-align: center; padding: 25px 15px; background-color: #e8f5e9; border: 1px solid #c8e6c9; border-radius: 8px; margin-bottom: 20px;">
+        <span style="font-size: 35px;">✅</span>
+        <h4 style="color: #2e7d32; margin: 10px 0 5px 0; font-size: 16px;">Termos Aceitos com Sucesso!</h4>
+        <p style="font-size: 13px; color: #43a047; line-height: 1.4;" id="textoDataAceite">
+            O seu comprovante de leitura e concordância já foi registrado e enviado para a Associação.
+        </p>
+    </div>
+
+    <hr style="border: 0; height: 1px; background: #e0e0e0; margin: 30px 0;">
+
+    <div style="margin-bottom: 25px;">
+        <h3 style="margin-bottom: 15px; display: flex; align-items: center; gap: 8px;">🥋 Próximos Treinamentos</h3>
+        
+        <div style="display: flex; align-items: center; background-color: #fff; border: 1px solid #e0e0e0; border-left: 5px solid #3498db; border-radius: 6px; padding: 15px; box-shadow: 0 2px 4px rgba(0,0,0,0.02);">
+            <div style="text-align: center; padding-right: 15px; border-right: 1px solid #eee; min-width: 70px;">
+                <span style="display: block; font-size: 24px; font-weight: bold; color: #2980b9;">26</span>
+                <span style="display: block; font-size: 12px; font-weight: bold; color: #7f8c8d; text-transform: uppercase;">JUL</span>
             </div>
-
-            <div id="blocoTermoAceito" style="display: none; text-align: center; padding: 25px 15px; background-color: #e8f5e9; border: 1px solid #c8e6c9; border-radius: 8px; margin-bottom: 20px;">
-                <span style="font-size: 35px;">✅</span>
-                <h4 style="color: #2e7d32; margin: 10px 0 5px 0; font-size: 16px;">Termos Aceitos com Sucesso!</h4>
-                <p style="font-size: 13px; color: #43a047; line-height: 1.4;" id="textoDataAceite">
-                    O seu comprovante de leitura e concordância já foi registrado e enviado para a Associação.
-                </p>
-            </div>
-
-            <hr style="border: 0; height: 1px; background: #e0e0e0; margin: 30px 0;">
-
-            <div style="margin-bottom: 25px;">
-                <h3 style="margin-bottom: 15px; display: flex; align-items: center; gap: 8px;">🥋 Próximos Treinamentos</h3>
-                
-                <div style="display: flex; align-items: center; background-color: #fff; border: 1px solid #e0e0e0; border-left: 5px solid #3498db; border-radius: 6px; padding: 15px; box-shadow: 0 2px 4px rgba(0,0,0,0.02);">
-                    <div style="text-align: center; padding-right: 15px; border-right: 1px solid #eee; min-width: 70px;">
-                        <span style="display: block; font-size: 24px; font-weight: bold; color: #2980b9;">26</span>
-                        <span style="display: block; font-size: 12px; font-weight: bold; color: #7f8c8d; text-transform: uppercase;">JUL</span>
-                    </div>
-                    <div style="padding-left: 15px;">
-                        <span style="display: block; font-size: 12px; color: #e67e22; font-weight: bold; text-transform: uppercase; margin-bottom: 2px;">Workshop Especial</span>
-                        <span style="display: block; font-size: 16px; font-weight: bold; color: #2c3e50;">Workshop com Brenda Padilha</span>
-                    </div>
-                </div>
-            </div>
-
-            <div style="margin-bottom: 15px;">
-                <h3 style="margin-bottom: 15px; display: flex; align-items: center; gap: 8px;">🏆 Próximos Campeonatos</h3>
-                
-                <div style="display: flex; align-items: center; background-color: #fff; border: 1px solid #e0e0e0; border-left: 5px solid #e74c3c; border-radius: 6px; padding: 15px; box-shadow: 0 2px 4px rgba(0,0,0,0.02);">
-                    <div style="text-align: center; padding-right: 15px; border-right: 1px solid #eee; min-width: 70px;">
-                        <span style="display: block; font-size: 24px; font-weight: bold; color: #c0392b;">23</span>
-                        <span style="display: block; font-size: 12px; font-weight: bold; color: #7f8c8d; text-transform: uppercase;">AGO</span>
-                    </div>
-                    <div style="padding-left: 15px;">
-                        <span style="display: block; font-size: 16px; font-weight: bold; color: #2c3e50; margin-bottom: 4px;">7ª Etapa ACAK</span>
-                        <span style="display: flex; align-items: center; gap: 4px; font-size: 13px; color: #7f8c8d;">
-                            📍 Cidade: Valinhos - SP
-                        </span>
-                    </div>
-                </div>
+            <div style="padding-left: 15px;">
+                <span style="display: block; font-size: 12px; color: #e67e22; font-weight: bold; text-transform: uppercase; margin-bottom: 2px;">Workshop Especial</span>
+                <span style="display: block; font-size: 16px; font-weight: bold; color: #2c3e50;">Workshop com Brenda Padilha</span>
             </div>
         </div>
+    </div>
+
+    <div style="margin-bottom: 15px;">
+        <h3 style="margin-bottom: 15px; display: flex; align-items: center; gap: 8px;">🏆 Próximos Campeonatos</h3>
+        
+        <div style="display: flex; align-items: center; background-color: #fff; border: 1px solid #e0e0e0; border-left: 5px solid #e74c3c; border-radius: 6px; padding: 15px; box-shadow: 0 2px 4px rgba(0,0,0,0.02);">
+            <div style="text-align: center; padding-right: 15px; border-right: 1px solid #eee; min-width: 70px;">
+                <span style="display: block; font-size: 24px; font-weight: bold; color: #c0392b;">23</span>
+                <span style="display: block; font-size: 12px; font-weight: bold; color: #7f8c8d; text-transform: uppercase;">AGO</span>
+            </div>
+            <div style="padding-left: 15px;">
+                <span style="display: block; font-size: 16px; font-weight: bold; color: #2c3e50; margin-bottom: 4px;">7ª Etapa ACAK</span>
+                <span style="display: flex; align-items: center; gap: 4px; font-size: 13px; color: #7f8c8d;">
+                    📍 Cidade: Valinhos - SP
+                </span>
+            </div>
+        </div>
+    </div>
+
+</div>
 
         <!-- SEÇÃO 3: GALERIA -->
-        <div id="galeria" class="tab-content">
-            <h3 style="margin-bottom: 15px;">📸 Histórico de Troca de Faixas</h3>
-            <p style="font-size: 14px; color: #666; margin-bottom: 20px;">
-                Selecione o evento desejado abaixo para abrir a pasta de fotos oficial no Google Drive.
-            </p>
+  <div id="galeria" class="tab-content">
+    <h3 style="margin-bottom: 15px;">📸 Histórico de Troca de Faixas</h3>
+    <p style="font-size: 14px; color: #666; margin-bottom: 20px;">
+        Selecione o event desejado abaixo para abrir a pasta de fotos oficial no Google Drive.
+    </p>
 
-            <div style="display: flex; flex-direction: column; gap: 12px;">
-                <a href="https://drive.google.com/drive/folders/1rtRaurMIERPIMTR70KxEu5TyhQa9PsHU?usp=drive_link" target="_blank" style="text-decoration: none; color: inherit;">
-                    <div style="display: flex; align-items: center; justify-content: space-between; padding: 15px; background-color: #f8f9fa; border: 1px solid #e0e0e0; border-radius: 8px; transition: background 0.2s; cursor: pointer;">
-                        <div style="display: flex; align-items: center; gap: 12px;">
-                            <span style="font-size: 20px;">📂</span>
-                            <span style="font-weight: bold; font-size: 15px; color: #2c3e50;">Troca de faixa - Junho 2022</span>
-                        </div>
-                        <span style="color: #7f8c8d; font-size: 14px;">➔</span>
-                    </div>
-                </a>
+    <div style="display: flex; flex-direction: column; gap: 12px;">
 
-                <a href="https://drive.google.com/drive/folders/1HfoZP89pVxOu3PqvmENSAwpo1nGZPg8K?usp=drive_link" target="_blank" style="text-decoration: none; color: inherit;">
-                    <div style="display: flex; align-items: center; justify-content: space-between; padding: 15px; background-color: #f8f9fa; border: 1px solid #e0e0e0; border-radius: 8px; transition: background 0.2s; cursor: pointer;">
-                        <div style="display: flex; align-items: center; gap: 12px;">
-                            <span style="font-size: 20px;">📂</span>
-                            <span style="font-weight: bold; font-size: 15px; color: #2c3e50;">Troca de faixa - Dezembro 2022</span>
-                        </div>
-                        <span style="color: #7f8c8d; font-size: 14px;">➔</span>
-                    </div>
-                </a>
-
-                <a href="https://drive.google.com/drive/folders/1oZsy4NswTt6MIfvlF7lDb6aHcENDPphL?usp=drive_link" target="_blank" style="text-decoration: none; color: inherit;">
-                    <div style="display: flex; align-items: center; justify-content: space-between; padding: 15px; background-color: #f8f9fa; border: 1px solid #e0e0e0; border-radius: 8px; transition: background 0.2s; cursor: pointer;">
-                        <div style="display: flex; align-items: center; gap: 12px;">
-                            <span style="font-size: 20px;">📂</span>
-                            <span style="font-weight: bold; font-size: 15px; color: #2c3e50;">Troca de faixa - Julho 2023</span>
-                        </div>
-                        <span style="color: #7f8c8d; font-size: 14px;">➔</span>
-                    </div>
-                </a>
-
-                <a href="https://drive.google.com/drive/folders/1-4vrTGEcgKnKMgVMFR9rZMI11psFiyn8?usp=drive_link" target="_blank" style="text-decoration: none; color: inherit;">
-                    <div style="display: flex; align-items: center; justify-content: space-between; padding: 15px; background-color: #f8f9fa; border: 1px solid #e0e0e0; border-radius: 8px; transition: background 0.2s; cursor: pointer;">
-                        <div style="display: flex; align-items: center; gap: 12px;">
-                            <span style="font-size: 20px;">📂</span>
-                            <span style="font-weight: bold; font-size: 15px; color: #2c3e50;">Troca de faixa - Dezembro 2023</span>
-                        </div>
-                        <span style="color: #7f8c8d; font-size: 14px;">➔</span>
-                    </div>
-                </a>
-
-                <a href="https://drive.google.com/drive/folders/1f-iaokIRnn5b6lOU239L3qh6-NvOiXoH?usp=drive_link" target="_blank" style="text-decoration: none; color: inherit;">
-                    <div style="display: flex; align-items: center; justify-content: space-between; padding: 15px; background-color: #f8f9fa; border: 1px solid #e0e0e0; border-radius: 8px; transition: background 0.2s; cursor: pointer;">
-                        <div style="display: flex; align-items: center; gap: 12px;">
-                            <span style="font-size: 20px;">📂</span>
-                            <span style="font-weight: bold; font-size: 15px; color: #2c3e50;">Troca de faixa - Dezembro 2024</span>
-                        </div>
-                        <span style="color: #7f8c8d; font-size: 14px;">➔</span>
-                    </div>
-                </a>
-
-                <a href="https://drive.google.com/drive/folders/1NgjvDrVK4YnHowuvrwRb8EcFIPGMfuWj?usp=drive_link" target="_blank" style="text-decoration: none; color: inherit;">
-                    <div style="display: flex; align-items: center; justify-content: space-between; padding: 15px; background-color: #f8f9fa; border: 1px solid #e0e0e0; border-radius: 8px; transition: background 0.2s; cursor: pointer;">
-                        <div style="display: flex; align-items: center; gap: 12px;">
-                            <span style="font-size: 20px;">📂</span>
-                            <span style="font-weight: bold; font-size: 15px; color: #2c3e50;">Troca de faixa - Junho 2025</span>
-                        </div>
-                        <span style="color: #7f8c8d; font-size: 14px;">➔</span>
-                    </div>
-                </a>
-
-                <a href="https://drive.google.com/drive/folders/1QkRd6NYoWFvarpcxWSR2wMiLWuFppTmF?usp=drive_link" target="_blank" style="text-decoration: none; color: inherit;">
-                    <div style="display: flex; align-items: center; justify-content: space-between; padding: 15px; background-color: #f8f9fa; border: 1px solid #e0e0e0; border-radius: 8px; transition: background 0.2s; cursor: pointer;">
-                        <div style="display: flex; align-items: center; gap: 12px;">
-                            <span style="font-size: 20px;">📂</span>
-                            <span style="font-weight: bold; font-size: 15px; color: #2c3e50;">Troca de faixa - Dezembro 2025</span>
-                        </div>
-                        <span style="color: #7f8c8d; font-size: 14px;">➔</span>
-                    </div>
-                </a>
-
-                <a href="https://drive.google.com/drive/folders/1TrXjV6R5Pqk_2FconkSwJicEqpmpI86g?usp=drive_link" target="_blank" style="text-decoration: none; color: inherit;">
-                    <div style="display: flex; align-items: center; justify-content: space-between; padding: 15px; background-color: #f8f9fa; border: 1px solid #e0e0e0; border-radius: 8px; transition: background 0.2s; cursor: pointer;">
-                        <div style="display: flex; align-items: center; gap: 12px;">
-                            <span style="font-size: 20px;">📂</span>
-                            <span style="font-weight: bold; font-size: 15px; color: #2c3e50;">Troca de faixa - Junho 2026</span>
-                        </div>
-                        <span style="color: #7f8c8d; font-size: 14px;">➔</span>
-                    </div>
-                </a>
+        <a href="https://drive.google.com/drive/folders/1rtRaurMIERPIMTR70KxEu5TyhQa9PsHU?usp=drive_link" target="_blank" style="text-decoration: none; color: inherit;">
+            <div style="display: flex; align-items: center; justify-content: space-between; padding: 15px; background-color: #f8f9fa; border: 1px solid #e0e0e0; border-radius: 8px; transition: background 0.2s; cursor: pointer;" onmouseover="this.style.backgroundColor='#edf2f7'" onmouseout="this.style.backgroundColor='#f8f9fa'">
+                <div style="display: flex; align-items: center; gap: 12px;">
+                    <span style="font-size: 20px;">📂</span>
+                    <span style="font-weight: bold; font-size: 15px; color: #2c3e50;">Troca de faixa - Junho 2022</span>
+                </div>
+                <span style="color: #7f8c8d; font-size: 14px;">➔</span>
             </div>
-        </div>
+        </a>
 
+        <a href="https://drive.google.com/drive/folders/1HfoZP89pVxOu3PqvmENSAwpo1nGZPg8K?usp=drive_link" target="_blank" style="text-decoration: none; color: inherit;">
+            <div style="display: flex; align-items: center; justify-content: space-between; padding: 15px; background-color: #f8f9fa; border: 1px solid #e0e0e0; border-radius: 8px; transition: background 0.2s; cursor: pointer;" onmouseover="this.style.backgroundColor='#edf2f7'" onmouseout="this.style.backgroundColor='#f8f9fa'">
+                <div style="display: flex; align-items: center; gap: 12px;">
+                    <span style="font-size: 20px;">📂</span>
+                    <span style="font-weight: bold; font-size: 15px; color: #2c3e50;">Troca de faixa - Dezembro 2022</span>
+                </div>
+                <span style="color: #7f8c8d; font-size: 14px;">➔</span>
+            </div>
+        </a>
+
+        <a href="https://drive.google.com/drive/folders/1oZsy4NswTt6MIfvlF7lDb6aHcENDPphL?usp=drive_link" target="_blank" style="text-decoration: none; color: inherit;">
+            <div style="display: flex; align-items: center; justify-content: space-between; padding: 15px; background-color: #f8f9fa; border: 1px solid #e0e0e0; border-radius: 8px; transition: background 0.2s; cursor: pointer;" onmouseover="this.style.backgroundColor='#edf2f7'" onmouseout="this.style.backgroundColor='#f8f9fa'">
+                <div style="display: flex; align-items: center; gap: 12px;">
+                    <span style="font-size: 20px;">📂</span>
+                    <span style="font-weight: bold; font-size: 15px; color: #2c3e50;">Troca de faixa - Julho 2023</span>
+                </div>
+                <span style="color: #7f8c8d; font-size: 14px;">➔</span>
+            </div>
+        </a>
+
+        <a href="https://drive.google.com/drive/folders/1-4vrTGEcgKnKMgVMFR9rZMI11psFiyn8?usp=drive_link" target="_blank" style="text-decoration: none; color: inherit;">
+            <div style="display: flex; align-items: center; justify-content: space-between; padding: 15px; background-color: #f8f9fa; border: 1px solid #e0e0e0; border-radius: 8px; transition: background 0.2s; cursor: pointer;" onmouseover="this.style.backgroundColor='#edf2f7'" onmouseout="this.style.backgroundColor='#f8f9fa'">
+                <div style="display: flex; align-items: center; gap: 12px;">
+                    <span style="font-size: 20px;">📂</span>
+                    <span style="font-weight: bold; font-size: 15px; color: #2c3e50;">Troca de faixa - Dezembro 2023</span>
+                </div>
+                <span style="color: #7f8c8d; font-size: 14px;">➔</span>
+            </div>
+        </a>
+
+        <a href="https://drive.google.com/drive/folders/1f-iaokIRnn5b6lOU239L3qh6-NvOiXoH?usp=drive_link" target="_blank" style="text-decoration: none; color: inherit;">
+            <div style="display: flex; align-items: center; justify-content: space-between; padding: 15px; background-color: #f8f9fa; border: 1px solid #e0e0e0; border-radius: 8px; transition: background 0.2s; cursor: pointer;" onmouseover="this.style.backgroundColor='#edf2f7'" onmouseout="this.style.backgroundColor='#f8f9fa'">
+                <div style="display: flex; align-items: center; gap: 12px;">
+                    <span style="font-size: 20px;">📂</span>
+                    <span style="font-weight: bold; font-size: 15px; color: #2c3e50;">Troca de faixa - Dezembro 2024</span>
+                </div>
+                <span style="color: #7f8c8d; font-size: 14px;">➔</span>
+            </div>
+        </a>
+
+        <a href="https://drive.google.com/drive/folders/1NgjvDrVK4YnHowuvrwRb8EcFIPGMfuWj?usp=drive_link" target="_blank" style="text-decoration: none; color: inherit;">
+            <div style="display: flex; align-items: center; justify-content: space-between; padding: 15px; background-color: #f8f9fa; border: 1px solid #e0e0e0; border-radius: 8px; transition: background 0.2s; cursor: pointer;" onmouseover="this.style.backgroundColor='#edf2f7'" onmouseout="this.style.backgroundColor='#f8f9fa'">
+                <div style="display: flex; align-items: center; gap: 12px;">
+                    <span style="font-size: 20px;">📂</span>
+                    <span style="font-weight: bold; font-size: 15px; color: #2c3e50;">Troca de faixa - Junho 2025</span>
+                </div>
+                <span style="color: #7f8c8d; font-size: 14px;">➔</span>
+            </div>
+        </a>
+
+        <a href="https://drive.google.com/drive/folders/1QkRd6NYoWFvarpcxWSR2wMiLWuFppTmF?usp=drive_link" target="_blank" style="text-decoration: none; color: inherit;">
+            <div style="display: flex; align-items: center; justify-content: space-between; padding: 15px; background-color: #f8f9fa; border: 1px solid #e0e0e0; border-radius: 8px; transition: background 0.2s; cursor: pointer;" onmouseover="this.style.backgroundColor='#edf2f7'" onmouseout="this.style.backgroundColor='#f8f9fa'">
+                <div style="display: flex; align-items: center; gap: 12px;">
+                    <span style="font-size: 20px;">📂</span>
+                    <span style="font-weight: bold; font-size: 15px; color: #2c3e50;">Troca de faixa - Dezembro 2025</span>
+                </div>
+                <span style="color: #7f8c8d; font-size: 14px;">➔</span>
+            </div>
+        </a>
+
+        <a href="https://drive.google.com/drive/folders/1TrXjV6R5Pqk_2FconkSwJicEqpmpI86g?usp=drive_link" target="_blank" style="text-decoration: none; color: inherit;">
+            <div style="display: flex; align-items: center; justify-content: space-between; padding: 15px; background-color: #f8f9fa; border: 1px solid #e0e0e0; border-radius: 8px; transition: background 0.2s; cursor: pointer;" onmouseover="this.style.backgroundColor='#edf2f7'" onmouseout="this.style.backgroundColor='#f8f9fa'">
+                <div style="display: flex; align-items: center; gap: 12px;">
+                    <span style="font-size: 20px;">📂</span>
+                    <span style="font-weight: bold; font-size: 15px; color: #2c3e50;">Troca de faixa - Junho 2026</span>
+                </div>
+                <span style="color: #7f8c8d; font-size: 14px;">➔</span>
+            </div>
+        </a>
+
+    </div>
+</div>
         <!-- SEÇÃO 4: E-BOOK -->
-        <div id="ebook" class="tab-content">
-            <h3>📚 E-Book</h3>
-            <p style="font-size: 14px; color: #666; margin-bottom: 15px;">
-                Acesse a nossa apostila oficial e materiais de estudo exclusivos para o seu exame de faixa.
-            </p>
-            
-            <div style="background-color: #f8f9fa; border: 1px dashed #3498db; padding: 20px; border-radius: 8px; text-align: center; margin-bottom: 15px;">
-                <span style="font-size: 40px;">📄</span>
-                <h4 style="margin: 10px 0 5px 0; color: #2c3e50;">Apostila Oficial da Associação</h4>
-                <p style="font-size: 13px; color: #7f8c8d; margin-bottom: 15px;">Para uma melhor leitura no smartphone, abra o documento em tela cheia.</p>
-                
-                <a href="documento.pdf" target="_blank" style="display: inline-block; width: 100%; max-width: 280px; padding: 12px; background-color: #3498db; color: white; text-decoration: none; font-weight: bold; border-radius: 6px; box-shadow: 0 2px 5px rgba(0,0,0,0.1);">
-                    📖 Abrir / Baixar E-book
-                </a>
-            </div>
+       <div id="ebook" class="tab-content">
+    <h3>📚 E-Book</h3>
+    <p style="font-size: 14px; color: #666; margin-bottom: 15px;">
+        Acesse a nossa apostila oficial e materiais de estudo exclusivos para o seu exame de faixa.
+    </p>
+    
+    <div style="background-color: #f8f9fa; border: 1px dashed #3498db; padding: 20px; border-radius: 8px; text-align: center; margin-bottom: 15px;">
+        <span style="font-size: 40px;">📄</span>
+        <h4 style="margin: 10px 0 5px 0; color: #2c3e50;">Apostila Oficial da Associação</h4>
+        <p style="font-size: 13px; color: #7f8c8d; margin-bottom: 15px;">Para uma melhor leitura no smartphone, abra o documento em tela cheia.</p>
+        
+        <a href="documento.pdf" target="_blank" style="display: inline-block; width: 100%; max-width: 280px; padding: 12px; background-color: #3498db; color: white; text-decoration: none; font-weight: bold; border-radius: 6px; box-shadow: 0 2px 5px rgba(0,0,0,0.1);">
+            📖 Abrir / Baixar E-book
+        </a>
+    </div>
 
-            <div class="pdf-container" style="display: none;"></div>
+    <div class="pdf-container" style="display: none;">
         </div>
-
+</div>
         <!-- SEÇÃO 5: SALDO -->
         <div id="saldo" class="tab-content">
             <h3>💰 Saldo em Conta da Associação</h3>
@@ -839,13 +851,18 @@
                 🔄 Atualizar Saldo
             </button>
         </div>
+
     </div>
 
-    <!-- MENU DE BOTÕES FIXO NO RODAPÉ -->
+    <!-- MENU DE BOTÕES ESTILO APP MÓVEL -->
     <div class="bottom-nav">
         <button class="nav-btn" onclick="mudarAba('exame', this)">
             <span class="icon">🥋</span>
             Painel
+        </button>
+        <button class="nav-btn" onclick="mudarAba('conteudo-programatico', this)">
+            <span class="icon">📋</span>
+            Conteúdo
         </button>
         <button class="nav-btn" onclick="mudarAba('comunicados', this)">
             <span class="icon">📢</span>
@@ -866,13 +883,9 @@
     </div>
 
 <script>
-        // 1. CARREGAMENTO DINÂMICO DE USUÁRIOS COM ASSINCRONISMO CORRIGIDO
+        // 1. CARREGAMENTO DINÂMICO DE USUÁRIOS
         const scriptUsuarios = document.createElement('script');
         scriptUsuarios.src = 'usuarios.js?v=' + new Date().getTime();
-        scriptUsuarios.onload = function() {
-            // Roda a renderização imediatamente no momento exato em que o arquivo é carregado
-            renderizarNotasDoAluno();
-        };
         document.head.appendChild(scriptUsuarios);
 
         // 2. PROTEÇÃO DE ACESSO
@@ -888,7 +901,7 @@
 
         document.getElementById('welcomeNome').textContent = `Olá, ${nomeDoAluno}!`;
 
-        // 4. CONSULTA O STATUS DO TERMO
+        // 4. CONSULTA O STATUS DO TERMO (ESTRATÉGIA BLINDADA DE PERSISTÊNCIA HÍBRIDA)
         function verificarStatusAceite() {
             if (!usuarioAtivo) return;
 
@@ -897,18 +910,22 @@
             const badge = document.getElementById('badgeNotificacao');
             const sininho = document.getElementById('wrapperSininho');
 
+            // PASSO 1: Carrega instantaneamente o estado salvo neste aparelho para não bloquear o aluno.
             const jaAceitouLocal = localStorage.getItem(`termo_aceito_${usuarioAtivo}`);
             const dataAceiteLocal = localStorage.getItem(`data_aceite_${usuarioAtivo}`) || '';
             
+            // Se o aparelho já sabe que foi assinado, libera a tela de imediato para evitar oscilações.
             if (jaAceitouLocal === 'true') {
                 aplicarLayoutAceito(blocoPendente, blocoAceito, badge, sininho, dataAceiteLocal, false);
             } else {
+                // Caso contrário, assume provisoriamente como pendente até a API responder.
                 aplicarLayoutPendente(blocoPendente, blocoAceito, badge, sininho);
             }
 
             const controller = new AbortController();
-            const timeoutId = setTimeout(() => controller.abort(), 90000); 
+            const timeoutId = setTimeout(() => controller.abort(), 90000); // 90 segundos para tolerar o Cold Start do Render
 
+            // PASSO 2: Validação rigorosa na API em segundo plano para checar múltiplos dispositivos
             fetch(`${URL_API_SERVIDOR}/api/status-termo/${usuarioAtivo}`, { signal: controller.signal })
                 .then(response => {
                     clearTimeout(timeoutId);
@@ -916,14 +933,19 @@
                     return response.json();
                 })
                 .then(data => {
+                    // Tratamento flexível do JSON: aceita tanto 'data.aceitou' quanto variações como 'data.sucesso' ou 'data.status'
                     const verificadoNaAPI = (data && (data.aceitou === true || data.sucesso === true || data.status === 'assinado' || data.status === 'aceito'));
                     const dataServidor = data.data || data.dataHora || data.updatedAt || new Date().toLocaleString('pt-BR');
 
                     if (verificadoNaAPI) {
+                        // Sincronização Perfeita: A API confirmou a existência do registro na nuvem. Salva no aparelho atual.
                         localStorage.setItem(`termo_aceito_${usuarioAtivo}`, 'true');
                         localStorage.setItem(`data_aceite_${usuarioAtivo}`, dataServidor);
+                        
                         aplicarLayoutAceito(blocoPendente, blocoAceito, badge, sininho, dataServidor, true);
                     } else {
+                        // A API respondeu com sucesso, mas explicitamente informou que este usuário NÃO assinou em lugar nenhum.
+                        // Só neste caso limpamos o LocalStorage por segurança.
                         localStorage.removeItem(`termo_aceito_${usuarioAtivo}`);
                         localStorage.removeItem(`data_aceite_${usuarioAtivo}`);
                         aplicarLayoutPendente(blocoPendente, blocoAceito, badge, sininho);
@@ -931,7 +953,9 @@
                 })
                 .catch(err => {
                     clearTimeout(timeoutId);
-                    console.warn("[Aviso] Servidor offline ou em hibernação. Mantendo cache local.");
+                    console.warn("[Aviso] Render em hibernação ou offline. Mantendo cache local de segurança para evitar bloqueio precoce.");
+                    
+                    // PASSO 3: Se a API falhar por timeout ou rede, NADA é apagado. O cache local dita a regra de acesso.
                     if (localStorage.getItem(`termo_aceito_${usuarioAtivo}`) === 'true') {
                         aplicarLayoutAceito(blocoPendente, blocoAceito, badge, sininho, dataAceiteLocal, false);
                     } else {
@@ -940,6 +964,7 @@
                 });
         }
 
+        // FUNÇÕES AUXILIARES DE RENDERIZAÇÃO DA INTERFACE
         function aplicarLayoutAceito(blocoPendente, blocoAceito, badge, sininho, dataRegistro, ehGlobal) {
             if (blocoPendente) blocoPendente.style.display = 'none';
             if (blocoAceito) {
@@ -965,12 +990,13 @@
 
         // 5. ATALHO CLIQUE NO SININHO
         function irParaAvisos() {
-            const botaoAvisosMenu = document.querySelectorAll('.nav-btn')[1]; 
+            const botaoAvisosMenu = document.querySelectorAll('.nav-btn')[2]; 
             if (botaoAvisosMenu) {
                 mudarAba('comunicados', botaoAvisosMenu);
             }
         }
         
+        // FUNÇÃO PARA ATUALIZAR O PAINEL SEM PRECISAR DE LOGOUT
         function atualizarPainel() {
             window.location.reload();
         }
@@ -991,137 +1017,145 @@
             }
         }
 
-        // 7. ENVIA O ACEITE
+        // 7. ENVIA O ACEITE (ENVIA À API PRIMEIRO PARA GRAVAÇÃO NA NUVEM)
         function enviarEmailAceite() {
             const nomeAluno = localStorage.getItem('nomeAlunoLogado') || 'Nome Não Identificado';
             const dataHoraAtual = new Date().toLocaleString('pt-BR');
+            
             const emailDestinatarioPrincipal = "luedo25@msn.com"; 
             const assunto = encodeURIComponent(`CONFIRMAÇÃO DE ACEITE: Regras da Associação - ${nomeAluno}`);
             
             const corpoEmail = encodeURIComponent(
-                `Prezada Associação,\n\n` +
-                `Confirmamos que o associado abaixo realizou a leitura completa e aceitou formalmente os termos de Regras e Normas vigentes.\n\n` +
-                `• Nome do Associado: ${nomeAluno}\n` +
-                `• Usuário do Sistema: ${usuarioAtivo}\n` +
-                `• Data/Hora do Aceite: ${dataHoraAtual}\n\n` +
-                `Este e-mail serve como comprovante digital de assinatura do termo.`
+                `Prezada Diretoria,\n\n` +
+                `Por meio deste e-mail, confirmo que li e aceito voluntariamente todos os termos, regras e normas da Associação.\n\n` +
+                `DADOS DO ASSOCIADO:\n` +
+                `Nome completo: ${nomeAluno}\n` +
+                `Usuário do sistema: ${usuarioAtivo}\n` +
+                `Data/Hora do Aceite: ${dataHoraAtual}\n\n` +
+                `Este e-mail serve como registro e comprovante digital do meu aceite obrigatório.`
             );
 
-            const linkMailto = `mailto:${emailDestinatarioPrincipal}?subject=${assunto}&body=${corpoEmail}`;
+            const mailtoUrl = `mailto:${emailDestinatarioPrincipal}?subject=${assunto}&body=${corpoEmail}`;
+            
+            // Salva de imediato localmente para o app não travar visualmente em conexões lentas
+            localStorage.setItem(`termo_aceito_${usuarioAtivo}`, 'true');
+            localStorage.setItem(`data_aceite_${usuarioAtivo}`, dataHoraAtual);
+            verificarStatusAceite();
 
-            const botao = document.getElementById('btnEnviarAceite');
-            if (botao) {
-                botao.disabled = true;
-                botao.innerText = "Processando Registro...";
-            }
-
+            // Envia para a API persistir no banco centralizado do Render
             fetch(`${URL_API_SERVIDOR}/api/aceitar-termo`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ usuario: usuarioAtivo, nome: nomeAluno, data: dataHoraAtual })
+                body: JSON.stringify({ usuario: usuarioAtivo })
             })
-            .then(res => {
-                if(!res.ok) throw new Error("Erro na API");
-                return res.json();
-            })
-            .then(() => {
-                localStorage.setItem(`termo_aceito_${usuarioAtivo}`, 'true');
-                localStorage.setItem(`data_acetate_${usuarioAtivo}`, dataHoraAtual);
+            .then(response => response.json())
+            .then(data => {
+                // Força a validação de sincronia final
                 verificarStatusAceite();
-                window.location.href = linkMailto;
+                window.location.href = mailtoUrl;
             })
-            .catch(() => {
-                localStorage.setItem(`termo_aceito_${usuarioAtivo}`, 'true');
-                localStorage.setItem(`data_aceite_${usuarioAtivo}`, dataHoraAtual);
-                verificarStatusAceite();
-                window.location.href = linkMailto;
+            .catch(err => {
+                console.warn("Falha de rede ao gravar termo. Mantendo cópia local offline.", err);
+                window.location.href = mailtoUrl;
             });
         }
 
-        // 8. LOGIC DE GERENCIAMENTO DE ABAS
-        function mudarAba(idAba, botaoClicado) {
-            document.querySelectorAll('.tab-content').forEach(aba => aba.classList.remove('active'));
-            document.querySelectorAll('.nav-btn').forEach(btn => btn.classList.remove('active'));
-            
-            const abaAlvo = document.getElementById(idAba);
-            if (abaAlvo) abaAlvo.classList.add('active');
+        // 8. ALTERNADOR DE ABAS
+        function mudarAba(idDaAba, botaoClicado) {
+            const secoes = document.querySelectorAll('.tab-content');
+            secoes.forEach(secao => secao.classList.remove('active'));
+
+            const botoes = document.querySelectorAll('.nav-btn');
+            botoes.forEach(btn => btn.classList.remove('active'));
+
+            const elementoAba = document.getElementById(idDaAba);
+            if (elementoAba) elementoAba.classList.add('active');
             if (botaoClicado) botaoClicado.classList.add('active');
 
             window.scrollTo({ top: 0, behavior: 'smooth' });
-        }
 
-        // 9. RENDERIZAÇÃO DINÂMICA DAS NOTAS (Mecanismo de Verificação Corrigido)
-        function renderizarNotasDoAluno() {
-            const corpoTabela = document.getElementById('corpoTabelaNotas');
-            if (!corpoTabela) return;
-
-            // Se o script ainda não carregou a lista global, tenta novamente em intervalos curtos
-            if (typeof listaDeUsuariosGlobal === 'undefined') {
-                setTimeout(renderizarNotasDoAluno, 100);
-                return;
+            if (idDaAba === 'comunicados') {
+                verificarStatusAceite();
             }
 
-            const dadosAluno = listaDeUsuariosGlobal.find(u => u.usuario === usuarioAtivo);
-            
-            if (!dadosAluno || !dadosAluno.historicoExames || dadosAluno.historicoExames.length === 0) {
-                corpoTabela.innerHTML = `<tr><td colspan="8" style="color:#7f8c8d; font-weight:normal; padding:20px;">Nenhum registro de notas encontrado no seu histórico.</td></tr>`;
-                return;
+            if (idDaAba === 'saldo') {
+                buscarSaldoMercadoPago();
             }
-
-            corpoTabela.innerHTML = "";
-            dadosAluno.historicoExames.forEach(exame => {
-                const tr = document.createElement('tr');
-                tr.innerHTML = `
-                    <td>${exame.faixa}</td>
-                    <td>${exame.ano}</td>
-                    <td>${exame.kihon}</td>
-                    <td>${exame.kata}</td>
-                    <td>${exame.kumite}</td>
-                    <td>${exame.perguntas}</td>
-                    <td class="col-total">${exame.total}</td>
-                    <td class="col-media">${exame.mediaFinal}</td>
-                `;
-                corpoTabela.appendChild(tr);
-            });
         }
 
-        // 10. INTEGRAÇÃO DA API MERCADO PAGO
+        // 9. EVENTO DE CARREGAMENTO DAS NOTAS
+        scriptUsuarios.onload = function() {
+            if (typeof listaAlunos === 'undefined') return;
+            const dadosAluno = listaAlunos.find(u => u.usuario === usuarioAtivo);
+            const tabelaBody = document.getElementById('corpoTabelaNotas');
+
+            if (!tabelaBody) return;
+
+            if (dadosAluno && dadosAluno.historico) {
+                tabelaBody.innerHTML = "";
+                dadosAluno.historico.forEach(exame => {
+                    const linha = document.createElement('tr');
+                    linha.innerHTML = `
+                        <td style="background-color: ${exame.corFaixa}; color: ${exame.corTexto}; border-radius: 4px;">${exame.faixa}</td>
+                        <td>${exame.ano}</td>
+                        <td>${exame.kihon.toFixed(1)}</td>
+                        <td>${exame.kata.toFixed(1)}</td>
+                        <td>${exame.kumite.toFixed(1)}</td>
+                        <td>${exame.perguntas.toFixed(1)}</td>
+                        <td class="col-total">${exame.total.toFixed(1)}</td>
+                        <td class="col-media">${exame.media.toFixed(1)}</td>
+                    `;
+                    tabelaBody.appendChild(linha);
+                });
+            } else {
+                tabelaBody.innerHTML = `<tr><td colspan="8">Nenhum registro encontrado.</td></tr>`;
+            }
+        };
+
+        // 10. BUSCA DE SALDO DO MERCADO PAGO
         function buscarSaldoMercadoPago() {
-            const txtSaldo = document.getElementById('textoSaldo');
-            if (txtSaldo) txtSaldo.innerText = "Consultando...";
+            const elementoSaldo = document.getElementById('textoSaldo');
+            if (!elementoSaldo) return;
+            
+            elementoSaldo.textContent = "Carregando...";
 
             fetch(`${URL_API_SERVIDOR}/api/saldo`)
-                .then(res => res.json())
+                .then(response => response.json())
                 .then(data => {
-                    if (data && data.saldo !== undefined) {
-                        const formatado = parseFloat(data.saldo).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
-                        if (txtSaldo) txtSaldo.innerText = formatado;
+                    if (data.saldo !== undefined) {
+                        elementoSaldo.textContent = data.saldo.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
                     } else {
-                        if (txtSaldo) txtSaldo.innerText = "R$ 0,00";
+                        elementoSaldo.textContent = "Erro ao carregar";
                     }
                 })
                 .catch(() => {
-                    if (txtSaldo) txtSaldo.innerText = "Erro ao carregar";
+                    elementoSaldo.textContent = "Erro de conexão";
                 });
         }
 
-        // 11. EVENTOS DE INICIALIZAÇÃO
-        document.addEventListener("DOMContentLoaded", () => {
-            const primeiroBotao = document.querySelector('.nav-btn');
-            mudarAba('exame', primeiroBotao);
-            
-            // Disparos iniciais de segurança
-            verificarStatusAceite();
-            buscarSaldoMercadoPago();
-            renderizarNotasDoAluno(); 
+        // 11. EVENTO DE LOGOUT
+        document.getElementById('logoutBtn').addEventListener('click', function() {
+            localStorage.removeItem('associadoAutenticado');
+            localStorage.removeItem('nomeAlunoLogado');
+            localStorage.removeItem('usuarioAtivo');
+            window.location.replace('index.html');
+        });
 
-            const btnLogout = document.getElementById('logoutBtn');
-            if (btnLogout) {
-                btnLogout.addEventListener('click', () => {
-                    localStorage.removeItem('associadoAutenticado');
-                    localStorage.removeItem('nomeAlunoLogado');
-                    window.location.href = 'index.html';
-                });
+        // 12. INICIALIZAÇÃO SEGURA DO PAINEL
+        document.addEventListener('DOMContentLoaded', () => {
+            try {
+                const primeiroBotao = document.querySelector('.nav-btn');
+                if (primeiroBotao) {
+                    mudarAba('exame', primeiroBotao);
+                }
+                
+                // Dispara a checagem com 300ms de folga
+                setTimeout(() => {
+                    verificarStatusAceite();
+                }, 300);
+                
+            } catch (error) {
+                console.error("Erro crítico contido na inicialização:", error);
             }
         });
 </script>
