@@ -25,6 +25,14 @@
     </div>
 
     <script>
+        // Proteção de acesso exclusivo para professor
+const usuarioAtivo = localStorage.getItem('usuarioAtivo');
+const tipoUsuario = localStorage.getItem('tipoUsuario');
+
+if (localStorage.getItem('associadoAutenticado') !== 'true' || (usuarioAtivo !== 'luiz.costa' && tipoUsuario !== 'professor')) {
+    alert('Acesso restrito a professores.');
+    window.location.replace('index.html');
+}
         const URL_API_SERVIDOR = "https://api-associacao-mp.onrender.com";
 
         // Define a data atual por padrão
