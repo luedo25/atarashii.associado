@@ -3,6 +3,7 @@
 <head>
     <script src="usuarios.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.2.0"></script>
     <link rel="manifest" href="./manifest.json">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -1330,93 +1331,39 @@
             window.location.replace('index.html');
         });
 
-     // 5. CARREGAMENTO E EXIBIÇÃO DO GRÁFICO DE FREQUÊNCIA (VIA API / SUPABASE)
-        function renderizarGraficoFrequencia(presencas, faltas) {
-            const elemPresencas = document.getElementById('qtdPresencas');
-            const elemFaltas = document.getElementById('qtdFaltas');
-
-            if (elemPresencas) elemPresencas.textContent = presencas;
-            if (elemFaltas) elemFaltas.textContent = faltas;
-
-            const canvas = document.getElementById('graficoFrequencia');
-            if (!canvas) return;
-
-            const ctx = canvas.getContext('2d');
-
-            if (window.meuGrafico) {
-                window.meuGrafico.destroy();
-            }
-
-            window.meuGrafico = new Chart(ctx, {
-                type: 'doughnut',
-                data: {
-                    labels: [
-                        `Presenças (${presencas})`, 
-                        `Faltas (${faltas})`
-                    ],
-                    datasets: [{
-                        data: [presencas, faltas],
-                        backgroundColor: ['#10b981', '#ef4444'],
-                        borderColor: '#1e293b',
-                        borderWidth: 2
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    plugins: {
-                        legend: {
-                            display: true,
-                            position: 'bottom',
-                            labels: {
-                                color: '#f8fafc',
-                                font: {
-                                    size: 13,
-                                    weight: 'bold'
-                                }
-                            }
-                        },
-                        tooltip: {
-                            callbacks: {
-                                label: function(context) {
-                                    const label = context.label || '';
-                                    const value = context.raw || 0;
-                                    const total = presencas + faltas;
-                                    const porcentagem = total > 0 ? Math.round((value / total) * 100) : 0;
-                                    return `${label}: ${value} (${porcentagem}%)`;
-                                }
-                            }
-                        }
-                    }
-                }
-            });
-        }
-
-    let instanciaGrafico = null;
+   // 5. CARREGAMENTO E EXIBIÇÃO DO GRÁFICO DE FREQUÊNCIA (VIA API / SUPABASE)
+let instanciaGrafico = null;
 
 function carregarGraficoFrequencia() {
     // 1. Valida se há usuário ativo antes de fazer a chamada
     if (!usuarioAtivo) {
-        console.warn("⚠️ Atencao: usuarioAtivo ainda nao foi definido.");
+        console.warn("⚠️ Atenção: usuarioAtivo ainda não foi definido.");
         return;
     }
 
-    // 2. Busca o canvas e valida se ele existe na DOM antes de continuar
+    // 2. Busca o canvas na DOM
     const canvasElement = document.getElementById('graficoFrequencia');
     if (!canvasElement) {
-        console.warn("⚠️ Elemento 'graficoFrequencia' nao foi encontrado na pagina.");
+        console.warn("⚠️ Elemento 'graficoFrequencia' não foi encontrado na página.");
         return;
     }
 
     // 3. Requisição à API
     fetch(`${URL_API_SERVIDOR}/api/frequencia/${usuarioAtivo}`)
         .then(res => {
-            if (!res.ok) throw new Error("Falha ao buscar frequencia do servidor");
+            if (!res.ok) throw new Error("Falha ao buscar frequência do servidor");
             return res.json();
         })
         .then(dados => {
-            // Garante que presencas e faltas sejam numeros validos
             const presencas = Number(dados.presencas) || 0;
             const faltas = Number(dados.faltas) || 0;
+            const total = presencas + faltas;
+
+            // Atualiza os contadores de texto na tela (se existirem)
+            const elemPresencas = document.getElementById('qtdPresencas');
+            const elemFaltas = document.getElementById('qtdFaltas');
+            if (elemPresencas) elemPresencas.textContent = presencas;
+            if (elemFaltas) elemFaltas.textContent = faltas;
 
             const ctx = canvasElement.getContext('2d');
 
@@ -1425,11 +1372,17 @@ function carregarGraficoFrequencia() {
                 instanciaGrafico.destroy();
             }
 
-            // Cria o novo gráfico
+            // Verifica se o plugin datalabels está disponível
+            const plugins = (typeof ChartDataLabels !== 'undefined') ? [ChartDataLabels] : [];
+
+            // Cria o novo gráfico com a porcentagem fixada
             instanciaGrafico = new Chart(ctx, {
                 type: 'pie',
                 data: {
-                    labels: ['Presenças', 'Faltas'],
+                    labels: [
+                        `Presenças (${presencas})`, 
+                        `Faltas (${faltas})`
+                    ],
                     datasets: [{
                         data: [presencas, faltas],
                         backgroundColor: ['#10b981', '#ef4444'],
@@ -1437,12 +1390,42 @@ function carregarGraficoFrequencia() {
                         borderColor: '#1e293b'
                     }]
                 },
+                plugins: plugins,
                 options: {
                     responsive: true,
                     plugins: {
                         legend: { 
                             position: 'bottom', 
-                            labels: { color: '#f8fafc' } 
+                            labels: { 
+                                color: '#f8fafc',
+                                font: {
+                                    size: 13,
+                                    weight: 'bold'
+                                }
+                            } 
+                        },
+                        // Exibe a porcentagem fixada diretamente sobre as fatias do gráfico
+                        datalabels: {
+                            color: '#ffffff',
+                            font: {
+                                weight: 'bold',
+                                size: 14
+                            },
+                            formatter: (valor) => {
+                                if (total === 0) return '0%';
+                                const porcentagem = Math.round((valor / total) * 100);
+                                return `${porcentagem}%`;
+                            }
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    const label = context.label || '';
+                                    const value = context.raw || 0;
+                                    const porcentagem = total > 0 ? Math.round((value / total) * 100) : 0;
+                                    return `${label}: ${value} (${porcentagem}%)`;
+                                }
+                            }
                         }
                     }
                 }
