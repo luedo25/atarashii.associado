@@ -2,7 +2,13 @@
 
 // Sua lista oficial e fixa de alunos e senhas
 const listaAlunos = [
-	{ usuario: "luiz.costa", senha: "123456", nome: "Luiz Costa", perfil: "PROFESSOR"},
+	{
+        usuario: "luiz.costa",
+        senha: "Atarashii@17",
+        nome: "Sensei Luiz Costa",
+        tipo: "professor", // Propriedade importante para identificar o perfil
+        historico: []
+    },
     { usuario: "adriano.miguel", senha: "Atarashii@26", nome: "Adriano Miguel", 
 	historico: [
             { faixa: "Branca/Amarela", corFaixa: "#ffeb3b", corTexto: "#000", ano: "Janeiro / 2022", kihon: 7.9, kata: 7.9, kumite: 8.1, perguntas: 0.5, total: 24.4, media: 8.1 },
