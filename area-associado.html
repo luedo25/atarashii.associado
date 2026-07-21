@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
+    <script src="usuarios.js"></script>
     <link rel="manifest" href="./manifest.json">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -1082,258 +1083,255 @@
 </div>
 
 <script>
-    // PROTEÇÃO DE ACESSO
-    if (localStorage.getItem('associadoAutenticado') !== 'true') {
-        alert('Acesso negado. Por favor, faça login.');
-        window.location.href = 'index.html';
-    }
-
-    const nomeDoAluno = localStorage.getItem('nomeAlunoLogado') || 'Associado';
-    const usuarioAtivo = localStorage.getItem('usuarioAtivo');
-    const URL_API_SERVIDOR = "https://api-associacao-mp.onrender.com";
-
-    document.getElementById('welcomeNome').textContent = `Olá, ${nomeDoAluno}!`;
-
-    // 1. CARREGAMENTO DINÂMICO DE USUÁRIOS E NOTAS
-    const scriptUsuarios = document.createElement('script');
-    scriptUsuarios.src = 'usuarios.js?v=' + new Date().getTime();
-    scriptUsuarios.onload = function() {
-        carregarNotasAluno();
-    };
-    document.head.appendChild(scriptUsuarios);
-
-   function carregarNotasAluno() {
-    const corpoTabela = document.getElementById('corpoTabelaNotas');
-    if (!corpoTabela) return;
-
-    // Obtém o Array listaAlunos disponibilizado pelo usuarios.js
-    const baseUsuarios = window.listaAlunos || [];
-
-    // Busca o aluno que bate exatamente com o usuarioAtivo salvo no localStorage
-    const alunoEncontrado = baseUsuarios.find(u => u.usuario === usuarioAtivo);
-
-    // Obtém a lista de exames/historico do aluno
-    const exames = alunoEncontrado ? alunoEncontrado.historico : null;
-
-    if (!exames || exames.length === 0) {
-        corpoTabela.innerHTML = `
-            <tr>
-                <td colspan="8" style="text-align: center; color: var(--text-muted); padding: 20px;">
-                    Nenhum exame cadastrado até o momento.
-                </td>
-            </tr>`;
-        return;
-    }
-
-    corpoTabela.innerHTML = exames.map(exame => {
-        const faixa = exame.faixa || '-';
-        const ano = exame.ano || '-';
-        const kihon = exame.kihon ?? '-';
-        const kata = exame.kata ?? '-';
-        const kumite = exame.kumite ?? '-';
-        const perguntas = exame.perguntas ?? '-';
-        const total = exame.total ?? '-';
-        const media = exame.media ?? '-';
-
-        return `
-            <tr>
-                <td><strong>${faixa}</strong></td>
-                <td>${ano}</td>
-                <td>${kihon}</td>
-                <td>${kata}</td>
-                <td>${kumite}</td>
-                <td>${perguntas}</td>
-                <td><strong>${total}</strong></td>
-                <td><span style="color: var(--accent-green); font-weight: 700;">${media}</span></td>
-            </tr>
-        `;
-    }).join('');
-}
-    // 2. TROCA DE ABAS
-    function mudarAba(abaId, elementoBotao) {
-        document.querySelectorAll('.tab-content').forEach(tab => {
-            tab.classList.remove('active');
-        });
-        document.querySelectorAll('.nav-btn').forEach(btn => {
-            btn.classList.remove('active');
-        });
-
-        const abaSelecionada = document.getElementById(abaId);
-        if (abaSelecionada) {
-            abaSelecionada.classList.add('active');
+        // 1. PROTEÇÃO DE ACESSO
+        if (localStorage.getItem('associadoAutenticado') !== 'true') {
+            alert('Acesso negado. Por favor, faça login.');
+            window.location.href = 'index.html';
         }
-        if (elementoBotao) {
-            elementoBotao.classList.add('active');
+
+        // 2. CONFIGURAÇÕES E VARIÁVEIS GLOBAIS
+        const nomeDoAluno = localStorage.getItem('nomeAlunoLogado') || 'Associado';
+        const usuarioAtivo = localStorage.getItem('usuarioAtivo');
+        const URL_API_SERVIDOR = "https://api-associacao-mp.onrender.com";
+
+        document.getElementById('welcomeNome').textContent = `Olá, ${nomeDoAluno}!`;
+
+        // 3. FUNÇÃO QUE CARREGA E PREENCHE AS NOTAS DO ALUNO
+        function carregarNotasAluno() {
+            const tabelaBody = document.getElementById('corpoTabelaNotas');
+            if (!tabelaBody) return;
+
+            // Verifica se a lista de alunos carregou do arquivo usuarios.js
+            if (typeof listaAlunos === 'undefined') {
+                tabelaBody.innerHTML = `<tr><td colspan="8">Aguardando dados de alunos...</td></tr>`;
+                // Se o arquivo ainda não carregou, tenta novamente em 500ms
+                setTimeout(carregarNotasAluno, 500);
+                return;
+            }
+
+            const dadosAluno = listaAlunos.find(u => u.usuario === usuarioAtivo);
+
+            if (dadosAluno && dadosAluno.historico && dadosAluno.historico.length > 0) {
+                tabelaBody.innerHTML = "";
+                dadosAluno.historico.forEach(exame => {
+                    const linha = document.createElement('tr');
+                    linha.innerHTML = `
+                        <td style="background-color: ${exame.corFaixa}; color: ${exame.corTexto}; border-radius: 4px;">${exame.faixa}</td>
+                        <td>${exame.ano}</td>
+                        <td>${Number(exame.kihon).toFixed(1)}</td>
+                        <td>${Number(exame.kata).toFixed(1)}</td>
+                        <td>${Number(exame.kumite).toFixed(1)}</td>
+                        <td>${Number(exame.perguntas).toFixed(1)}</td>
+                        <td class="col-total">${Number(exame.total).toFixed(1)}</td>
+                        <td class="col-media">${Number(exame.media).toFixed(1)}</td>
+                    `;
+                    tabelaBody.appendChild(linha);
+                });
+            } else {
+                tabelaBody.innerHTML = `<tr><td colspan="8">Nenhum registro de exame encontrado para este aluno.</td></tr>`;
+            }
         }
-        window.scrollTo({ top: 0, behavior: 'smooth' });
-    }
 
-    // 3. CONSULTA STATUS DO TERMO
-    function verificarStatusAceite() {
-        if (!usuarioAtivo) return;
+        // 4. CONSULTA O STATUS DO TERMO (ESTRATÉGIA BLINDADA)
+        function verificarStatusAceite() {
+            if (!usuarioAtivo) return;
 
-        const blocoPendente = document.getElementById('blocoTermoPendente');
-        const blocoAceito = document.getElementById('blocoTermoAceito');
-        const badge = document.getElementById('badgeNotificacao');
-        const sininho = document.getElementById('wrapperSininho');
+            const blocoPendente = document.getElementById('blocoTermoPendente');
+            const blocoAceito = document.getElementById('blocoTermoAceito');
+            const badge = document.getElementById('badgeNotificacao');
+            const sininho = document.getElementById('wrapperSininho');
 
-        const jaAceitouLocal = localStorage.getItem(`termo_aceito_${usuarioAtivo}`);
-        const dataAceiteLocal = localStorage.getItem(`data_aceite_${usuarioAtivo}`) || '';
+            const jaAceitouLocal = localStorage.getItem(`termo_aceito_${usuarioAtivo}`);
+            const dataAceiteLocal = localStorage.getItem(`data_aceite_${usuarioAtivo}`) || '';
+            
+            if (jaAceitouLocal === 'true') {
+                aplicarLayoutAceito(blocoPendente, blocoAceito, badge, sininho, dataAceiteLocal, false);
+            } else {
+                aplicarLayoutPendente(blocoPendente, blocoAceito, badge, sininho);
+            }
+
+            const controller = new AbortController();
+            const timeoutId = setTimeout(() => controller.abort(), 90000);
+
+            fetch(`${URL_API_SERVIDOR}/api/status-termo/${usuarioAtivo}`, { signal: controller.signal })
+                .then(response => {
+                    clearTimeout(timeoutId);
+                    if (!response.ok) throw new Error("Resposta inválida do servidor");
+                    return response.json();
+                })
+                .then(data => {
+                    const verificadoNaAPI = (data && (data.aceitou === true || data.sucesso === true || data.status === 'assinado' || data.status === 'aceito'));
+                    const dataServidor = data.data || data.dataHora || data.updatedAt || new Date().toLocaleString('pt-BR');
+
+                    if (verificadoNaAPI) {
+                        localStorage.setItem(`termo_aceito_${usuarioAtivo}`, 'true');
+                        localStorage.setItem(`data_aceite_${usuarioAtivo}`, dataServidor);
+                        aplicarLayoutAceito(blocoPendente, blocoAceito, badge, sininho, dataServidor, true);
+                    } else {
+                        localStorage.removeItem(`termo_aceito_${usuarioAtivo}`);
+                        localStorage.removeItem(`data_aceite_${usuarioAtivo}`);
+                        aplicarLayoutPendente(blocoPendente, blocoAceito, badge, sininho);
+                    }
+                })
+                .catch(err => {
+                    clearTimeout(timeoutId);
+                    if (localStorage.getItem(`termo_aceito_${usuarioAtivo}`) === 'true') {
+                        aplicarLayoutAceito(blocoPendente, blocoAceito, badge, sininho, dataAceiteLocal, false);
+                    } else {
+                        aplicarLayoutPendente(blocoPendente, blocoAceito, badge, sininho);
+                    }
+                });
+        }
+
+        function aplicarLayoutAceito(blocoPendente, blocoAceito, badge, sininho, dataRegistro, ehGlobal) {
+            if (blocoPendente) blocoPendente.style.display = 'none';
+            if (blocoAceito) {
+                blocoAceito.style.display = 'block';
+                const tipoSinc = ehGlobal ? "sincronizado com a nuvem em:" : "verificado via dispositivo em:";
+                document.getElementById('textoDataAceite').innerHTML = `O seu comprovante de leitura e concordância foi ${tipoSinc} <br><strong>${dataRegistro}</strong>`;
+            }
+            if (badge) badge.style.display = 'none';
+            if (sininho) { 
+                sininho.style.animation = 'none'; 
+                sininho.title = "Nenhum aviso pendente"; 
+            }
+        }
+
+        function aplicarLayoutPendente(blocoPendente, blocoAceito, badge, sininho) {
+            if (blocoPendente) blocoPendente.style.display = 'block';
+            if (blocoAceito) blocoAceito.style.display = 'none';
+            if (badge) badge.style.display = 'flex';
+            if (sininho) {
+                sininho.style.animation = 'balancoSininho 0.5s ease-in-out infinite alternate';
+            }
+        }
+
+        function irParaAvisos() {
+            const botaoAvisosMenu = document.querySelectorAll('.nav-btn')[2]; 
+            if (botaoAvisosMenu) mudarAba('comunicados', botaoAvisosMenu);
+        }
         
-        if (jaAceitouLocal === 'true') {
-            aplicarLayoutAceito(blocoPendente, blocoAceito, badge, sininho, dataAceiteLocal, false);
-        } else {
-            aplicarLayoutPendente(blocoPendente, blocoAceito, badge, sininho);
+        function atualizarPainel() {
+            window.location.reload();
         }
 
-        const controller = new AbortController();
-        const timeoutId = setTimeout(() => controller.abort(), 90000);
+        function alternarBotaoAceite() {
+            const checkbox = document.getElementById('checkAceite');
+            const botao = document.getElementById('btnEnviarAceite');
 
-        fetch(`${URL_API_SERVIDOR}/api/status-termo/${usuarioAtivo}`, { signal: controller.signal })
-            .then(response => {
-                clearTimeout(timeoutId);
-                if (!response.ok) throw new Error("Resposta inválida do servidor");
-                return response.json();
+            if (checkbox && checkbox.checked) {
+                botao.disabled = false;
+                botao.style.backgroundColor = '#27ae60';
+                botao.style.cursor = 'pointer';
+            } else if (botao) {
+                botao.disabled = true;
+                botao.style.backgroundColor = '#95a5a6';
+                botao.style.cursor = 'not-allowed';
+            }
+        }
+
+        function enviarEmailAceite() {
+            const nomeAluno = localStorage.getItem('nomeAlunoLogado') || 'Nome Não Identificado';
+            const dataHoraAtual = new Date().toLocaleString('pt-BR');
+            
+            const emailDestinatarioPrincipal = "luedo25@msn.com"; 
+            const assunto = encodeURIComponent(`CONFIRMAÇÃO DE ACEITE: Regras da Associação - ${nomeAluno}`);
+            
+            const corpoEmail = encodeURIComponent(
+                `Prezada Diretoria,\n\n` +
+                `Por meio deste e-mail, confirmo que li e aceito voluntariamente todos os termos, regras e normas da Associação.\n\n` +
+                `DADOS DO ASSOCIADO:\n` +
+                `Nome completo: ${nomeAluno}\n` +
+                `Usuário do sistema: ${usuarioAtivo}\n` +
+                `Data/Hora do Aceite: ${dataHoraAtual}\n\n` +
+                `Este e-mail serve como registro e comprovante digital do meu aceite obrigatório.`
+            );
+
+            const mailtoUrl = `mailto:${emailDestinatarioPrincipal}?subject=${assunto}&body=${corpoEmail}`;
+            
+            localStorage.setItem(`termo_aceito_${usuarioAtivo}`, 'true');
+            localStorage.setItem(`data_aceite_${usuarioAtivo}`, dataHoraAtual);
+            verificarStatusAceite();
+
+            fetch(`${URL_API_SERVIDOR}/api/aceitar-termo`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ usuario: usuarioAtivo })
             })
-            .then(data => {
-                const verificadoNaAPI = (data && (data.aceitou === true || data.sucesso === true || data.status === 'assinado' || data.status === 'aceito'));
-                const dataServidor = data.data || data.dataHora || data.updatedAt || new Date().toLocaleString('pt-BR');
-
-                if (verificadoNaAPI) {
-                    localStorage.setItem(`termo_aceito_${usuarioAtivo}`, 'true');
-                    localStorage.setItem(`data_aceite_${usuarioAtivo}`, dataServidor);
-                    aplicarLayoutAceito(blocoPendente, blocoAceito, badge, sininho, dataServidor, true);
-                } else {
-                    localStorage.removeItem(`termo_aceito_${usuarioAtivo}`);
-                    localStorage.removeItem(`data_aceite_${usuarioAtivo}`);
-                    aplicarLayoutPendente(blocoPendente, blocoAceito, badge, sininho);
-                }
+            .then(response => response.json())
+            .then(() => {
+                verificarStatusAceite();
+                window.location.href = mailtoUrl;
             })
             .catch(err => {
-                clearTimeout(timeoutId);
-                if (localStorage.getItem(`termo_aceito_${usuarioAtivo}`) === 'true') {
-                    aplicarLayoutAceito(blocoPendente, blocoAceito, badge, sininho, dataAceiteLocal, false);
-                } else {
-                    aplicarLayoutPendente(blocoPendente, blocoAceito, badge, sininho);
-                }
+                console.warn("Falha de rede ao gravar termo. Mantendo cópia local offline.", err);
+                window.location.href = mailtoUrl;
             });
-    }
-
-    function aplicarLayoutAceito(blocoPendente, blocoAceito, badge, sininho, dataRegistro, ehGlobal) {
-        if (blocoPendente) blocoPendente.style.display = 'none';
-        if (blocoAceito) {
-            blocoAceito.style.display = 'block';
-            const tipoSinc = ehGlobal ? "sincronizado com a nuvem em:" : "registrado no dispositivo em:";
-            document.getElementById('textoDataAceite').innerHTML = `Comprovante ${tipoSinc}<br><strong>${dataRegistro}</strong>`;
         }
-        if (badge) badge.style.display = 'none';
-        if (sininho) { 
-            sininho.style.animation = 'none'; 
-            sininho.title = "Nenhum aviso pendente"; 
+
+        function mudarAba(idDaAba, botaoClicado) {
+            const secoes = document.querySelectorAll('.tab-content');
+            secoes.forEach(secao => secao.classList.remove('active'));
+
+            const botoes = document.querySelectorAll('.nav-btn');
+            botoes.forEach(btn => btn.classList.remove('active'));
+
+            const elementoAba = document.getElementById(idDaAba);
+            if (elementoAba) elementoAba.classList.add('active');
+            if (botaoClicado) botaoClicado.classList.add('active');
+
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+
+            if (idDaAba === 'comunicados') verificarStatusAceite();
+            if (idDaAba === 'saldo') buscarSaldoMercadoPago();
         }
-    }
 
-    function aplicarLayoutPendente(blocoPendente, blocoAceito, badge, sininho) {
-        if (blocoPendente) blocoPendente.style.display = 'block';
-        if (blocoAceito) blocoAceito.style.display = 'none';
-        if (badge) badge.style.display = 'flex';
-        if (sininho) {
-            sininho.style.animation = 'balancoSininho 0.5s ease-in-out infinite alternate';
+        function buscarSaldoMercadoPago() {
+            const elementoSaldo = document.getElementById('textoSaldo');
+            if (!elementoSaldo) return;
+            
+            elementoSaldo.textContent = "Carregando...";
+
+            fetch(`${URL_API_SERVIDOR}/api/saldo`)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.saldo !== undefined) {
+                        elementoSaldo.textContent = data.saldo.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+                    } else {
+                        elementoSaldo.textContent = "Erro ao carregar";
+                    }
+                })
+                .catch(() => {
+                    elementoSaldo.textContent = "Erro de conexão";
+                });
         }
-    }
 
-    function irParaAvisos() {
-        const botoes = document.querySelectorAll('.nav-btn');
-        if (botoes[2]) mudarAba('comunicados', botoes[2]);
-    }
-
-    function atualizarPainel() {
-        window.location.reload();
-    }
-
-    function alternarBotaoAceite() {
-        const checkbox = document.getElementById('checkAceite');
-        const botao = document.getElementById('btnEnviarAceite');
-
-        if (checkbox && checkbox.checked) {
-            botao.disabled = false;
-            botao.style.background = 'var(--accent-green)';
-            botao.style.opacity = '1';
-            botao.style.cursor = 'pointer';
-            botao.style.boxShadow = '0 4px 12px rgba(16, 185, 129, 0.25)';
-        } else if (botao) {
-            botao.disabled = true;
-            botao.style.background = '#475569';
-            botao.style.opacity = '0.6';
-            botao.style.cursor = 'not-allowed';
-            botao.style.boxShadow = 'none';
-        }
-    }
-
-    function enviarEmailAceite() {
-        const nomeAluno = localStorage.getItem('nomeAlunoLogado') || 'Não Identificado';
-        const dataHoraAtual = new Date().toLocaleString('pt-BR');
-        const emailDestinatarioPrincipal = "luedo25@msn.com"; 
-        const assunto = encodeURIComponent(`CONFIRMAÇÃO DE ACEITE: Regras da Associação - ${nomeAluno}`);
-        
-        const corpoEmail = encodeURIComponent(
-            `Prezada Diretoria,\n\n` +
-            `Confirmo que li e aceito os termos e regras da Associação.\n\n` +
-            `DADOS DO ASSOCIADO:\n` +
-            `Nome: ${nomeAluno}\n` +
-            `Usuário: ${usuarioAtivo}\n` +
-            `Data/Hora: ${dataHoraAtual}\n`
-        );
-
-        const mailtoUrl = `mailto:${emailDestinatarioPrincipal}?subject=${assunto}&body=${corpoEmail}`;
-        
-        localStorage.setItem(`termo_aceito_${usuarioAtivo}`, 'true');
-        localStorage.setItem(`data_aceite_${usuarioAtivo}`, dataHoraAtual);
-        verificarStatusAceite();
-
-        fetch(`${URL_API_SERVIDOR}/api/aceitar-termo`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ usuario: usuarioAtivo })
-        })
-        .then(() => {
-            verificarStatusAceite();
-            window.location.href = mailtoUrl;
-        })
-        .catch(() => {
-            window.location.href = mailtoUrl;
+        document.getElementById('logoutBtn').addEventListener('click', function() {
+            localStorage.removeItem('associadoAutenticado');
+            localStorage.removeItem('nomeAlunoLogado');
+            localStorage.removeItem('usuarioAtivo');
+            window.location.replace('index.html');
         });
-    }
 
-    function buscarSaldoMercadoPago() {
-        const txtSaldo = document.getElementById('textoSaldo');
-        txtSaldo.textContent = "Carregando...";
-        fetch(`${URL_API_SERVIDOR}/api/saldo`)
-            .then(res => res.json())
-            .then(data => {
-                if (data && data.saldo !== undefined) {
-                    txtSaldo.textContent = `R$ ${parseFloat(data.saldo).toFixed(2).replace('.', ',')}`;
-                } else {
-                    txtSaldo.textContent = "R$ --,--";
+        // 5. INICIALIZAÇÃO SEGURA
+        document.addEventListener('DOMContentLoaded', () => {
+            try {
+                const primeiroBotao = document.querySelector('.nav-btn');
+                if (primeiroBotao) {
+                    mudarAba('exame', primeiroBotao);
                 }
-            })
-            .catch(() => {
-                txtSaldo.textContent = "Erro ao buscar";
-            });
-    }
+                
+                // Dispara o carregamento das notas do aluno
+                carregarNotasAluno();
 
-    // EVENTOS AO CARREGAR A PÁGINA
-    document.addEventListener('DOMContentLoaded', () => {
-        verificarStatusAceite();
-        
-        const logoutBtn = document.getElementById('logoutBtn');
-        if (logoutBtn) {
-            logoutBtn.addEventListener('click', () => {
-                localStorage.removeItem('associadoAutenticado');
-                window.location.href = 'index.html';
-            });
-        }
-    });
+                setTimeout(() => {
+                    verificarStatusAceite();
+                }, 300);
+                
+            } catch (error) {
+                console.error("Erro crítico contido na inicialização:", error);
+            }
+        });
 </script>
 </body>
 </html>
