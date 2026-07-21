@@ -1,126 +1,197 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-<link rel="manifest" href="./manifest.json">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apple-mobile-web-app-title" content="Painel Aluno">
-<link rel="apple-touch-icon" href="icone-192.png">
-<meta name="mobile-web-app-capable" content="yes">
+    <link rel="manifest" href="./manifest.json">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Painel Aluno">
+    <link rel="apple-touch-icon" href="icone-192.png">
+    <meta name="mobile-web-app-capable" content="yes">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Painel do Associado</title>
     <style>
+        :root {
+            --bg-primary: #0f172a;
+            --bg-card: #1e293b;
+            --bg-card-hover: #334155;
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --accent-green: #10b981;
+            --accent-blue: #3b82f6;
+            --accent-red: #ef4444;
+            --accent-gold: #f59e0b;
+            --border-color: #334155;
+            --radius-lg: 16px;
+            --radius-md: 12px;
+            --radius-sm: 8px;
+        }
+
         * {
             box-sizing: border-box;
             margin: 0;
             padding: 0;
-            font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, Roboto, Helvetica, Arial, sans-serif;
-            /* Remove o efeito de clique cinza nativo do Safari no iOS */
-            -webkit-tap-highlight-color: transparent; 
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            -webkit-tap-highlight-color: transparent;
         }
 
         body {
-            background: #f4f7f6;
-            color: #333;
-            /* Garante que o conteúdo role perfeitamente sem sumir atrás do menu inferior */
-            padding-bottom: 100px; 
+            background-color: var(--bg-primary);
+            color: var(--text-main);
+            padding-bottom: 110px;
+            min-height: 100vh;
         }
 
-        /* --- EFEITO STICKY REVEAL (TOPO FIXO E TRANSPARENTE) --- */
-        .sticky-top-wrapper {
+        /* HEADER */
+        header {
+            background: rgba(30, 41, 59, 0.85);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
             position: sticky;
             top: 0;
-            z-index: 100;
-            background: #2c3e50;
-            color: white;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.15);
-        }
-
-        header {
-            background-color: transparent;
-            color: white;
-            padding: 15px 20px 10px 20px;
+            z-index: 1000;
+            border-bottom: 1px solid var(--border-color);
+            padding: 12px 20px;
             display: flex;
             justify-content: space-between;
             align-items: center;
         }
 
         header h1 {
-            font-size: 20px;
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--text-main);
+            letter-spacing: 0.3px;
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .header-left img {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid var(--accent-blue);
+        }
+
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+
+        .icon-btn {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-sm);
+            width: 38px;
+            height: 38px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 18px;
+            transition: all 0.2s;
+            position: relative;
+        }
+
+        .icon-btn:active {
+            transform: scale(0.92);
+            background: rgba(255, 255, 255, 0.1);
         }
 
         .btn-logout {
-            background-color: #e74c3c;
-            color: white;
-            border: none;
-            padding: 6px 12px;
-            border-radius: 4px;
+            background: rgba(239, 68, 68, 0.15);
+            color: #fca5a5;
+            border: 1px solid rgba(239, 68, 68, 0.3);
+            padding: 8px 14px;
+            border-radius: var(--radius-sm);
             cursor: pointer;
-            font-weight: bold;
-            font-size: 14px;
-        }
-
-        .welcome-box {
-            background: transparent;
-            padding: 10px 20px 20px 20px;
-            border-radius: 0;
-            box-shadow: none;
-            margin-bottom: 0;
-        }
-
-        .welcome-box h2 {
-            font-size: 18px;
-            margin-bottom: 2px;
-            color: #ffffff;
-        }
-
-        .welcome-box p {
+            font-weight: 600;
             font-size: 13px;
-            color: #bdc3c7;
+            transition: all 0.2s;
         }
 
-        /* Máscara de Transição/Transparência suave */
-        .fade-overlay {
-            height: 25px;
-            width: 100%;
-            background: linear-gradient(to bottom, #2c3e50 0%, rgba(244, 247, 246, 0) 100%);
+        .btn-logout:active {
+            transform: scale(0.95);
+            background: rgba(239, 68, 68, 0.3);
+        }
+
+        .badge-count {
+            position: absolute;
+            top: -4px;
+            right: -4px;
+            background: var(--accent-red);
+            color: white;
+            font-size: 10px;
+            font-weight: bold;
+            border-radius: 50%;
+            width: 18px;
+            height: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 2px solid var(--bg-card);
+        }
+
+        /* CONTAINER PRINCIPAL */
+        .container {
+            max-width: 900px;
+            margin: 20px auto 0;
+            padding: 0 16px;
+        }
+
+        /* CARD BOAS-VINDAS */
+        .welcome-box {
+            background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+            border: 1px solid var(--border-color);
+            padding: 22px;
+            border-radius: var(--radius-lg);
+            margin-bottom: 20px;
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .welcome-box::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 150px;
+            height: 150px;
+            background: radial-gradient(circle, rgba(59,130,246,0.15) 0%, rgba(0,0,0,0) 70%);
             pointer-events: none;
         }
 
-        .container {
-            max-width: 1200px;
-            margin: -10px auto 0 auto;
-            padding: 0 12px;
-            position: relative;
-            z-index: 1; /* Permite rolar por baixo da área sticky */
+        .welcome-box h2 {
+            font-size: 22px;
+            font-weight: 700;
+            margin-bottom: 6px;
+            background: linear-gradient(to right, #fff, var(--text-muted));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
         }
 
-        /* Estilo para a imagem dentro do botão */
-        .nav-btn .icon img.logo-icon {
-            width: 24px;   /* Defina a largura desejada, ex: 24px */
-            height: 24px;  /* Defina a altura desejada, ex: 24px */
-            object-fit: contain; /* Garante que a imagem não seja distorcida */
-            vertical-align: middle; /* Alinha verticalmente com o texto */
-            margin-right: 5px; /* Adiciona um pequeno espaço entre o ícone e o texto */
+        .welcome-box p {
+            font-size: 14px;
+            color: var(--text-muted);
         }
 
-        /* Garante que o span .icon não tenha estilos que interfiram */
-        .nav-btn .icon {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        /* CONFIGURAÇÃO DAS SEÇÕES DINÂMICAS */
+        /* CONTEÚDO DAS ABAS */
         .tab-content {
-            display: none; 
-            background: white;
-            padding: 20px 15px;
-            border-radius: 8px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+            display: none;
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            padding: 24px;
+            border-radius: var(--radius-lg);
             margin-bottom: 20px;
-            animation: slideUp 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+            animation: fadeIn 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+            box-shadow: 0 4px 20px rgba(0,0,0,0.2);
         }
 
         .tab-content.active {
@@ -129,122 +200,125 @@
 
         .tab-content h3 {
             font-size: 18px;
-            color: #2c3e50;
-            margin-bottom: 15px;
-            border-bottom: 2px solid #ecf0f1;
-            padding-bottom: 8px;
+            font-weight: 600;
+            color: var(--text-main);
+            margin-bottom: 18px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
         }
 
-        @keyframes slideUp {
-            from { opacity: 0; transform: translateY(15px); }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
             to { opacity: 1; transform: translateY(0); }
         }
 
-        /* EXAME DE FAIXA: TABELA RESPONSIVA PARA SMARTPHONES */
+        /* TABELAS RESPONSIVAS */
         .table-container {
             width: 100%;
             overflow-x: auto;
-            -webkit-overflow-scrolling: touch; /* Rolagem por toque super lisa no iOS */
-            border: 1px solid #ddd;
-            border-radius: 6px;
+            -webkit-overflow-scrolling: touch;
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-md);
+            background: rgba(15, 23, 42, 0.6);
         }
 
         table {
             width: 100%;
             border-collapse: collapse;
-            min-width: 650px; /* Força a tabela a manter tamanho legível sem esmagar números */
-            text-align: center;
-            font-size: 14px;
+            min-width: 600px;
+            text-align: left;
+            font-size: 13px;
         }
 
         th, td {
-            border: none;
-            border-bottom: 1px solid #ddd;
-            padding: 12px 6px;
-            font-weight: bold;
+            padding: 14px 12px;
+            border-bottom: 1px solid var(--border-color);
         }
 
         th {
-            background-color: #f8f9fa;
-            color: #2c3e50;
+            background: rgba(255, 255, 255, 0.03);
+            color: var(--text-muted);
+            font-weight: 600;
+            text-transform: uppercase;
+            font-size: 11px;
+            letter-spacing: 0.5px;
         }
 
-        .col-total, .col-media {
-            background-color: #e8f5e9;
-            color: #2e7d32;
+        td {
+            color: var(--text-main);
         }
 
-        /* CONTÊINER PARA A TABELA DE CARÊNCIA (IMAGEM ISOLADA) */
+        tbody tr:last-child td {
+            border-bottom: none;
+        }
+
+        /* IMAGEM CARÊNCIA */
         .container-tabela-carencia {
             width: 100%;
             margin-top: 25px;
-            padding-top: 15px;
             text-align: center;
         }
 
         .img-tabela-carencia {
             max-width: 100%;
             height: auto;
-            display: inline-block;
-            border-radius: 6px;
-            box-shadow: 0 2px 6px rgba(0,0,0,0.06);
-            border: 1px solid #e0e0e0;
+            border-radius: var(--radius-md);
+            border: 1px solid var(--border-color);
         }
 
-        /* ESTILOS DOS MÓDULOS EXPANSÍVEIS (DETAILS/SUMMARY) */
+        /* ACCORDIONS / DETAILS */
         .modulo-faixa {
-            background: #fff;
-            border: 1px solid #e0e0e0;
-            border-radius: 8px;
+            background: rgba(15, 23, 42, 0.4);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-md);
             margin-bottom: 12px;
             overflow: hidden;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.02);
-            transition: border-color 0.2s;
+            transition: all 0.2s ease;
         }
 
         .modulo-faixa[open] {
-            border-color: #bdc3c7;
+            border-color: var(--accent-blue);
+            background: rgba(15, 23, 42, 0.8);
         }
 
         .botao-expandir {
-            padding: 14px 15px;
+            padding: 16px;
             display: flex;
             align-items: center;
-            font-weight: bold;
+            font-weight: 600;
             font-size: 15px;
-            color: #2c3e50;
+            color: var(--text-main);
             cursor: pointer;
-            list-style: none; /* Remove a seta nativa do HTML */
+            list-style: none;
             user-select: none;
-            background: #fafbfc;
         }
 
         .botao-expandir::-webkit-details-marker {
-            display: none; /* Remove a seta nativa no Safari/Chrome antigo */
+            display: none;
         }
 
-        /* Indicadores de Cor das Faixas */
+        /* CORES DAS FAIXAS */
         .faixa-cor {
-            width: 18px;
-            height: 18px;
-            border-radius: 3px;
+            width: 14px;
+            height: 14px;
+            border-radius: 4px;
             display: inline-block;
-            margin-right: 4px;
-            border: 1px solid rgba(0,0,0,0.15);
+            margin-right: 6px;
         }
         .faixa-cor.branca { background-color: #ffffff; }
-        .faixa-cor.amarela { background-color: #f1c40f; }
-        .faixa-cor.vermelha { background-color: #e74c3c; }
-        .faixa-cor.laranja { background-color: #e67e22; }
-        .faixa-cor.verde { background-color: #27ae60; }
-        .faixa-cor.roxa { background-color: #8e44ad; }
-        .faixa-cor.marrom { background-color: #795548; }
-        .faixa-cor.preta { background-color: #2c3e50; margin-right: 10px; }
+        .faixa-cor.amarela { background-color: #facc15; }
+        .faixa-cor.vermelha { background-color: #ef4444; }
+        .faixa-cor.laranja { background-color: #f97316; }
+        .faixa-cor.verde { background-color: #10b981; }
+        .faixa-cor.roxa { background-color: #a855f7; }
+        .faixa-cor.marrom { background-color: #854d0e; }
+        .faixa-cor.preta { background-color: #000000; border: 1px solid #475569; margin-right: 10px; }
 
         .seta {
             margin-left: auto;
             font-size: 12px;
-            color: #95a5a6;
+            color: var(--text-muted);
             transition: transform 0.2s;
         }
 
@@ -252,1101 +326,961 @@
             transform: rotate(180deg);
         }
 
-        /* Blocos de Informações Extras e Teoria */
         .bloco-extra {
-            background-color: #f8f9fa;
-            padding: 15px;
-            border-top: 1px solid #eee;
-            font-size: 14px;
-            color: #333;
-            line-height: 1.5;
+            padding: 16px;
+            border-top: 1px solid var(--border-color);
+            font-size: 13px;
+            color: var(--text-muted);
+            line-height: 1.6;
+            background: rgba(0, 0, 0, 0.2);
         }
 
         .bloco-extra strong {
-            color: #2c3e50;
+            color: var(--text-main);
             display: block;
             margin-top: 10px;
             margin-bottom: 4px;
         }
-        
-        .bloco-extra strong:first-child {
-            margin-top: 0;
-        }
-
-        .bloco-extra p {
-            margin-bottom: 8px;
-        }
 
         .texto-vermelho {
-            color: #c0392b;
-            font-weight: bold;
+            color: #f87171;
+            font-weight: 600;
         }
 
-        /* VISUALIZADOR DE PDF PREPARADO PARA TELAS PEQUENAS */
-        .pdf-container {
-            width: 100%;
-            height: 60vh; 
-            border: 1px solid #ddd;
-            border-radius: 6px;
-            overflow: hidden;
-            background-color: #333;
+        /* CARDS E LISTAS INTERATIVAS */
+        .card-item {
+            display: flex;
+            align-items: center;
+            background: rgba(15, 23, 42, 0.5);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-md);
+            padding: 14px 16px;
+            margin-bottom: 12px;
+            gap: 14px;
+            text-decoration: none;
+            color: inherit;
+            transition: all 0.2s;
         }
 
-        .pdf-container iframe {
+        .card-item:hover, .card-item:active {
+            background: var(--bg-card-hover);
+            border-color: var(--accent-blue);
+            transform: translateY(-1px);
+        }
+
+        .card-date-badge {
+            text-align: center;
+            padding-right: 14px;
+            border-right: 1px solid var(--border-color);
+            min-width: 65px;
+        }
+
+        .card-date-badge .day {
+            display: block;
+            font-size: 22px;
+            font-weight: 800;
+            color: var(--accent-blue);
+            line-height: 1;
+        }
+
+        .card-date-badge .month {
+            display: block;
+            font-size: 11px;
+            font-weight: 700;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            margin-top: 4px;
+        }
+
+        .btn-action {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
             width: 100%;
-            height: 100%;
+            padding: 14px;
+            background: var(--accent-blue);
+            color: white;
             border: none;
+            border-radius: var(--radius-md);
+            font-weight: 600;
+            font-size: 14px;
+            cursor: pointer;
+            text-decoration: none;
+            transition: all 0.2s;
+            box-shadow: 0 4px 12px rgba(59, 130, 246, 0.25);
         }
 
-        /* BARRA DE NAVEGAÇÃO ESTILO APP DE CELULAR (FIXADA NO RODAPÉ) */
+        .btn-action:active {
+            transform: scale(0.98);
+            opacity: 0.9;
+        }
+
+        .btn-whatsapp {
+            background: #22c55e;
+            box-shadow: 0 4px 12px rgba(34, 197, 94, 0.25);
+        }
+
+        /* BARRA INFERIOR DE NAVEGAÇÃO */
         .bottom-nav {
             position: fixed;
             bottom: 0;
             left: 0;
             width: 100%;
-            background-color: #ffffff;
+            background: rgba(15, 23, 42, 0.92);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
             display: flex;
-            justify-content: space-between;
+            justify-content: space-around;
             align-items: center;
-            padding: 8px 4px calc(8px + env(safe-area-inset-bottom)); /* Suporte para a barra inferior do iPhone */
-            box-shadow: 0 -3px 12px rgba(0,0,0,0.08);
+            padding: 10px 6px calc(10px + env(safe-area-inset-bottom));
+            border-top: 1px solid var(--border-color);
             z-index: 9999;
-            border-top: 1px solid #eee;
         }
 
         .nav-btn {
             background: none;
             border: none;
-            color: #7f8c8d;
+            color: var(--text-muted);
             font-size: 10px;
             font-weight: 600;
             cursor: pointer;
             display: flex;
             flex-direction: column;
             align-items: center;
-            justify-content: center;
             gap: 4px;
             flex: 1;
-            min-width: 0;
-            padding: 6px 2px;
+            padding: 4px 0;
             transition: all 0.2s;
         }
 
-        @keyframes balancoSininho {
-            0% { transform: rotate(-10deg); }
-            100% { transform: rotate(10deg); }
-        }
-
-        /* Visual ativo do botão clicado */
-        .nav-btn.active {
-            color: #27ae60;
-            transform: scale(1.05);
-        }
-
         .nav-btn .icon {
-            font-size: 22px;
+            font-size: 20px;
             transition: transform 0.2s;
+        }
+
+        .nav-btn .icon img.logo-icon {
+            width: 22px;
+            height: 22px;
+            object-fit: contain;
+            filter: grayscale(100%) opacity(0.6);
+            transition: all 0.2s;
+        }
+
+        .nav-btn.active {
+            color: var(--accent-blue);
         }
 
         .nav-btn.active .icon {
             transform: translateY(-2px);
         }
 
-        /* MEDIA QUERIES PARA ADAPTAÇÃO EXTREMA (CELULARES PEQUENOS) */
+        .nav-btn.active .icon img.logo-icon {
+            filter: grayscale(0%) opacity(1);
+        }
+
+        @keyframes balancoSininho {
+            0% { transform: rotate(-12deg); }
+            100% { transform: rotate(12deg); }
+        }
+
         @media (max-width: 480px) {
-            header h1 { font-size: 18px; }
-            .btn-logout { padding: 4px 10px; font-size: 13px; }
-            .nav-btn { font-size: 9px; }
-            .nav-btn .icon { font-size: 20px; }
-            .tab-content { padding: 15px 10px; }
+            header h1 { font-size: 16px; }
+            .container { padding: 0 12px; }
+            .tab-content { padding: 18px 14px; }
         }
     </style>
 </head>
 <body>
 
-<!-- ENVOLTÓRIO STICKY REVEAL -->
-<div class="sticky-top-wrapper">
-    <header>
-        <div style="display: flex; align-items: center; gap: 12px;">
-            <img src="./logo-associacao.png" alt="Logo Associação Atarashii" style="width: 42px; height: 42px; object-fit: contain; border-radius: 50%; filter: drop-shadow(0px 2px 4px rgba(0,0,0,0.25));">
-            <h1 style="margin: 0; font-size: 20px; font-weight: bold; letter-spacing: 0.5px;">Painel do Aluno</h1>
+<header>
+    <div class="header-left">
+        <img src="./logo-associacao.png" alt="Logo Associação Atarashii">
+        <h1>Painel do Aluno</h1>
+    </div>
+    
+    <div class="header-actions">
+        <div class="icon-btn" onclick="atualizarPainel()" title="Atualizar painel">
+            🔄
         </div>
-        
-        <div style="display: flex; align-items: center; gap: 18px;">
-            <div onclick="atualizarPainel()" title="Atualizar painel" style="cursor: pointer; font-size: 20px; padding: 5px; transition: transform 0.2s; user-select: none;" onmousedown="this.style.transform='scale(0.85)'" onmouseup="this.style.transform='scale(1)'">
-                🔄
-            </div>
 
-            <div id="wrapperSininho" onclick="irParaAvisos()" style="position: relative; cursor: pointer; font-size: 22px; padding: 5px; transition: transform 0.2s; user-select: none;">
-                🔔
-                <span id="badgeNotificacao" style="display: none; position: absolute; top: 0; right: 0; background-color: #e74c3c; color: white; font-size: 11px; font-weight: bold; border-radius: 50%; width: 18px; height: 18px; display: flex; align-items: center; justify-content: center; border: 2px solid #2c3e50;">
-                    1
-                </span>
-            </div>
-
-            <button class="btn-logout" id="logoutBtn" style="margin: 0;">Sair</button>
+        <div class="icon-btn" id="wrapperSininho" onclick="irParaAvisos()">
+            🔔
+            <span class="badge-count" id="badgeNotificacao" style="display: none;">1</span>
         </div>
-    </header>
 
-    <!-- Boas-Vindas Integrada -->
+        <button class="btn-logout" id="logoutBtn">Sair</button>
+    </div>
+</header>
+
+<div class="container">
+    <!-- Boas-Vindas -->
     <div class="welcome-box">
         <h2 id="welcomeNome">Olá, Associado!</h2>
-        <p>Toque nas opções do menu inferior para navegar pelo seu painel.</p>
+        <p>Acompanhe suas notas, conteúdos e avisos no menu inferior.</p>
     </div>
 
-    <!-- Gradiente de Transparência que sobrepõe a rolagem -->
-    <div class="fade-overlay"></div>
-</div>
-
-    <div class="container">
-        <!-- SEÇÃO 1: EXAME DE FAIXA -->
-        <div id="exame" class="tab-content">
-            <h3>Exames de Faixa</h3>
-            <div class="table-container">
+    <!-- SEÇÃO 1: EXAME DE FAIXA -->
+    <div id="exame" class="tab-content active">
+        <h3>🥋 Exames de Faixa</h3>
+        <div class="table-container">
+            <table>
+                <thead>
+                    <tr>
+                        <th>FAIXA</th>
+                        <th>Ano</th>
+                        <th>KIHON</th>
+                        <th>KATA</th>
+                        <th>KUMITE</th>
+                        <th>Perguntas</th>
+                        <th>TOTAL</th>
+                        <th>MÉDIA</th>
+                    </tr>
+                </thead>
+                <tbody id="corpoTabelaNotas">
+                    <!-- Gerado via JavaScript -->
+                </tbody>
+            </table>
+        </div>
+        
+        <div class="container-tabela-carencia">
+            <h3 style="margin-top: 20px;">⏳ Carência Mínima (Kyu)</h3>
+            <img src="./tabela-carencia.png" alt="Tabela de Carência Mínima" class="img-tabela-carencia">
+        </div>
+    </div>
+    
+    <!-- SEÇÃO 2: CONTEÚDO PROGRAMÁTICO -->
+    <div id="conteudo-programatico" class="tab-content">
+        <h3>📖 Conteúdo Programático</h3>
+        
+        <!-- BRANCA PARA AMARELA -->
+        <details class="modulo-faixa">
+            <summary class="botao-expandir">
+                <span class="faixa-cor branca"></span>
+                <span class="faixa-cor amarela"></span>
+                Branca para Amarela
+                <span class="seta">▼</span>
+            </summary>
+            <div class="table-container" style="border:none; border-radius:0;">
                 <table>
                     <thead>
                         <tr>
-                            <th>FAIXA</th>
-                            <th>Ano</th>
-                            <th>KIHON</th>
-                            <th>KATA</th>
-                            <th>KUMITE</th>
-                            <th>Perguntas</th>
-                            <th>TOTAL</th>
-                            <th>MÉDIA FINAL</th>
+                            <th>Kihon</th>
+                            <th>Base</th>
+                            <th>Sentido</th>
                         </tr>
                     </thead>
-                    <tbody id="corpoTabelaNotas">
-                        <!-- Gerado via JavaScript -->
+                    <tbody>
+                        <tr><td>Oi-Zuki</td><td>Zenkutsu-Dachi</td><td>Avançando 5x</td></tr>
+                        <tr><td>Ague-Uke / final (Guiako-zuki)</td><td>Zenkutsu-Dachi</td><td>Recuando 5x</td></tr>
+                        <tr><td>Mae-Gueri</td><td>Zenkutsu-Dachi</td><td>Avançando 5x</td></tr>
+                        <tr><td>Soto-Uke / final (Guiako-zuki)</td><td>Zenkutsu-Dachi</td><td>Recuando 5x</td></tr>
+                        <tr><td>Guedan-Barai / final (Guiako-zuki)</td><td>Zenkutsu-Dachi</td><td>Avançando 5x</td></tr>
+                        <tr><td>Uchi-Uke / final (Guiako-zuki)</td><td>Zenkutsu-Dachi</td><td>Recuando 5x</td></tr>
+                        <tr><td>Yoko-Gueri-Keague</td><td>Kiba-Dachi</td><td>Ida 3x</td></tr>
+                        <tr><td>Yoko-Gueri-Kekome</td><td>Kiba-Dachi</td><td>Volta 3x</td></tr>
                     </tbody>
                 </table>
+                <div class="bloco-extra">
+                    <strong>Kihon-Gohon-Kumite:</strong>
+                    <p><span class="texto-vermelho">Ataques</span> - Jodan-zuki, Tchudan-zuki, Guedan-zuki. <span class="texto-vermelho">Defesa</span> - Jodan-Ague-uke, Tchudan-Soto-uke, Guedan-barai, final Guiako-zuki.</p>
+                    <strong>Kata:</strong> Heian-Shodan (com contagem)
+                    <strong>Exame Oral:</strong> Contagem em japonês, Dojo-Kun e Pergunta livre.
+                    <strong>Kumite:</strong> (1:30 min) Sombra luta semi-contato.
+                </div>
             </div>
-            <!-- NOVA SEÇÃO: IMAGEM DA TABELA DE CARÊNCIA MÍNIMA (KYU) -->
-            <div class="container-tabela-carencia">
-                <h3 style="margin-bottom: 15px; border-bottom: 2px solid #ecf0f1; padding-bottom: 8px;">⏳ Tabela de Carência Mínima (Kyu)</h3>
-                <img src="./tabela-carencia.png" alt="Tabela de Carência Mínima para Exame de Faixa" class="img-tabela-carencia">
+        </details>
+
+        <!-- AMARELA PARA VERMELHA -->
+        <details class="modulo-faixa">
+            <summary class="botao-expandir">
+                <span class="faixa-cor amarela"></span>
+                <span class="faixa-cor vermelha"></span>
+                Amarela para Vermelha
+                <span class="seta">▼</span>
+            </summary>
+            <div class="table-container" style="border:none; border-radius:0;">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Kihon</th>
+                            <th>Base</th>
+                            <th>Sentido</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr><td>Oi-Zuki</td><td>Zenkutsu-Dachi</td><td>Avançando 5x</td></tr>
+                        <tr><td>Ague-Uke / final (Guiako-zuki)</td><td>Zenkutsu-Dachi</td><td>Recuando 5x</td></tr>
+                        <tr><td>Mae-Gueri</td><td>Zenkutsu-Dachi</td><td>Avançando 5x</td></tr>
+                        <tr><td>Soto-Uke / final (Guiako-zuki)</td><td>Zenkutsu-Dachi</td><td>Recuando 5x</td></tr>
+                        <tr><td>Mawachi-Gueri</td><td>Zenkutsu-Dachi</td><td>Avançando 5x</td></tr>
+                        <tr><td>Uchi-Uke / final (Guiako-zuki)</td><td>Zenkutsu-Dachi</td><td>Recuando 5x</td></tr>
+                        <tr><td>Shoto-Uke</td><td>Kokutsu-dachi</td><td>Avançando 5x</td></tr>
+                        <tr><td>Shoto-Uke / final Guiako-Yon-Nukite</td><td>Kokutsu-dachi</td><td>Recuando 5x</td></tr>
+                        <tr><td>Yoko-Gueri-Keague</td><td>Kiba-Dachi</td><td>Ida 3x</td></tr>
+                        <tr><td>Yoko-Gueri-Kekome</td><td>Kiba-Dachi</td><td>Volta 3x</td></tr>
+                    </tbody>
+                </table>
+                <div class="bloco-extra">
+                    <strong>Kihon-Gohon-Kumite:</strong>
+                    <p><span class="texto-vermelho">Ataques</span> - Jodan-zuki, Tchudan-zuki, Guedan-zuki. <span class="texto-vermelho">Defesa</span> - Jodan-Ague-uke, Tchudan-Soto-uke, Guedan-barai, final Guiako-zuki.</p>
+                    <strong>Kata:</strong> Heian-Shodan e Heian-Nidan (sem contagem)
+                    <strong>Exame Oral:</strong> Contagem em japonês, Dojo-Kun e Pergunta livre.
+                    <strong>Kumite:</strong> (2 min) Sombra luta com contato.
+                </div>
+            </div>
+        </details>
+
+        <!-- VERMELHA PARA LARANJA -->
+        <details class="modulo-faixa">
+            <summary class="botao-expandir">
+                <span class="faixa-cor vermelha"></span>
+                <span class="faixa-cor laranja"></span>
+                Vermelha para Laranja
+                <span class="seta">▼</span>
+            </summary>
+            <div class="table-container" style="border:none; border-radius:0;">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Kihon</th>
+                            <th>Base</th>
+                            <th>Sentido</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr><td>Sambom-Zuki</td><td>Zenkutsu-Dachi</td><td>Avançando 5x</td></tr>
+                        <tr><td>Ague-Uke / Guiako-zuki</td><td>Zenkutsu-Dachi</td><td>Recuando 5x</td></tr>
+                        <tr><td>Mae-Gueri / Guiako-zuki</td><td>Zenkutsu-Dachi</td><td>Avançando 5x</td></tr>
+                        <tr><td>Soto-Uke / Guiako-zuki</td><td>Zenkutsu-Dachi</td><td>Recuando 5x</td></tr>
+                        <tr><td>Mawachi-Gueri</td><td>Zenkutsu-Dachi</td><td>Avançando 5x</td></tr>
+                        <tr><td>Uchi-Uke / Guiako-zuki</td><td>Zenkutsu-Dachi</td><td>Recuando 5x</td></tr>
+                        <tr><td>Shoto-uke / Guiako-yon-Nukite</td><td>Kokutsu-dachi</td><td>Avançando 5x</td></tr>
+                        <tr><td>Shoto-uke / Guiako-yon-Nukite</td><td>Kokutsu-dachi</td><td>Recuando 5x</td></tr>
+                        <tr><td>Yoko-Gueri-Keague</td><td>Kiba-Dachi</td><td>Ida 3x</td></tr>
+                        <tr><td>Yoko-Gueri-Kekome</td><td>Kiba-Dachi</td><td>Volta 3x</td></tr>
+                    </tbody>
+                </table>
+                <div class="bloco-extra">
+                    <strong>Kihon-Ipom-Kumite:</strong>
+                    <p><span class="texto-vermelho">Ataques</span> - Jodan-zuki, Tchudan-zuki, Mae-Gueri, Yoko-Gueri, Mawachi-Gueri.</p>
+                    <strong>Kata:</strong> Heian-Nidan, Heian-Sandan, Heian Yodan
+                    <strong>Exame Oral:</strong> Contagem, Dojo-Kun e Pergunta livre.
+                    <strong>Kumite:</strong> (2 min) Luta com contato.
+                </div>
+            </div>
+        </details>
+
+        <!-- LARANJA PARA VERDE -->
+        <details class="modulo-faixa">
+            <summary class="botao-expandir">
+                <span class="faixa-cor laranja"></span>
+                <span class="faixa-cor verde"></span>
+                Laranja para Verde
+                <span class="seta">▼</span>
+            </summary>
+            <div class="table-container" style="border:none; border-radius:0;">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Kihon</th>
+                            <th>Base</th>
+                            <th>Sentido</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr><td>Sambom-Zuki</td><td>Zenkutsu-Dachi</td><td>Avançando 5x</td></tr>
+                        <tr><td>Ague-uke / Guiako-zuki</td><td>Zenkutsu-Dachi</td><td>Recuando 5x</td></tr>
+                        <tr><td>Mae-gueri / Guiako-zuki</td><td>Zenkutsu-Dachi</td><td>Avançando 5x</td></tr>
+                        <tr><td>Soto-uke / Guiako-zuki</td><td>Zenkutsu-Dachi</td><td>Recuando 5x</td></tr>
+                        <tr><td>Kizame-gueri / Mawachi-Gueri</td><td>Zenkutsu-Dachi</td><td>Avançando 5x</td></tr>
+                        <tr><td>Uchi-uke / Kizame-zuki / Guiako-zuki</td><td>Zenkutsu-Dachi</td><td>Recuando 5x</td></tr>
+                        <tr><td>Shoto-uke / Guiako-yon-Nukite</td><td>Kokutsu-Dachi</td><td>Avançando 5x</td></tr>
+                        <tr><td>Shoto-uke / Kizame-gueri / Guiako-yon-Nukite</td><td>Kokutsu-Dachi</td><td>Recuando 5x</td></tr>
+                        <tr><td>Yoko-Gueri-Keague</td><td>Kiba-Dachi</td><td>Ida 3x</td></tr>
+                        <tr><td>Yoko-Gueri-Kekome</td><td>Kiba-Dachi</td><td>Volta 3x</td></tr>
+                    </tbody>
+                </table>
+                <div class="bloco-extra">
+                    <strong>Kihon-Ipom-Kumite:</strong> Ataques e contra-ataques combinados.
+                    <strong>Kata:</strong> Heian-Sandan, Heian-Yondan e Heian-Godan.
+                    <strong>Kumite:</strong> (2 min) Sombra e luta com contato.
+                </div>
+            </div>
+        </details>
+
+        <!-- VERDE PARA ROXA -->
+        <details class="modulo-faixa">
+            <summary class="botao-expandir">
+                <span class="faixa-cor verde"></span>
+                <span class="faixa-cor roxa"></span>
+                Verde para Roxa
+                <span class="seta">▼</span>
+            </summary>
+            <div class="table-container" style="border:none; border-radius:0;">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Kihon</th>
+                            <th>Base</th>
+                            <th>Sentido</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr><td>Sonoba-zuki</td><td>Kiba-Dachi</td><td>10 repetições</td></tr>
+                        <tr><td>Sambom-Zuki</td><td>Zenkutsu-Dachi</td><td>Avançando 5x</td></tr>
+                        <tr><td>Ague-uke / Uraken / Guiako-zuki</td><td>Zenkutsu-Dachi</td><td>Recuando 5x</td></tr>
+                        <tr><td>Mae-gueri / Guiako-zuki</td><td>Zenkutsu-Dachi</td><td>Avançando 5x</td></tr>
+                        <tr><td>Soto-uke, empi / Uraken / Guiako-zuki</td><td>Zenkutsu-Dachi</td><td>Recuando 5x</td></tr>
+                        <tr><td>Kizame-gueri / Mawachi-Gueri</td><td>Zenkutsu-Dachi</td><td>Avançando 5x</td></tr>
+                        <tr><td>Uchi-Uke / Kizame-zuki / Guiako-zuki</td><td>Zenkutsu-Dachi</td><td>Recuando 5x</td></tr>
+                        <tr><td>Shoto-uke / Guiako-yon-Nukite</td><td>Kokutsu-Dachi</td><td>Avançando 5x</td></tr>
+                        <tr><td>Shoto-uke / Kizame-gueri / Guiako-yon-Nukite</td><td>Kokutsu-Dachi</td><td>Recuando 5x</td></tr>
+                        <tr><td>Yoko-Gueri-Keague / Kekome</td><td>Kiba-Dachi</td><td>Ida/Volta 3x</td></tr>
+                        <tr><td>Mae / Mawachi / Yoko / Ushiro-gueri</td><td>Zenkutsu-Dachi</td><td>Ida/Volta 1x</td></tr>
+                    </tbody>
+                </table>
+                <div class="bloco-extra">
+                    <strong>Jiu-Ipom-Kumite:</strong> Defesas e contra-ataques livres.
+                    <strong>Kata/Bunkai:</strong> Heian-Godan, Bassai-Dai. Apresentar aplicações.
+                    <strong>Kumite:</strong> Shiai-kumite 2 min / Jiu-kumite 1 min.
+                </div>
+            </div>
+        </details>
+
+        <!-- ROXA PARA MARROM -->
+        <details class="modulo-faixa">
+            <summary class="botao-expandir">
+                <span class="faixa-cor roxa"></span>
+                <span class="faixa-cor marrom"></span>
+                Roxa para Marrom
+                <span class="seta">▼</span>
+            </summary>
+            <div class="table-container" style="border:none; border-radius:0;">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Kihon</th>
+                            <th>Base</th>
+                            <th>Sentido</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr><td>Sonoba-zuki</td><td>Kiba-Dachi</td><td>10 repetições</td></tr>
+                        <tr><td>Oi-zuki</td><td>Zenkutsu-Dachi</td><td>Avançando 5x</td></tr>
+                        <tr><td>Mae-gueri / Tchudan-Oi-zuki</td><td>Zenkutsu-Dachi</td><td>Avançando 5x</td></tr>
+                        <tr><td>Guiako-zuki</td><td>Zenkutsu-Dachi</td><td>Avançando 5x</td></tr>
+                        <tr><td>Mae-gueri / Guiako-zuki</td><td>Zenkutsu-Dachi</td><td>Avançando 5x</td></tr>
+                        <tr><td>Sambom-Zuki</td><td>Zenkutsu-Dachi</td><td>Avançando 5x</td></tr>
+                        <tr><td>Ague-uke / Guiako-zuki</td><td>Zenkutsu-Dachi</td><td>Recuando 5x</td></tr>
+                        <tr><td>Yoko-Gueri-Kekome / Mawachi-Guiako empi</td><td>Zenkutsu-Dachi</td><td>Avançando 5x</td></tr>
+                        <tr><td>Soto-uke / Empi / Uraken / Guiako-zuki</td><td>Zenkutsu / Kiba</td><td>Recuando 5x</td></tr>
+                        <tr><td>Kizame-Gueri / Mawachi-Gueri</td><td>Zenkutsu-Dachi</td><td>Avançando 5x</td></tr>
+                        <tr><td>Uchi-uke / kizame-zuki / Guiako-zuki</td><td>Zenkutsu-Dachi</td><td>Recuando 5x</td></tr>
+                        <tr><td>Shoto-uke / Guiako-yon-Nukite</td><td>Kokutsu-Dachi</td><td>Avançando 5x</td></tr>
+                        <tr><td>Shoto-uke / kizame-Gueri / Guiako-yon-Nukite</td><td>Kokutsu-Dachi</td><td>Recuando 5x</td></tr>
+                        <tr><td>Yoko-Gueri-Keague</td><td>Kiba-Dachi</td><td>Ida/Volta 3x</td></tr>
+                        <tr><td>Mae / Mawachi / Yoko / Ushiro-gueri</td><td>Zenkutsu-Dachi</td><td>Ida/Volta 1x</td></tr>
+                    </tbody>
+                </table>
+                <div class="bloco-extra">
+                    <strong>Jiu-Ipom-Kumite:</strong> Defesas e contra-ataques livres.
+                    <strong>Kata/Bunkai:</strong> Tekki-shodan, Bassai-Dai, Kanku-dai e Jion.
+                    <strong>Kumite:</strong> Shiai-kumite 2 min.
+                </div>
+            </div>
+        </details>
+
+        <!-- FPK 1º DAN -->
+        <details class="modulo-faixa">
+            <summary class="botao-expandir">
+                <span class="faixa-cor preta"></span>
+                FPK - Graduação (1º Dan)
+                <span class="seta">▼</span>
+            </summary>
+            <div class="table-container" style="border:none; border-radius:0;">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Nº / Kihon</th>
+                            <th>Base</th>
+                            <th>Repetições</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr><td>1. Sonoba-Zuki</td><td>Kiba-Dachi</td><td>10 repetições</td></tr>
+                        <tr><td>2. Mae-Gueri / Oi-Zuki</td><td>Zenkutsu-Dachi</td><td>5x ida</td></tr>
+                        <tr><td>3. Mae-Gueri / Guiako-Zuki</td><td>Zenkutsu-Dachi</td><td>5x volta</td></tr>
+                        <tr><td>4. Sambom-Zuki</td><td>Zenkutsu-Dachi</td><td>5x ida</td></tr>
+                        <tr><td>5. Uchi-Uke / Kizami / Guiako</td><td>Zenkutsu-Dachi</td><td>5x recuar</td></tr>
+                        <tr><td>6. Ague-Uke / Guedan / Guiako</td><td>Zenkutsu-Dachi</td><td>5x ida</td></tr>
+                        <tr><td>7. Shuto-Uke / Nukite / Shuto</td><td>Kokutsu / Zenkutsu</td><td>5x recuar</td></tr>
+                        <tr><td>8. Oi-Zuki / Guedan / Oi-Zuki</td><td>Zenkutsu / Kiba</td><td>5x ida</td></tr>
+                        <tr><td>9. Kamae / Kizami / Uraken</td><td>Neko-ashi / Zenkutsu</td><td>5x volta</td></tr>
+                        <tr><td>10. Combinado de Chutes</td><td>Zenkutsu-Dachi</td><td>1x ida/volta</td></tr>
+                        <tr><td>11. Chutes Mesma Perna</td><td>Zenkutsu-Dachi</td><td>3x ida/volta</td></tr>
+                        <tr><td>12. Yoko-Gueri-keague</td><td>Kiba-Dachi</td><td>3x ida/volta</td></tr>
+                    </tbody>
+                </table>
+                <div class="bloco-extra">
+                    <strong>Kata Obrigatório:</strong> Heian 1º ao 5º, Tekki-Shodan.
+                    <strong>Kata Optativo:</strong> Bassai-dai, Kanku-dai, Jion.
+                </div>
+            </div>
+        </details>
+    </div>
+
+    <!-- SEÇÃO 3: AVISOS -->
+    <div id="comunicados" class="tab-content">
+        <h3>📢 Regras e Normas da Associação</h3>
+        
+        <div id="blocoTermoPendente">
+            <p style="font-size: 14px; color: var(--text-muted); margin-bottom: 16px;">
+                Abra e leia o documento de regras antes de assinar digitalmente.
+            </p>
+
+            <a href="regras-associacao.pdf" target="_blank" class="btn-action" style="margin-bottom: 16px;">
+                📖 Ler Regras e Normas (PDF)
+            </a>
+
+            <div style="background: rgba(15, 23, 42, 0.6); border: 1px solid var(--border-color); padding: 16px; border-radius: var(--radius-md); margin-bottom: 20px;">
+                <label style="display: flex; gap: 12px; cursor: pointer; font-size: 13px; color: var(--text-main); font-weight: 500; line-height: 1.4;">
+                    <input type="checkbox" id="checkAceite" onchange="alternarBotaoAceite()" style="width: 20px; height: 20px; accent-color: var(--accent-blue);">
+                    <span>Declaro que li e concordo com todas as Regras e Normas da Associação.</span>
+                </label>
+
+                <button id="btnEnviarAceite" disabled onclick="enviarEmailAceite()" class="btn-action" style="margin-top: 14px; background: #475569; opacity: 0.6; cursor: not-allowed; box-shadow: none;">
+                    🔒 Confirmar e Enviar Aceite
+                </button>
+            </div>
+        </div>
+
+        <div id="blocoTermoAceito" style="display: none; text-align: center; padding: 20px; background: rgba(16, 185, 129, 0.1); border: 1px solid rgba(16, 185, 129, 0.3); border-radius: var(--radius-md); margin-bottom: 20px;">
+            <span style="font-size: 32px;">✅</span>
+            <h4 style="color: var(--accent-green); margin: 8px 0;">Termos Aceitos</h4>
+            <p style="font-size: 13px; color: var(--text-muted);" id="textoDataAceite">
+                Comprovante registrado com sucesso.
+            </p>
+        </div>
+
+        <h3 style="margin-top: 25px;">⚔️ Próximos Treinamentos</h3>
+        <div class="card-item">
+            <div class="card-date-badge">
+                <span class="day">26</span>
+                <span class="month">JUL</span>
+            </div>
+            <div>
+                <strong style="display: block; font-size: 15px;">Workshop com Brenda Padilha</strong>
+                <span style="font-size: 12px; color: var(--text-muted);">📍 Cidade: Hortolândia - SP</span>
+            </div>
+        </div>
+
+        <h3>🏆 Próximos Campeonatos</h3>
+        <div class="card-item">
+            <div class="card-date-badge">
+                <span class="day" style="color: var(--accent-red);">23</span>
+                <span class="month">AGO</span>
+            </div>
+            <div>
+                <strong style="display: block; font-size: 15px;">7ª Etapa ACAK</strong>
+                <span style="font-size: 12px; color: var(--text-muted);">📍 Cidade: Valinhos - SP</span>
             </div>
         </div>
         
-        <!-- SEÇÃO EXAME: CONTEÚDO PROGRAMÁTICO DO EXAME (MÓDULOS EXPANSÍVEIS) -->
-        <div id="conteudo-programatico" class="tab-content">
-            <h3 style="margin-top: 5px; margin-bottom: 15px;">📖 Conteúdo Programático para Exames</h3>
-            
-            <!-- FAIXA BRANCA PARA AMARELA -->
-            <details class="modulo-faixa">
-                <summary class="botao-expandir">
-                    <span class="faixa-cor branca"></span>
-                    <span class="faixa-cor amarela"></span>
-                    Exame: Branca para Amarela
-                    <span class="seta">▼</span>
-                </summary>
-                <div class="table-container" style="border:none; border-radius:0; margin-bottom:0;">
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>Kihon</th>
-                                <th>Base</th>
-                                <th>Sentido</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr><td>Oi-Zuki</td><td>Zenkutsu-Dachi</td><td>Avançando 5 Vezes</td></tr>
-                            <tr><td>Ague-Uke / final (Guiako-zuki)</td><td>Zenkutsu-Dachi</td><td>Recuando 5 Vezes</td></tr>
-                            <tr><td>Mae-Gueri</td><td>Zenkutsu-Dachi</td><td>Avançando 5 Vezes</td></tr>
-                            <tr><td>Soto-Uke / final (Guiako-zuki)</td><td>Zenkutsu-Dachi</td><td>Recuando 5 Vezes</td></tr>
-                            <tr><td>Guedan-Barai / final (Guiako-zuki)</td><td>Zenkutsu-Dachi</td><td>Avançando 5 Vezes</td></tr>
-                            <tr><td>Uchi-Uke / final (Guiako-zuki)</td><td>Zenkutsu-Dachi</td><td>Recuando 5 Vezes</td></tr>
-                            <tr><td>Yoko-Gueri-Keague</td><td>Kiba-Dachi</td><td>Ida 3 Vezes</td></tr>
-                            <tr><td>Yoko-Gueri-Kekome</td><td>Kiba-Dachi</td><td>Volta 3 Vezes</td></tr>
-                        </tbody>
-                    </table>
-                  <div class="bloco-extra">
-                        <strong>Kihon-Gohon-Kumite (Luta combinada com Cinco passos):</strong>
-                        <p><span class="texto-vermelho">Ataques</span> - Jodan-zuki, Tchudan-zuki, Guedan-zuki. <span class="texto-vermelho">Defesa</span> - Jodan-Ague-uke, Tchudan-Soto-uke, Guedan-barai, final Guiako-zuki.</p>
-                        <strong>Kata:</strong>
-                        <p>Heian-Shodan (com contagem)</p>
-                        <strong>Exame Oral:</strong> Contagem em japonês, Pronunciar o Dojo-Kun e Pergunta livre.
-                        <strong>Kumite:</strong> (Combate) 1:30 min. Sombra luta semi-contato.
-                    </div>
-                </div>
-            </details>
-
-            <!-- FAIXA AMARELA PARA VERMELHA -->
-            <details class="modulo-faixa">
-                <summary class="botao-expandir">
-                    <span class="faixa-cor amarela"></span>
-                    <span class="faixa-cor vermelha"></span>
-                    Exame: Amarela para Vermelha
-                    <span class="seta">▼</span>
-                </summary>
-                <div class="table-container" style="border:none; border-radius:0; margin-bottom:0;">
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>Kihon</th>
-                                <th>Base</th>
-                                <th>Sentido</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr><td>Oi-Zuki</td><td>Zenkutsu-Dachi</td><td>Avançando 5 Vezes</td></tr>
-                            <tr><td>Ague-Uke / final (Guiako-zuki)</td><td>Zenkutsu-Dachi</td><td>Recuando 5 Vezes</td></tr>
-                            <tr><td>Mae-Gueri</td><td>Zenkutsu-Dachi</td><td>Avançando 5 Vezes</td></tr>
-                            <tr><td>Soto-Uke / final (Guiako-zuki)</td><td>Zenkutsu-Dachi</td><td>Recuando 5 Vezes</td></tr>
-                            <tr><td>Mawachi-Gueri</td><td>Zenkutsu-Dachi</td><td>Avançando 5 Vezes</td></tr>
-                            <tr><td>Uchi-Uke / final (Guiako-zuki)</td><td>Zenkutsu-Dachi</td><td>Recuando 5 Vezes</td></tr>
-                            <tr><td>Shoto-Uke</td><td>Kokutsu-dachi</td><td>Avançando 5 Vezes</td></tr>
-                            <tr><td>Shoto-Uke / final Guiako-Yon-Nukite</td><td>Kokutsu-dachi</td><td>Recuando 5 Vezes</td></tr>
-                            <tr><td>Yoko-Gueri-Keague</td><td>Kiba-Dachi</td><td>Ida 3 Vezes</td></tr>
-                            <tr><td>Yoko-Gueri-Kekome</td><td>Kiba-Dachi</td><td>Volta 3 Vezes</td></tr>
-                        </tbody>
-                    </table>
-                    <div class="bloco-extra">
-                        <strong>Kihon-Gohon-Kumite (Luta combinada com Cinco passos):</strong>
-                        <p><span class="texto-vermelho">Ataques</span> - Jodan-zuki, Tchudan-zuki, Guedan-zuki. <span class="texto-vermelho">Defesa</span> - Jodan-Ague-uke, Tchudan-Soto-uke, Guedan-barai, final Guiako-zuki.</p>
-                        <strong>Kata:</strong>
-                        <p>Heian-Shodan (sem contagem), Heian-Nidan (sem contagem)</p>
-                        <strong>Exame Oral:</strong> Contagem em japonês, Pronunciar o Dojo-Kun e Pergunta livre.
-                        <strong>Kumite:</strong> (Combate) 2 min. Sombra luta com contato.
-                    </div>
-                </div>
-            </details>
-
-            <!-- FAIXA VERMELHA PARA LARANJA -->
-            <details class="modulo-faixa">
-                <summary class="botao-expandir">
-                    <span class="faixa-cor vermelha"></span>
-                    <span class="faixa-cor laranja"></span>
-                    Exame: Vermelha para Laranja
-                    <span class="seta">▼</span>
-                </summary>
-                <div class="table-container" style="border:none; border-radius:0; margin-bottom:0;">
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>Kihon</th>
-                                <th>Base</th>
-                                <th>Sentido</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr><td>Sambom-Zuki</td><td>Zenkutsu-Dachi</td><td>Avançando 5 Vezes</td></tr>
-                            <tr><td>Ague-Uke / Guiako-zuki</td><td>Zenkutsu-Dachi</td><td>Recuando 5 Vezes</td></tr>
-                            <tr><td>Mae-Gueri / Guiako-zuki</td><td>Zenkutsu-Dachi</td><td>Avançando 5 Vezes</td></tr>
-                            <tr><td>Soto-Uke / Guiako-zuki</td><td>Zenkutsu-Dachi</td><td>Recuando 5 Vezes</td></tr>
-                            <tr><td>Mawachi-Gueri</td><td>Zenkutsu-Dachi</td><td>Avançando 5 Vezes</td></tr>
-                            <tr><td>Uchi-Uke / Guiako-zuki</td><td>Zenkutsu-Dachi</td><td>Recuando 5 Vezes</td></tr>
-                            <tr><td>Shoto-uke / Guiako-yon-Nukite</td><td>Kokutsu-dachi</td><td>Avançando 5 Vezes</td></tr>
-                            <tr><td>Shoto-uke / Guiako-yon-Nukite</td><td>Kokutsu-dachi</td><td>Recuando 5 Vezes</td></tr>
-                            <tr><td>Yoko-Gueri-Keague</td><td>Kiba-Dachi</td><td>Ida 3 Vezes</td></tr>
-                            <tr><td>Yoko-Gueri-Kekome</td><td>Kiba-Dachi</td><td>Volta 3 Vezes</td></tr>
-                        </tbody>
-                    </table>
-                    <div class="bloco-extra">
-                        <strong>Kihon-Ipom-Kumite (Luta combinada com um passo):</strong>
-                        <p><span class="texto-vermelho">Ataques</span> - Jodan-zuki, Tchudan-zuki, Mae-Gueri, Yoko-Gueri, Mawachi-Gueri. <span class="texto-vermelho">Defesas e contra-ataques combinados.</span></p>
-                        <strong>Kata:</strong>
-                        <p>Heian-Nidan, Heian-Sandan, Heian Yondan (Sem contagem)</p>
-                        <strong>Exame Oral:</strong> Contagem em japonês, Pronunciar o Dojo-Kun e Pergunta livre.
-                        <strong>Kumite:</strong> (Combate) 2 min. Sombra luta com contato.
-                    </div>
-                </div>
-            </details>
-
-            <!-- FAIXA LARANJA PARA VERDE -->
-            <details class="modulo-faixa">
-                <summary class="botao-expandir">
-                    <span class="faixa-cor laranja"></span>
-                    <span class="faixa-cor verde"></span>
-                    Exame: Laranja para Verde
-                    <span class="seta">▼</span>
-                </summary>
-                <div class="table-container" style="border:none; border-radius:0; margin-bottom:0;">
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>Kihon</th>
-                                <th>Base</th>
-                                <th>Sentido</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr><td>Sambom-Zuki</td><td>Zenkutsu-Dachi</td><td>Avançando cinco Vezes</td></tr>
-                            <tr><td>Ague-uke / Guiako-zuki</td><td>Zenkutsu-Dachi</td><td>Recuando cinco Vezes</td></tr>
-                            <tr><td>Mae-gueri / Guiako-zuki</td><td>Zenkutsu-Dachi</td><td>Avançando cinco Vezes</td></tr>
-                            <tr><td>Soto-uke / Guiako-zuki</td><td>Zenkutsu-Dachi</td><td>Recuando cinco Vezes</td></tr>
-                            <tr><td>Kizame-gueri / Mawachi-Gueri</td><td>Zenkutsu-Dachi</td><td>Avançando cinco Vezes</td></tr>
-                            <tr><td>Uchi-uke / Kizame-zuki / Guiako-zuki</td><td>Zenkutsu-Dachi</td><td>Recuando cinco Vezes</td></tr>
-                            <tr><td>Shoto-uke / Guiako-yon-Nukite</td><td>Kokutsu-Dachi</td><td>Avançando cinco Vezes</td></tr>
-                            <tr><td>Shoto-uke / Kizame-gueri / Guiako-yon-Nukite</td><td>Kokutsu-Dachi</td><td>Recuando cinco Vezes</td></tr>
-                            <tr><td>Yoko-Gueri-Keague</td><td>Kiba-Dachi</td><td>Ida três Vezes</td></tr>
-                            <tr><td>Yoko-Gueri-Kekome</td><td>Kiba-Dachi</td><td>Volta três Vezes</td></tr>
-                        </tbody>
-                    </table>
-                    <div class="bloco-extra">
-                        <strong>Kihon-Ipom-Kumite (Luta combinada com um passo):</strong>
-                        <p><span class="texto-vermelho">Ataques</span> - Jodan-zuki, Tchudan-zuki, Mae-Gueri, Yoko-Gueri, Mawachi-Gueri. <span class="texto-vermelho">Defesas e Contra-ataque Combinado.</span></p>
-                        <strong>Kata:</strong>
-                        <p>Heian-Sandan, Heian-Yondan e Heian-Godan</p>
-                        <strong>Exame Oral:</strong> Contagem em japonês, Pronunciar o Dojo-Kun e Pergunta livre.
-                        <strong>Kumite:</strong> (Combate) 2 min. Sombra luta com contato.
-                    </div>
-                </div>
-            </details>
-
-            <!-- FAIXA VERDE PARA ROXA -->
-            <details class="modulo-faixa">
-                <summary class="botao-expandir">
-                    <span class="faixa-cor verde"></span>
-                    <span class="faixa-cor roxa"></span>
-                    Exame: Verde para Roxa
-                    <span class="seta">▼</span>
-                </summary>
-                <div class="table-container" style="border:none; border-radius:0; margin-bottom:0;">
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>Kihon</th>
-                                <th>Base</th>
-                                <th>Sentido</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr><td>Sonoba-zuki</td><td>Kiba-Dachi</td><td>Dez repetições</td></tr>
-                            <tr><td>Sambom-Zuki</td><td>Zenkutsu-Dachi</td><td>Avançando cinco Vezes</td></tr>
-                            <tr><td>Ague-uke / Uraken / Guiako-zuki</td><td>Zenkutsu-Dachi</td><td>Recuando cinco Vezes</td></tr>
-                            <tr><td>Mae-gueri / Guiako-zuki</td><td>Zenkutsu-Dachi</td><td>Avançando cinco Vezes</td></tr>
-                            <tr><td>Soto-uke, empi / Uraken / Guiako-zuki</td><td>Zenkutsu-Dachi</td><td>Recuando cinco Vezes</td></tr>
-                            <tr><td>Kizame-gueri / Mawachi-Gueri</td><td>Zenkutsu-Dachi</td><td>Avançando cinco Vezes</td></tr>
-                            <tr><td>Uchi-Uke / Kizame-zuki / Guiako-zuki</td><td>Zenkutsu-Dachi</td><td>Recuando cinco Vezes</td></tr>
-                            <tr><td>Shoto-uke / Guiako-yon-Nukite</td><td>Kokutsu-Dachi</td><td>Avançando cinco Vezes</td></tr>
-                            <tr><td>Shoto-uke / Kizame-gueri / Guiako-yon-Nukite</td><td>Kokutsu-Dachi</td><td>Recuando cinco Vezes</td></tr>
-                            <tr><td>Yoko-Gueri-Keague</td><td>Kiba-Dachi</td><td>Ida três Vezes</td></tr>
-                            <tr><td>Yoko-Gueri-Kekome</td><td>Kiba-Dachi</td><td>Volta três Vezes</td></tr>
-                            <tr><td>Mae-gueri / Mawachi-gueri / Yoko-gueri / Ushiro-gueri, Guiako-zuki</td><td>Zenkutsu-Dachi</td><td>Ida/Volta uma vez.</td></tr>
-                        </tbody>
-                    </table>
-                    <div class="bloco-extra">
-                        <strong>Jiu-Ipom-Kumite (Luta combinada com um passo):</strong>
-                        <p><span class="texto-vermelho">Ataques</span> - Jodan-zuki, Tchudan-zuki, Mae-Gueri, Yoko-Gueri, Mawachi-Gueri. <span class="texto-vermelho">Defesas Contra-ataque Livre.</span></p>
-                        <strong>Kata/Bunkai:</strong>
-                        <p>Heian-Godan, Bassai-Dai. Apresentar Aplicação, duas partes de cada Kata.</p>
-                        <strong>Exame Oral:</strong> Contagem em japonês, Pronunciar o Dojo-Kun e Pergunta livre.
-                        <strong>Kumite:</strong> (Combate) Shiai-kumite 2 min. Acima de 18 anos, Jiu-kumite 1 min.
-                    </div>
-                </div>
-            </details>
-
-            <!-- FAIXA ROXA PARA MARROM -->
-            <details class="modulo-faixa">
-                <summary class="botao-expandir">
-                    <span class="faixa-cor roxa"></span>
-                    <span class="faixa-cor marrom"></span>
-                    Exame: Roxa para Marrom
-                    <span class="seta">▼</span>
-                </summary>
-                <div class="table-container" style="border:none; border-radius:0; margin-bottom:0;">
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>Kihon</th>
-                                <th>Base</th>
-                                <th>Sentido</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr><td>Sonoba-zuki</td><td>Kiba-Dachi</td><td>Dez repetições</td></tr>
-                            <tr><td>Oi-zuki</td><td>Zenkutsu-Dachi</td><td>Avançando cinco Vezes</td></tr>
-                            <tr><td>Mae-gueri / Tchudan-Oi-zuki</td><td>Zenkutsu-Dachi</td><td>Avançando cinco Vezes</td></tr>
-                            <tr><td>Guiako-zuki</td><td>Zenkutsu-Dachi</td><td>Avançando cinco Vezes</td></tr>
-                            <tr><td>Mae-gueri / Guiako-zuki</td><td>Zenkutsu-Dachi</td><td>Avançando cinco Vezes</td></tr>
-                            <tr><td>Sambom-Zuki</td><td>Zenkutsu-Dachi</td><td>Avançando cinco Vezes</td></tr>
-                            <tr><td>Ague-uke / Guiako-zuki</td><td>Zenkutsu-Dachi</td><td>Recuando cinco Vezes</td></tr>
-                            <tr><td>Yoko-Gueri-Kekome / Mawachi-Guiako empi-uchi</td><td>Zenkutsu-Dachi</td><td>Avançando cinco Vezes</td></tr>
-                            <tr><td>Soto-uke / Empi / Uraken / Guiako-zuki</td><td>Zenkutsu-Dachi / Kiba-Dachi</td><td>Recuando cinco Vezes</td></tr>
-                            <tr><td>Kizame-Gueri / Mawachi-Gueri</td><td>Zenkutsu-Dachi</td><td>Avançando cinco Vezes</td></tr>
-                            <tr><td>Uchi-uke / kizame-zuki / Guiako-zuki</td><td>Zenkutsu-Dachi</td><td>Recuando cinco Vezes</td></tr>
-                            <tr><td>Shoto-uke / Guiako-yon-Nukite</td><td>Kokutsu-Dachi</td><td>Avançando cinco Vezes</td></tr>
-                            <tr><td>Shoto-uke / kizame-Gueri / Guiako-yon-Nukite</td><td>Kokutsu-Dachi</td><td>Recuando cinco Vezes</td></tr>
-                            <tr><td>Yoko-Gueri-Keague</td><td>Kiba-Dachi</td><td>Ida/Volta três Vezes</td></tr>
-                            <tr><td>Mae-gueri / Mawachi-gueri / Yoko-gueri / Ushiro-gueri, Guiako-zuki</td><td>Zenkutsu-Dachi</td><td>Ida/Volta uma vez.</td></tr>
-                        </tbody>
-                    </table>
-                    <div class="bloco-extra">
-                        <strong>Jiu-Ipom-Kumite (Luta combinada com um passo):</strong>
-                        <p><span class="texto-vermelho">Ataques</span> - Jodan-zuki, Tchudan-zuki. Mae-Gueri, Yoko-Gueri, Mawachi-Gueri. <span class="texto-vermelho">Defesas Contra-ataque Livre.</span></p>
-                        <strong>Kata/Bunkai:</strong>
-                        <p>Tekki-shodan, Bassai-Dai, Kanku-dai e Jion. Apresentar Aplicação, duas partes dos Kata escolhidos que será de no mínimo dois Kata.</p>
-                        <strong>Exame Oral:</strong> Contagem em japonês, Pronunciar o Dojo-Kun e Pergunta livre.
-                        <strong>Kumite:</strong> (Combate) Shiai-kumite 2 min.
-                    </div>
-                </div>
-            </details>
-
-            <!-- FPK MATÉRIA 1º DAN (FAIXA PRETA) -->
-            <details class="modulo-faixa">
-                <summary class="botao-expandir">
-                    <span class="faixa-cor preta"></span>
-                    FPK - Exame de Graduação (1º Dan)
-                    <span class="seta">▼</span>
-                </summary>
-                <div class="table-container" style="border:none; border-radius:0; margin-bottom:0;">
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>Nº / Kihon</th>
-                                <th>Base</th>
-                                <th>Repetições / Sentido</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr><td>1. Sonoba-Zuki</td><td>Kiba-Dachi</td><td>10 repetições.</td></tr>
-                            <tr><td>2. Mae-Gueri / Oi-Zuki</td><td>Zenkutsu-Dachi</td><td>5 repetições. ida</td></tr>
-                            <tr><td>3. Mae-Gueri / Guiako-Zuki</td><td>Zenkutsu-Dachi</td><td>5 repetições. volta</td></tr>
-                            <tr><td>4. Sambom-Zuki</td><td>Zenkutsu-Dachi</td><td>5 repetições. ida</td></tr>
-                            <tr><td>5. Uchi-Uke / Kizami-Zuki / Guiako-Zuki</td><td>Zenkutsu-Dachi</td><td>5 repetições. recuar</td></tr>
-                            <tr><td>6. Ague-Uke / Guedan-barai / Guiako-Zuki</td><td>Zenkutsu-Dachi</td><td>5 repetições. ida</td></tr>
-                            <tr><td>7. Shuto-Uke / Guiako-Nukite / Shuto-Uke</td><td>Kokutsu / Zenkutsu / Kokutsu</td><td>5 repetições. recuar</td></tr>
-                            <tr><td>8. Oi-Zuki / Guedan-barai (Recuando) / Oi-Zuki</td><td>Zenkutsu-Dachi / Kiba-dachi-zenkutsu-dachi</td><td>5 repetições. ida</td></tr>
-                            <tr><td>9. Kamae / Kizami-Zuki / Uraken-Uchi (Girando por trás)</td><td>Neko-ashi / Zenkutsu</td><td>5 repetições. Volta</td></tr>
-                            <tr><td>10. Mae-Gueri / Mae-Sokuto-Kekomi / Mawashi-Gueri / Ushiro-Gueri / Guiako-Zuki</td><td>Zenkutsu-Dachi</td><td>1 repetição. ida/Volta</td></tr>
-                            <tr><td>11. Kizami-Gueri / Mae-Gueri / Mawashi-Gueri (mesma perna)</td><td>Zenkutsu-Dachi</td><td>3 repetições. Ida/Volta</td></tr>
-                            <tr><td>12. Yoko-Gueri-keague</td><td>Kiba-Dachi</td><td>3 repetições. Ida/volta</td></tr>
-                        </tbody>
-                    </table>
-                    <div class="bloco-extra">
-                        <strong>Kata Obrigatório:</strong> Heian 1º ao 5º, Tekki-Shodan
-                        <strong>Kata Optativo:</strong> Bassai-dai, Kanku-dai, Jion
-                    </div>
-                </div>
-            </details>
+        <h3>🥋 Próximo Exame de Faixa</h3>
+        <div class="card-item">
+            <div class="card-date-badge">
+                <span class="day">06</span>
+                <span class="month">DEZ</span>
+            </div>
+            <div>
+                <strong style="display: block; font-size: 15px;">Exame de Faixa Atarashii</strong>
+                <span style="font-size: 12px; color: var(--text-muted);">📍 Academia Bee Strong - SP</span>
+            </div>
         </div>
+        
+        <h3>🎉 Confraternização</h3>
+        <div class="card-item">
+            <div class="card-date-badge">
+                <span class="day" style="color: var(--accent-gold);">12</span>
+                <span class="month">DEZ</span>
+            </div>
+            <div>
+                <strong style="display: block; font-size: 15px;">Confraternização Atarashii</strong>
+                <span style="font-size: 12px; color: var(--text-muted);">📍 Aguardando definição - SP</span>
+            </div>
+        </div>
+    </div>
 
-        <!-- SEÇÃO 2: AVISOS (COM OCULTAÇÃO AUTOMÁTICA PÓS-ACEITE) -->
-<div id="comunicados" class="tab-content">
-    
-    <h3 style="margin-bottom: 12px;">📢 Regras e Normas da Associação</h3>
-    
-  <div id="blocoTermoPendente">
-        <p style="font-size: 14px; color: #666; margin-bottom: 15px;">
-            Por favor, toque no botão abaixo para abrir, ler o documento completo de regras e depois confirmar o seu aceite obrigatório.
+    <!-- SEÇÃO 4: GALERIA -->
+    <div id="galeria" class="tab-content">
+        <h3>📸 Troca de Faixas (Google Drive)</h3>
+        <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 16px;">
+            Toque nos eventos abaixo para acessar as fotos do Google Drive.
         </p>
 
-        <!-- BOTÃO PRINCIPAL DE LEITURA (SOLUÇÃO DE COMPATIBILIDADE PARA IOS/ANDROID) -->
-        <div style="margin-bottom: 20px;">
-            <a href="regras-associacao.pdf" target="_blank" style="display: flex; align-items: center; justify-content: center; gap: 10px; background-color: #34495e; color: white; padding: 14px; border-radius: 8px; text-decoration: none; font-weight: bold; font-size: 15px; text-align: center; box-shadow: 0 3px 6px rgba(0,0,0,0.1); transition: background 0.2s;" onmouseover="this.style.backgroundColor='#2c3e50'" onmouseout="this.style.backgroundColor='#34495e'">
-                📖 Abrir Regras e Normas da Associação (PDF)
+        <a href="https://drive.google.com/drive/folders/1rtRaurMIERPIMTR70KxEu5TyhQa9PsHU?usp=drive_link" target="_blank" class="card-item">
+            <span style="font-size: 20px;">📂</span>
+            <span style="font-weight: 600; font-size: 14px;">Junho 2022</span>
+            <span style="margin-left: auto; color: var(--text-muted);">➔</span>
+        </a>
+
+        <a href="https://drive.google.com/drive/folders/1HfoZP89pVxOu3PqvmENSAwpo1nGZPg8K?usp=drive_link" target="_blank" class="card-item">
+            <span style="font-size: 20px;">📂</span>
+            <span style="font-weight: 600; font-size: 14px;">Dezembro 2022</span>
+            <span style="margin-left: auto; color: var(--text-muted);">➔</span>
+        </a>
+
+        <a href="https://drive.google.com/drive/folders/1oZsy4NswTt6MIfvlF7lDb6aHcENDPphL?usp=drive_link" target="_blank" class="card-item">
+            <span style="font-size: 20px;">📂</span>
+            <span style="font-weight: 600; font-size: 14px;">Julho 2023</span>
+            <span style="margin-left: auto; color: var(--text-muted);">➔</span>
+        </a>
+
+        <a href="https://drive.google.com/drive/folders/1-4vrTGEcgKnKMgVMFR9rZMI11psFiyn8?usp=drive_link" target="_blank" class="card-item">
+            <span style="font-size: 20px;">📂</span>
+            <span style="font-weight: 600; font-size: 14px;">Dezembro 2023</span>
+            <span style="margin-left: auto; color: var(--text-muted);">➔</span>
+        </a>
+
+        <a href="https://drive.google.com/drive/folders/1f-iaokIRnn5b6lOU239L3qh6-NvOiXoH?usp=drive_link" target="_blank" class="card-item">
+            <span style="font-size: 20px;">📂</span>
+            <span style="font-weight: 600; font-size: 14px;">Dezembro 2024</span>
+            <span style="margin-left: auto; color: var(--text-muted);">➔</span>
+        </a>
+
+        <a href="https://drive.google.com/drive/folders/1NgjvDrVK4YnHowuvrwRb8EcFIPGMfuWj?usp=drive_link" target="_blank" class="card-item">
+            <span style="font-size: 20px;">📂</span>
+            <span style="font-weight: 600; font-size: 14px;">Junho 2025</span>
+            <span style="margin-left: auto; color: var(--text-muted);">➔</span>
+        </a>
+
+        <a href="https://drive.google.com/drive/folders/1QkRd6NYoWFvarpcxWSR2wMiLWuFppTmF?usp=drive_link" target="_blank" class="card-item">
+            <span style="font-size: 20px;">📂</span>
+            <span style="font-weight: 600; font-size: 14px;">Dezembro 2025</span>
+            <span style="margin-left: auto; color: var(--text-muted);">➔</span>
+        </a>
+
+        <a href="https://drive.google.com/drive/folders/1TrXjV6R5Pqk_2FconkSwJicEqpmpI86g?usp=drive_link" target="_blank" class="card-item">
+            <span style="font-size: 20px;">📂</span>
+            <span style="font-weight: 600; font-size: 14px;">Junho 2026</span>
+            <span style="margin-left: auto; color: var(--text-muted);">➔</span>
+        </a>
+    </div>
+
+    <!-- SEÇÃO 5: ESTUDO -->
+    <div id="ebook" class="tab-content">
+        <h3>📚 Materiais de Estudo</h3>
+        
+        <div class="card-item" style="flex-direction: column; align-items: flex-start; gap: 10px;">
+            <strong style="font-size: 15px;">📄 Apostila Oficial da Associação</strong>
+            <p style="font-size: 12px; color: var(--text-muted);">Conteúdo teórico completo para exames.</p>
+            <a href="documento.pdf" target="_blank" class="btn-action" style="padding: 10px;">📖 Abrir Apostila</a>
+        </div>
+
+        <div class="card-item" style="flex-direction: column; align-items: flex-start; gap: 10px;">
+            <strong style="font-size: 15px;">📄 Numeral em Japonês</strong>
+            <p style="font-size: 12px; color: var(--text-muted);">Guia de contagem oficial.</p>
+            <a href="Numeral em japones.pdf" target="_blank" class="btn-action" style="padding: 10px;">📖 Abrir Guia</a>
+        </div>
+
+        <div class="card-item" style="flex-direction: column; align-items: flex-start; gap: 10px;">
+            <strong style="font-size: 15px;">📄 Regulamento Kata (WKF)</strong>
+            <p style="font-size: 12px; color: var(--text-muted);">Regras atualizadas de arbitragem.</p>
+            <a href="Regulamento de Arbitragem WKF - Kata.pdf" target="_blank" class="btn-action" style="padding: 10px;">📖 Abrir PDF</a>
+        </div>
+
+        <div class="card-item" style="flex-direction: column; align-items: flex-start; gap: 10px;">
+            <strong style="font-size: 15px;">📄 Regulamento Kumite (WKF)</strong>
+            <p style="font-size: 12px; color: var(--text-muted);">Regras oficiais de combate.</p>
+            <a href="Regulamento de Arbitragem WKF - Kumite.pdf" target="_blank" class="btn-action" style="padding: 10px;">📖 Abrir PDF</a>
+        </div>
+    </div>
+
+    <!-- SEÇÃO 6: ATARASHII -->
+    <div id="saldo" class="tab-content">
+        <h3>💰 Saldo em Conta da Associação</h3>
+        <p style="font-size: 32px; font-weight: 800; color: var(--accent-green); margin: 10px 0 16px 0;" id="textoSaldo">R$ --,--</p>
+        <button onclick="buscarSaldoMercadoPago()" class="btn-action" style="margin-bottom: 20px;">
+            🔄 Atualizar Saldo
+        </button>
+
+        <h3>🔗 Contatos Oficiais</h3>
+        <div style="display: flex; flex-direction: column; gap: 10px; margin-bottom: 20px;">
+            <a href="https://wa.me/5511988412917" target="_blank" class="btn-action btn-whatsapp">
+                💬 Falar com o Sensei
+            </a>
+            <a href="https://wa.me/5511965512234" target="_blank" class="btn-action btn-whatsapp" style="background: #059669;">
+                💬 Falar com a Academia
             </a>
         </div>
 
-        <!-- Formulário de Aceite -->
-        <div style="background-color: #f8f9fa; border: 1px solid #e0e0e0; padding: 15px; border-radius: 6px; margin-bottom: 20px;">
-            <label style="display: flex; align-items: flex-start; gap: 10px; cursor: pointer; font-size: 14px; font-weight: bold; line-height: 1.4;">
-                <input type="checkbox" id="checkAceite" onchange="alternarBotaoAceite()" style="width: 18px; height: 18px; margin-top: 2px;">
-                <span>Declaro que li, compreendi e concordo integralmente com todas as Regras, Normas e Termos estabelecidos pela Associação.</span>
-            </label>
-
-            <button id="btnEnviarAceite" disabled onclick="enviarEmailAceite()" style="width: 100%; margin-top: 15px; padding: 14px; background-color: #95a5a6; color: white; border: none; border-radius: 6px; font-weight: bold; font-size: 15px; cursor: not-allowed; transition: background 0.3s;">
-                🔒 Aceitar Termos e Enviar Comprovante
-            </button>
+        <div style="display: flex; gap: 10px; margin-bottom: 25px;">
+            <a href="https://www.facebook.com/atarashiishotokan/" target="_blank" class="btn-action" style="background: #1877f2;" title="Facebook">
+                Facebook
+            </a>
+            <a href="https://www.instagram.com/associacao_atarashii_karate/" target="_blank" class="btn-action" style="background: linear-gradient(45deg, #f09433, #dc2743, #bc1888);" title="Instagram">
+                Instagram
+            </a>
         </div>
-    </div>
 
-    <div id="blocoTermoAceito" style="display: none; text-align: center; padding: 25px 15px; background-color: #e8f5e9; border: 1px solid #c8e6c9; border-radius: 8px; margin-bottom: 20px;">
-        <span style="font-size: 35px;">✅</span>
-        <h4 style="color: #2e7d32; margin: 10px 0 5px 0; font-size: 16px;">Termos Aceitos com Sucesso!</h4>
-        <p style="font-size: 13px; color: #43a047; line-height: 1.4;" id="textoDataAceite">
-            O seu comprovante de leitura e concordância já foi registrado e enviado para a Associação.
-        </p>
-    </div>
+        <h3>📜 Diplomas Oficiais</h3>
+        <div style="display: flex; flex-direction: column; gap: 12px;">
+            <div class="card-item" style="flex-direction: column;">
+                <a href="DIPLOMA.jpeg" target="_blank" style="text-decoration: none; width: 100%; text-align: center;">
+                    <img src="DIPLOMA.jpeg" alt="Diploma FPK" style="width: 100%; max-height: 200px; object-fit: contain; border-radius: var(--radius-sm);">
+                    <span style="display: block; margin-top: 8px; font-size: 13px; color: var(--text-main); font-weight: 600;">
+                        🥇 Diploma FPK - Faixa Preta 1º Dan
+                    </span>
+                </a>
+            </div>
 
-    <hr style="border: 0; height: 1px; background: #e0e0e0; margin: 30px 0;">
-
-    <div style="margin-bottom: 25px;">
-        <h3 style="margin-bottom: 15px; display: flex; align-items: center; gap: 8px;">⚔️ Próximos Treinamentos</h3>
-        
-        <div style="display: flex; align-items: center; background-color: #fff; border: 1px solid #e0e0e0; border-left: 5px solid #3498db; border-radius: 6px; padding: 15px; box-shadow: 0 2px 4px rgba(0,0,0,0.02);">
-            <div style="text-align: center; padding-right: 15px; border-right: 1px solid #eee; min-width: 70px;">
-                <span style="display: block; font-size: 24px; font-weight: bold; color: #2980b9;">26</span>
-                <span style="display: block; font-size: 12px; font-weight: bold; color: #7f8c8d; text-transform: uppercase;">JUL</span>
-            </div>
-            <div style="padding-left: 15px;">
-                <span style="display: block; font-size: 16px; font-weight: bold; color: #2c3e50;">Workshop com Brenda Padilha</span>
-                <span style="display: flex; align-items: center; gap: 4px; font-size: 13px; color: #7f8c8d;">
-                    📍 Cidade: Hortolandia - SP
-                </span>
-            </div>
-        </div>
-    </div>
-
-    <div style="margin-bottom: 15px;">
-        <h3 style="margin-bottom: 15px; display: flex; align-items: center; gap: 8px;">🏆 Próximos Campeonatos</h3>
-        
-        <div style="display: flex; align-items: center; background-color: #fff; border: 1px solid #e0e0e0; border-left: 5px solid #e74c3c; border-radius: 6px; padding: 15px; box-shadow: 0 2px 4px rgba(0,0,0,0.02);">
-            <div style="text-align: center; padding-right: 15px; border-right: 1px solid #eee; min-width: 70px;">
-                <span style="display: block; font-size: 24px; font-weight: bold; color: #c0392b;">23</span>
-                <span style="display: block; font-size: 12px; font-weight: bold; color: #7f8c8d; text-transform: uppercase;">AGO</span>
-            </div>
-            <div style="padding-left: 15px;">
-                <span style="display: block; font-size: 16px; font-weight: bold; color: #2c3e50; margin-bottom: 4px;">7ª Etapa ACAK</span>
-                <span style="display: flex; align-items: center; gap: 4px; font-size: 13px; color: #7f8c8d;">
-                    📍 Cidade: Valinhos - SP
-                </span>
-            </div>
-        </div>
-    </div>
-    
-      <div style="margin-bottom: 25px;">
-        <h3 style="margin-bottom: 15px; display: flex; align-items: center; gap: 8px;">🥋 Próximo Exame de Faixa</h3>
-        
-        <div style="display: flex; align-items: center; background-color: #fff; border: 1px solid #e0e0e0; border-left: 5px solid #3498db; border-radius: 6px; padding: 15px; box-shadow: 0 2px 4px rgba(0,0,0,0.02);">
-            <div style="text-align: center; padding-right: 15px; border-right: 1px solid #eee; min-width: 70px;">
-                <span style="display: block; font-size: 24px; font-weight: bold; color: #2980b9;">06</span>
-                <span style="display: block; font-size: 12px; font-weight: bold; color: #7f8c8d; text-transform: uppercase;">DEZ</span>
-            </div>
-            <div style="padding-left: 15px;">
-                <span style="display: block; font-size: 12px; color: #e67e22; font-weight: bold; text-transform: uppercase; margin-bottom: 2px;">Exame de Faixa Atarashii</span>
-               <span style="display: flex; align-items: center; gap: 4px; font-size: 13px; color: #7f8c8d;">
-                    📍 Academia Bee Strong - SP
-                </span>
-            </div>
-        </div>
-    </div>
-    
-    <div style="margin-bottom: 25px;">
-        <h3 style="margin-bottom: 15px; display: flex; align-items: center; gap: 8px;">🎉 Confraternização</h3>
-        
-        <div style="display: flex; align-items: center; background-color: #fff; border: 1px solid #e0e0e0; border-left: 5px solid #e74c3c; border-radius: 6px; padding: 15px; box-shadow: 0 2px 4px rgba(0,0,0,0.02);">
-            <div style="text-align: center; padding-right: 15px; border-right: 1px solid #eee; min-width: 70px;">
-                <span style="display: block; font-size: 24px; font-weight: bold; color: #c0392b;">12</span>
-                <span style="display: block; font-size: 12px; font-weight: bold; color: #7f8c8d; text-transform: uppercase;">DEZ</span>
-            </div>
-            <div style="padding-left: 15px;">
-                <span style="display: block; font-size: 12px; color: #e67e22; font-weight: bold; text-transform: uppercase; margin-bottom: 2px;">Confraternização da Associação Atarashii</span>
-               <span style="display: flex; align-items: center; gap: 4px; font-size: 13px; color: #7f8c8d;">
-                    📍 Aguardando definição - SP
-                </span>
+            <div class="card-item" style="flex-direction: column;">
+                <a href="DIPLOMA CBK.jpg" target="_blank" style="text-decoration: none; width: 100%; text-align: center;">
+                    <img src="DIPLOMA CBK.jpg" alt="Diploma CBK" style="width: 100%; max-height: 200px; object-fit: contain; border-radius: var(--radius-sm);">
+                    <span style="display: block; margin-top: 8px; font-size: 13px; color: var(--text-main); font-weight: 600;">
+                        🥇 Diploma CBK - Faixa Preta 1º Dan
+                    </span>
+                </a>
             </div>
         </div>
     </div>
 </div>
 
-        <!-- SEÇÃO 3: GALERIA -->
-  <div id="galeria" class="tab-content">
-    <h3 style="margin-bottom: 15px;">📸 Histórico de Troca de Faixas</h3>
-    <p style="font-size: 14px; color: #666; margin-bottom: 20px;">
-        Selecione o evento desejado abaixo para abrir a pasta de fotos oficial no Google Drive.
-    </p>
-
-    <div style="display: flex; flex-direction: column; gap: 12px;">
-        <a href="https://drive.google.com/drive/folders/1rtRaurMIERPIMTR70KxEu5TyhQa9PsHU?usp=drive_link" target="_blank" style="text-decoration: none; color: inherit;">
-            <div style="display: flex; align-items: center; justify-content: space-between; padding: 15px; background-color: #f8f9fa; border: 1px solid #e0e0e0; border-radius: 8px; transition: background 0.2s; cursor: pointer;" onmouseover="this.style.backgroundColor='#edf2f7'" onmouseout="this.style.backgroundColor='#f8f9fa'">
-                <div style="display: flex; align-items: center; gap: 12px;">
-                    <span style="font-size: 20px;">📂</span>
-                    <span style="font-weight: bold; font-size: 15px; color: #2c3e50;">Troca de faixa - Junho 2022</span>
-                </div>
-                <span style="color: #7f8c8d; font-size: 14px;">➔</span>
-            </div>
-        </a>
-
-        <a href="https://drive.google.com/drive/folders/1HfoZP89pVxOu3PqvmENSAwpo1nGZPg8K?usp=drive_link" target="_blank" style="text-decoration: none; color: inherit;">
-            <div style="display: flex; align-items: center; justify-content: space-between; padding: 15px; background-color: #f8f9fa; border: 1px solid #e0e0e0; border-radius: 8px; transition: background 0.2s; cursor: pointer;" onmouseover="this.style.backgroundColor='#edf2f7'" onmouseout="this.style.backgroundColor='#f8f9fa'">
-                <div style="display: flex; align-items: center; gap: 12px;">
-                    <span style="font-size: 20px;">📂</span>
-                    <span style="font-weight: bold; font-size: 15px; color: #2c3e50;">Troca de faixa - Dezembro 2022</span>
-                </div>
-                <span style="color: #7f8c8d; font-size: 14px;">➔</span>
-            </div>
-        </a>
-
-        <a href="https://drive.google.com/drive/folders/1oZsy4NswTt6MIfvlF7lDb6aHcENDPphL?usp=drive_link" target="_blank" style="text-decoration: none; color: inherit;">
-            <div style="display: flex; align-items: center; justify-content: space-between; padding: 15px; background-color: #f8f9fa; border: 1px solid #e0e0e0; border-radius: 8px; transition: background 0.2s; cursor: pointer;" onmouseover="this.style.backgroundColor='#edf2f7'" onmouseout="this.style.backgroundColor='#f8f9fa'">
-                <div style="display: flex; align-items: center; gap: 12px;">
-                    <span style="font-size: 20px;">📂</span>
-                    <span style="font-weight: bold; font-size: 15px; color: #2c3e50;">Troca de faixa - Julho 2023</span>
-                </div>
-                <span style="color: #7f8c8d; font-size: 14px;">➔</span>
-            </div>
-        </a>
-
-        <a href="https://drive.google.com/drive/folders/1-4vrTGEcgKnKMgVMFR9rZMI11psFiyn8?usp=drive_link" target="_blank" style="text-decoration: none; color: inherit;">
-            <div style="display: flex; align-items: center; justify-content: space-between; padding: 15px; background-color: #f8f9fa; border: 1px solid #e0e0e0; border-radius: 8px; transition: background 0.2s; cursor: pointer;" onmouseover="this.style.backgroundColor='#edf2f7'" onmouseout="this.style.backgroundColor='#f8f9fa'">
-                <div style="display: flex; align-items: center; gap: 12px;">
-                    <span style="font-size: 20px;">📂</span>
-                    <span style="font-weight: bold; font-size: 15px; color: #2c3e50;">Troca de faixa - Dezembro 2023</span>
-                </div>
-                <span style="color: #7f8c8d; font-size: 14px;">➔</span>
-            </div>
-        </a>
-
-        <a href="https://drive.google.com/drive/folders/1f-iaokIRnn5b6lOU239L3qh6-NvOiXoH?usp=drive_link" target="_blank" style="text-decoration: none; color: inherit;">
-            <div style="display: flex; align-items: center; justify-content: space-between; padding: 15px; background-color: #f8f9fa; border: 1px solid #e0e0e0; border-radius: 8px; transition: background 0.2s; cursor: pointer;" onmouseover="this.style.backgroundColor='#edf2f7'" onmouseout="this.style.backgroundColor='#f8f9fa'">
-                <div style="display: flex; align-items: center; gap: 12px;">
-                    <span style="font-size: 20px;">📂</span>
-                    <span style="font-weight: bold; font-size: 15px; color: #2c3e50;">Troca de faixa - Dezembro 2024</span>
-                </div>
-                <span style="color: #7f8c8d; font-size: 14px;">➔</span>
-            </div>
-        </a>
-
-        <a href="https://drive.google.com/drive/folders/1NgjvDrVK4YnHowuvrwRb8EcFIPGMfuWj?usp=drive_link" target="_blank" style="text-decoration: none; color: inherit;">
-            <div style="display: flex; align-items: center; justify-content: space-between; padding: 15px; background-color: #f8f9fa; border: 1px solid #e0e0e0; border-radius: 8px; transition: background 0.2s; cursor: pointer;" onmouseover="this.style.backgroundColor='#edf2f7'" onmouseout="this.style.backgroundColor='#f8f9fa'">
-                <div style="display: flex; align-items: center; gap: 12px;">
-                    <span style="font-size: 20px;">📂</span>
-                    <span style="font-weight: bold; font-size: 15px; color: #2c3e50;">Troca de faixa - Junho 2025</span>
-                </div>
-                <span style="color: #7f8c8d; font-size: 14px;">➔</span>
-            </div>
-        </a>
-
-        <a href="https://drive.google.com/drive/folders/1QkRd6NYoWFvarpcxWSR2wMiLWuFppTmF?usp=drive_link" target="_blank" style="text-decoration: none; color: inherit;">
-            <div style="display: flex; align-items: center; justify-content: space-between; padding: 15px; background-color: #f8f9fa; border: 1px solid #e0e0e0; border-radius: 8px; transition: background 0.2s; cursor: pointer;" onmouseover="this.style.backgroundColor='#edf2f7'" onmouseout="this.style.backgroundColor='#f8f9fa'">
-                <div style="display: flex; align-items: center; gap: 12px;">
-                    <span style="font-size: 20px;">📂</span>
-                    <span style="font-weight: bold; font-size: 15px; color: #2c3e50;">Troca de faixa - Dezembro 2025</span>
-                </div>
-                <span style="color: #7f8c8d; font-size: 14px;">➔</span>
-            </div>
-        </a>
-
-        <a href="https://drive.google.com/drive/folders/1TrXjV6R5Pqk_2FconkSwJicEqpmpI86g?usp=drive_link" target="_blank" style="text-decoration: none; color: inherit;">
-            <div style="display: flex; align-items: center; justify-content: space-between; padding: 15px; background-color: #f8f9fa; border: 1px solid #e0e0e0; border-radius: 8px; transition: background 0.2s; cursor: pointer;" onmouseover="this.style.backgroundColor='#edf2f7'" onmouseout="this.style.backgroundColor='#f8f9fa'">
-                <div style="display: flex; align-items: center; gap: 12px;">
-                    <span style="font-size: 20px;">📂</span>
-                    <span style="font-weight: bold; font-size: 15px; color: #2c3e50;">Troca de faixa - Junho 2026</span>
-                </div>
-                <span style="color: #7f8c8d; font-size: 14px;">➔</span>
-            </div>
-        </a>
-    </div>
+<!-- NAVEGAÇÃO INFERIOR -->
+<div class="bottom-nav">
+    <button class="nav-btn active" onclick="mudarAba('exame', this)">
+        <span class="icon">🥋</span>
+        Painel
+    </button>
+    <button class="nav-btn" onclick="mudarAba('conteudo-programatico', this)">
+        <span class="icon">📋</span>
+        Exame
+    </button>
+    <button class="nav-btn" onclick="mudarAba('comunicados', this)">
+        <span class="icon">📢</span>
+        Avisos
+    </button>
+    <button class="nav-btn" onclick="mudarAba('galeria', this)">
+        <span class="icon">📸</span>
+        Galeria
+    </button>
+    <button class="nav-btn" onclick="mudarAba('ebook', this)">
+        <span class="icon">📚</span>
+        Estudo
+    </button>
+    <button class="nav-btn" onclick="mudarAba('saldo', this)">
+        <span class="icon">
+            <img src="atarashii-192.png" alt="Logo Associação" class="logo-icon">
+        </span>
+        Atarashii
+    </button>
 </div>
-
-        <!-- SEÇÃO 4: Estudo -->
-       <div id="ebook" class="tab-content">
-    <h3>📚 E-book</h3>
-    <p style="font-size: 14px; color: #666; margin-bottom: 15px;">
-        Acesse a nossa apostila oficial e materiais de estudo exclusivos para o seu exame de faixa.
-    </p>
-    
-    <div style="background-color: #f8f9fa; border: 1px dashed #3498db; padding: 20px; border-radius: 8px; text-align: center; margin-bottom: 15px;">
-        <span style="font-size: 40px;">📄</span>
-        <h4 style="margin: 10px 0 5px 0; color: #2c3e50;">Apostila Oficial da Associação</h4>
-        <p style="font-size: 13px; color: #7f8c8d; margin-bottom: 15px;">Para uma melhor leitura no smartphone, abra o documento em tela cheia.</p>
-        
-        <a href="documento.pdf" target="_blank" style="display: inline-block; width: 100%; max-width: 280px; padding: 12px; background-color: #3498db; color: white; text-decoration: none; font-weight: bold; border-radius: 6px; box-shadow: 0 2px 5px rgba(0,0,0,0.1);">
-            📖 Abrir / Baixar E-book
-        </a>
-    </div>
-               <div class="pdf-container" style="display: none;"></div>
-    <h3>📚 Numeral em japonês</h3>
-    <p style="font-size: 14px; color: #666; margin-bottom: 15px;">
-        Acesse o Numeral em japonês.
-    </p>
-    <div style="background-color: #f8f9fa; border: 1px dashed #3498db; padding: 20px; border-radius: 8px; text-align: center; margin-bottom: 15px;">
-        <span style="font-size: 40px;">📄</span>
-        <h4 style="margin: 10px 0 5px 0; color: #2c3e50;">Numeral em japonês</h4>
-        <p style="font-size: 13px; color: #7f8c8d; margin-bottom: 15px;">Para uma melhor leitura no smartphone, abra o documento em tela cheia.</p>
-        
-        <a href="Numeral em japones.pdf" target="_blank" style="display: inline-block; width: 100%; max-width: 280px; padding: 12px; background-color: #3498db; color: white; text-decoration: none; font-weight: bold; border-radius: 6px; box-shadow: 0 2px 5px rgba(0,0,0,0.1);">
-            📖 Abrir / Baixar
-        </a>
-    </div>
-    <div class="pdf-container" style="display: none;"></div>
-
-    <h3>📚 REGULAMENTO DE COMPETIÇÃO DE KATA</h3>
-    <p style="font-size: 14px; color: #666; margin-bottom: 15px;">
-        Acesse o REGULAMENTO DE COMPETIÇÃO DE KATA - WKF.
-    </p>
-    
-    <div style="background-color: #f8f9fa; border: 1px dashed #3498db; padding: 20px; border-radius: 8px; text-align: center; margin-bottom: 15px;">
-        <span style="font-size: 40px;">📄</span>
-        <h4 style="margin: 10px 0 5px 0; color: #2c3e50;">REGULAMENTO DE COMPETIÇÃO DE KATA</h4>
-        <p style="font-size: 13px; color: #7f8c8d; margin-bottom: 15px;">Para uma melhor leitura no smartphone, abra o documento em tela cheia.</p>
-        
-        <a href="Regulamento de Arbitragem WKF - Kata.pdf" target="_blank" style="display: inline-block; width: 100%; max-width: 280px; padding: 12px; background-color: #3498db; color: white; text-decoration: none; font-weight: bold; border-radius: 6px; box-shadow: 0 2px 5px rgba(0,0,0,0.1);">
-            📖 Abrir / Baixar
-        </a>
-    </div>
-    <div class="pdf-container" style="display: none;"></div>
-
-    <h3>📚 REGULAMENTO DE COMPETIÇÃO DE KUMITE</h3>
-    <p style="font-size: 14px; color: #666; margin-bottom: 15px;">
-        Acesse o REGULAMENTO DE COMPETIÇÃO DE KUMITE - WKF.
-    </p>
-    
-    <div style="background-color: #f8f9fa; border: 1px dashed #3498db; padding: 20px; border-radius: 8px; text-align: center; margin-bottom: 15px;">
-        <span style="font-size: 40px;">📄</span>
-        <h4 style="margin: 10px 0 5px 0; color: #2c3e50;">REGULAMENTO DE COMPETIÇÃO DE KUMITE</h4>
-        <p style="font-size: 13px; color: #7f8c8d; margin-bottom: 15px;">Para uma melhor leitura no smartphone, abra o documento em tela cheia.</p>
-        
-        <a href="Regulamento de Arbitragem WKF - Kumite.pdf" target="_blank" style="display: inline-block; width: 100%; max-width: 280px; padding: 12px; background-color: #3498db; color: white; text-decoration: none; font-weight: bold; border-radius: 6px; box-shadow: 0 2px 5px rgba(0,0,0,0.1);">
-            📖 Abrir / Baixar
-        </a>
-    </div>
-    <div class="pdf-container" style="display: none;"></div>
-</div>
-
-        <!-- SEÇÃO 5: Atarashii -->
-        <div id="saldo" class="tab-content">
-            <h3>💰 Saldo em Conta da Associação</h3>
-            <p style="font-size: 32px; font-weight: bold; color: #27ae60; margin: 15px 0 20px 0;" id="textoSaldo">R$ --,--</p>
-            <button onclick="buscarSaldoMercadoPago()" style="width: 100%; padding: 14px; background: #3498db; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: bold; font-size: 15px;">
-                🔄 Atualizar Saldo
-            </button>
-             <hr style="border: 0; height: 1px; background: #e0e0e0; margin-bottom: 20px;">
-
-            <h3>🔗 Links e Contatos Oficiais</h3>
-            
-            <div style="display: flex; flex-direction: column; gap: 10px; margin-bottom: 15px;">
-                <!-- Falar com o Sensei -->
-                <a href="https://wa.me/5511988412917" target="_blank" style="display: flex; align-items: center; justify-content: center; gap: 10px; background-color: #25D366; color: white; padding: 12px; border-radius: 6px; text-decoration: none; font-weight: bold; font-size: 15px; text-align: center; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
-                    <svg style="width: 22px; height: 22px; fill: white;" viewBox="0 0 24 24">
-                        <path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946C.06 5.348 5.397.01 12.008.01c3.202.001 6.212 1.244 8.477 3.513 2.266 2.268 3.507 5.28 3.505 8.484-.004 6.657-5.34 11.997-11.953 11.997-2.005-.001-3.973-.502-5.713-1.457L0 24zm6.59-4.846c1.666.988 3.309 1.492 4.961 1.493 5.432.001 9.85-4.416 9.854-9.849.002-2.63-1.023-5.101-2.887-6.967C16.71 1.966 14.239.941 11.999.941 6.566.941 2.147 5.36 2.144 10.795c-.001 1.732.478 3.42 1.387 4.918L2.536 21.53l6.111-1.604v-.001zM18.29 14.53c-.344-.173-2.039-1.007-2.353-1.122-.314-.114-.543-.173-.772.173-.23.346-.887 1.122-1.087 1.352-.201.23-.401.257-.745.085-.344-.173-1.454-.537-2.77-1.712-1.023-.913-1.714-2.043-1.915-2.388-.201-.346-.022-.533.15-.705.154-.155.344-.403.516-.605.172-.201.23-.346.344-.576.114-.23.057-.431-.028-.604-.086-.173-.772-1.859-1.058-2.55-.279-.672-.562-.581-.772-.592-.198-.011-.427-.013-.656-.013-.23 0-.602.086-.916.431-.314.346-1.199 1.178-1.199 2.872 0 1.694 1.233 3.328 1.405 3.559.172.23 2.427 3.706 5.879 5.196.82.354 1.46.566 1.958.724.823.261 1.574.224 2.167.135.66-.099 2.039-.832 2.326-1.636.287-.804.287-1.493.201-1.636-.086-.144-.315-.23-.659-.403z"/>
-                    </svg>
-                    Falar com o Sensei
-                </a>
-                
-                <!-- Falar com a Academia -->
-                <a href="https://wa.me/5511965512234" target="_blank" style="display: flex; align-items: center; justify-content: center; gap: 10px; background-color: #128C7E; color: white; padding: 12px; border-radius: 6px; text-decoration: none; font-weight: bold; font-size: 15px; text-align: center; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
-                    <svg style="width: 22px; height: 22px; fill: white;" viewBox="0 0 24 24">
-                        <path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946C.06 5.348 5.397.01 12.008.01c3.202.001 6.212 1.244 8.477 3.513 2.266 2.268 3.507 5.28 3.505 8.484-.004 6.657-5.34 11.997-11.953 11.997-2.005-.001-3.973-.502-5.713-1.457L0 24zm6.59-4.846c1.666.988 3.309 1.492 4.961 1.493 5.432.001 9.85-4.416 9.854-9.849.002-2.63-1.023-5.101-2.887-6.967C16.71 1.966 14.239.941 11.999.941 6.566.941 2.147 5.36 2.144 10.795c-.001 1.732.478 3.42 1.387 4.918L2.536 21.53l6.111-1.604v-.001zM18.29 14.53c-.344-.173-2.039-1.007-2.353-1.122-.314-.114-.543-.173-.772.173-.23.346-.887 1.122-1.087 1.352-.201.23-.401.257-.745.085-.344-.173-1.454-.537-2.77-1.712-1.023-.913-1.714-2.043-1.915-2.388-.201-.346-.022-.533.15-.705.154-.155.344-.403.516-.605.172-.201.23-.346.344-.576.114-.23.057-.431-.028-.604-.086-.173-.772-1.859-1.058-2.55-.279-.672-.562-.581-.772-.592-.198-.011-.427-.013-.656-.013-.23 0-.602.086-.916.431-.314.346-1.199 1.178-1.199 2.872 0 1.694 1.233 3.328 1.405 3.559.172.23 2.427 3.706 5.879 5.196.82.354 1.46.566 1.958.724.823.261 1.574.224 2.167.135.66-.099 2.039-.832 2.326-1.636.287-.804.287-1.493.201-1.636-.086-.144-.315-.23-.659-.403z"/>
-                    </svg>
-                    Falar com a Academia
-                </a>
-            </div>
-
-            <!-- Botões apenas com ícones (Facebook e Instagram) -->
-            <div style="display: flex; gap: 10px; margin-bottom: 20px;">
-                <!-- Facebook -->
-                <a href="https://www.facebook.com/atarashiishotokan/" target="_blank" style="flex: 1; display: flex; align-items: center; justify-content: center; background-color: #1877F2; padding: 12px; border-radius: 6px; text-decoration: none; box-shadow: 0 2px 4px rgba(0,0,0,0.1);" title="Facebook">
-                    <svg style="width: 24px; height: 24px; fill: white;" viewBox="0 0 24 24">
-                        <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
-                    </svg>
-                </a>
-                
-                <!-- Instagram -->
-                <a href="https://www.instagram.com/associacao_atarashii_karate/" target="_blank" style="flex: 1; display: flex; align-items: center; justify-content: center; background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%); padding: 12px; border-radius: 6px; text-decoration: none; box-shadow: 0 2px 4px rgba(0,0,0,0.1);" title="Instagram">
-                    <svg style="width: 24px; height: 24px; fill: white;" viewBox="0 0 24 24">
-                        <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.051.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 1 0 0 12.324 6.162 6.162 0 0 0 0-12.324zM12 16a4 4 0 1 1 0-8 4 4 0 0 1 0 8zm6.406-11.845a1.44 1.44 0 1 0 0 2.881 1.44 1.44 0 0 0 0-2.881z"/>
-                    </svg>
-                </a>
-            </div>
-            
-            <h3>📜 Diplomas Oficiais (Sensei Luiz)</h3>
-            
-            <div style="display: flex; flex-wrap: wrap; gap: 15px; width: 100%;">
-                <!-- Diploma FPK -->
-                <div style="flex: 1; min-width: 280px; background: #fdfdfd; border: 1px solid #e0e0e0; border-radius: 8px; padding: 10px; box-shadow: 0 2px 4px rgba(0,0,0,0.05); text-align: center;">
-                    <a href="DIPLOMA.jpeg" target="_blank" style="text-decoration: none; display: block;">
-                        <img src="DIPLOMA.jpeg" alt="Diploma FPK - Federação Paulista de Karate" style="width: 100%; height: auto; border-radius: 4px; border: 1px solid #eee; cursor: zoom-in; max-height: 250px; object-fit: contain;">
-                        <span style="display: block; margin-top: 8px; font-size: 13px; color: #555; font-weight: bold;">
-                            🥇 Diploma FPK - Faixa Preta 1º Dan
-                        </span>
-                    </a>
-                </div>
-
-                <!-- Diploma CBK -->
-                <div style="flex: 1; min-width: 280px; background: #fdfdfd; border: 1px solid #e0e0e0; border-radius: 8px; padding: 10px; box-shadow: 0 2px 4px rgba(0,0,0,0.05); text-align: center;">
-                    <a href="DIPLOMA CBK.jpg" target="_blank" style="text-decoration: none; display: block;">
-                        <img src="DIPLOMA CBK.jpg" alt="Diploma CBK - Confederação Brasileira de Karate" style="width: 100%; height: auto; border-radius: 4px; border: 1px solid #eee; cursor: zoom-in; max-height: 250px; object-fit: contain;">
-                        <span style="display: block; margin-top: 8px; font-size: 13px; color: #555; font-weight: bold;">
-                            🥇 Diploma CBK - Faixa Preta 1º Dan
-                        </span>
-                    </a>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- MENU DE BOTÕES ESTILO APP MÓVEL -->
-    <div class="bottom-nav">
-        <button class="nav-btn" onclick="mudarAba('exame', this)">
-            <span class="icon">🥋</span>
-            Painel
-        </button>
-        <button class="nav-btn" onclick="mudarAba('conteudo-programatico', this)">
-            <span class="icon">📋</span>
-            Exame
-        </button>
-        <button class="nav-btn" onclick="mudarAba('comunicados', this)">
-            <span class="icon">📢</span>
-            Avisos
-        </button>
-        <button class="nav-btn" onclick="mudarAba('galeria', this)">
-            <span class="icon">📸</span>
-            Galeria
-        </button>
-        <button class="nav-btn" onclick="mudarAba('ebook', this)">
-            <span class="icon">📚</span>
-            Estudo
-        </button>
-       <button class="nav-btn" onclick="mudarAba('saldo', this)">
-            <span class="icon">
-                <img src="atarashii-192.png" alt="Logo Associação Atarashii" class="logo-icon">
-            </span>
-            Atarashii
-        </button>
-    </div>
 
 <script>
-        // 1. CARREGAMENTO DINÂMICO DE USUÁRIOS
-        const scriptUsuarios = document.createElement('script');
-        scriptUsuarios.src = 'usuarios.js?v=' + new Date().getTime();
-        document.head.appendChild(scriptUsuarios);
+    // 1. CARREGAMENTO DINÂMICO DE USUÁRIOS
+    const scriptUsuarios = document.createElement('script');
+    scriptUsuarios.src = 'usuarios.js?v=' + new Date().getTime();
+    document.head.appendChild(scriptUsuarios);
 
-        // 2. PROTEÇÃO DE ACESSO
-        if (localStorage.getItem('associadoAutenticado') !== 'true') {
-            alert('Acesso negado. Por favor, faça login.');
-            window.location.href = 'index.html';
+    // 2. PROTEÇÃO DE ACESSO
+    if (localStorage.getItem('associadoAutenticado') !== 'true') {
+        alert('Acesso negado. Por favor, faça login.');
+        window.location.href = 'index.html';
+    }
+
+    // 3. CONFIGURAÇÕES E VARIÁVEIS GLOBAIS
+    const nomeDoAluno = localStorage.getItem('nomeAlunoLogado') || 'Associado';
+    const usuarioAtivo = localStorage.getItem('usuarioAtivo');
+    const URL_API_SERVIDOR = "https://api-associacao-mp.onrender.com";
+
+    document.getElementById('welcomeNome').textContent = `Olá, ${nomeDoAluno}!`;
+
+    // 4. TROCA DE ABAS
+    function mudarAba(abaId, elementoBotao) {
+        document.querySelectorAll('.tab-content').forEach(tab => {
+            tab.classList.remove('active');
+        });
+        document.querySelectorAll('.nav-btn').forEach(btn => {
+            btn.classList.remove('active');
+        });
+
+        const abaSelecionada = document.getElementById(abaId);
+        if (abaSelecionada) {
+            abaSelecionada.classList.add('active');
         }
-
-        // 3. CONFIGURAÇÕES E VARIÁVEIS GLOBAIS
-        const nomeDoAluno = localStorage.getItem('nomeAlunoLogado') || 'Associado';
-        const usuarioAtivo = localStorage.getItem('usuarioAtivo');
-        const URL_API_SERVIDOR = "https://api-associacao-mp.onrender.com";
-
-        document.getElementById('welcomeNome').textContent = `Olá, ${nomeDoAluno}!`;
-
-        // 4. CONSULTA O STATUS DO TERMO
-        function verificarStatusAceite() {
-            if (!usuarioAtivo) return;
-
-            const blocoPendente = document.getElementById('blocoTermoPendente');
-            const blocoAceito = document.getElementById('blocoTermoAceito');
-            const badge = document.getElementById('badgeNotificacao');
-            const sininho = document.getElementById('wrapperSininho');
-
-            const jaAceitouLocal = localStorage.getItem(`termo_aceito_${usuarioAtivo}`);
-            const dataAceiteLocal = localStorage.getItem(`data_aceite_${usuarioAtivo}`) || '';
-            
-            if (jaAceitouLocal === 'true') {
-                aplicarLayoutAceito(blocoPendente, blocoAceito, badge, sininho, dataAceiteLocal, false);
-            } else {
-                aplicarLayoutPendente(blocoPendente, blocoAceito, badge, sininho);
-            }
-
-            const controller = new AbortController();
-            const timeoutId = setTimeout(() => controller.abort(), 90000);
-
-            fetch(`${URL_API_SERVIDOR}/api/status-termo/${usuarioAtivo}`, { signal: controller.signal })
-                .then(response => {
-                    clearTimeout(timeoutId);
-                    if (!response.ok) throw new Error("Resposta inválida do servidor");
-                    return response.json();
-                })
-                .then(data => {
-                    const verificadoNaAPI = (data && (data.aceitou === true || data.sucesso === true || data.status === 'assinado' || data.status === 'aceito'));
-                    const dataServidor = data.data || data.dataHora || data.updatedAt || new Date().toLocaleString('pt-BR');
-
-                    if (verificadoNaAPI) {
-                        localStorage.setItem(`termo_aceito_${usuarioAtivo}`, 'true');
-                        localStorage.setItem(`data_aceite_${usuarioAtivo}`, dataServidor);
-                        aplicarLayoutAceito(blocoPendente, blocoAceito, badge, sininho, dataServidor, true);
-                    } else {
-                        localStorage.removeItem(`termo_aceito_${usuarioAtivo}`);
-                        localStorage.removeItem(`data_aceite_${usuarioAtivo}`);
-                        aplicarLayoutPendente(blocoPendente, blocoAceito, badge, sininho);
-                    }
-                })
-                .catch(err => {
-                    clearTimeout(timeoutId);
-                    console.warn("[Aviso] Render em hibernação ou offline. Mantendo cache local de segurança.");
-                    if (localStorage.getItem(`termo_aceito_${usuarioAtivo}`) === 'true') {
-                        aplicarLayoutAceito(blocoPendente, blocoAceito, badge, sininho, dataAceiteLocal, false);
-                    } else {
-                        aplicarLayoutPendente(blocoPendente, blocoAceito, badge, sininho);
-                    }
-                });
+        if (elementoBotao) {
+            elementoBotao.classList.add('active');
         }
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
 
-        function aplicarLayoutAceito(blocoPendente, blocoAceito, badge, sininho, dataRegistro, ehGlobal) {
-            if (blocoPendente) blocoPendente.style.display = 'none';
-            if (blocoAceito) {
-                blocoAceito.style.display = 'block';
-                const tipoSinc = ehGlobal ? "sincronizado com a nuvem em:" : "verificado via dispositivo em:";
-                document.getElementById('textoDataAceite').innerHTML = `O seu comprovante de leitura e concordância foi ${tipoSinc} <br><strong>${dataRegistro}</strong>`;
-            }
-            if (badge) badge.style.display = 'none';
-            if (sininho) { 
-                sininho.style.animation = 'none'; 
-                sininho.title = "Nenhum aviso pendente"; 
-            }
-        }
+    // 5. CONSULTA STATUS DO TERMO
+    function verificarStatusAceite() {
+        if (!usuarioAtivo) return;
 
-        function aplicarLayoutPendente(blocoPendente, blocoAceito, badge, sininho) {
-            if (blocoPendente) blocoPendente.style.display = 'block';
-            if (blocoAceito) blocoAceito.style.display = 'none';
-            if (badge) badge.style.display = 'flex';
-            if (sininho) {
-                sininho.style.animation = 'balancoSininho 0.5s ease-in-out infinite alternate';
-            }
-        }
+        const blocoPendente = document.getElementById('blocoTermoPendente');
+        const blocoAceito = document.getElementById('blocoTermoAceito');
+        const badge = document.getElementById('badgeNotificacao');
+        const sininho = document.getElementById('wrapperSininho');
 
-        // 5. ATALHO CLIQUE NO SININHO
-        function irParaAvisos() {
-            const botaoAvisosMenu = document.querySelectorAll('.nav-btn')[2]; 
-            if (botaoAvisosMenu) {
-                mudarAba('comunicados', botaoAvisosMenu);
-            }
-        }
+        const jaAceitouLocal = localStorage.getItem(`termo_aceito_${usuarioAtivo}`);
+        const dataAceiteLocal = localStorage.getItem(`data_aceite_${usuarioAtivo}`) || '';
         
-        function atualizarPainel() {
-            window.location.reload();
+        if (jaAceitouLocal === 'true') {
+            aplicarLayoutAceito(blocoPendente, blocoAceito, badge, sininho, dataAceiteLocal, false);
+        } else {
+            aplicarLayoutPendente(blocoPendente, blocoAceito, badge, sininho);
         }
 
-        // 6. ALTERNADOR DE BOTÃO DE ACEITE
-        function alternarBotaoAceite() {
-            const checkbox = document.getElementById('checkAceite');
-            const botao = document.getElementById('btnEnviarAceite');
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), 90000);
 
-            if (checkbox && checkbox.checked) {
-                botao.disabled = false;
-                botao.style.backgroundColor = '#27ae60';
-                botao.style.cursor = 'pointer';
-            } else if (botao) {
-                botao.disabled = true;
-                botao.style.backgroundColor = '#95a5a6';
-                botao.style.cursor = 'not-allowed';
-            }
-        }
-
-        // 7. ENVIA O ACEITE
-        function enviarEmailAceite() {
-            const nomeAluno = localStorage.getItem('nomeAlunoLogado') || 'Nome Não Identificado';
-            const dataHoraAtual = new Date().toLocaleString('pt-BR');
-            
-            const emailDestinatarioPrincipal = "luedo25@msn.com"; 
-            const assunto = encodeURIComponent(`CONFIRMAÇÃO DE ACEITE: Regras da Associação - ${nomeAluno}`);
-            
-            const corpoEmail = encodeURIComponent(
-                `Prezada Diretoria,\n\n` +
-                `Por meio deste e-mail, confirmo que li e aceito voluntariamente todos os termos, regras e normas da Associação.\n\n` +
-                `DADOS DO ASSOCIADO:\n` +
-                `Nome completo: ${nomeAluno}\n` +
-                `Usuário do sistema: ${usuarioAtivo}\n` +
-                `Data/Hora do Aceite: ${dataHoraAtual}\n\n` +
-                `Este e-mail serve como registro e comprovante digital do meu aceite obrigatório.`
-            );
-
-            const mailtoUrl = `mailto:${emailDestinatarioPrincipal}?subject=${assunto}&body=${corpoEmail}`;
-            
-            localStorage.setItem(`termo_aceito_${usuarioAtivo}`, 'true');
-            localStorage.setItem(`data_aceite_${usuarioAtivo}`, dataHoraAtual);
-            verificarStatusAceite();
-
-            fetch(`${URL_API_SERVIDOR}/api/aceitar-termo`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ usuario: usuarioAtivo })
+        fetch(`${URL_API_SERVIDOR}/api/status-termo/${usuarioAtivo}`, { signal: controller.signal })
+            .then(response => {
+                clearTimeout(timeoutId);
+                if (!response.ok) throw new Error("Resposta inválida do servidor");
+                return response.json();
             })
-            .then(response => response.json())
             .then(data => {
-                verificarStatusAceite();
-                window.location.href = mailtoUrl;
+                const verificadoNaAPI = (data && (data.aceitou === true || data.sucesso === true || data.status === 'assinado' || data.status === 'aceito'));
+                const dataServidor = data.data || data.dataHora || data.updatedAt || new Date().toLocaleString('pt-BR');
+
+                if (verificadoNaAPI) {
+                    localStorage.setItem(`termo_aceito_${usuarioAtivo}`, 'true');
+                    localStorage.setItem(`data_aceite_${usuarioAtivo}`, dataServidor);
+                    aplicarLayoutAceito(blocoPendente, blocoAceito, badge, sininho, dataServidor, true);
+                } else {
+                    localStorage.removeItem(`termo_aceito_${usuarioAtivo}`);
+                    localStorage.removeItem(`data_aceite_${usuarioAtivo}`);
+                    aplicarLayoutPendente(blocoPendente, blocoAceito, badge, sininho);
+                }
             })
             .catch(err => {
-                console.warn("Falha de rede ao gravar termo. Mantendo cópia local offline.", err);
-                window.location.href = mailtoUrl;
+                clearTimeout(timeoutId);
+                if (localStorage.getItem(`termo_aceito_${usuarioAtivo}`) === 'true') {
+                    aplicarLayoutAceito(blocoPendente, blocoAceito, badge, sininho, dataAceiteLocal, false);
+                } else {
+                    aplicarLayoutPendente(blocoPendente, blocoAceito, badge, sininho);
+                }
+            });
+    }
+
+    function aplicarLayoutAceito(blocoPendente, blocoAceito, badge, sininho, dataRegistro, ehGlobal) {
+        if (blocoPendente) blocoPendente.style.display = 'none';
+        if (blocoAceito) {
+            blocoAceito.style.display = 'block';
+            const tipoSinc = ehGlobal ? "sincronizado com a nuvem em:" : "registrado no dispositivo em:";
+            document.getElementById('textoDataAceite').innerHTML = `Comprovante ${tipoSinc}<br><strong>${dataRegistro}</strong>`;
+        }
+        if (badge) badge.style.display = 'none';
+        if (sininho) { 
+            sininho.style.animation = 'none'; 
+            sininho.title = "Nenhum aviso pendente"; 
+        }
+    }
+
+    function aplicarLayoutPendente(blocoPendente, blocoAceito, badge, sininho) {
+        if (blocoPendente) blocoPendente.style.display = 'block';
+        if (blocoAceito) blocoAceito.style.display = 'none';
+        if (badge) badge.style.display = 'flex';
+        if (sininho) {
+            sininho.style.animation = 'balancoSininho 0.5s ease-in-out infinite alternate';
+        }
+    }
+
+    function irParaAvisos() {
+        const botoes = document.querySelectorAll('.nav-btn');
+        if (botoes[2]) mudarAba('comunicados', botoes[2]);
+    }
+
+    function atualizarPainel() {
+        window.location.reload();
+    }
+
+    function alternarBotaoAceite() {
+        const checkbox = document.getElementById('checkAceite');
+        const botao = document.getElementById('btnEnviarAceite');
+
+        if (checkbox && checkbox.checked) {
+            botao.disabled = false;
+            botao.style.background = 'var(--accent-green)';
+            botao.style.opacity = '1';
+            botao.style.cursor = 'pointer';
+            botao.style.boxShadow = '0 4px 12px rgba(16, 185, 129, 0.25)';
+        } else if (botao) {
+            botao.disabled = true;
+            botao.style.background = '#475569';
+            botao.style.opacity = '0.6';
+            botao.style.cursor = 'not-allowed';
+            botao.style.boxShadow = 'none';
+        }
+    }
+
+    function enviarEmailAceite() {
+        const nomeAluno = localStorage.getItem('nomeAlunoLogado') || 'Não Identificado';
+        const dataHoraAtual = new Date().toLocaleString('pt-BR');
+        const emailDestinatarioPrincipal = "luedo25@msn.com"; 
+        const assunto = encodeURIComponent(`CONFIRMAÇÃO DE ACEITE: Regras da Associação - ${nomeAluno}`);
+        
+        const corpoEmail = encodeURIComponent(
+            `Prezada Diretoria,\n\n` +
+            `Confirmo que li e aceito os termos e regras da Associação.\n\n` +
+            `DADOS DO ASSOCIADO:\n` +
+            `Nome: ${nomeAluno}\n` +
+            `Usuário: ${usuarioAtivo}\n` +
+            `Data/Hora: ${dataHoraAtual}\n`
+        );
+
+        const mailtoUrl = `mailto:${emailDestinatarioPrincipal}?subject=${assunto}&body=${corpoEmail}`;
+        
+        localStorage.setItem(`termo_aceito_${usuarioAtivo}`, 'true');
+        localStorage.setItem(`data_aceite_${usuarioAtivo}`, dataHoraAtual);
+        verificarStatusAceite();
+
+        fetch(`${URL_API_SERVIDOR}/api/aceitar-termo`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ usuario: usuarioAtivo })
+        })
+        .then(() => {
+            verificarStatusAceite();
+            window.location.href = mailtoUrl;
+        })
+        .catch(() => {
+            window.location.href = mailtoUrl;
+        });
+    }
+
+    function buscarSaldoMercadoPago() {
+        const txtSaldo = document.getElementById('textoSaldo');
+        txtSaldo.textContent = "Carregando...";
+        fetch(`${URL_API_SERVIDOR}/api/saldo`)
+            .then(res => res.json())
+            .then(data => {
+                if (data && data.saldo !== undefined) {
+                    txtSaldo.textContent = `R$ ${parseFloat(data.saldo).toFixed(2).replace('.', ',')}`;
+                } else {
+                    txtSaldo.textContent = "R$ --,--";
+                }
+            })
+            .catch(() => {
+                txtSaldo.textContent = "Erro ao buscar";
+            });
+    }
+
+    // EVENTOS AO CARREGAR A PÁGINA
+    document.addEventListener('DOMContentLoaded', () => {
+        verificarStatusAceite();
+        
+        const logoutBtn = document.getElementById('logoutBtn');
+        if (logoutBtn) {
+            logoutBtn.addEventListener('click', () => {
+                localStorage.removeItem('associadoAutenticado');
+                window.location.href = 'index.html';
             });
         }
-
-        // 8. ALTERNADOR DE ABAS
-        function mudarAba(idDaAba, botaoClicado) {
-            const secoes = document.querySelectorAll('.tab-content');
-            secoes.forEach(secao => secao.classList.remove('active'));
-
-            const botoes = document.querySelectorAll('.nav-btn');
-            botoes.forEach(btn => btn.classList.remove('active'));
-
-            const elementoAba = document.getElementById(idDaAba);
-            if (elementoAba) elementoAba.classList.add('active');
-            if (botaoClicado) botaoClicado.classList.add('active');
-
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-
-            if (idDaAba === 'comunicados') {
-                verificarStatusAceite();
-            }
-
-            if (idDaAba === 'saldo') {
-                buscarSaldoMercadoPago();
-            }
-        }
-
-        // 9. EVENTO DE CARREGAMENTO DAS NOTAS
-        scriptUsuarios.onload = function() {
-            if (typeof listaAlunos === 'undefined') return;
-            const dadosAluno = listaAlunos.find(u => u.usuario === usuarioAtivo);
-            const tabelaBody = document.getElementById('corpoTabelaNotas');
-
-            if (!tabelaBody) return;
-
-            if (dadosAluno && dadosAluno.historico) {
-                tabelaBody.innerHTML = "";
-                dadosAluno.historico.forEach(exame => {
-                    const linha = document.createElement('tr');
-                    linha.innerHTML = `
-                        <td style="background-color: ${exame.corFaixa}; color: ${exame.corTexto}; border-radius: 4px;">${exame.faixa}</td>
-                        <td>${exame.ano}</td>
-                        <td>${exame.kihon.toFixed(1)}</td>
-                        <td>${exame.kata.toFixed(1)}</td>
-                        <td>${exame.kumite.toFixed(1)}</td>
-                        <td>${exame.perguntas.toFixed(1)}</td>
-                        <td class="col-total">${exame.total.toFixed(1)}</td>
-                        <td class="col-media">${exame.media.toFixed(1)}</td>
-                    `;
-                    tabelaBody.appendChild(linha);
-                });
-            } else {
-                tabelaBody.innerHTML = `<tr><td colspan="8">Nenhum registro encontrado.</td></tr>`;
-            }
-        };
-
-        // 10. BUSCA DE SALDO DO MERCADO PAGO
-        function buscarSaldoMercadoPago() {
-            const elementoSaldo = document.getElementById('textoSaldo');
-            if (!elementoSaldo) return;
-            
-            elementoSaldo.textContent = "Carregando...";
-
-            fetch(`${URL_API_SERVIDOR}/api/saldo`)
-                .then(response => response.json())
-                .then(data => {
-                    if (data.saldo !== undefined) {
-                        elementoSaldo.textContent = data.saldo.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
-                    } else {
-                        elementoSaldo.textContent = "Erro ao carregar";
-                    }
-                })
-                .catch(() => {
-                    elementoSaldo.textContent = "Erro de conexão";
-                });
-        }
-
-        // 11. EVENTO DE LOGOUT
-        document.getElementById('logoutBtn').addEventListener('click', function() {
-            localStorage.removeItem('associadoAutenticado');
-            localStorage.removeItem('nomeAlunoLogado');
-            localStorage.removeItem('usuarioAtivo');
-            window.location.replace('index.html');
-        });
-
-        // 12. INICIALIZAÇÃO SEGURA DO PAINEL
-        document.addEventListener('DOMContentLoaded', () => {
-            try {
-                const primeiroBotao = document.querySelector('.nav-btn');
-                if (primeiroBotao) {
-                    mudarAba('exame', primeiroBotao);
-                }
-                
-                setTimeout(() => {
-                    verificarStatusAceite();
-                }, 300);
-                
-            } catch (error) {
-                console.error("Erro crítico contido na inicialização:", error);
-            }
-        });
+    });
 </script>
 </body>
 </html>
