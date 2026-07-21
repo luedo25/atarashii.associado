@@ -1391,59 +1391,80 @@
             });
         }
 
-        function carregarDadosGrafico() {
-            if (!usuarioAtivo) {
-                renderizarGraficoFrequencia(0, 0);
-                return;
+    let instanciaGrafico = null;
+
+function carregarGraficoFrequencia() {
+    // 1. Valida se há usuário ativo antes de fazer a chamada
+    if (!usuarioAtivo) {
+        console.warn("⚠️ Atencao: usuarioAtivo ainda nao foi definido.");
+        return;
+    }
+
+    // 2. Busca o canvas e valida se ele existe na DOM antes de continuar
+    const canvasElement = document.getElementById('graficoFrequencia');
+    if (!canvasElement) {
+        console.warn("⚠️ Elemento 'graficoFrequencia' nao foi encontrado na pagina.");
+        return;
+    }
+
+    // 3. Requisição à API
+    fetch(`${URL_API_SERVIDOR}/api/frequencia/${usuarioAtivo}`)
+        .then(res => {
+            if (!res.ok) throw new Error("Falha ao buscar frequencia do servidor");
+            return res.json();
+        })
+        .then(dados => {
+            // Garante que presencas e faltas sejam numeros validos
+            const presencas = Number(dados.presencas) || 0;
+            const faltas = Number(dados.faltas) || 0;
+
+            const ctx = canvasElement.getContext('2d');
+
+            // Destrói a instância anterior se existir
+            if (instanciaGrafico) {
+                instanciaGrafico.destroy();
             }
 
-            // Faz a chamada à API no Render para buscar presenças e faltas do Supabase
-            fetch(`${URL_API_SERVIDOR}/api/frequencia/${usuarioAtivo}`)
-                .then(response => {
-                    if (!response.ok) {
-                        throw new Error("Erro na resposta do servidor");
+            // Cria o novo gráfico
+            instanciaGrafico = new Chart(ctx, {
+                type: 'pie',
+                data: {
+                    labels: ['Presenças', 'Faltas'],
+                    datasets: [{
+                        data: [presencas, faltas],
+                        backgroundColor: ['#10b981', '#ef4444'],
+                        borderWidth: 1,
+                        borderColor: '#1e293b'
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: { 
+                            position: 'bottom', 
+                            labels: { color: '#f8fafc' } 
+                        }
                     }
-                    return response.json();
-                })
-                .then(dados => {
-                    const presencas = dados.presencas || 0;
-                    const faltas = dados.faltas || 0;
-                    renderizarGraficoFrequencia(presencas, faltas);
-                })
-                .catch(err => {
-                    console.error("❌ Erro ao buscar dados de frequência da API:", err);
-                    // Em caso de falha, exibe 0 no gráfico sem travar a interface
-                    renderizarGraficoFrequencia(0, 0);
-                });
-        }
+                }
+            });
+        })
+        .catch(err => console.error("❌ Erro ao carregar gráfico de frequência:", err));
+}
 
-        function carregarDadosGrafico() {
-            if (typeof listaAlunos === 'undefined') {
-                setTimeout(carregarDadosGrafico, 300);
-                return;
-            }
+// Inicialização da página
+document.addEventListener('DOMContentLoaded', () => {
+    try {
+        const primeiroBotao = document.querySelector('.nav-btn');
+        if (primeiroBotao) mudarAba('exame', primeiroBotao);
 
-            const dadosAluno = listaAlunos.find(u => u.usuario === usuarioAtivo);
-            const presencas = dadosAluno && dadosAluno.presencas !== undefined ? dadosAluno.presencas : 0;
-            const faltas = dadosAluno && dadosAluno.faltas !== undefined ? dadosAluno.faltas : 0;
+        carregarNotasAluno();
+        carregarGraficoFrequencia();
 
-            renderizarGraficoFrequencia(presencas, faltas);
-        }
-
-        // Inicialização dos eventos ao carregar a página
-        document.addEventListener('DOMContentLoaded', () => {
-            try {
-                const primeiroBotao = document.querySelector('.nav-btn');
-                if (primeiroBotao) mudarAba('exame', primeiroBotao);
-                
-                carregarNotasAluno();
-                carregarDadosGrafico();
-
-                setTimeout(() => verificarStatusAceite(), 300);
-            } catch (error) {
-                console.error("Erro na inicialização:", error);
-            }
-        });
+        setTimeout(() => verificarStatusAceite(), 300);
+    } catch (error) {
+        console.error("Erro na inicializacao:", error);
+    }
+});
 </script>
 </body>
 </html>
