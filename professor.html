@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Área do Professor - Chamada</title>
+    <script src="usuarios.js"></script>
+    <style>
+        body { background-color: #0f172a; color: #f8fafc; font-family: sans-serif; padding: 20px; }
+        .container { max-width: 600px; margin: 0 auto; background: #1e293b; padding: 20px; border-radius: 12px; }
+        .aluno-item { display: flex; justify-content: space-between; align-items: center; padding: 10px 0; border-bottom: 1px solid #334155; }
+        input[type="date"] { padding: 8px; font-size: 16px; margin-bottom: 20px; width: 100%; border-radius: 6px; }
+        .btn-salvar { width: 100%; padding: 12px; background: #3b82f6; color: white; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; margin-top: 20px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>🥋 Chamada dos Alunos</h2>
+        <label>Selecione a Data da Aula (Ter, Qui ou Sáb):</label>
+        <input type="date" id="dataAula">
+
+        <div id="listaAlunosContainer"></div>
+
+        <button onclick="salvarChamada()" class="btn-salvar">💾 Salvar Chamada</button>
+    </div>
+
+    <script>
+        const URL_API_SERVIDOR = "https://api-associacao-mp.onrender.com";
+
+        // Define a data atual por padrão
+        document.getElementById('dataAula').valueAsDate = new Date();
+
+        function renderizarAlunos() {
+            const container = document.getElementById('listaAlunosContainer');
+            container.innerHTML = '';
+
+            // Filtra removendo administradores e pega os alunos de usuarios.js
+            const alunos = listaAlunos.filter(u => u.usuario !== 'luiz.costa');
+
+            alunos.forEach(aluno => {
+                const div = document.createElement('div');
+                div.className = 'aluno-item';
+                div.innerHTML = `
+                    <span>${aluno.nome}</span>
+                    <label>
+                        <input type="checkbox" data-usuario="${aluno.usuario}" class="chk-presente" checked> Presente
+                    </label>
+                `;
+                container.appendChild(div);
+            });
+        }
+
+        async function salvarChamada() {
+            const data = document.getElementById('dataAula').value;
+            if (!data) return alert("Selecione uma data.");
+
+            const checkboxes = document.querySelectorAll('.chk-presente');
+            const chamadas = Array.from(checkboxes).map(chk => ({
+                usuario: chk.getAttribute('data-usuario'),
+                presente: chk.checked
+            }));
+
+            const response = await fetch(`${URL_API_SERVIDOR}/api/chamada`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ data, chamadas })
+            });
+
+            const result = await response.json();
+            if (response.ok) {
+                alert("Chamada salva com sucesso!");
+            } else {
+                alert("Erro: " + result.erro);
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', renderizarAlunos);
+    </script>
+</body>
+</html>
