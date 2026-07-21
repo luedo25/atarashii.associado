@@ -1330,7 +1330,7 @@
             window.location.replace('index.html');
         });
 
-        // 5. CARREGAMENTO E EXIBIÇÃO DO GRÁFICO DE FREQUÊNCIA
+     // 5. CARREGAMENTO E EXIBIÇÃO DO GRÁFICO DE FREQUÊNCIA (VIA API / SUPABASE)
         function renderizarGraficoFrequencia(presencas, faltas) {
             const elemPresencas = document.getElementById('qtdPresencas');
             const elemFaltas = document.getElementById('qtdFaltas');
@@ -1389,6 +1389,32 @@
                     }
                 }
             });
+        }
+
+        function carregarDadosGrafico() {
+            if (!usuarioAtivo) {
+                renderizarGraficoFrequencia(0, 0);
+                return;
+            }
+
+            // Faz a chamada à API no Render para buscar presenças e faltas do Supabase
+            fetch(`${URL_API_SERVIDOR}/api/frequencia/${usuarioAtivo}`)
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error("Erro na resposta do servidor");
+                    }
+                    return response.json();
+                })
+                .then(dados => {
+                    const presencas = dados.presencas || 0;
+                    const faltas = dados.faltas || 0;
+                    renderizarGraficoFrequencia(presencas, faltas);
+                })
+                .catch(err => {
+                    console.error("❌ Erro ao buscar dados de frequência da API:", err);
+                    // Em caso de falha, exibe 0 no gráfico sem travar a interface
+                    renderizarGraficoFrequencia(0, 0);
+                });
         }
 
         function carregarDadosGrafico() {
