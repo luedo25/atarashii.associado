@@ -553,16 +553,21 @@
             <img src="./tabela-carencia.png" alt="Tabela de Carência Mínima" class="img-tabela-carencia">
         </div>
 
-        <div style="background: var(--bg-card); border: 1px solid var(--border-color); border-radius: var(--radius-lg); padding: 20px; margin-bottom: 20px; text-align: center;">
-            <h3>📊 Frequência nas Aulas</h3>
-            <div style="max-width: 260px; margin: 15px auto;">
-                <canvas id="graficoFrequencia"></canvas>
-            </div>
-        </div> <!-- FECHAMENTO CORRIGIDO DA DIV DO GRÁFICO -->
-
-    </div> <!-- FECHAMENTO CORRIGIDO DA ABA EXAME -->
-
-
+     <div class="grafico-container" style="position: relative; width: 100%; max-width: 400px; margin: 0 auto;">
+    <canvas id="graficoFrequencia"></canvas>
+    
+    <!-- Resumo de Presenças e Faltas -->
+    <div id="resumoFrequencia" style="display: flex; justify-content: space-around; margin-top: 15px; font-family: sans-serif;">
+        <div style="background-color: #e8f5e9; border: 1px solid #2ecc71; color: #27ae60; padding: 8px 16px; border-radius: 20px; font-weight: bold; text-align: center;">
+            <span style="font-size: 12px; display: block; color: #555;">Presenças</span>
+            <span id="qtdPresencas" style="font-size: 18px;">0</span>
+        </div>
+        <div style="background-color: #ffebee; border: 1px solid #e74c3c; color: #c0392b; padding: 8px 16px; border-radius: 20px; font-weight: bold; text-align: center;">
+            <span style="font-size: 12px; display: block; color: #555;">Faltas</span>
+            <span id="qtdFaltas" style="font-size: 18px;">0</span>
+        </div>
+    </div>
+</div>
     <!-- SEÇÃO 2: CONTEÚDO PROGRAMÁTICO -->
     <div id="conteudo-programatico" class="tab-content">
         <h3>📖 Conteúdo Programático</h3>
@@ -1324,34 +1329,59 @@
 
       let instanciaGrafico = null;
 
-function carregarGraficoFrequencia() {
-    fetch(`${URL_API_SERVIDOR}/api/frequencia/${usuarioAtivo}`)
-        .then(res => res.json())
-        .then(dados => {
-            const ctx = document.getElementById('graficoFrequencia').getContext('2d');
-            
-            if (instanciaGrafico) instanciaGrafico.destroy();
+function renderizarGraficoFrequencia(presencas, faltas) {
+    // 1. Atualiza os contadores em texto abaixo do gráfico
+    document.getElementById('qtdPresencas').textContent = presencas;
+    document.getElementById('qtdFaltas').textContent = faltas;
 
-            instanciaGrafico = new Chart(ctx, {
-                type: 'pie',
-                data: {
-                    labels: ['Presenças', 'Faltas'],
-                    datasets: [{
-                        data: [dados.presencas, dados.faltas],
-                        backgroundColor: ['#10b981', '#ef4444'],
-                        borderWidth: 1,
-                        borderColor: '#1e293b'
-                    }]
+    const ctx = document.getElementById('graficoFrequencia').getContext('2d');
+
+    // Se o gráfico já existir, podemos destruí-lo antes de recriar para evitar bugs de sobreposição
+    if (window.meuGrafico) {
+        window.meuGrafico.destroy();
+    }
+
+    window.meuGrafico = new Chart(ctx, {
+        type: 'doughnut', // ou 'pie'
+        data: {
+            // Inclui a quantidade diretamente nos rótulos da legenda
+            labels: [
+                `Presenças (${presencas})`, 
+                `Faltas (${faltas})`
+            ],
+            datasets: [{
+                data: [presencas, faltas],
+                backgroundColor: ['#2ecc71', '#e74c3c'],
+                borderWidth: 2
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                legend: {
+                    display: true,
+                    position: 'bottom',
+                    labels: {
+                        font: {
+                            size: 14,
+                            weight: 'bold'
+                        }
+                    }
                 },
-                options: {
-                    responsive: true,
-                    plugins: {
-                        legend: { position: 'bottom', labels: { color: '#f8fafc' } }
+                tooltip: {
+                    callbacks: {
+                        label: function(context) {
+                            const label = context.label || '';
+                            const value = context.raw || 0;
+                            const total = presencas + faltas;
+                            const porcentagem = total > 0 ? Math.round((value / total) * 100) : 0;
+                            return `${label}: ${value} (${porcentagem}%)`;
+                        }
                     }
                 }
-            });
-        })
-        .catch(err => console.error("Erro ao carregar gráfico:", err));
+            }
+        }
+    });
 }
 
 // Chame a função na inicialização:
