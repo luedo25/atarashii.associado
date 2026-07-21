@@ -1102,51 +1102,53 @@
     };
     document.head.appendChild(scriptUsuarios);
 
-    function carregarNotasAluno() {
-        const corpoTabela = document.getElementById('corpoTabelaNotas');
-        if (!corpoTabela) return;
+   function carregarNotasAluno() {
+    const corpoTabela = document.getElementById('corpoTabelaNotas');
+    if (!corpoTabela) return;
 
-        // Procura no objeto global usuarios / dbUsuarios disponibilizado em usuarios.js
-        const baseUsuarios = window.usuarios || window.dbUsuarios || window.dadosUsuarios;
-        const alunoData = baseUsuarios ? baseUsuarios[usuarioAtivo] : null;
+    // Obtém o Array listaAlunos disponibilizado pelo usuarios.js
+    const baseUsuarios = window.listaAlunos || [];
 
-        const exames = alunoData ? (alunoData.exames || alunoData.notas || alunoData.historico) : null;
+    // Busca o aluno que bate exatamente com o usuarioAtivo salvo no localStorage
+    const alunoEncontrado = baseUsuarios.find(u => u.usuario === usuarioAtivo);
 
-        if (!exames || exames.length === 0) {
-            corpoTabela.innerHTML = `
-                <tr>
-                    <td colspan="8" style="text-align: center; color: var(--text-muted); padding: 20px;">
-                        Nenhum exame cadastrado até o momento.
-                    </td>
-                </tr>`;
-            return;
-        }
+    // Obtém a lista de exames/historico do aluno
+    const exames = alunoEncontrado ? alunoEncontrado.historico : null;
 
-        corpoTabela.innerHTML = exames.map(exame => {
-            const faixa = exame.faixa || exame.graduacao || '-';
-            const ano = exame.ano || exame.data || '-';
-            const kihon = exame.kihon ?? '-';
-            const kata = exame.kata ?? '-';
-            const kumite = exame.kumite ?? '-';
-            const perguntas = exame.perguntas ?? '-';
-            const total = exame.total ?? '-';
-            const media = exame.media ?? '-';
-
-            return `
-                <tr>
-                    <td><strong>${faixa}</strong></td>
-                    <td>${ano}</td>
-                    <td>${kihon}</td>
-                    <td>${kata}</td>
-                    <td>${kumite}</td>
-                    <td>${perguntas}</td>
-                    <td><strong>${total}</strong></td>
-                    <td><span style="color: var(--accent-green); font-weight: 700;">${media}</span></td>
-                </tr>
-            `;
-        }).join('');
+    if (!exames || exames.length === 0) {
+        corpoTabela.innerHTML = `
+            <tr>
+                <td colspan="8" style="text-align: center; color: var(--text-muted); padding: 20px;">
+                    Nenhum exame cadastrado até o momento.
+                </td>
+            </tr>`;
+        return;
     }
 
+    corpoTabela.innerHTML = exames.map(exame => {
+        const faixa = exame.faixa || '-';
+        const ano = exame.ano || '-';
+        const kihon = exame.kihon ?? '-';
+        const kata = exame.kata ?? '-';
+        const kumite = exame.kumite ?? '-';
+        const perguntas = exame.perguntas ?? '-';
+        const total = exame.total ?? '-';
+        const media = exame.media ?? '-';
+
+        return `
+            <tr>
+                <td><strong>${faixa}</strong></td>
+                <td>${ano}</td>
+                <td>${kihon}</td>
+                <td>${kata}</td>
+                <td>${kumite}</td>
+                <td>${perguntas}</td>
+                <td><strong>${total}</strong></td>
+                <td><span style="color: var(--accent-green); font-weight: 700;">${media}</span></td>
+            </tr>
+        `;
+    }).join('');
+}
     // 2. TROCA DE ABAS
     function mudarAba(abaId, elementoBotao) {
         document.querySelectorAll('.tab-content').forEach(tab => {
