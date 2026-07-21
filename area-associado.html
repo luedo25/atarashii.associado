@@ -206,7 +206,8 @@
             color: var(--text-main);
             margin-bottom: 18px;
             display: flex;
-            align-items: gap: 10px;
+            align-items: center;
+            gap: 10px;
         }
 
         @keyframes fadeIn {
@@ -553,21 +554,24 @@
             <img src="./tabela-carencia.png" alt="Tabela de Carência Mínima" class="img-tabela-carencia">
         </div>
 
-     <div class="grafico-container" style="position: relative; width: 100%; max-width: 400px; margin: 0 auto;">
-    <canvas id="graficoFrequencia"></canvas>
-    
-    <!-- Resumo de Presenças e Faltas -->
-    <div id="resumoFrequencia" style="display: flex; justify-content: space-around; margin-top: 15px; font-family: sans-serif;">
-        <div style="background-color: #e8f5e9; border: 1px solid #2ecc71; color: #27ae60; padding: 8px 16px; border-radius: 20px; font-weight: bold; text-align: center;">
-            <span style="font-size: 12px; display: block; color: #555;">Presenças</span>
-            <span id="qtdPresencas" style="font-size: 18px;">0</span>
+        <div class="grafico-container" style="position: relative; width: 100%; max-width: 400px; margin: 25px auto 0 auto;">
+            <h3 style="justify-content: center; margin-bottom: 15px;">📊 Frequência de Aulas</h3>
+            <canvas id="graficoFrequencia"></canvas>
+            
+            <!-- Resumo de Presenças e Faltas -->
+            <div id="resumoFrequencia" style="display: flex; justify-content: space-around; margin-top: 15px; font-family: sans-serif;">
+                <div style="background-color: #10b98122; border: 1px solid var(--accent-green); color: var(--accent-green); padding: 8px 16px; border-radius: 20px; font-weight: bold; text-align: center;">
+                    <span style="font-size: 12px; display: block; color: var(--text-muted);">Presenças</span>
+                    <span id="qtdPresencas" style="font-size: 18px;">0</span>
+                </div>
+                <div style="background-color: #ef444422; border: 1px solid var(--accent-red); color: #f87171; padding: 8px 16px; border-radius: 20px; font-weight: bold; text-align: center;">
+                    <span style="font-size: 12px; display: block; color: var(--text-muted);">Faltas</span>
+                    <span id="qtdFaltas" style="font-size: 18px;">0</span>
+                </div>
+            </div>
         </div>
-        <div style="background-color: #ffebee; border: 1px solid #e74c3c; color: #c0392b; padding: 8px 16px; border-radius: 20px; font-weight: bold; text-align: center;">
-            <span style="font-size: 12px; display: block; color: #555;">Faltas</span>
-            <span id="qtdFaltas" style="font-size: 18px;">0</span>
-        </div>
-    </div>
-</div>
+    </div> <!-- /div#exame CORRIGIDA AQUI -->
+
     <!-- SEÇÃO 2: CONTEÚDO PROGRAMÁTICO -->
     <div id="conteudo-programatico" class="tab-content">
         <h3>📖 Conteúdo Programático</h3>
@@ -1118,7 +1122,6 @@
             // Verifica se a lista de alunos carregou do arquivo usuarios.js
             if (typeof listaAlunos === 'undefined') {
                 tabelaBody.innerHTML = `<tr><td colspan="8">Aguardando dados de alunos...</td></tr>`;
-                // Se o arquivo ainda não carregou, tenta novamente em 500ms
                 setTimeout(carregarNotasAluno, 500);
                 return;
             }
@@ -1327,77 +1330,94 @@
             window.location.replace('index.html');
         });
 
-      let instanciaGrafico = null;
+        // 5. CARREGAMENTO E EXIBIÇÃO DO GRÁFICO DE FREQUÊNCIA
+        function renderizarGraficoFrequencia(presencas, faltas) {
+            const elemPresencas = document.getElementById('qtdPresencas');
+            const elemFaltas = document.getElementById('qtdFaltas');
 
-function renderizarGraficoFrequencia(presencas, faltas) {
-    // 1. Atualiza os contadores em texto abaixo do gráfico
-    document.getElementById('qtdPresencas').textContent = presencas;
-    document.getElementById('qtdFaltas').textContent = faltas;
+            if (elemPresencas) elemPresencas.textContent = presencas;
+            if (elemFaltas) elemFaltas.textContent = faltas;
 
-    const ctx = document.getElementById('graficoFrequencia').getContext('2d');
+            const canvas = document.getElementById('graficoFrequencia');
+            if (!canvas) return;
 
-    // Se o gráfico já existir, podemos destruí-lo antes de recriar para evitar bugs de sobreposição
-    if (window.meuGrafico) {
-        window.meuGrafico.destroy();
-    }
+            const ctx = canvas.getContext('2d');
 
-    window.meuGrafico = new Chart(ctx, {
-        type: 'doughnut', // ou 'pie'
-        data: {
-            // Inclui a quantidade diretamente nos rótulos da legenda
-            labels: [
-                `Presenças (${presencas})`, 
-                `Faltas (${faltas})`
-            ],
-            datasets: [{
-                data: [presencas, faltas],
-                backgroundColor: ['#2ecc71', '#e74c3c'],
-                borderWidth: 2
-            }]
-        },
-        options: {
-            responsive: true,
-            plugins: {
-                legend: {
-                    display: true,
-                    position: 'bottom',
-                    labels: {
-                        font: {
-                            size: 14,
-                            weight: 'bold'
-                        }
-                    }
+            if (window.meuGrafico) {
+                window.meuGrafico.destroy();
+            }
+
+            window.meuGrafico = new Chart(ctx, {
+                type: 'doughnut',
+                data: {
+                    labels: [
+                        `Presenças (${presencas})`, 
+                        `Faltas (${faltas})`
+                    ],
+                    datasets: [{
+                        data: [presencas, faltas],
+                        backgroundColor: ['#10b981', '#ef4444'],
+                        borderColor: '#1e293b',
+                        borderWidth: 2
+                    }]
                 },
-                tooltip: {
-                    callbacks: {
-                        label: function(context) {
-                            const label = context.label || '';
-                            const value = context.raw || 0;
-                            const total = presencas + faltas;
-                            const porcentagem = total > 0 ? Math.round((value / total) * 100) : 0;
-                            return `${label}: ${value} (${porcentagem}%)`;
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: {
+                            display: true,
+                            position: 'bottom',
+                            labels: {
+                                color: '#f8fafc',
+                                font: {
+                                    size: 13,
+                                    weight: 'bold'
+                                }
+                            }
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    const label = context.label || '';
+                                    const value = context.raw || 0;
+                                    const total = presencas + faltas;
+                                    const porcentagem = total > 0 ? Math.round((value / total) * 100) : 0;
+                                    return `${label}: ${value} (${porcentagem}%)`;
+                                }
+                            }
                         }
                     }
                 }
-            }
+            });
         }
-    });
-}
 
-// Chame a função na inicialização:
-document.addEventListener('DOMContentLoaded', () => {
-    try {
-        const primeiroBotao = document.querySelector('.nav-btn');
-        if (primeiroBotao) mudarAba('exame', primeiroBotao);
-        
-        carregarNotasAluno();
-        carregarGraficoFrequencia(); // <--- Adicionado aqui
+        function carregarDadosGrafico() {
+            if (typeof listaAlunos === 'undefined') {
+                setTimeout(carregarDadosGrafico, 300);
+                return;
+            }
 
-        setTimeout(() => verificarStatusAceite(), 300);
-    } catch (error) {
-        console.error("Erro na inicialização:", error);
-    }
-});
+            const dadosAluno = listaAlunos.find(u => u.usuario === usuarioAtivo);
+            const presencas = dadosAluno && dadosAluno.presencas !== undefined ? dadosAluno.presencas : 0;
+            const faltas = dadosAluno && dadosAluno.faltas !== undefined ? dadosAluno.faltas : 0;
+
+            renderizarGraficoFrequencia(presencas, faltas);
+        }
+
+        // Inicialização dos eventos ao carregar a página
+        document.addEventListener('DOMContentLoaded', () => {
+            try {
+                const primeiroBotao = document.querySelector('.nav-btn');
+                if (primeiroBotao) mudarAba('exame', primeiroBotao);
+                
+                carregarNotasAluno();
+                carregarDadosGrafico();
+
+                setTimeout(() => verificarStatusAceite(), 300);
+            } catch (error) {
+                console.error("Erro na inicialização:", error);
+            }
+        });
 </script>
 </body>
 </html>
