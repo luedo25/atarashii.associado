@@ -11,7 +11,7 @@ const listaAlunos = [
             { faixa: "Verde/Roxa", corFaixa: "#673ab7", corTexto: "#fff", ano: "Junho / 2024", kihon: 7.8, kata: 7.8, kumite: 8.0, perguntas: 0.5, total: 24.1, media: 8.0 }
         ]	
 	},
-    { usuario: "luiz.costa", senha: "123456", nome: "Luiz Costa",
+    { usuario: "luiz.costa", senha: "123456", nome: "Luiz Costa", perfil: "PROFESSOR",
 	 historico: [
             { faixa: "Branca/Amarela", corFaixa: "#ffeb3b", corTexto: "#000", ano: "Junho / 2018", kihon: 7.5, kata: 7.0, kumite: 7.5, perguntas: 0, total: 22, media: 7.3 },
             { faixa: "Amarela/Vermelha", corFaixa: "#ff0000", corTexto: "#fff", ano: "Dezembro / 2018", kihon: 7.8, kata: 7.8, kumite: 7.7, perguntas: 0.5, total: 23.8, media: 7.9 },
