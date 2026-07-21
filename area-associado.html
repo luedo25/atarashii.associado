@@ -2,6 +2,7 @@
 <html lang="pt-BR">
 <head>
     <script src="usuarios.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <link rel="manifest" href="./manifest.json">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -552,8 +553,12 @@
             <h3 style="margin-top: 20px;">⏳ Carência Mínima (Kyu)</h3>
             <img src="./tabela-carencia.png" alt="Tabela de Carência Mínima" class="img-tabela-carencia">
         </div>
+        <div style="background: var(--bg-card); border: 1px solid var(--border-color); border-radius: var(--radius-lg); padding: 20px; margin-bottom: 20px; text-align: center;">
+    <h3>📊 Frequência nas Aulas</h3>
+    <div style="max-width: 260px; margin: 15px auto;">
+        <canvas id="graficoFrequencia"></canvas>
     </div>
-    
+</div>
     <!-- SEÇÃO 2: CONTEÚDO PROGRAMÁTICO -->
     <div id="conteudo-programatico" class="tab-content">
         <h3>📖 Conteúdo Programático</h3>
@@ -1313,25 +1318,52 @@
             window.location.replace('index.html');
         });
 
-        // 5. INICIALIZAÇÃO SEGURA
-        document.addEventListener('DOMContentLoaded', () => {
-            try {
-                const primeiroBotao = document.querySelector('.nav-btn');
-                if (primeiroBotao) {
-                    mudarAba('exame', primeiroBotao);
-                }
-                
-                // Dispara o carregamento das notas do aluno
-                carregarNotasAluno();
+      let instanciaGrafico = null;
 
-                setTimeout(() => {
-                    verificarStatusAceite();
-                }, 300);
-                
-            } catch (error) {
-                console.error("Erro crítico contido na inicialização:", error);
-            }
-        });
+function carregarGraficoFrequencia() {
+    fetch(`${URL_API_SERVIDOR}/api/frequencia/${usuarioAtivo}`)
+        .then(res => res.json())
+        .then(dados => {
+            const ctx = document.getElementById('graficoFrequencia').getContext('2d');
+            
+            if (instanciaGrafico) instanciaGrafico.destroy();
+
+            instanciaGrafico = new Chart(ctx, {
+                type: 'pie',
+                data: {
+                    labels: ['Presenças', 'Faltas'],
+                    datasets: [{
+                        data: [dados.presencas, dados.faltas],
+                        backgroundColor: ['#10b981', '#ef4444'],
+                        borderWidth: 1,
+                        borderColor: '#1e293b'
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: { position: 'bottom', labels: { color: '#f8fafc' } }
+                    }
+                }
+            });
+        })
+        .catch(err => console.error("Erro ao carregar gráfico:", err));
+}
+
+// Chame a função na inicialização:
+document.addEventListener('DOMContentLoaded', () => {
+    try {
+        const primeiroBotao = document.querySelector('.nav-btn');
+        if (primeiroBotao) mudarAba('exame', primeiroBotao);
+        
+        carregarNotasAluno();
+        carregarGraficoFrequencia(); // <--- Adicionado aqui
+
+        setTimeout(() => verificarStatusAceite(), 300);
+    } catch (error) {
+        console.error("Erro na inicialização:", error);
+    }
+});
 </script>
 </body>
 </html>
