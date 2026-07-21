@@ -538,7 +538,11 @@
                     </tr>
                 </thead>
                 <tbody id="corpoTabelaNotas">
-                    <!-- Gerado via JavaScript -->
+                    <tr>
+                        <td colspan="8" style="text-align: center; color: var(--text-muted); padding: 20px;">
+                            Carregando histórico de exames...
+                        </td>
+                    </tr>
                 </tbody>
             </table>
         </div>
@@ -664,7 +668,7 @@
                 <div class="bloco-extra">
                     <strong>Kihon-Ipom-Kumite:</strong>
                     <p><span class="texto-vermelho">Ataques</span> - Jodan-zuki, Tchudan-zuki, Mae-Gueri, Yoko-Gueri, Mawachi-Gueri.</p>
-                    <strong>Kata:</strong> Heian-Nidan, Heian-Sandan, Heian Yodan
+                    <strong>Kata:</strong> Heian-Nidan, Heian-Sandan, Heian Yondan
                     <strong>Exame Oral:</strong> Contagem, Dojo-Kun e Pergunta livre.
                     <strong>Kumite:</strong> (2 min) Luta com contato.
                 </div>
@@ -1078,25 +1082,72 @@
 </div>
 
 <script>
-    // 1. CARREGAMENTO DINÂMICO DE USUÁRIOS
-    const scriptUsuarios = document.createElement('script');
-    scriptUsuarios.src = 'usuarios.js?v=' + new Date().getTime();
-    document.head.appendChild(scriptUsuarios);
-
-    // 2. PROTEÇÃO DE ACESSO
+    // PROTEÇÃO DE ACESSO
     if (localStorage.getItem('associadoAutenticado') !== 'true') {
         alert('Acesso negado. Por favor, faça login.');
         window.location.href = 'index.html';
     }
 
-    // 3. CONFIGURAÇÕES E VARIÁVEIS GLOBAIS
     const nomeDoAluno = localStorage.getItem('nomeAlunoLogado') || 'Associado';
     const usuarioAtivo = localStorage.getItem('usuarioAtivo');
     const URL_API_SERVIDOR = "https://api-associacao-mp.onrender.com";
 
     document.getElementById('welcomeNome').textContent = `Olá, ${nomeDoAluno}!`;
 
-    // 4. TROCA DE ABAS
+    // 1. CARREGAMENTO DINÂMICO DE USUÁRIOS E NOTAS
+    const scriptUsuarios = document.createElement('script');
+    scriptUsuarios.src = 'usuarios.js?v=' + new Date().getTime();
+    scriptUsuarios.onload = function() {
+        carregarNotasAluno();
+    };
+    document.head.appendChild(scriptUsuarios);
+
+    function carregarNotasAluno() {
+        const corpoTabela = document.getElementById('corpoTabelaNotas');
+        if (!corpoTabela) return;
+
+        // Procura no objeto global usuarios / dbUsuarios disponibilizado em usuarios.js
+        const baseUsuarios = window.usuarios || window.dbUsuarios || window.dadosUsuarios;
+        const alunoData = baseUsuarios ? baseUsuarios[usuarioAtivo] : null;
+
+        const exames = alunoData ? (alunoData.exames || alunoData.notas || alunoData.historico) : null;
+
+        if (!exames || exames.length === 0) {
+            corpoTabela.innerHTML = `
+                <tr>
+                    <td colspan="8" style="text-align: center; color: var(--text-muted); padding: 20px;">
+                        Nenhum exame cadastrado até o momento.
+                    </td>
+                </tr>`;
+            return;
+        }
+
+        corpoTabela.innerHTML = exames.map(exame => {
+            const faixa = exame.faixa || exame.graduacao || '-';
+            const ano = exame.ano || exame.data || '-';
+            const kihon = exame.kihon ?? '-';
+            const kata = exame.kata ?? '-';
+            const kumite = exame.kumite ?? '-';
+            const perguntas = exame.perguntas ?? '-';
+            const total = exame.total ?? '-';
+            const media = exame.media ?? '-';
+
+            return `
+                <tr>
+                    <td><strong>${faixa}</strong></td>
+                    <td>${ano}</td>
+                    <td>${kihon}</td>
+                    <td>${kata}</td>
+                    <td>${kumite}</td>
+                    <td>${perguntas}</td>
+                    <td><strong>${total}</strong></td>
+                    <td><span style="color: var(--accent-green); font-weight: 700;">${media}</span></td>
+                </tr>
+            `;
+        }).join('');
+    }
+
+    // 2. TROCA DE ABAS
     function mudarAba(abaId, elementoBotao) {
         document.querySelectorAll('.tab-content').forEach(tab => {
             tab.classList.remove('active');
@@ -1115,7 +1166,7 @@
         window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 
-    // 5. CONSULTA STATUS DO TERMO
+    // 3. CONSULTA STATUS DO TERMO
     function verificarStatusAceite() {
         if (!usuarioAtivo) return;
 
