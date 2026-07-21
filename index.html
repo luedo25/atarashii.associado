@@ -199,7 +199,7 @@
         document.getElementById('loginForm').addEventListener('submit', function(event) {
             event.preventDefault(); 
             
-            const usuarioInput = document.getElementById('username').value;
+            const usuarioInput = document.getElementById('username').value.trim();
             const senhaInput = document.getElementById('password').value;
             const errorMessage = document.getElementById('errorMessage');
 
@@ -211,10 +211,27 @@
             const alunoLogado = autenticarUsuarioDireto(usuarioInput, senhaInput);
 
             if (alunoLogado) {
+                // Guarda dados de sessão básicos
                 localStorage.setItem('associadoAutenticado', 'true');
                 localStorage.setItem('nomeAlunoLogado', alunoLogado.nome);
                 localStorage.setItem('usuarioAtivo', alunoLogado.usuario);
-                window.location.href = 'area-associado.html';
+                
+                // Se houver tipo/perfil definido no usuarios.js, salva no localStorage
+                if (alunoLogado.tipo) {
+                    localStorage.setItem('tipoUsuario', alunoLogado.tipo);
+                }
+
+                // REDIRECIONAMENTO INTELIGENTE
+                // Verifica se o usuário é 'luiz.costa' ou se a propriedade 'tipo' é 'professor'
+                const usuarioLower = alunoLogado.usuario.toLowerCase();
+                const tipoLower = alunoLogado.tipo ? alunoLogado.tipo.toLowerCase() : '';
+
+                if (usuarioLower === 'luiz.costa' || tipoLower === 'professor') {
+                    window.location.href = 'professor.html';
+                } else {
+                    window.location.href = 'area-associado.html';
+                }
+
             } else {
                 errorMessage.style.display = 'block';
             }
