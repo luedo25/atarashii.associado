@@ -20,6 +20,13 @@ const listaAlunos = [
 	},
 	{ usuario: "joaquim.gadelha", senha: "Treino301", nome: "Joaquim Gadelha" 
 	},
+	{ usuario: "davi.dantas", senha: "Treino309", nome: "Davi Dantas",
+	 historico: [
+            { faixa: "Branca/Amarela", corFaixa: "#ffeb3b", corTexto: "#000", ano: "Julho / 2023", kihon: 7.3, kata: 7.4, kumite: 7.6, perguntas: 0.5, total: 22.8, media: 7.6 },
+            { faixa: "Amarela/Vermelha", corFaixa: "#ff0000", corTexto: "#fff", ano: "Dezembro / 2023", kihon: 7.2, kata: 7.3, kumite: 7.3, perguntas: 0.5, total: 22.3, media: 7.4 },
+            { faixa: "Vermelha/Laranja", corFaixa: "#e65100", corTexto: "#fff", ano: "Dezembro / 2024", kihon: 7.5, kata: 7.6, kumite: 7.7, perguntas: 0.3, total: 23.1, media: 7.7 },
+        ]	
+	},
     { usuario: "luiz.guilherme", senha: "Kumite964", nome: "Luiz Guilherme", 
 	historico: [
             { faixa: "Branca/Amarela", corFaixa: "#ffeb3b", corTexto: "#000", ano: "Junho / 2018", kihon: 7.5, kata: 7.0, kumite: 7.5, perguntas: 0, total: 22, media: 7.3 },
