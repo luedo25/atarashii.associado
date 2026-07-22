@@ -571,36 +571,36 @@
                 </div>
             </div>
         </div>
-    </div> <!-- /div#exame CORRIGIDA AQUI -->
 
-    <!-- FORMULÁRIO DE JUSTIFICATIVA DE FALTAS -->
-<div style="margin-top: 30px; background: rgba(15, 23, 42, 0.6); border: 1px solid var(--border-color); padding: 20px; border-radius: var(--radius-md);">
-    <h3 style="margin-bottom: 12px; font-size: 16px;">📝 Justificar Falta em Aula</h3>
-    <form id="formJustificativa">
-        <label style="display: block; font-size: 13px; color: var(--text-muted); margin-bottom: 6px;">Selecione a data da falta:</label>
-        <input type="date" id="dataFaltaAluno" required style="width: 100%; padding: 10px; border-radius: 6px; border: 1px solid var(--border-color); background: var(--bg-primary); color: var(--text-main); margin-bottom: 15px;">
+        <!-- FORMULÁRIO DE JUSTIFICATIVA DE FALTAS (DENTRO DA ABA EXAME) -->
+        <div style="margin-top: 30px; background: rgba(15, 23, 42, 0.6); border: 1px solid var(--border-color); padding: 20px; border-radius: var(--radius-md);">
+            <h3 style="margin-bottom: 12px; font-size: 16px;">📝 Justificar Falta em Aula</h3>
+            <form id="formJustificativa">
+                <label style="display: block; font-size: 13px; color: var(--text-muted); margin-bottom: 6px;">Selecione a data da falta:</label>
+                <input type="date" id="dataFaltaAluno" required style="width: 100%; padding: 10px; border-radius: 6px; border: 1px solid var(--border-color); background: var(--bg-primary); color: var(--text-main); margin-bottom: 15px;">
 
-        <label style="display: block; font-size: 13px; color: var(--text-muted); margin-bottom: 8px;">Selecione o motivo da falta:</label>
-        
-        <div style="display: flex; flex-direction: column; gap: 8px; font-size: 13px; color: var(--text-main); text-align: left; margin-bottom: 15px;">
-            <label><input type="checkbox" name="motivoFalta" value="Doença do aluno"> a) Doença do aluno.</label>
-            <label><input type="checkbox" name="motivoFalta" value="Falecimento de familiar"> b) Falecimento de familiar.</label>
-            <label><input type="checkbox" name="motivoFalta" value="Nascimento de irmão ou filho"> c) Nascimento de irmão ou filho.</label>
-            <label><input type="checkbox" name="motivoFalta" value="Realização de tratamento ambulatório, em virtude de doença ou deficiência"> d) Realização de tratamento ambulatório, em virtude de doença ou deficiência.</label>
-            <label><input type="checkbox" name="motivoFalta" value="Assistência na doença a membro do agregado familiar"> e) Assistência na doença a membro do agregado familiar.</label>
-            <label><input type="checkbox" name="motivoFalta" value="Ato decorrente da religião professada pelo aluno"> f) Ato decorrente da religião professada pelo aluno.</label>
-            <label><input type="checkbox" name="motivoFalta" value="Participação em atividades culturais e lazer"> g) Participação em atividades culturais e lazer.</label>
-            <label><input type="checkbox" name="motivoFalta" value="Preparação e participação em atividades desportivas, trabalho ou escolares"> h) Preparação e participação em atividades desportivas, trabalho ou escolares.</label>
-            <label><input type="checkbox" name="motivoFalta" value="Participação de estudo previstas no plano de atividades da escola"> i) Participação de estudo previstas no plano de atividades da escola.</label>
+                <label style="display: block; font-size: 13px; color: var(--text-muted); margin-bottom: 8px;">Selecione o motivo da falta:</label>
+                
+                <div style="display: flex; flex-direction: column; gap: 8px; font-size: 13px; color: var(--text-main); text-align: left; margin-bottom: 15px;">
+                    <label><input type="checkbox" name="motivoFalta" value="Doença do aluno"> a) Doença do aluno.</label>
+                    <label><input type="checkbox" name="motivoFalta" value="Falecimento de familiar"> b) Falecimento de familiar.</label>
+                    <label><input type="checkbox" name="motivoFalta" value="Nascimento de irmão ou filho"> c) Nascimento de irmão ou filho.</label>
+                    <label><input type="checkbox" name="motivoFalta" value="Realização de tratamento ambulatório, em virtude de doença ou deficiência"> d) Realização de tratamento ambulatório, em virtude de doença ou deficiência.</label>
+                    <label><input type="checkbox" name="motivoFalta" value="Assistência na doença a membro do agregado familiar"> e) Assistência na doença a membro do agregado familiar.</label>
+                    <label><input type="checkbox" name="motivoFalta" value="Ato decorrente da religião professada pelo aluno"> f) Ato decorrente da religião professada pelo aluno.</label>
+                    <label><input type="checkbox" name="motivoFalta" value="Participação em atividades culturais e lazer"> g) Participação em atividades culturais e lazer.</label>
+                    <label><input type="checkbox" name="motivoFalta" value="Preparação e participação em atividades desportivas, trabalho ou escolares"> h) Preparação e participação em atividades desportivas, trabalho ou escolares.</label>
+                    <label><input type="checkbox" name="motivoFalta" value="Participação de estudo previstas no plano de atividades da escola"> i) Participação de estudo previstas no plano de atividades da escola.</label>
+                </div>
+
+                <button type="submit" class="btn-action">📤 Enviar Justificativa</button>
+            </form>
+
+            <!-- HISTÓRICO E STATUS DE JUSTIFICATIVAS -->
+            <h4 style="margin-top: 25px; margin-bottom: 10px; font-size: 14px; color: var(--text-muted);">Status dos Pedidos de Justificativa</h4>
+            <div id="listaJustificativasAluno" style="font-size: 13px;">Carregando histórico...</div>
         </div>
-
-        <button type="submit" class="btn-action">📤 Enviar Justificativa</button>
-    </form>
-
-    <!-- HISTÓRICO E STATUS DE JUSTIFICATIVAS -->
-    <h4 style="margin-top: 25px; margin-bottom: 10px; font-size: 14px; color: var(--text-muted);">Status dos Pedidos de Justificativa</h4>
-    <div id="listaJustificativasAluno" style="font-size: 13px;">Carregando histórico...</div>
-</div>
+    </div> <!-- /div#exame -->
 
     <!-- SEÇÃO 2: CONTEÚDO PROGRAMÁTICO -->
     <div id="conteudo-programatico" class="tab-content">
@@ -1359,190 +1359,181 @@
             localStorage.removeItem('usuarioAtivo');
             window.location.replace('index.html');
         });
-    document.getElementById('formJustificativa').addEventListener('submit', async function(e) {
-    e.preventDefault();
-    const dataFalta = document.getElementById('dataFaltaAluno').value;
-    const marcados = Array.from(document.querySelectorAll('input[name="motivoFalta"]:checked')).map(cb => cb.value);
 
-    if (!dataFalta) return alert("Por favor, selecione a data.");
-    if (marcados.length === 0) return alert("Selecione ao menos um motivo.");
+        document.getElementById('formJustificativa').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            const dataFalta = document.getElementById('dataFaltaAluno').value;
+            const marcados = Array.from(document.querySelectorAll('input[name="motivoFalta"]:checked')).map(cb => cb.value);
 
-    const motivoFinal = marcados.join('; ');
+            if (!dataFalta) return alert("Por favor, selecione a data.");
+            if (marcados.length === 0) return alert("Selecione ao menos um motivo.");
 
-    try {
-        const response = await fetch(`${URL_API_SERVIDOR}/api/justificativa`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-                usuario: usuarioAtivo,
-                data_falta: dataFalta,
-                motivo: motivoFinal
-            })
+            const motivoFinal = marcados.join('; ');
+
+            try {
+                const response = await fetch(`${URL_API_SERVIDOR}/api/justificativa`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        usuario: usuarioAtivo,
+                        data_falta: dataFalta,
+                        motivo: motivoFinal
+                    })
+                });
+
+                const result = await response.json();
+                if (response.ok) {
+                    alert(result.mensagem);
+                    document.getElementById('formJustificativa').reset();
+                    carregarStatusJustificativas();
+                } else {
+                    alert("Erro: " + result.erro);
+                }
+            } catch (err) {
+                alert("Erro ao enviar solicitação.");
+            }
         });
 
-        const result = await response.json();
-        if (response.ok) {
-            alert(result.mensagem);
-            document.getElementById('formJustificativa').reset();
-            carregarStatusJustificativas();
-        } else {
-            alert("Erro: " + result.erro);
+        async function carregarStatusJustificativas() {
+            const container = document.getElementById('listaJustificativasAluno');
+            try {
+                const response = await fetch(`${URL_API_SERVIDOR}/api/justificativa/aluno/${usuarioAtivo}`);
+                const dados = await response.json();
+
+                if (dados.length === 0) {
+                    container.innerHTML = "<p style='color: var(--text-muted);'>Nenhuma justificativa enviada até o momento.</p>";
+                    return;
+                }
+
+                container.innerHTML = dados.map(item => {
+                    let corBadge = '#f59e0b'; // Pendente
+                    if (item.status === 'aprovado') corBadge = '#10b981';
+                    if (item.status === 'reprovado') corBadge = '#ef4444';
+
+                    return `
+                        <div style="background: rgba(0,0,0,0.2); padding: 10px; border-radius: 6px; margin-bottom: 8px; border-left: 4px solid ${corBadge}; text-align: left;">
+                            <div><strong>Data da Falta:</strong> ${item.data_falta.split('-').reverse().join('/')}</div>
+                            <div><strong>Motivo:</strong> ${item.motivo}</div>
+                            <div><strong>Status:</strong> <span style="color: ${corBadge}; font-weight: bold; text-transform: uppercase;">${item.status}</span></div>
+                            <div style="font-size: 11px; color: var(--text-muted); margin-top: 4px;">Solicitado em: ${item.data_solicitacao}</div>
+                        </div>
+                    `;
+                }).join('');
+            } catch (err) {
+                container.innerHTML = "<p style='color: red;'>Erro ao carregar justificativas.</p>";
+            }
         }
-    } catch (err) {
-        alert("Erro ao enviar solicitação.");
-    }
-});
 
-async function carregarStatusJustificativas() {
-    const container = document.getElementById('listaJustificativasAluno');
-    try {
-        const response = await fetch(`${URL_API_SERVIDOR}/api/justificativa/aluno/${usuarioAtivo}`);
-        const dados = await response.json();
+        // 5. CARREGAMENTO E EXIBIÇÃO DO GRÁFICO DE FREQUÊNCIA (VIA API / SUPABASE)
+        let instanciaGrafico = null;
 
-        if (dados.length === 0) {
-            container.innerHTML = "<p style='color: var(--text-muted);'>Nenhuma justificativa enviada até o momento.</p>";
-            return;
-        }
-
-        container.innerHTML = dados.map(item => {
-            let corBadge = '#f59e0b'; // Pendente
-            if (item.status === 'aprovado') corBadge = '#10b981';
-            if (item.status === 'reprovado') corBadge = '#ef4444';
-
-            return `
-                <div style="background: rgba(0,0,0,0.2); padding: 10px; border-radius: 6px; margin-bottom: 8px; border-left: 4px solid ${corBadge}; text-align: left;">
-                    <div><strong>Data da Falta:</strong> ${item.data_falta.split('-').reverse().join('/')}</div>
-                    <div><strong>Motivo:</strong> ${item.motivo}</div>
-                    <div><strong>Status:</strong> <span style="color: ${corBadge}; font-weight: bold; text-transform: uppercase;">${item.status}</span></div>
-                    <div style="font-size: 11px; color: var(--text-muted); margin-top: 4px;">Solicitado em: ${item.data_solicitacao}</div>
-                </div>
-            `;
-        }).join('');
-    } catch (err) {
-        container.innerHTML = "<p style='color: red;'>Erro ao carregar justificativas.</p>";
-    }
-}
-
-// Chame na inicialização da página:
-document.addEventListener('DOMContentLoaded', carregarStatusJustificativas);
-
-   // 5. CARREGAMENTO E EXIBIÇÃO DO GRÁFICO DE FREQUÊNCIA (VIA API / SUPABASE)
-let instanciaGrafico = null;
-
-function carregarGraficoFrequencia() {
-    // 1. Valida se há usuário ativo antes de fazer a chamada
-    if (!usuarioAtivo) {
-        console.warn("⚠️ Atenção: usuarioAtivo ainda não foi definido.");
-        return;
-    }
-
-    // 2. Busca o canvas na DOM
-    const canvasElement = document.getElementById('graficoFrequencia');
-    if (!canvasElement) {
-        console.warn("⚠️ Elemento 'graficoFrequencia' não foi encontrado na página.");
-        return;
-    }
-
-    // 3. Requisição à API
-    fetch(`${URL_API_SERVIDOR}/api/frequencia/${usuarioAtivo}`)
-        .then(res => {
-            if (!res.ok) throw new Error("Falha ao buscar frequência do servidor");
-            return res.json();
-        })
-        .then(dados => {
-            const presencas = Number(dados.presencas) || 0;
-            const faltas = Number(dados.faltas) || 0;
-            const total = presencas + faltas;
-
-            // Atualiza os contadores de texto na tela (se existirem)
-            const elemPresencas = document.getElementById('qtdPresencas');
-            const elemFaltas = document.getElementById('qtdFaltas');
-            if (elemPresencas) elemPresencas.textContent = presencas;
-            if (elemFaltas) elemFaltas.textContent = faltas;
-
-            const ctx = canvasElement.getContext('2d');
-
-            // Destrói a instância anterior se existir
-            if (instanciaGrafico) {
-                instanciaGrafico.destroy();
+        function carregarGraficoFrequencia() {
+            if (!usuarioAtivo) {
+                console.warn("⚠️ Atenção: usuarioAtivo ainda não foi definido.");
+                return;
             }
 
-            // Verifica se o plugin datalabels está disponível
-            const plugins = (typeof ChartDataLabels !== 'undefined') ? [ChartDataLabels] : [];
+            const canvasElement = document.getElementById('graficoFrequencia');
+            if (!canvasElement) {
+                console.warn("⚠️ Elemento 'graficoFrequencia' não foi encontrado na página.");
+                return;
+            }
 
-            // Cria o novo gráfico com a porcentagem fixada
-            instanciaGrafico = new Chart(ctx, {
-                type: 'pie',
-                data: {
-                    labels: [
-                        `Presenças (${presencas})`, 
-                        `Faltas (${faltas})`
-                    ],
-                    datasets: [{
-                        data: [presencas, faltas],
-                        backgroundColor: ['#10b981', '#ef4444'],
-                        borderWidth: 1,
-                        borderColor: '#1e293b'
-                    }]
-                },
-                plugins: plugins,
-                options: {
-                    responsive: true,
-                    plugins: {
-                        legend: { 
-                            position: 'bottom', 
-                            labels: { 
-                                color: '#f8fafc',
-                                font: {
-                                    size: 13,
-                                    weight: 'bold'
-                                }
-                            } 
+            fetch(`${URL_API_SERVIDOR}/api/frequencia/${usuarioAtivo}`)
+                .then(res => {
+                    if (!res.ok) throw new Error("Falha ao buscar frequência do servidor");
+                    return res.json();
+                })
+                .then(dados => {
+                    const presencas = Number(dados.presencas) || 0;
+                    const faltas = Number(dados.faltas) || 0;
+                    const total = presencas + faltas;
+
+                    const elemPresencas = document.getElementById('qtdPresencas');
+                    const elemFaltas = document.getElementById('qtdFaltas');
+                    if (elemPresencas) elemPresencas.textContent = presencas;
+                    if (elemFaltas) elemFaltas.textContent = faltas;
+
+                    const ctx = canvasElement.getContext('2d');
+
+                    if (instanciaGrafico) {
+                        instanciaGrafico.destroy();
+                    }
+
+                    const plugins = (typeof ChartDataLabels !== 'undefined') ? [ChartDataLabels] : [];
+
+                    instanciaGrafico = new Chart(ctx, {
+                        type: 'pie',
+                        data: {
+                            labels: [
+                                `Presenças (${presencas})`, 
+                                `Faltas (${faltas})`
+                            ],
+                            datasets: [{
+                                data: [presencas, faltas],
+                                backgroundColor: ['#10b981', '#ef4444'],
+                                borderWidth: 1,
+                                borderColor: '#1e293b'
+                            }]
                         },
-                        // Exibe a porcentagem fixada diretamente sobre as fatias do gráfico
-                        datalabels: {
-                            color: '#ffffff',
-                            font: {
-                                weight: 'bold',
-                                size: 14
-                            },
-                            formatter: (valor) => {
-                                if (total === 0) return '0%';
-                                const porcentagem = Math.round((valor / total) * 100);
-                                return `${porcentagem}%`;
-                            }
-                        },
-                        tooltip: {
-                            callbacks: {
-                                label: function(context) {
-                                    const label = context.label || '';
-                                    const value = context.raw || 0;
-                                    const porcentagem = total > 0 ? Math.round((value / total) * 100) : 0;
-                                    return `${label}: ${value} (${porcentagem}%)`;
+                        plugins: plugins,
+                        options: {
+                            responsive: true,
+                            plugins: {
+                                legend: { 
+                                    position: 'bottom', 
+                                    labels: { 
+                                        color: '#f8fafc',
+                                        font: {
+                                            size: 13,
+                                            weight: 'bold'
+                                        }
+                                    } 
+                                },
+                                datalabels: {
+                                    color: '#ffffff',
+                                    font: {
+                                        weight: 'bold',
+                                        size: 14
+                                    },
+                                    formatter: (valor) => {
+                                        if (total === 0) return '0%';
+                                        const porcentagem = Math.round((valor / total) * 100);
+                                        return `${porcentagem}%`;
+                                    }
+                                },
+                                tooltip: {
+                                    callbacks: {
+                                        label: function(context) {
+                                            const label = context.label || '';
+                                            const value = context.raw || 0;
+                                            const porcentagem = total > 0 ? Math.round((value / total) * 100) : 0;
+                                            return `${label}: ${value} (${porcentagem}%)`;
+                                        }
+                                    }
                                 }
                             }
                         }
-                    }
-                }
-            });
-        })
-        .catch(err => console.error("❌ Erro ao carregar gráfico de frequência:", err));
-}
+                    });
+                })
+                .catch(err => console.error("❌ Erro ao carregar gráfico de frequência:", err));
+        }
 
-// Inicialização da página
-document.addEventListener('DOMContentLoaded', () => {
-    try {
-        const primeiroBotao = document.querySelector('.nav-btn');
-        if (primeiroBotao) mudarAba('exame', primeiroBotao);
+        // Inicialização da página
+        document.addEventListener('DOMContentLoaded', () => {
+            try {
+                const primeiroBotao = document.querySelector('.nav-btn');
+                if (primeiroBotao) mudarAba('exame', primeiroBotao);
 
-        carregarNotasAluno();
-        carregarGraficoFrequencia();
+                carregarNotasAluno();
+                carregarGraficoFrequencia();
+                carregarStatusJustificativas();
 
-        setTimeout(() => verificarStatusAceite(), 300);
-    } catch (error) {
-        console.error("Erro na inicializacao:", error);
-    }
-});
+                setTimeout(() => verificarStatusAceite(), 300);
+            } catch (error) {
+                console.error("Erro na inicializacao:", error);
+            }
+        });
 </script>
 </body>
 </html>
