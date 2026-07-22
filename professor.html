@@ -221,14 +221,11 @@
             <button onclick="salvarChamada()" class="btn-salvar">💾 Salvar Chamada</button>
         </section>
 
-        <!-- ABA 2: JUSTIFICATIVA DE FALTAS -->
-        <section id="aba-justificativas" class="tab-content">
-            <h2 style="margin-bottom: 15px;">📝 Justificativa de Faltas</h2>
-            
-            <div class="card-justificativas">
-                <p>Módulo de gestão de justificativas de faltas em desenvolvimento...</p>
-            </div>
-        </section>
+       <!-- ABA 2: JUSTIFICATIVA DE FALTAS -->
+<section id="aba-justificativas" class="tab-content">
+    <h2 style="margin-bottom: 15px;">📝 Pedidos de Justificativa de Faltas</h2>
+    <div id="listaJustificativasProfessor">Carregando pedidos...</div>
+</section>
 
     </main>
 
@@ -315,6 +312,84 @@
         }
 
         document.addEventListener('DOMContentLoaded', renderizarAlunos);
+
+        // Nomes dos alunos mapeados do usuarios.js
+function obterNomeAluno(usuario) {
+    const aluno = listaAlunos.find(u => u.usuario === usuario);
+    return aluno ? aluno.nome : usuario;
+}
+
+async function carregarJustificativasProfessor() {
+    const container = document.getElementById('listaJustificativasProfessor');
+    try {
+        const response = await fetch(`${URL_API_SERVIDOR}/api/justificativas`);
+        const dados = await response.json();
+
+        if (dados.length === 0) {
+            container.innerHTML = "<div class='card-justificativas'><p>Nenhum pedido de justificativa encontrado.</p></div>";
+            return;
+        }
+
+        container.innerHTML = dados.map(item => {
+            const ehPendente = item.status === 'pendente';
+            let corStatus = item.status === 'aprovado' ? '#10b981' : (item.status === 'reprovado' ? '#ef4444' : '#f59e0b');
+
+            return `
+                <div style="background: #0f172a; padding: 16px; border-radius: 8px; border: 1px solid #334155; margin-bottom: 12px; text-align: left;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                        <strong style="font-size: 16px; color: #f8fafc;">🥋 ${obterNomeAluno(item.usuario)}</strong>
+                        <span style="background: ${corStatus}22; color: ${corStatus}; border: 1px solid ${corStatus}; padding: 2px 8px; border-radius: 12px; font-size: 12px; font-weight: bold; text-transform: uppercase;">
+                            ${item.status}
+                        </span>
+                    </div>
+                    <div style="font-size: 14px; color: #94a3b8; margin-bottom: 4px;"><strong>Data da Falta:</strong> ${item.data_falta.split('-').reverse().join('/')}</div>
+                    <div style="font-size: 14px; color: #94a3b8; margin-bottom: 8px;"><strong>Motivo:</strong> ${item.motivo}</div>
+                    <div style="font-size: 11px; color: #64748b; margin-bottom: 12px;">Enviado em: ${item.data_solicitacao}</div>
+
+                    ${ehPendente ? `
+                        <div style="display: flex; gap: 10px;">
+                            <button onclick="responderJustificativa(${item.id}, 'aprovado')" style="flex: 1; padding: 10px; background: #10b981; color: white; border: none; border-radius: 6px; font-weight: bold; cursor: pointer;">✅ Aprovar</button>
+                            <button onclick="responderJustificativa(${item.id}, 'reprovado')" style="flex: 1; padding: 10px; background: #ef4444; color: white; border: none; border-radius: 6px; font-weight: bold; cursor: pointer;">❌ Reprovar</button>
+                        </div>
+                    ` : ''}
+                </div>
+            `;
+        }).join('');
+    } catch (err) {
+        container.innerHTML = "<p style='color: #ef4444;'>Erro ao carregar justificativas.</p>";
+    }
+}
+
+async function responderJustificativa(id, status) {
+    if (!confirm(`Deseja alterar o status desta justificativa para ${status.toUpperCase()}?`)) return;
+
+    try {
+        const response = await fetch(`${URL_API_SERVIDOR}/api/justificativa/resposta`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ id, status })
+        });
+
+        const result = await response.json();
+        if (response.ok) {
+            alert(result.mensagem);
+            carregarJustificativasProfessor();
+        } else {
+            alert("Erro: " + result.erro);
+        }
+    } catch (err) {
+        alert("Erro na conexão com o servidor.");
+    }
+}
+
+// Atualizar a troca de abas para carregar a lista quando o professor clicar na aba
+const funcaoMudarAbaOriginal = mudarAba;
+mudarAba = function(nomeAba, elementoBotao) {
+    funcaoMudarAbaOriginal(nomeAba, elementoBotao);
+    if (nomeAba === 'justificativas') {
+        carregarJustificativasProfessor();
+    }
+};
     </script>
 </body>
 </html>
