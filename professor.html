@@ -36,16 +36,40 @@
             font-weight: bold;
         }
 
-        /* BOTÃO SAIR */
-        .btn-sair {
-            background-color: #ef4444;
-            color: #ffffff;
+        /* GRUPO DE BOTÕES DE AÇÃO DO HEADER */
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        /* BOTÕES DE AÇÃO (ATUALIZAR E SAIR) */
+        .btn-header {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
             padding: 8px 16px;
             border-radius: 6px;
             text-decoration: none;
             font-weight: bold;
             font-size: 0.9rem;
+            border: none;
+            cursor: pointer;
             transition: background-color 0.2s;
+        }
+
+        .btn-atualizar {
+            background-color: #3b82f6;
+            color: #ffffff;
+        }
+
+        .btn-atualizar:hover {
+            background-color: #2563eb;
+        }
+
+        .btn-sair {
+            background-color: #ef4444;
+            color: #ffffff;
         }
 
         .btn-sair:hover {
@@ -157,12 +181,19 @@
     <!-- CABEÇALHO / NAVBAR -->
     <header class="top-bar">
         <div class="logo-container">
-            <!-- Altere 'logo.png' para o caminho real da sua imagem se necessário -->
-            <img src="logo-associacao.png" alt="Logo Associação" class="logo-img">
+            <img src="logo.png" alt="Logo Associação" class="logo-img">
             <span class="header-title">Área do Professor</span>
         </div>
 
-        <a href="index.html" class="btn-sair">🚪 Sair</a>
+        <!-- GRUPO DE BOTÕES (ATUALIZAR + SAIR) -->
+        <div class="header-actions">
+            <button onclick="location.reload()" class="btn-header btn-atualizar" title="Atualizar página">
+                🔄 Atualizar
+            </button>
+            <a href="index.html" class="btn-header btn-sair" title="Sair do sistema">
+                🚪 Sair
+            </a>
+        </div>
     </header>
 
     <!-- MENU DE ABAS -->
