@@ -18,6 +18,13 @@ const listaAlunos = [
             { faixa: "Verde/Roxa", corFaixa: "#673ab7", corTexto: "#fff", ano: "Junho / 2024", kihon: 7.8, kata: 7.8, kumite: 8.0, perguntas: 0.5, total: 24.1, media: 8.0 }
         ]	
 	},
+	  { usuario: "maria.clara", senha: "Atarashii@26", nome: "Maria Clara", 
+	historico: [
+            { faixa: "Branca/Amarela", corFaixa: "#ffeb3b", corTexto: "#000", ano: "Janeiro / 2022", kihon: 7.7, kata: 7.6, kumite: 8.0, perguntas: 0.5, total: 23.8, media: 7.9 },
+            { faixa: "Amarela/Vermelha", corFaixa: "#ff0000", corTexto: "#fff", ano: "Junho / 2022", kihon: 7.5, kata: 7.5, kumite: 8.0, perguntas: 0.3, total: 23.2, media: 7.7 },
+            { faixa: "Vermelha/Laranja", corFaixa: "#e65100", corTexto: "#fff", ano: "Dezembro / 2022", kihon: 7.0, kata: 7.0, kumite: 7.5, perguntas: 0.5, total: 22.0, media: 7.3 },
+            { faixa: "Laranja/Verde", corFaixa: "#4caf50", corTexto: "#fff", ano: "Dezembro / 2024", kihon: 7.5, kata: 7.5, kumite: 7.8, perguntas: 0.3, total: 23.1, media: 7.7 },
+        ]
 	{ usuario: "joaquim.gadelha", senha: "Treino301", nome: "Joaquim Gadelha" 
 	},
 	{ usuario: "davi.dantas", senha: "Treino309", nome: "Davi Dantas",
