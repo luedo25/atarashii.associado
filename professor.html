@@ -82,7 +82,7 @@
             gap: 8px;
             background-color: #0f172a;
             padding: 16px 24px 0 24px;
-            max-width: 700px;
+            max-width: 800px;
             margin: 0 auto;
         }
 
@@ -92,7 +92,7 @@
             color: #94a3b8;
             border: none;
             padding: 12px;
-            font-size: 0.95rem;
+            font-size: 0.9rem;
             font-weight: bold;
             cursor: pointer;
             border-radius: 8px 8px 0 0;
@@ -111,7 +111,7 @@
 
         /* CONTEÚDO DAS ABAS */
         .content-container {
-            max-width: 700px;
+            max-width: 800px;
             margin: 0 auto;
             padding: 20px;
         }
@@ -174,6 +174,38 @@
             color: #94a3b8;
             text-align: center;
         }
+
+        /* ESTILOS DA TABELA DE RESUMO DE FREQUÊNCIA */
+        .tabela-resumo {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+            font-size: 0.95rem;
+        }
+
+        .tabela-resumo th, .tabela-resumo td {
+            padding: 12px 10px;
+            text-align: left;
+            border-bottom: 1px solid #334155;
+        }
+
+        .tabela-resumo th {
+            background-color: #0f172a;
+            color: #94a3b8;
+            font-weight: bold;
+        }
+
+        .tabela-resumo tr:hover {
+            background-color: #33415522;
+        }
+
+        .badge-porcentagem {
+            padding: 4px 8px;
+            border-radius: 6px;
+            font-weight: bold;
+            font-size: 0.85rem;
+            display: inline-block;
+        }
     </style>
 </head>
 <body>
@@ -202,7 +234,10 @@
             📋 Chamada
         </button>
         <button class="nav-btn" onclick="mudarAba('justificativas', this)">
-            📝 Justificativa de Faltas
+            📝 Justificativas
+        </button>
+        <button class="nav-btn" onclick="mudarAba('resumo', this)">
+            📊 Resumo de Frequência
         </button>
     </nav>
 
@@ -221,11 +256,17 @@
             <button onclick="salvarChamada()" class="btn-salvar">💾 Salvar Chamada</button>
         </section>
 
-       <!-- ABA 2: JUSTIFICATIVA DE FALTAS -->
-<section id="aba-justificativas" class="tab-content">
-    <h2 style="margin-bottom: 15px;">📝 Pedidos de Justificativa de Faltas</h2>
-    <div id="listaJustificativasProfessor">Carregando pedidos...</div>
-</section>
+        <!-- ABA 2: JUSTIFICATIVA DE FALTAS -->
+        <section id="aba-justificativas" class="tab-content">
+            <h2 style="margin-bottom: 15px;">📝 Pedidos de Justificativa de Faltas</h2>
+            <div id="listaJustificativasProfessor">Carregando pedidos...</div>
+        </section>
+
+        <!-- ABA 3: RESUMO DE FREQUÊNCIA -->
+        <section id="aba-resumo" class="tab-content">
+            <h2 style="margin-bottom: 15px;">📊 Visão Geral de Frequência</h2>
+            <div id="resumoFrequenciaContainer">Carregando relatório de frequência...</div>
+        </section>
 
     </main>
 
@@ -259,6 +300,12 @@
 
             if (elementoBotao) {
                 elementoBotao.classList.add('active');
+            }
+
+            if (nomeAba === 'justificativas') {
+                carregarJustificativasProfessor();
+            } else if (nomeAba === 'resumo') {
+                carregarResumoFrequencia();
             }
         }
 
@@ -314,82 +361,140 @@
         document.addEventListener('DOMContentLoaded', renderizarAlunos);
 
         // Nomes dos alunos mapeados do usuarios.js
-function obterNomeAluno(usuario) {
-    const aluno = listaAlunos.find(u => u.usuario === usuario);
-    return aluno ? aluno.nome : usuario;
-}
-
-async function carregarJustificativasProfessor() {
-    const container = document.getElementById('listaJustificativasProfessor');
-    try {
-        const response = await fetch(`${URL_API_SERVIDOR}/api/justificativas`);
-        const dados = await response.json();
-
-        if (dados.length === 0) {
-            container.innerHTML = "<div class='card-justificativas'><p>Nenhum pedido de justificativa encontrado.</p></div>";
-            return;
+        function obterNomeAluno(usuario) {
+            const aluno = listaAlunos.find(u => u.usuario === usuario);
+            return aluno ? aluno.nome : usuario;
         }
 
-        container.innerHTML = dados.map(item => {
-            const ehPendente = item.status === 'pendente';
-            let corStatus = item.status === 'aprovado' ? '#10b981' : (item.status === 'reprovado' ? '#ef4444' : '#f59e0b');
+        async function carregarJustificativasProfessor() {
+            const container = document.getElementById('listaJustificativasProfessor');
+            try {
+                const response = await fetch(`${URL_API_SERVIDOR}/api/justificativas`);
+                const dados = await response.json();
 
-            return `
-                <div style="background: #0f172a; padding: 16px; border-radius: 8px; border: 1px solid #334155; margin-bottom: 12px; text-align: left;">
-                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
-                        <strong style="font-size: 16px; color: #f8fafc;">🥋 ${obterNomeAluno(item.usuario)}</strong>
-                        <span style="background: ${corStatus}22; color: ${corStatus}; border: 1px solid ${corStatus}; padding: 2px 8px; border-radius: 12px; font-size: 12px; font-weight: bold; text-transform: uppercase;">
-                            ${item.status}
-                        </span>
-                    </div>
-                    <div style="font-size: 14px; color: #94a3b8; margin-bottom: 4px;"><strong>Data da Falta:</strong> ${item.data_falta.split('-').reverse().join('/')}</div>
-                    <div style="font-size: 14px; color: #94a3b8; margin-bottom: 8px;"><strong>Motivo:</strong> ${item.motivo}</div>
-                    <div style="font-size: 11px; color: #64748b; margin-bottom: 12px;">Enviado em: ${item.data_solicitacao}</div>
+                if (dados.length === 0) {
+                    container.innerHTML = "<div class='card-justificativas'><p>Nenhum pedido de justificativa encontrado.</p></div>";
+                    return;
+                }
 
-                    ${ehPendente ? `
-                        <div style="display: flex; gap: 10px;">
-                            <button onclick="responderJustificativa(${item.id}, 'aprovado')" style="flex: 1; padding: 10px; background: #10b981; color: white; border: none; border-radius: 6px; font-weight: bold; cursor: pointer;">✅ Aprovar</button>
-                            <button onclick="responderJustificativa(${item.id}, 'reprovado')" style="flex: 1; padding: 10px; background: #ef4444; color: white; border: none; border-radius: 6px; font-weight: bold; cursor: pointer;">❌ Reprovar</button>
+                container.innerHTML = dados.map(item => {
+                    const ehPendente = item.status === 'pendente';
+                    let corStatus = item.status === 'aprovado' ? '#10b981' : (item.status === 'reprovado' ? '#ef4444' : '#f59e0b');
+
+                    return `
+                        <div style="background: #0f172a; padding: 16px; border-radius: 8px; border: 1px solid #334155; margin-bottom: 12px; text-align: left;">
+                            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                                <strong style="font-size: 16px; color: #f8fafc;">🥋 ${obterNomeAluno(item.usuario)}</strong>
+                                <span style="background: ${corStatus}22; color: ${corStatus}; border: 1px solid ${corStatus}; padding: 2px 8px; border-radius: 12px; font-size: 12px; font-weight: bold; text-transform: uppercase;">
+                                    ${item.status}
+                                </span>
+                            </div>
+                            <div style="font-size: 14px; color: #94a3b8; margin-bottom: 4px;"><strong>Data da Falta:</strong> ${item.data_falta.split('-').reverse().join('/')}</div>
+                            <div style="font-size: 14px; color: #94a3b8; margin-bottom: 8px;"><strong>Motivo:</strong> ${item.motivo}</div>
+                            <div style="font-size: 11px; color: #64748b; margin-bottom: 12px;">Enviado em: ${item.data_solicitacao}</div>
+
+                            ${ehPendente ? `
+                                <div style="display: flex; gap: 10px;">
+                                    <button onclick="responderJustificativa(${item.id}, 'aprovado')" style="flex: 1; padding: 10px; background: #10b981; color: white; border: none; border-radius: 6px; font-weight: bold; cursor: pointer;">✅ Aprovar</button>
+                                    <button onclick="responderJustificativa(${item.id}, 'reprovado')" style="flex: 1; padding: 10px; background: #ef4444; color: white; border: none; border-radius: 6px; font-weight: bold; cursor: pointer;">❌ Reprovar</button>
+                                </div>
+                            ` : ''}
                         </div>
-                    ` : ''}
-                </div>
-            `;
-        }).join('');
-    } catch (err) {
-        container.innerHTML = "<p style='color: #ef4444;'>Erro ao carregar justificativas.</p>";
-    }
-}
-
-async function responderJustificativa(id, status) {
-    if (!confirm(`Deseja alterar o status desta justificativa para ${status.toUpperCase()}?`)) return;
-
-    try {
-        const response = await fetch(`${URL_API_SERVIDOR}/api/justificativa/resposta`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ id, status })
-        });
-
-        const result = await response.json();
-        if (response.ok) {
-            alert(result.mensagem);
-            carregarJustificativasProfessor();
-        } else {
-            alert("Erro: " + result.erro);
+                    `;
+                }).join('');
+            } catch (err) {
+                container.innerHTML = "<p style='color: #ef4444;'>Erro ao carregar justificativas.</p>";
+            }
         }
-    } catch (err) {
-        alert("Erro na conexão com o servidor.");
-    }
-}
 
-// Atualizar a troca de abas para carregar a lista quando o professor clicar na aba
-const funcaoMudarAbaOriginal = mudarAba;
-mudarAba = function(nomeAba, elementoBotao) {
-    funcaoMudarAbaOriginal(nomeAba, elementoBotao);
-    if (nomeAba === 'justificativas') {
-        carregarJustificativasProfessor();
-    }
-};
+        async function responderJustificativa(id, status) {
+            if (!confirm(`Deseja alterar o status desta justificativa para ${status.toUpperCase()}?`)) return;
+
+            try {
+                const response = await fetch(`${URL_API_SERVIDOR}/api/justificativa/resposta`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ id, status })
+                });
+
+                const result = await response.json();
+                if (response.ok) {
+                    alert(result.mensagem);
+                    carregarJustificativasProfessor();
+                } else {
+                    alert("Erro: " + result.erro);
+                }
+            } catch (err) {
+                alert("Erro na conexão com o servidor.");
+            }
+        }
+
+        // CARREGAR RESUMO DE FREQUÊNCIA
+        async function carregarResumoFrequencia() {
+            const container = document.getElementById('resumoFrequenciaContainer');
+            container.innerHTML = "<p style='color: #94a3b8;'>Buscando dados no servidor...</p>";
+
+            try {
+                const response = await fetch(`${URL_API_SERVIDOR}/api/chamada`);
+                const registros = await response.json();
+
+                const alunos = listaAlunos.filter(u => u.usuario !== 'luiz.costa');
+
+                if (!registros || registros.length === 0) {
+                    container.innerHTML = "<div class='card-justificativas'><p>Nenhuma chamada foi salva ainda.</p></div>";
+                    return;
+                }
+
+                // Agrupa as chamadas por aluno
+                let linhasHTML = '';
+
+                alunos.forEach(aluno => {
+                    const historicoAluno = registros.filter(r => r.usuario === aluno.usuario);
+                    const totalAulas = historicoAluno.length;
+                    
+                    const presencas = historicoAluno.filter(r => r.presente).length;
+                    const faltas = totalAulas - presencas;
+                    
+                    const pctPresenca = totalAulas > 0 ? ((presencas / totalAulas) * 100).toFixed(0) : 0;
+
+                    let corBadge = '#10b981'; // Verde (alto)
+                    if (pctPresenca < 75) corBadge = '#ef4444'; // Vermelho (baixo)
+                    else if (pctPresenca < 85) corBadge = '#f59e0b'; // Amarelo (médio)
+
+                    linhasHTML += `
+                        <tr>
+                            <td style="font-weight: bold; color: #f8fafc;">${aluno.nome}</td>
+                            <td style="color: #10b981; font-weight: bold;">${presencas}</td>
+                            <td style="color: #ef4444; font-weight: bold;">${faltas}</td>
+                            <td>
+                                <span class="badge-porcentagem" style="background: ${corBadge}22; color: ${corBadge}; border: 1px solid ${corBadge};">
+                                    ${pctPresenca}% Presença
+                                </span>
+                            </td>
+                        </tr>
+                    `;
+                });
+
+                container.innerHTML = `
+                    <table class="tabela-resumo">
+                        <thead>
+                            <tr>
+                                <th>Aluno</th>
+                                <th>Presenças</th>
+                                <th>Faltas</th>
+                                <th>Frequência</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            ${linhasHTML}
+                        </tbody>
+                    </table>
+                `;
+            } catch (err) {
+                console.error("Erro ao carregar frequência:", err);
+                container.innerHTML = "<p style='color: #ef4444;'>Erro ao conectar com o servidor para buscar a frequência.</p>";
+            }
+        }
     </script>
 </body>
 </html>
