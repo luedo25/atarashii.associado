@@ -572,7 +572,7 @@
 <div style="margin-top: 30px; background: rgba(15, 23, 42, 0.6); border: 1px solid var(--border-color); padding: 20px; border-radius: var(--radius-md);">
     <h3 style="margin-bottom: 12px; font-size: 16px;">📝 Justificar Falta em Aula</h3>
     <form id="formJustificativa">
-        <label style="display: block; font-size: 13px; color: var(--text-muted); margin-bottom: 6px;">Selecione a data da falta:</label>
+        <label style="display: block; font-size: 13px; color: var(--text-muted); margin-bottom: 6px;">Selecione a data da falta (Terças, Quintas ou Sábados):</label>
         <input type="date" id="dataFaltaAluno" required style="width: 100%; padding: 10px; border-radius: 6px; border: 1px solid var(--border-color); background: var(--bg-primary); color: var(--text-main); margin-bottom: 15px;">
 
         <label style="display: block; font-size: 13px; color: var(--text-muted); margin-bottom: 8px;">Selecione o motivo da falta:</label>
@@ -590,7 +590,7 @@
             
             <!-- CHECKBOX OUTRO -->
             <label style="font-weight: bold; color: var(--accent-blue);">
-                <input type="checkbox" id="checkOutro" id="checkboxOutros" onchange="alternarCampoTextoOutro()"> j) Outro(s)
+                <input type="checkbox" id="checkOutro" onchange="alternarCampoTextoOutro()"> j) Outro(s)
             </label>
         </div>
 
@@ -1388,7 +1388,23 @@
             }
         }
 
-        // Submissão da justificativa ajustada para enviar o campo "Outro" concatenado
+        // Validação imediata dos dias da semana (1º Requisito)
+        document.getElementById('dataFaltaAluno').addEventListener('change', function() {
+            if (!this.value) return;
+            
+            // Cria objeto Date em UTC para evitar divergências de fuso horário
+            const partes = this.value.split('-');
+            const dataSelecionada = new Date(Date.UTC(partes[0], partes[1] - 1, partes[2]));
+            const diaSemana = dataSelecionada.getUTCDay(); // 0 = Domingo, 2 = Terça, 4 = Quinta, 6 = Sábado
+
+            // Permitidos apenas Terça (2), Quinta (4) e Sábado (6)
+            if (diaSemana !== 2 && diaSemana !== 4 && diaSemana !== 6) {
+                alert("Erro: Aulas ocorrem apenas Terças, Quintas e Sábados. Por favor, selecione uma data válida.");
+                this.value = '';
+            }
+        });
+
+        // Submissão da justificativa com validação do prazo de 48 horas (2º Requisito)
         document.getElementById('formJustificativa').addEventListener('submit', async function(e) {
             e.preventDefault();
             const dataFalta = document.getElementById('dataFaltaAluno').value;
@@ -1400,6 +1416,15 @@
             const textoOutro = campoTextoOutro ? campoTextoOutro.value.trim() : '';
 
             if (!dataFalta) return alert("Por favor, selecione a data.");
+
+            // Validação de Prazo: 48 horas antes e 48 horas depois
+            const dataFaltaObj = new Date(`${dataFalta}T00:00:00`);
+            const agora = new Date();
+            const diferencaEmHoras = Math.abs(agora - dataFaltaObj) / (1000 * 60 * 60);
+
+            if (diferencaEmHoras > 48) {
+                return alert("Erro: O prazo para justificativa de falta é de até 48 horas antes ou 48 horas depois da data da aula.");
+            }
 
             // Validação caso "Outro" esteja marcado sem texto inserido
             if (ehOutroMarcado && !textoOutro) {
