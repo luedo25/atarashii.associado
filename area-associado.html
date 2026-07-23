@@ -568,38 +568,45 @@
             </div>
         </div>
 
-        <!-- FORMULÁRIO DE JUSTIFICATIVA DE FALTAS -->
-        <div style="margin-top: 30px; background: rgba(15, 23, 42, 0.6); border: 1px solid var(--border-color); padding: 20px; border-radius: var(--radius-md);">
-            <h3 style="margin-bottom: 12px; font-size: 16px;">📝 Justificar Falta em Aula</h3>
-            <form id="formJustificativa">
-                <label style="display: block; font-size: 13px; color: var(--text-muted); margin-bottom: 6px;">Selecione a data da falta:</label>
-                <input type="date" id="dataFaltaAluno" required style="width: 100%; padding: 10px; border-radius: 6px; border: 1px solid var(--border-color); background: var(--bg-primary); color: var(--text-main); margin-bottom: 15px;">
+     <!-- FORMULÁRIO DE JUSTIFICATIVA DE FALTAS -->
+<div style="margin-top: 30px; background: rgba(15, 23, 42, 0.6); border: 1px solid var(--border-color); padding: 20px; border-radius: var(--radius-md);">
+    <h3 style="margin-bottom: 12px; font-size: 16px;">📝 Justificar Falta em Aula</h3>
+    <form id="formJustificativa">
+        <label style="display: block; font-size: 13px; color: var(--text-muted); margin-bottom: 6px;">Selecione a data da falta:</label>
+        <input type="date" id="dataFaltaAluno" required style="width: 100%; padding: 10px; border-radius: 6px; border: 1px solid var(--border-color); background: var(--bg-primary); color: var(--text-main); margin-bottom: 15px;">
 
-                <label style="display: block; font-size: 13px; color: var(--text-muted); margin-bottom: 8px;">Selecione o motivo da falta:</label>
-                
-                <div style="display: flex; flex-direction: column; gap: 8px; font-size: 13px; color: var(--text-main); text-align: left; margin-bottom: 15px;">
-                    <label><input type="checkbox" name="motivoFalta" value="Doença do aluno"> a) Doença do aluno.</label>
-                    <label><input type="checkbox" name="motivoFalta" value="Falecimento de familiar"> b) Falecimento de familiar.</label>
-                    <label><input type="checkbox" name="motivoFalta" value="Nascimento de irmão ou filho"> c) Nascimento de irmão ou filho.</label>
-                    <label><input type="checkbox" name="motivoFalta" value="Realização de tratamento ambulatório, em virtude de doença ou deficiência"> d) Realização de tratamento ambulatório, em virtude de doença ou deficiência.</label>
-                    <label><input type="checkbox" name="motivoFalta" value="Assistência na doença a membro do agregado familiar"> e) Assistência na doença a membro do agregado familiar.</label>
-                    <label><input type="checkbox" name="motivoFalta" value="Ato decorrente da religião professada pelo aluno"> f) Ato decorrente da religião professada pelo aluno.</label>
-                    <label><input type="checkbox" name="motivoFalta" value="Participação em atividades culturais e lazer"> g) Participação em atividades culturais e lazer.</label>
-                    <label><input type="checkbox" name="motivoFalta" value="Preparação e participação em atividades desportivas, trabalho ou escolares"> h) Preparação e participação em atividades desportivas, trabalho ou escolares.</label>
-                    <label><input type="checkbox" name="motivoFalta" value="Participação de estudo previstas no plano de atividades da escola"> i) Participação de estudo previstas no plano de atividades da escola.</label>
-                </div>
-
-                <!-- CAMPO ADICIONADO: TEXTO LIVRE DA JUSTIFICATIVA -->
-                <label style="display: block; font-size: 13px; color: var(--text-muted); margin-bottom: 6px;">Descreva o motivo (obrigatório):</label>
-                <textarea id="textoJustificativaManual" rows="3" placeholder="Digite aqui o motivo da sua falta..." style="width: 100%; padding: 10px; border-radius: 6px; border: 1px solid var(--border-color); background: var(--bg-primary); color: var(--text-main); margin-bottom: 15px; resize: vertical; font-size: 13px;"></textarea>
-
-                <button type="submit" class="btn-action">📤 Enviar Justificativa</button>
-            </form>
-
-            <!-- HISTÓRICO E STATUS DE JUSTIFICATIVAS -->
-            <h4 style="margin-top: 25px; margin-bottom: 10px; font-size: 14px; color: var(--text-muted);">Status dos Pedidos de Justificativa</h4>
-            <div id="listaJustificativasAluno" style="font-size: 13px;">Carregando histórico...</div>
+        <label style="display: block; font-size: 13px; color: var(--text-muted); margin-bottom: 8px;">Selecione o motivo da falta:</label>
+        
+        <div style="display: flex; flex-direction: column; gap: 8px; font-size: 13px; color: var(--text-main); text-align: left; margin-bottom: 15px;">
+            <label><input type="checkbox" name="motivoFalta" value="Doença do aluno"> a) Doença do aluno.</label>
+            <label><input type="checkbox" name="motivoFalta" value="Falecimento de familiar"> b) Falecimento de familiar.</label>
+            <label><input type="checkbox" name="motivoFalta" value="Nascimento de irmão ou filho"> c) Nascimento de irmão ou filho.</label>
+            <label><input type="checkbox" name="motivoFalta" value="Realização de tratamento ambulatório, em virtude de doença ou deficiência"> d) Realização de tratamento ambulatório, em virtude de doença ou deficiência.</label>
+            <label><input type="checkbox" name="motivoFalta" value="Assistência na doença a membro do agregado familiar"> e) Assistência na doença a membro do agregado familiar.</label>
+            <label><input type="checkbox" name="motivoFalta" value="Ato decorrente da religião professada pelo aluno"> f) Ato decorrente da religião professada pelo aluno.</label>
+            <label><input type="checkbox" name="motivoFalta" value="Participação em atividades culturais e lazer"> g) Participação em atividades culturais e lazer.</label>
+            <label><input type="checkbox" name="motivoFalta" value="Preparação e participação em atividades desportivas, trabalho ou escolares"> h) Preparação e participação em atividades desportivas, trabalho ou escolares.</label>
+            <label><input type="checkbox" name="motivoFalta" value="Participação de estudo previstas no plano de atividades da escola"> i) Participação de estudo previstas no plano de atividades da escola.</label>
+            
+            <!-- CHECKBOX OUTRO -->
+            <label style="font-weight: bold; color: var(--accent-blue);">
+                <input type="checkbox" id="checkOutro" id="checkboxOutros" onchange="alternarCampoTextoOutro()"> j) Outro(s)
+            </label>
         </div>
+
+        <!-- CAMPO DE TEXTO (OCULTO POR PADRÃO) -->
+        <div id="containerTextoOutro" style="display: none; margin-bottom: 15px;">
+            <label style="display: block; font-size: 13px; color: var(--text-muted); margin-bottom: 6px;">Especifique o motivo da falta:</label>
+            <textarea id="textoJustificativaOutro" rows="3" placeholder="Escreva aqui o motivo detalhado da falta..." style="width: 100%; padding: 10px; border-radius: 6px; border: 1px solid var(--border-color); background: var(--bg-primary); color: var(--text-main); resize: vertical; font-size: 13px;"></textarea>
+        </div>
+
+        <button type="submit" class="btn-action">📤 Enviar Justificativa</button>
+    </form>
+
+    <!-- HISTÓRICO E STATUS DE JUSTIFICATIVAS -->
+    <h4 style="margin-top: 25px; margin-bottom: 10px; font-size: 14px; color: var(--text-muted);">Status dos Pedidos de Justificativa</h4>
+    <div id="listaJustificativasAluno" style="font-size: 13px;">Carregando histórico...</div>
+</div>
     </div> <!-- /div#exame -->
 
     <!-- SEÇÃO 2: CONTEÚDO PROGRAMÁTICO (EXAME) -->
@@ -1366,15 +1373,50 @@
             window.location.replace('index.html');
         });
 
+        // Alterna a exibição da caixa de texto quando o checkbox "Outro" for acionado
+        function alternarCampoTextoOutro() {
+            const checkOutro = document.getElementById('checkOutro');
+            const containerTexto = document.getElementById('containerTextoOutro');
+            const campoTexto = document.getElementById('textoJustificativaOutro');
+
+            if (checkOutro && checkOutro.checked) {
+                if (containerTexto) containerTexto.style.display = 'block';
+                if (campoTexto) campoTexto.focus();
+            } else {
+                if (containerTexto) containerTexto.style.display = 'none';
+                if (campoTexto) campoTexto.value = '';
+            }
+        }
+
+        // Submissão da justificativa ajustada para enviar o campo "Outro" concatenado
         document.getElementById('formJustificativa').addEventListener('submit', async function(e) {
             e.preventDefault();
             const dataFalta = document.getElementById('dataFaltaAluno').value;
             const marcados = Array.from(document.querySelectorAll('input[name="motivoFalta"]:checked')).map(cb => cb.value);
+            
+            const checkOutro = document.getElementById('checkOutro');
+            const ehOutroMarcado = checkOutro ? checkOutro.checked : false;
+            const campoTextoOutro = document.getElementById('textoJustificativaOutro');
+            const textoOutro = campoTextoOutro ? campoTextoOutro.value.trim() : '';
 
             if (!dataFalta) return alert("Por favor, selecione a data.");
-            if (marcados.length === 0) return alert("Selecione ao menos um motivo.");
 
-            const motivoFinal = marcados.join('; ');
+            // Validação caso "Outro" esteja marcado sem texto inserido
+            if (ehOutroMarcado && !textoOutro) {
+                return alert("Você marcou a opção 'Outro(s)'. Por favor, descreva o motivo no campo de texto.");
+            }
+
+            if (marcados.length === 0 && !ehOutroMarcado) {
+                return alert("Selecione ao menos um motivo para a falta.");
+            }
+
+            // Unifica os motivos pré-selecionados com o motivo digitado
+            let listaMotivos = [...marcados];
+            if (ehOutroMarcado && textoOutro) {
+                listaMotivos.push(`Outro: ${textoOutro}`);
+            }
+
+            const motivoFinal = listaMotivos.join('; ');
 
             try {
                 const response = await fetch(`${URL_API_SERVIDOR}/api/justificativa`, {
@@ -1389,11 +1431,12 @@
 
                 const result = await response.json();
                 if (response.ok) {
-                    alert(result.mensagem);
+                    alert(result.mensagem || "Justificativa enviada para aprovação com sucesso!");
                     document.getElementById('formJustificativa').reset();
+                    alternarCampoTextoOutro(); // Oculta a área de texto após o envio
                     carregarStatusJustificativas();
                 } else {
-                    alert("Erro: " + result.erro);
+                    alert("Erro: " + (result.erro || "Falha ao registrar justificativa."));
                 }
             } catch (err) {
                 alert("Erro ao enviar solicitação.");
