@@ -217,7 +217,6 @@
             <span class="header-title">Área do Professor</span>
         </div>
 
-        <!-- GRUPO DE BOTÕES (ATUALIZAR + SAIR) -->
         <div class="header-actions">
             <button onclick="location.reload()" class="btn-header btn-atualizar" title="Atualizar página">
                 🔄 Atualizar
@@ -271,7 +270,6 @@
     </main>
 
     <script>
-        // Proteção de acesso exclusivo para professor
         const usuarioAtivo = localStorage.getItem('usuarioAtivo');
         const tipoUsuario = localStorage.getItem('tipoUsuario');
 
@@ -282,10 +280,8 @@
 
         const URL_API_SERVIDOR = "https://api-associacao-mp.onrender.com";
 
-        // Define a data atual por padrão
         document.getElementById('dataAula').valueAsDate = new Date();
 
-        // Função para alternar entre as abas
         function mudarAba(nomeAba, elementoBotao) {
             const abas = document.querySelectorAll('.tab-content');
             abas.forEach(aba => aba.classList.remove('active'));
@@ -313,7 +309,6 @@
             const container = document.getElementById('listaAlunosContainer');
             container.innerHTML = '';
 
-            // Filtra removendo administradores e pega os alunos de usuarios.js
             const alunos = listaAlunos.filter(u => u.usuario !== 'luiz.costa');
 
             alunos.forEach(aluno => {
@@ -360,7 +355,6 @@
 
         document.addEventListener('DOMContentLoaded', renderizarAlunos);
 
-        // Nomes dos alunos mapeados do usuarios.js
         function obterNomeAluno(usuario) {
             const aluno = listaAlunos.find(u => u.usuario === usuario);
             return aluno ? aluno.nome : usuario;
@@ -429,37 +423,49 @@
             }
         }
 
-        // CARREGAR RESUMO DE FREQUÊNCIA
+        // NOVA LÓGICA DE CARREGAMENTO ROBUSTA POR ALUNO DA LISTA USUARIOS.JS
         async function carregarResumoFrequencia() {
             const container = document.getElementById('resumoFrequenciaContainer');
             container.innerHTML = "<p style='color: #94a3b8;'>Buscando dados no servidor...</p>";
 
+            const alunos = listaAlunos.filter(u => u.usuario !== 'luiz.costa');
+            let linhasHTML = '';
+
             try {
-                const response = await fetch(`${URL_API_SERVIDOR}/api/chamada`);
-                const registros = await response.json();
+                // Executa requisição para cada aluno individualmente ou via rota geral com fallback
+                for (const aluno of alunos) {
+                    let presencas = 0;
+                    let faltas = 0;
+                    let totalAulas = 0;
 
-                const alunos = listaAlunos.filter(u => u.usuario !== 'luiz.costa');
+                    try {
+                        const response = await fetch(`${URL_API_SERVIDOR}/api/frequencia/${aluno.usuario}`);
+                        if (response.ok) {
+                            const dados = await response.json();
+                            presencas = dados.presencas || 0;
+                            faltas = dados.faltas || 0;
+                            totalAulas = presencas + faltas;
+                        } else {
+                            // Tenta endpoint alternativo de presença caso o individual não exista
+                            const responseAlt = await fetch(`${URL_API_SERVIDOR}/api/chamada?usuario=${aluno.usuario}`);
+                            if (responseAlt.ok) {
+                                const registros = await responseAlt.json();
+                                if (Array.isArray(registros)) {
+                                    totalAulas = registros.length;
+                                    presencas = registros.filter(r => r.presente).length;
+                                    faltas = totalAulas - presencas;
+                                }
+                            }
+                        }
+                    } catch (e) {
+                        console.warn(`Erro ao carregar dados do aluno ${aluno.usuario}:`, e);
+                    }
 
-                if (!registros || registros.length === 0) {
-                    container.innerHTML = "<div class='card-justificativas'><p>Nenhuma chamada foi salva ainda.</p></div>";
-                    return;
-                }
-
-                // Agrupa as chamadas por aluno
-                let linhasHTML = '';
-
-                alunos.forEach(aluno => {
-                    const historicoAluno = registros.filter(r => r.usuario === aluno.usuario);
-                    const totalAulas = historicoAluno.length;
-                    
-                    const presencas = historicoAluno.filter(r => r.presente).length;
-                    const faltas = totalAulas - presencas;
-                    
                     const pctPresenca = totalAulas > 0 ? ((presencas / totalAulas) * 100).toFixed(0) : 0;
 
-                    let corBadge = '#10b981'; // Verde (alto)
-                    if (pctPresenca < 75) corBadge = '#ef4444'; // Vermelho (baixo)
-                    else if (pctPresenca < 85) corBadge = '#f59e0b'; // Amarelo (médio)
+                    let corBadge = '#10b981'; // Verde
+                    if (pctPresenca < 75) corBadge = '#ef4444'; // Vermelho
+                    else if (pctPresenca < 85) corBadge = '#f59e0b'; // Amarelo
 
                     linhasHTML += `
                         <tr>
@@ -473,7 +479,7 @@
                             </td>
                         </tr>
                     `;
-                });
+                }
 
                 container.innerHTML = `
                     <table class="tabela-resumo">
@@ -491,8 +497,8 @@
                     </table>
                 `;
             } catch (err) {
-                console.error("Erro ao carregar frequência:", err);
-                container.innerHTML = "<p style='color: #ef4444;'>Erro ao conectar com o servidor para buscar a frequência.</p>";
+                console.error("Erro geral ao montar tabela:", err);
+                container.innerHTML = "<p style='color: #ef4444;'>Não foi possível carregar as informações de frequência.</p>";
             }
         }
     </script>
