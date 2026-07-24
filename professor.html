@@ -514,7 +514,7 @@
             }
         }
 
-        // CARREGAMENTO USANDO AS APIS REAIS DO SEU BACKEND (/api/chamada?usuario=... e /api/frequencia/...)
+        // CARREGAMENTO DE RESUMO DE FREQUÊNCIA COM FILTRO DE DATAS REAL
         async function carregarResumoFrequencia() {
             const container = document.getElementById('resumoFrequenciaContainer');
             container.innerHTML = "<p style='color: #94a3b8;'>Buscando dados no servidor...</p>";
@@ -550,44 +550,26 @@
                     console.warn("Aviso ao carregar justificativas:", eJust);
                 }
 
-                // 2. Consulta os dados de chamada detalhados de cada aluno
+                // 2. Consulta frequência de cada aluno enviando os parâmetros de data
                 for (const aluno of alunos) {
                     let presencas = 0;
                     let faltas = 0;
-                    let totalAulas = 0;
 
                     try {
-                        // Tenta primeiro a rota /api/chamada?usuario=... que contém a data de cada aula
-                        const responseAlt = await fetch(`${URL_API_SERVIDOR}/api/chamada?usuario=${aluno.usuario}`);
+                        const response = await fetch(
+                            `${URL_API_SERVIDOR}/api/frequencia/${aluno.usuario}?dataInicio=${dataInicio}&dataFim=${dataFim}`
+                        );
                         
-                        if (responseAlt.ok) {
-                            const registros = await responseAlt.json();
-                            if (Array.isArray(registros)) {
-                                // Filtra estritamente os registros entre Data Inicial e Data Final
-                                const registrosFiltrados = registros.filter(r => {
-                                    if (!r.data) return true; // Se não houver data, mantém para não ignorar
-                                    const dataRegistro = r.data.substring(0, 10);
-                                    return dataRegistro >= dataInicio && dataRegistro <= dataFim;
-                                });
-
-                                totalAulas = registrosFiltrados.length;
-                                presencas = registrosFiltrados.filter(r => r.presente === true || String(r.presente).toLowerCase() === 'true' || r.status === true || String(r.status).toLowerCase() === 'true').length;
-                                faltas = totalAulas - presencas;
-                            }
-                        } else {
-                            // Fallback para a rota de resumo simples caso /api/chamada não funcione
-                            const response = await fetch(`${URL_API_SERVIDOR}/api/frequencia/${aluno.usuario}`);
-                            if (response.ok) {
-                                const dados = await response.json();
-                                presencas = dados.presencas || 0;
-                                faltas = dados.faltas || 0;
-                                totalAulas = presencas + faltas;
-                            }
+                        if (response.ok) {
+                            const dados = await response.json();
+                            presencas = dados.presencas || 0;
+                            faltas = dados.faltas || 0;
                         }
                     } catch (e) {
                         console.warn(`Erro ao carregar dados do aluno ${aluno.usuario}:`, e);
                     }
 
+                    const totalAulas = presencas + faltas;
                     const pctPresenca = totalAulas > 0 ? ((presencas / totalAulas) * 100).toFixed(0) : 0;
                     const justificativasAprovadas = mapaJustificativas[aluno.usuario] || 0;
 
