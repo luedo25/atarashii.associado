@@ -136,9 +136,9 @@
             border-bottom: 1px solid #334155; 
         }
 
-        input[type="date"] { 
+        input[type="date"], select { 
             padding: 10px; 
-            font-size: 16px; 
+            font-size: 15px; 
             margin-top: 6px;
             margin-bottom: 20px; 
             width: 100%; 
@@ -175,6 +175,27 @@
             text-align: center;
         }
 
+        /* CAIXA DE FILTRO DE MÊS */
+        .filtro-container {
+            background-color: #0f172a;
+            padding: 12px 16px;
+            border-radius: 8px;
+            border: 1px solid #334155;
+            margin-bottom: 15px;
+        }
+
+        .filtro-container label {
+            font-size: 0.9rem;
+            color: #94a3b8;
+            font-weight: bold;
+            display: block;
+            margin-bottom: 4px;
+        }
+
+        .filtro-container select {
+            margin-bottom: 0;
+        }
+
         /* ESTILOS DA TABELA DE RESUMO DE FREQUÊNCIA */
         .table-responsive {
             width: 100%;
@@ -187,7 +208,7 @@
 
         .tabela-resumo {
             width: 100%;
-            min-width: 550px; /* Garante que a tabela não fique esmagada em telas pequenas */
+            min-width: 550px;
             border-collapse: collapse;
             font-size: 0.95rem;
         }
@@ -196,7 +217,7 @@
             padding: 12px 10px;
             text-align: left;
             border-bottom: 1px solid #334155;
-            white-space: nowrap; /* Impede a quebra indesejada do texto */
+            white-space: nowrap;
         }
 
         .tabela-resumo th {
@@ -295,6 +316,28 @@
         <!-- ABA 3: RESUMO DE FREQUÊNCIA -->
         <section id="aba-resumo" class="tab-content">
             <h2 style="margin-bottom: 15px;">📊 Visão Geral de Frequência</h2>
+            
+            <!-- FILTRO DE MÊS -->
+            <div class="filtro-container">
+                <label for="filtroMesFrequencia">📅 Filtrar por Período / Mês:</label>
+                <select id="filtroMesFrequencia" onchange="carregarResumoFrequencia()">
+                    <option value="todos">Todos os Meses</option>
+                    <option value="jul_dez_26" selected>Julho/26 a Dezembro/26</option>
+                    <option value="2026-01">Janeiro / 2026</option>
+                    <option value="2026-02">Fevereiro / 2026</option>
+                    <option value="2026-03">Março / 2026</option>
+                    <option value="2026-04">Abril / 2026</option>
+                    <option value="2026-05">Maio / 2026</option>
+                    <option value="2026-06">Junho / 2026</option>
+                    <option value="2026-07">Julho / 2026</option>
+                    <option value="2026-08">Agosto / 2026</option>
+                    <option value="2026-09">Setembro / 2026</option>
+                    <option value="2026-10">Outubro / 2026</option>
+                    <option value="2026-11">Novembro / 2026</option>
+                    <option value="2026-12">Dezembro / 2026</option>
+                </select>
+            </div>
+
             <div id="resumoFrequenciaContainer">Carregando relatório de frequência...</div>
         </section>
 
@@ -454,57 +497,78 @@
             }
         }
 
-        // CARREGAMENTO ROBUSTO COM CONTAGEM DE JUSTIFICATIVAS APROVADAS
+        // CARREGAMENTO COM FILTRO POR MÊS E CONTAGEM DE JUSTIFICATIVAS APROVADAS
         async function carregarResumoFrequencia() {
             const container = document.getElementById('resumoFrequenciaContainer');
             container.innerHTML = "<p style='color: #94a3b8;'>Buscando dados no servidor...</p>";
 
+            const filtroSelecionado = document.getElementById('filtroMesFrequencia').value;
             const alunos = listaAlunos.filter(u => u.usuario !== 'luiz.costa');
             let linhasHTML = '';
 
             try {
-                // Busca todas as justificativas registradas no servidor
+                // 1. Busca justificativas do servidor com base no filtro
                 let mapaJustificativas = {};
                 try {
                     const respJust = await fetch(`${URL_API_SERVIDOR}/api/justificativas`);
                     if (respJust.ok) {
                         const listaJustificativas = await respJust.json();
                         if (Array.isArray(listaJustificativas)) {
-                            // Mapeia e conta apenas justificativas com status 'aprovado' para cada aluno
                             listaJustificativas.forEach(item => {
-                                if (item.status === 'aprovado') {
-                                    mapaJustificativas[item.usuario] = (mapaJustificativas[item.usuario] || 0) + 1;
+                                if (item.status === 'aprovado' && item.data_falta) {
+                                    let considerar = false;
+                                    if (filtroSelecionado === 'todos') {
+                                        considerar = true;
+                                    } else if (filtroSelecionado === 'jul_dez_26') {
+                                        considerar = item.data_falta >= '2026-07-01' && item.data_falta <= '2026-12-31';
+                                    } else {
+                                        considerar = item.data_falta.startsWith(filtroSelecionado);
+                                    }
+
+                                    if (considerar) {
+                                        mapaJustificativas[item.usuario] = (mapaJustificativas[item.usuario] || 0) + 1;
+                                    }
                                 }
                             });
                         }
                     }
                 } catch (eJust) {
-                    console.warn("Não foi possível carregar a lista global de justificativas:", eJust);
+                    console.warn("Aviso ao buscar justificativas:", eJust);
                 }
 
-                // Executa requisição para cada aluno
+                // 2. Processa presenças e faltas de cada aluno
                 for (const aluno of alunos) {
                     let presencas = 0;
                     let faltas = 0;
                     let totalAulas = 0;
 
                     try {
-                        const response = await fetch(`${URL_API_SERVIDOR}/api/frequencia/${aluno.usuario}`);
+                        const response = await fetch(`${URL_API_SERVIDOR}/api/chamada?usuario=${aluno.usuario}`);
                         if (response.ok) {
-                            const dados = await response.json();
-                            presencas = dados.presencas || 0;
-                            faltas = dados.faltas || 0;
-                            totalAulas = presencas + faltas;
+                            let registros = await response.json();
+                            if (Array.isArray(registros)) {
+                                // Aplica o filtro de data no array de registros
+                                registros = registros.filter(r => {
+                                    if (!r.data) return true;
+                                    if (filtroSelecionado === 'todos') return true;
+                                    if (filtroSelecionado === 'jul_dez_26') {
+                                        return r.data >= '2026-07-01' && r.data <= '2026-12-31';
+                                    }
+                                    return r.data.startsWith(filtroSelecionado);
+                                });
+
+                                totalAulas = registros.length;
+                                presencas = registros.filter(r => r.presente).length;
+                                faltas = totalAulas - presencas;
+                            }
                         } else {
-                            // Tenta endpoint alternativo de presença caso o individual não exista
-                            const responseAlt = await fetch(`${URL_API_SERVIDOR}/api/chamada?usuario=${aluno.usuario}`);
-                            if (responseAlt.ok) {
-                                const registros = await responseAlt.json();
-                                if (Array.isArray(registros)) {
-                                    totalAulas = registros.length;
-                                    presencas = registros.filter(r => r.presente).length;
-                                    faltas = totalAulas - presencas;
-                                }
+                            // Endpoint alternativo de frequência caso seja o mantido no backend
+                            const respAlt = await fetch(`${URL_API_SERVIDOR}/api/frequencia/${aluno.usuario}`);
+                            if (respAlt.ok) {
+                                const dados = await respAlt.json();
+                                presencas = dados.presencas || 0;
+                                faltas = dados.faltas || 0;
+                                totalAulas = presencas + faltas;
                             }
                         }
                     } catch (e) {
