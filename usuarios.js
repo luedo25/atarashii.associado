@@ -26,6 +26,8 @@ const listaAlunos = [
             { faixa: "Laranja/Verde", corFaixa: "#4caf50", corTexto: "#fff", ano: "Dezembro / 2024", kihon: 7.5, kata: 7.5, kumite: 7.8, perguntas: 0.3, total: 23.1, media: 7.7 },
         ]
 		},
+	{ usuario: "flavio.santiago", senha: "Treino123", nome: "Flavio Santiago" 
+	},
 	{ usuario: "joaquim.gadelha", senha: "Treino301", nome: "Joaquim Gadelha" 
 	},
 	{ usuario: "davi.dantas", senha: "Treino309", nome: "Davi Dantas",
