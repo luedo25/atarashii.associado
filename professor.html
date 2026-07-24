@@ -175,7 +175,7 @@
             text-align: center;
         }
 
-        /* CAIXA DE FILTRO DE DATA DUPLE */
+        /* CAIXA DE FILTRO DE DATA DUPLA */
         .filtro-datas-container {
             background-color: #0f172a;
             padding: 16px;
@@ -207,6 +207,7 @@
             font-weight: bold;
             cursor: pointer;
             transition: background 0.2s;
+            margin-top: 8px;
         }
 
         .btn-filtrar:hover {
@@ -513,7 +514,7 @@
             }
         }
 
-        // CARREGAMENTO DAS AULAS E FREQUÊNCIAS (TABELAS 'AULAS' E 'FREQUENCIAS')
+        // CARREGAMENTO USANDO AS APIS REAIS DO SEU BACKEND (/api/chamada?usuario=... e /api/frequencia/...)
         async function carregarResumoFrequencia() {
             const container = document.getElementById('resumoFrequenciaContainer');
             container.innerHTML = "<p style='color: #94a3b8;'>Buscando dados no servidor...</p>";
@@ -530,40 +531,7 @@
             let linhasHTML = '';
 
             try {
-                // 1. Busca todas as AULAS cadastradas
-                let aulasNoPeriodo = [];
-                try {
-                    const respAulas = await fetch(`${URL_API_SERVIDOR}/api/aulas`);
-                    if (respAulas.ok) {
-                        const todasAulas = await respAulas.json();
-                        if (Array.isArray(todasAulas)) {
-                            // Filtra as aulas que estão estritamente dentro do período
-                            aulasNoPeriodo = todasAulas.filter(aula => {
-                                const dataAula = aula.data ? aula.data.substring(0, 10) : '';
-                                return dataAula >= dataInicio && dataAula <= dataFim;
-                            });
-                        }
-                    }
-                } catch (eAulas) {
-                    console.warn("Erro ao carregar lista de aulas:", eAulas);
-                }
-
-                // 2. Busca todas as FREQUÊNCIAS cadastradas
-                let mapaFrequencias = [];
-                try {
-                    const respFreq = await fetch(`${URL_API_SERVIDOR}/api/frequencias`);
-                    if (respFreq.ok) {
-                        mapaFrequencias = await respFreq.json();
-                    } else {
-                        // Fallback caso a rota seja singular
-                        const respFreqAlt = await fetch(`${URL_API_SERVIDOR}/api/frequencia`);
-                        if (respFreqAlt.ok) mapaFrequencias = await respFreqAlt.json();
-                    }
-                } catch (eFreq) {
-                    console.warn("Erro ao carregar frequências:", eFreq);
-                }
-
-                // 3. Busca JUSTIFICATIVAS aprovadas no período
+                // 1. Busca todas as justificativas registradas no servidor no período
                 let mapaJustificativas = {};
                 try {
                     const respJust = await fetch(`${URL_API_SERVIDOR}/api/justificativas`);
@@ -579,39 +547,47 @@
                         }
                     }
                 } catch (eJust) {
-                    console.warn("Erro ao carregar justificativas:", eJust);
+                    console.warn("Aviso ao carregar justificativas:", eJust);
                 }
 
-                // 4. Mapeamento de Presenças e Faltas para cada aluno
-                const idsAulasFiltradas = new Set(aulasNoPeriodo.map(a => a.id));
-
+                // 2. Consulta os dados de chamada detalhados de cada aluno
                 for (const aluno of alunos) {
                     let presencas = 0;
                     let faltas = 0;
+                    let totalAulas = 0;
 
-                    // Filtra os registros da tabela 'frequencias' para o aluno e apenas para as aulas do período
-                    const registrosAluno = mapaFrequencias.filter(f => {
-                        const pertenceAluno = (f.usuario === aluno.usuario || f.aluno_id === aluno.usuario || f.id_aluno === aluno.usuario);
-                        const pertenceAula = idsAulasFiltradas.has(f.aula_id || f.id_aula);
+                    try {
+                        // Tenta primeiro a rota /api/chamada?usuario=... que contém a data de cada aula
+                        const responseAlt = await fetch(`${URL_API_SERVIDOR}/api/chamada?usuario=${aluno.usuario}`);
                         
-                        // Caso a tabela 'frequencias' guarde diretamente a data em vez do id_aula
-                        const dataRegistro = f.data ? f.data.substring(0, 10) : '';
-                        const dentroDoPeriodoData = dataRegistro >= dataInicio && dataRegistro <= dataFim;
+                        if (responseAlt.ok) {
+                            const registros = await responseAlt.json();
+                            if (Array.isArray(registros)) {
+                                // Filtra estritamente os registros entre Data Inicial e Data Final
+                                const registrosFiltrados = registros.filter(r => {
+                                    if (!r.data) return true; // Se não houver data, mantém para não ignorar
+                                    const dataRegistro = r.data.substring(0, 10);
+                                    return dataRegistro >= dataInicio && dataRegistro <= dataFim;
+                                });
 
-                        return pertenceAluno && (pertenceAula || dentroDoPeriodoData);
-                    });
-
-                    registrosAluno.forEach(reg => {
-                        // Trata status booleano (true/false) ou string ('true'/'false'/1/0)
-                        const statusNormalizado = String(reg.status).toLowerCase();
-                        if (reg.status === true || statusNormalizado === 'true' || reg.status === 1 || reg.presente === true) {
-                            presencas++;
+                                totalAulas = registrosFiltrados.length;
+                                presencas = registrosFiltrados.filter(r => r.presente === true || String(r.presente).toLowerCase() === 'true' || r.status === true || String(r.status).toLowerCase() === 'true').length;
+                                faltas = totalAulas - presencas;
+                            }
                         } else {
-                            faltas++;
+                            // Fallback para a rota de resumo simples caso /api/chamada não funcione
+                            const response = await fetch(`${URL_API_SERVIDOR}/api/frequencia/${aluno.usuario}`);
+                            if (response.ok) {
+                                const dados = await response.json();
+                                presencas = dados.presencas || 0;
+                                faltas = dados.faltas || 0;
+                                totalAulas = presencas + faltas;
+                            }
                         }
-                    });
+                    } catch (e) {
+                        console.warn(`Erro ao carregar dados do aluno ${aluno.usuario}:`, e);
+                    }
 
-                    const totalAulas = presencas + faltas;
                     const pctPresenca = totalAulas > 0 ? ((presencas / totalAulas) * 100).toFixed(0) : 0;
                     const justificativasAprovadas = mapaJustificativas[aluno.usuario] || 0;
 
