@@ -423,7 +423,7 @@
             }
         }
 
-        // NOVA LÓGICA DE CARREGAMENTO ROBUSTA POR ALUNO DA LISTA USUARIOS.JS
+        // CARREGAMENTO ROBUSTO COM CONTAGEM DE JUSTIFICATIVAS APROVADAS
         async function carregarResumoFrequencia() {
             const container = document.getElementById('resumoFrequenciaContainer');
             container.innerHTML = "<p style='color: #94a3b8;'>Buscando dados no servidor...</p>";
@@ -432,7 +432,26 @@
             let linhasHTML = '';
 
             try {
-                // Executa requisição para cada aluno individualmente ou via rota geral com fallback
+                // Busca todas as justificativas registradas no servidor
+                let mapaJustificativas = {};
+                try {
+                    const respJust = await fetch(`${URL_API_SERVIDOR}/api/justificativas`);
+                    if (respJust.ok) {
+                        const listaJustificativas = await respJust.json();
+                        if (Array.isArray(listaJustificativas)) {
+                            // Mapeia e conta apenas justificativas com status 'aprovado' para cada aluno
+                            listaJustificativas.forEach(item => {
+                                if (item.status === 'aprovado') {
+                                    mapaJustificativas[item.usuario] = (mapaJustificativas[item.usuario] || 0) + 1;
+                                }
+                            });
+                        }
+                    }
+                } catch (eJust) {
+                    console.warn("Não foi possível carregar a lista global de justificativas:", eJust);
+                }
+
+                // Executa requisição para cada aluno
                 for (const aluno of alunos) {
                     let presencas = 0;
                     let faltas = 0;
@@ -462,6 +481,7 @@
                     }
 
                     const pctPresenca = totalAulas > 0 ? ((presencas / totalAulas) * 100).toFixed(0) : 0;
+                    const justificativasAprovadas = mapaJustificativas[aluno.usuario] || 0;
 
                     let corBadge = '#10b981'; // Verde
                     if (pctPresenca < 75) corBadge = '#ef4444'; // Vermelho
@@ -472,6 +492,7 @@
                             <td style="font-weight: bold; color: #f8fafc;">${aluno.nome}</td>
                             <td style="color: #10b981; font-weight: bold;">${presencas}</td>
                             <td style="color: #ef4444; font-weight: bold;">${faltas}</td>
+                            <td style="color: #3b82f6; font-weight: bold;">${justificativasAprovadas}</td>
                             <td>
                                 <span class="badge-porcentagem" style="background: ${corBadge}22; color: ${corBadge}; border: 1px solid ${corBadge};">
                                     ${pctPresenca}% Presença
@@ -488,6 +509,7 @@
                                 <th>Aluno</th>
                                 <th>Presenças</th>
                                 <th>Faltas</th>
+                                <th>Justificativas</th>
                                 <th>Frequência</th>
                             </tr>
                         </thead>
