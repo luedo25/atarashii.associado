@@ -42,29 +42,7 @@
             align-items: center;
             gap: 10px;
         }
-        /* Contêiner com rolagem horizontal no mobile */
-.table-responsive {
-  width: 100%;
-  overflow-x: auto;
-  -webkit-overflow-scrolling: touch; /* Rolagem suave em dispositivos iOS */
-  margin-bottom: 1rem;
-}
 
-/* Garante que a tabela tenha um tamanho mínimo adequado no celular */
-.tabela-frequencia {
-  width: 100%;
-  min-width: 600px; /* Evita que o texto das colunas fique esmagado */
-  border-collapse: collapse;
-}
-
-/* Ajuste de padding para telas menores */
-@media (max-width: 768px) {
-  .tabela-frequencia th,
-  .tabela-frequencia td {
-    padding: 8px 10px;
-    font-size: 14px; /* Reduz levemente a fonte para otimizar espaço */
-  }
-}
         /* BOTÕES DE AÇÃO (ATUALIZAR E SAIR) */
         .btn-header {
             display: inline-flex;
@@ -198,10 +176,19 @@
         }
 
         /* ESTILOS DA TABELA DE RESUMO DE FREQUÊNCIA */
+        .table-responsive {
+            width: 100%;
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+            margin-top: 15px;
+            border-radius: 8px;
+            border: 1px solid #334155;
+        }
+
         .tabela-resumo {
             width: 100%;
+            min-width: 550px; /* Garante que a tabela não fique esmagada em telas pequenas */
             border-collapse: collapse;
-            margin-top: 15px;
             font-size: 0.95rem;
         }
 
@@ -209,6 +196,7 @@
             padding: 12px 10px;
             text-align: left;
             border-bottom: 1px solid #334155;
+            white-space: nowrap; /* Impede a quebra indesejada do texto */
         }
 
         .tabela-resumo th {
@@ -227,6 +215,27 @@
             font-weight: bold;
             font-size: 0.85rem;
             display: inline-block;
+        }
+
+        /* RESPONSIVIDADE PARA SMARTPHONES */
+        @media (max-width: 768px) {
+            .content-container {
+                padding: 10px;
+            }
+
+            .tab-content {
+                padding: 12px;
+            }
+
+            .tabela-resumo th, .tabela-resumo td {
+                padding: 8px 6px;
+                font-size: 0.85rem;
+            }
+
+            .badge-porcentagem {
+                font-size: 0.75rem;
+                padding: 2px 6px;
+            }
         }
     </style>
 </head>
@@ -284,14 +293,11 @@
         </section>
 
         <!-- ABA 3: RESUMO DE FREQUÊNCIA -->
-        <div class="table-responsive">
-  <table class="tabela-frequencia">
         <section id="aba-resumo" class="tab-content">
             <h2 style="margin-bottom: 15px;">📊 Visão Geral de Frequência</h2>
             <div id="resumoFrequenciaContainer">Carregando relatório de frequência...</div>
         </section>
-</table>
-</div>
+
     </main>
 
     <script>
@@ -528,20 +534,22 @@
                 }
 
                 container.innerHTML = `
-                    <table class="tabela-resumo">
-                        <thead>
-                            <tr>
-                                <th>Aluno</th>
-                                <th>Presenças</th>
-                                <th>Faltas</th>
-                                <th>Justificativas</th>
-                                <th>Frequência</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            ${linhasHTML}
-                        </tbody>
-                    </table>
+                    <div class="table-responsive">
+                        <table class="tabela-resumo">
+                            <thead>
+                                <tr>
+                                    <th>Aluno</th>
+                                    <th>Presenças</th>
+                                    <th>Faltas</th>
+                                    <th>Justificativas</th>
+                                    <th>Frequência</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                ${linhasHTML}
+                            </tbody>
+                        </table>
+                    </div>
                 `;
             } catch (err) {
                 console.error("Erro geral ao montar tabela:", err);
