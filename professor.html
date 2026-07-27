@@ -330,9 +330,25 @@
             <button onclick="salvarChamada()" class="btn-salvar">💾 Salvar Chamada</button>
         </section>
 
-        <!-- ABA 2: JUSTIFICATIVA DE FALTAS -->
+      <!-- ABA 2: JUSTIFICATIVA DE FALTAS -->
         <section id="aba-justificativas" class="tab-content">
             <h2 style="margin-bottom: 15px;">📝 Pedidos de Justificativa de Faltas</h2>
+
+            <!-- FILTRO DE PERÍODO DA JUSTIFICATIVA -->
+            <div class="filtro-datas-container">
+                <div class="filtro-grid">
+                    <div class="filtro-campo">
+                        <label for="dataInicioJustificativa">📅 Data Inicial:</label>
+                        <input type="date" id="dataInicioJustificativa" value="2026-07-01">
+                    </div>
+                    <div class="filtro-campo">
+                        <label for="dataFimJustificativa">📅 Data Final:</label>
+                        <input type="date" id="dataFimJustificativa" value="2026-12-31">
+                    </div>
+                </div>
+                <button onclick="carregarJustificativasProfessor()" class="btn-filtrar">🔍 Filtrar Justificativas</button>
+            </div>
+
             <div id="listaJustificativasProfessor">Carregando pedidos...</div>
         </section>
 
@@ -471,18 +487,39 @@
             return aluno ? aluno.nome : usuario;
         }
 
-        async function carregarJustificativasProfessor() {
+     async function carregarJustificativasProfessor() {
             const container = document.getElementById('listaJustificativasProfessor');
+            container.innerHTML = "<p style='color: #94a3b8;'>Buscando justificativas no servidor...</p>";
+
+            const dataInicio = document.getElementById('dataInicioJustificativa').value;
+            const dataFim = document.getElementById('dataFimJustificativa').value;
+
+            if (!dataInicio || !dataFim) {
+                alert("Por favor, selecione as datas Inicial e Final para consulta.");
+                return;
+            }
+
             try {
                 const response = await fetch(`${URL_API_SERVIDOR}/api/justificativas`);
                 const dados = await response.json();
 
-                if (dados.length === 0) {
+                if (!Array.isArray(dados) || dados.length === 0) {
                     container.innerHTML = "<div class='card-justificativas'><p>Nenhum pedido de justificativa encontrado.</p></div>";
                     return;
                 }
 
-                container.innerHTML = dados.map(item => {
+                // Filtra os registros comparando a data da falta com o período selecionado
+                const dadosFiltrados = dados.filter(item => {
+                    const dataFalta = item.data_falta ? item.data_falta.substring(0, 10) : '';
+                    return dataFalta >= dataInicio && dataFalta <= dataFim;
+                });
+
+                if (dadosFiltrados.length === 0) {
+                    container.innerHTML = "<div class='card-justificativas'><p>Nenhum pedido de justificativa encontrado para este período.</p></div>";
+                    return;
+                }
+
+                container.innerHTML = dadosFiltrados.map(item => {
                     const ehPendente = item.status === 'pendente';
                     let corStatus = item.status === 'aprovado' ? '#10b981' : (item.status === 'reprovado' ? '#ef4444' : '#f59e0b');
 
@@ -508,6 +545,7 @@
                     `;
                 }).join('');
             } catch (err) {
+                console.error("Erro ao filtrar justificativas:", err);
                 container.innerHTML = "<p style='color: #ef4444;'>Erro ao carregar justificativas.</p>";
             }
         }
