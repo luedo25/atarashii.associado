@@ -551,19 +551,23 @@
         </div>
         
 
-        <div class="grafico-container" style="position: relative; width: 100%; max-width: 400px; margin: 25px auto 0 auto;">
+        <div class="grafico-container" style="position: relative; width: 100%; max-width: 420px; margin: 25px auto 0 auto;">
             <h3 style="justify-content: center; margin-bottom: 15px;">📊 Frequência de Aulas (A partir de Julho 2026)</h3>
             <canvas id="graficoFrequencia"></canvas>
             
-            <!-- Resumo de Presenças e Faltas -->
-            <div id="resumoFrequencia" style="display: flex; justify-content: space-around; margin-top: 15px; font-family: sans-serif;">
-                <div style="background-color: #10b98122; border: 1px solid var(--accent-green); color: var(--accent-green); padding: 8px 16px; border-radius: 20px; font-weight: bold; text-align: center;">
-                    <span style="font-size: 12px; display: block; color: var(--text-muted);">Presenças</span>
-                    <span id="qtdPresencas" style="font-size: 18px;">0</span>
+            <!-- Resumo de Presenças, Faltas e Justificativas Aprovadas -->
+            <div id="resumoFrequencia" style="display: flex; justify-content: space-around; gap: 6px; margin-top: 15px; font-family: sans-serif;">
+                <div style="background-color: #10b98122; border: 1px solid var(--accent-green); color: var(--accent-green); padding: 8px 10px; border-radius: 12px; font-weight: bold; text-align: center; flex: 1;">
+                    <span style="font-size: 11px; display: block; color: var(--text-muted);">Presenças</span>
+                    <span id="qtdPresencas" style="font-size: 16px;">0</span>
                 </div>
-                <div style="background-color: #ef444422; border: 1px solid var(--accent-red); color: #f87171; padding: 8px 16px; border-radius: 20px; font-weight: bold; text-align: center;">
-                    <span style="font-size: 12px; display: block; color: var(--text-muted);">Faltas</span>
-                    <span id="qtdFaltas" style="font-size: 18px;">0</span>
+                <div style="background-color: #ef444422; border: 1px solid var(--accent-red); color: #f87171; padding: 8px 10px; border-radius: 12px; font-weight: bold; text-align: center; flex: 1;">
+                    <span style="font-size: 11px; display: block; color: var(--text-muted);">Faltas</span>
+                    <span id="qtdFaltas" style="font-size: 16px;">0</span>
+                </div>
+                <div style="background-color: #f59e0b22; border: 1px solid var(--accent-gold); color: #fbbf24; padding: 8px 10px; border-radius: 12px; font-weight: bold; text-align: center; flex: 1;">
+                    <span style="font-size: 11px; display: block; color: var(--text-muted);">Justificativas</span>
+                    <span id="qtdJustificativas" style="font-size: 16px;">0</span>
                 </div>
             </div>
         </div>
@@ -1204,7 +1208,6 @@
             const tabelaBody = document.getElementById('corpoTabelaNotas');
             if (!tabelaBody) return;
 
-            // Verifica se a lista de alunos carregou do arquivo usuarios.js
             if (typeof listaAlunos === 'undefined') {
                 tabelaBody.innerHTML = `<tr><td colspan="8">Aguardando dados de alunos...</td></tr>`;
                 setTimeout(carregarNotasAluno, 500);
@@ -1234,7 +1237,7 @@
             }
         }
 
-        // 4. CONSULTA O STATUS DO TERMO (ESTRATÉGIA BLINDADA)
+        // 4. CONSULTA O STATUS DO TERMO
         function verificarStatusAceite() {
             if (!usuarioAtivo) return;
 
@@ -1415,7 +1418,6 @@
             window.location.replace('index.html');
         });
 
-        // Alterna a exibição da caixa de texto quando o checkbox "Outro" for acionado
         function alternarCampoTextoOutro() {
             const checkOutro = document.getElementById('checkOutro');
             const containerTexto = document.getElementById('containerTextoOutro');
@@ -1430,23 +1432,19 @@
             }
         }
 
-        // Validação imediata dos dias da semana (1º Requisito)
         document.getElementById('dataFaltaAluno').addEventListener('change', function() {
             if (!this.value) return;
             
-            // Cria objeto Date em UTC para evitar divergências de fuso horário
             const partes = this.value.split('-');
             const dataSelecionada = new Date(Date.UTC(partes[0], partes[1] - 1, partes[2]));
-            const diaSemana = dataSelecionada.getUTCDay(); // 0 = Domingo, 2 = Terça, 4 = Quinta, 6 = Sábado
+            const diaSemana = dataSelecionada.getUTCDay();
 
-            // Permitidos apenas Terça (2), Quinta (4) e Sábado (6)
             if (diaSemana !== 2 && diaSemana !== 4 && diaSemana !== 6) {
                 alert("Erro: Aulas ocorrem apenas Terças, Quintas e Sábados. Por favor, selecione uma data válida.");
                 this.value = '';
             }
         });
 
-        // Submissão da justificativa com validação do prazo de 48 horas (2º Requisito)
         document.getElementById('formJustificativa').addEventListener('submit', async function(e) {
             e.preventDefault();
             const dataFalta = document.getElementById('dataFaltaAluno').value;
@@ -1459,7 +1457,6 @@
 
             if (!dataFalta) return alert("Por favor, selecione a data.");
 
-            // Validação de Prazo: 48 horas antes e 48 horas depois
             const dataFaltaObj = new Date(`${dataFalta}T00:00:00`);
             const agora = new Date();
             const diferencaEmHoras = Math.abs(agora - dataFaltaObj) / (1000 * 60 * 60);
@@ -1468,7 +1465,6 @@
                 return alert("Erro: O prazo para justificativa de falta é de até 48 horas antes ou 48 horas depois da data da aula.");
             }
 
-            // Validação caso "Outro" esteja marcado sem texto inserido
             if (ehOutroMarcado && !textoOutro) {
                 return alert("Você marcou a opção 'Outro(s)'. Por favor, descreva o motivo no campo de texto.");
             }
@@ -1477,7 +1473,6 @@
                 return alert("Selecione ao menos um motivo para a falta.");
             }
 
-            // Unifica os motivos pré-selecionados com o motivo digitado
             let listaMotivos = [...marcados];
             if (ehOutroMarcado && textoOutro) {
                 listaMotivos.push(`Outro: ${textoOutro}`);
@@ -1500,8 +1495,9 @@
                 if (response.ok) {
                     alert(result.mensagem || "Justificativa enviada para aprovação com sucesso!");
                     document.getElementById('formJustificativa').reset();
-                    alternarCampoTextoOutro(); // Oculta a área de texto após o envio
+                    alternarCampoTextoOutro();
                     carregarStatusJustificativas();
+                    carregarGraficoFrequencia(); // Atualiza gráfico e resumo após envio
                 } else {
                     alert("Erro: " + (result.erro || "Falha ao registrar justificativa."));
                 }
@@ -1516,7 +1512,7 @@
                 const response = await fetch(`${URL_API_SERVIDOR}/api/justificativa/aluno/${usuarioAtivo}`);
                 const dados = await response.json();
 
-                if (dados.length === 0) {
+                if (!dados || dados.length === 0) {
                     container.innerHTML = "<p style='color: var(--text-muted);'>Nenhuma justificativa enviada até o momento.</p>";
                     return;
                 }
@@ -1540,10 +1536,10 @@
             }
         }
 
-        // 5. CARREGAMENTO E EXIBIÇÃO DO GRÁFICO DE FREQUÊNCIA (VIA API / SUPABASE)
+        // 5. CARREGAMENTO E EXIBIÇÃO DO GRÁFICO DE FREQUÊNCIA (COM PRESENÇAS, FALTAS E JUSTIFICATIVAS APROVADAS)
         let instanciaGrafico = null;
 
-        function carregarGraficoFrequencia() {
+        async function carregarGraficoFrequencia() {
             if (!usuarioAtivo) {
                 console.warn("⚠️ Atenção: usuarioAtivo ainda não foi definido.");
                 return;
@@ -1555,84 +1551,107 @@
                 return;
             }
 
-            fetch(`${URL_API_SERVIDOR}/api/frequencia/${usuarioAtivo}`)
-                .then(res => {
-                    if (!res.ok) throw new Error("Falha ao buscar frequência do servidor");
-                    return res.json();
-                })
-                .then(dados => {
-                    const presencas = Number(dados.presencas) || 0;
-                    const faltas = Number(dados.faltas) || 0;
-                    const total = presencas + faltas;
+            try {
+                // Busca dados de frequência
+                const resFreq = await fetch(`${URL_API_SERVIDOR}/api/frequencia/${usuarioAtivo}`);
+                if (!resFreq.ok) throw new Error("Falha ao buscar frequência do servidor");
+                const dadosFreq = await resFreq.json();
 
-                    const elemPresencas = document.getElementById('qtdPresencas');
-                    const elemFaltas = document.getElementById('qtdFaltas');
-                    if (elemPresencas) elemPresencas.textContent = presencas;
-                    if (elemFaltas) elemFaltas.textContent = faltas;
+                // Busca número de justificativas aprovadas
+                let justificativasAprovadas = Number(dadosFreq.justificativas_aprovadas) || 0;
 
-                    const ctx = canvasElement.getContext('2d');
-
-                    if (instanciaGrafico) {
-                        instanciaGrafico.destroy();
+                // Caso a rota de frequência não retorne a quantidade diretamente, consulta via endpoint de justificativas
+                if (dadosFreq.justificativas_aprovadas === undefined) {
+                    try {
+                        const resJust = await fetch(`${URL_API_SERVIDOR}/api/justificativa/aluno/${usuarioAtivo}`);
+                        if (resJust.ok) {
+                            const listaJust = await resJust.json();
+                            justificativasAprovadas = listaJust.filter(item => item.status === 'aprovado').length;
+                        }
+                    } catch (e) {
+                        console.warn("Não foi possível buscar justificativas aprovadas separadamente:", e);
                     }
+                }
 
-                    const plugins = (typeof ChartDataLabels !== 'undefined') ? [ChartDataLabels] : [];
+                const presencas = Number(dadosFreq.presencas) || 0;
+                const faltas = Number(dadosFreq.faltas) || 0;
+                const total = presencas + faltas + justificativasAprovadas;
 
-                    instanciaGrafico = new Chart(ctx, {
-                        type: 'pie',
-                        data: {
-                            labels: [
-                                `Presenças (${presencas})`, 
-                                `Faltas (${faltas})`
-                            ],
-                            datasets: [{
-                                data: [presencas, faltas],
-                                backgroundColor: ['#10b981', '#ef4444'],
-                                borderWidth: 1,
-                                borderColor: '#1e293b'
-                            }]
-                        },
-                        plugins: plugins,
-                        options: {
-                            responsive: true,
-                            plugins: {
-                                legend: { 
-                                    position: 'bottom', 
-                                    labels: { 
-                                        color: '#f8fafc',
-                                        font: {
-                                            size: 13,
-                                            weight: 'bold'
-                                        }
-                                    } 
-                                },
-                                datalabels: {
-                                    color: '#ffffff',
+                // Atualiza elementos DOM do resumo abaixo do gráfico
+                const elemPresencas = document.getElementById('qtdPresencas');
+                const elemFaltas = document.getElementById('qtdFaltas');
+                const elemJustificativas = document.getElementById('qtdJustificativas');
+
+                if (elemPresencas) elemPresencas.textContent = presencas;
+                if (elemFaltas) elemFaltas.textContent = faltas;
+                if (elemJustificativas) elemJustificativas.textContent = justificativasAprovadas;
+
+                const ctx = canvasElement.getContext('2d');
+
+                if (instanciaGrafico) {
+                    instanciaGrafico.destroy();
+                }
+
+                const plugins = (typeof ChartDataLabels !== 'undefined') ? [ChartDataLabels] : [];
+
+                // Criação do Gráfico Pizza com 3 dados (Presenças, Faltas e Justificativas)
+                instanciaGrafico = new Chart(ctx, {
+                    type: 'pie',
+                    data: {
+                        labels: [
+                            `Presenças (${presencas})`, 
+                            `Faltas (${faltas})`,
+                            `Justificativas (${justificativasAprovadas})`
+                        ],
+                        datasets: [{
+                            data: [presencas, faltas, justificativasAprovadas],
+                            backgroundColor: ['#10b981', '#ef4444', '#f59e0b'],
+                            borderWidth: 1,
+                            borderColor: '#1e293b'
+                        }]
+                    },
+                    plugins: plugins,
+                    options: {
+                        responsive: true,
+                        plugins: {
+                            legend: { 
+                                position: 'bottom', 
+                                labels: { 
+                                    color: '#f8fafc',
                                     font: {
-                                        weight: 'bold',
-                                        size: 14
-                                    },
-                                    formatter: (valor) => {
-                                        if (total === 0) return '0%';
-                                        const porcentagem = Math.round((valor / total) * 100);
-                                        return `${porcentagem}%`;
+                                        size: 12,
+                                        weight: 'bold'
                                     }
+                                } 
+                            },
+                            datalabels: {
+                                color: '#ffffff',
+                                font: {
+                                    weight: 'bold',
+                                    size: 13
                                 },
-                                tooltip: {
-                                    callbacks: {
-                                        label: function(context) {
-                                            const label = context.label || '';
-                                            const value = context.raw || 0;
-                                            const porcentagem = total > 0 ? Math.round((value / total) * 100) : 0;
-                                            return `${label}: ${value} (${porcentagem}%)`;
-                                        }
+                                formatter: (valor) => {
+                                    if (total === 0 || valor === 0) return '';
+                                    const porcentagem = Math.round((valor / total) * 100);
+                                    return `${porcentagem}%`;
+                                }
+                            },
+                            tooltip: {
+                                callbacks: {
+                                    label: function(context) {
+                                        const label = context.label || '';
+                                        const value = context.raw || 0;
+                                        const porcentagem = total > 0 ? Math.round((value / total) * 100) : 0;
+                                        return `${label}: ${value} (${porcentagem}%)`;
                                     }
                                 }
                             }
                         }
-                    });
-                })
-                .catch(err => console.error("❌ Erro ao carregar gráfico de frequência:", err));
+                    }
+                });
+            } catch (err) {
+                console.error("❌ Erro ao carregar gráfico de frequência:", err);
+            }
         }
 
         // Inicialização da página
