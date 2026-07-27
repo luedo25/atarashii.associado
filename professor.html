@@ -330,13 +330,19 @@
             <button onclick="salvarChamada()" class="btn-salvar">💾 Salvar Chamada</button>
         </section>
 
-      <!-- ABA 2: JUSTIFICATIVA DE FALTAS -->
+   <!-- ABA 2: JUSTIFICATIVA DE FALTAS -->
         <section id="aba-justificativas" class="tab-content">
             <h2 style="margin-bottom: 15px;">📝 Pedidos de Justificativa de Faltas</h2>
 
-            <!-- FILTRO DE PERÍODO DA JUSTIFICATIVA -->
+            <!-- FILTRO DE ALUNO E PERÍODO DA JUSTIFICATIVA -->
             <div class="filtro-datas-container">
-                <div class="filtro-grid">
+                <div class="filtro-grid" style="grid-template-columns: 1fr 1fr 1fr;">
+                    <div class="filtro-campo">
+                        <label for="filtroAlunoJustificativa">🥋 Aluno:</label>
+                        <select id="filtroAlunoJustificativa" style="padding: 10px; font-size: 15px; margin-top: 4px; margin-bottom: 12px; width: 100%; border-radius: 6px; border: 1px solid #334155; background-color: #0f172a; color: #f8fafc;">
+                            <option value="todos">Todos os Alunos</option>
+                        </select>
+                    </div>
                     <div class="filtro-campo">
                         <label for="dataInicioJustificativa">📅 Data Inicial:</label>
                         <input type="date" id="dataInicioJustificativa" value="2026-07-01">
@@ -417,14 +423,19 @@
             }
         }
 
-    // Popula os checkboxes da chamada e as opções do filtro de alunos
+   // Popula os checkboxes da chamada e as opções dos filtros de alunos (Resumo e Justificativas)
         function renderizarAlunos() {
             const container = document.getElementById('listaAlunosContainer');
-            const selectAluno = document.getElementById('filtroAluno');
+            const selectAlunoResumo = document.getElementById('filtroAluno');
+            const selectAlunoJustificativa = document.getElementById('filtroAlunoJustificativa');
             
             container.innerHTML = '';
-            if (selectAluno) {
-                selectAluno.innerHTML = '<option value="todos">Todos os Alunos</option>';
+            
+            if (selectAlunoResumo) {
+                selectAlunoResumo.innerHTML = '<option value="todos">Todos os Alunos</option>';
+            }
+            if (selectAlunoJustificativa) {
+                selectAlunoJustificativa.innerHTML = '<option value="todos">Todos os Alunos</option>';
             }
 
             const alunos = listaAlunos.filter(u => u.usuario !== 'luiz.costa');
@@ -441,12 +452,20 @@
                 `;
                 container.appendChild(div);
 
-                // Preenche o Select do Filtro
-                if (selectAluno) {
+                // Preenche o Select do Filtro do Resumo
+                if (selectAlunoResumo) {
                     const option = document.createElement('option');
                     option.value = aluno.usuario;
                     option.textContent = aluno.nome;
-                    selectAluno.appendChild(option);
+                    selectAlunoResumo.appendChild(option);
+                }
+
+                // Preenche o Select do Filtro das Justificativas
+                if (selectAlunoJustificativa) {
+                    const option = document.createElement('option');
+                    option.value = aluno.usuario;
+                    option.textContent = aluno.nome;
+                    selectAlunoJustificativa.appendChild(option);
                 }
             });
         }
@@ -487,12 +506,13 @@
             return aluno ? aluno.nome : usuario;
         }
 
-     async function carregarJustificativasProfessor() {
+ async function carregarJustificativasProfessor() {
             const container = document.getElementById('listaJustificativasProfessor');
             container.innerHTML = "<p style='color: #94a3b8;'>Buscando justificativas no servidor...</p>";
 
             const dataInicio = document.getElementById('dataInicioJustificativa').value;
             const dataFim = document.getElementById('dataFimJustificativa').value;
+            const usuarioSelecionado = document.getElementById('filtroAlunoJustificativa').value;
 
             if (!dataInicio || !dataFim) {
                 alert("Por favor, selecione as datas Inicial e Final para consulta.");
@@ -508,14 +528,17 @@
                     return;
                 }
 
-                // Filtra os registros comparando a data da falta com o período selecionado
+                // Filtra por PERÍODO e por ALUNO (se diferente de 'todos')
                 const dadosFiltrados = dados.filter(item => {
                     const dataFalta = item.data_falta ? item.data_falta.substring(0, 10) : '';
-                    return dataFalta >= dataInicio && dataFalta <= dataFim;
+                    const dentroDoPeriodo = dataFalta >= dataInicio && dataFalta <= dataFim;
+                    const alunoCoincide = (usuarioSelecionado === 'todos') || (item.usuario === usuarioSelecionado);
+
+                    return dentroDoPeriodo && alunoCoincide;
                 });
 
                 if (dadosFiltrados.length === 0) {
-                    container.innerHTML = "<div class='card-justificativas'><p>Nenhum pedido de justificativa encontrado para este período.</p></div>";
+                    container.innerHTML = "<div class='card-justificativas'><p>Nenhum pedido de justificativa encontrado para os filtros selecionados.</p></div>";
                     return;
                 }
 
