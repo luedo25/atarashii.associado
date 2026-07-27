@@ -1608,19 +1608,22 @@ async function carregarGraficoFrequencia() {
         const presencas = Number(dadosFreq.presencas) || 0;
         const faltasBrutas = Number(dadosFreq.faltas) || 0; // Faltas totais reais
 
-        // Garante que a justificativa não ultrapasse as faltas brutas
+        // Garante que as justificativas não ultrapassem as faltas brutas
         const justificativasEfetivas = Math.min(justificativasAprovadas, faltasBrutas);
         
-        // Total de chamadas/aulas registradas no período
-        const total = presencas + faltasBrutas;
+        // Faltas descontadas para exibição da fatia do gráfico
+        const faltasDescontadas = faltasBrutas - justificativasEfetivas;
 
-        // Atualiza elementos do resumo abaixo do gráfico com os valores totais/reais
+        // Total geral de chamadas (Presenças + Faltas Descontadas + Justificativas)
+        const totalAulas = presencas + faltasDescontadas + justificativasEfetivas;
+
+        // Atualiza elementos do resumo abaixo do gráfico com os valores brutas e reais
         const elemPresencas = document.getElementById('qtdPresencas');
         const elemFaltas = document.getElementById('qtdFaltas');
         const elemJustificativas = document.getElementById('qtdJustificativas');
 
         if (elemPresencas) elemPresencas.textContent = presencas;
-        if (elemFaltas) elemFaltas.textContent = faltasBrutas; // Exibe o valor real/total de faltas
+        if (elemFaltas) elemFaltas.textContent = faltasBrutas; // Exibe o total real bruto de faltas
         if (elemJustificativas) elemJustificativas.textContent = justificativasEfetivas;
 
         const ctx = canvasElement.getContext('2d');
@@ -1631,7 +1634,7 @@ async function carregarGraficoFrequencia() {
 
         const plugins = (typeof ChartDataLabels !== 'undefined') ? [ChartDataLabels] : [];
 
-        // Criação do Gráfico Pizza exibindo o valor real total de faltas na legenda
+        // Criação do Gráfico Pizza
         instanciaGrafico = new Chart(ctx, {
             type: 'pie',
             data: {
@@ -1641,7 +1644,8 @@ async function carregarGraficoFrequencia() {
                     `Justificativas Aprovadas (${justificativasEfetivas})`
                 ],
                 datasets: [{
-                    data: [presencas, faltasBrutas, justificativasEfetivas],
+                    // O gráfico desenha as fatias considerando as faltas descontadas
+                    data: [presencas, faltasDescontadas, justificativasEfetivas],
                     backgroundColor: ['#10b981', '#ef4444', '#f59e0b'],
                     borderWidth: 1,
                     borderColor: '#1e293b'
@@ -1668,8 +1672,8 @@ async function carregarGraficoFrequencia() {
                             size: 13
                         },
                         formatter: (valor) => {
-                            if (total === 0 || valor === 0) return '';
-                            const porcentagem = Math.round((valor / total) * 100);
+                            if (totalAulas === 0 || valor === 0) return '';
+                            const porcentagem = Math.round((valor / totalAulas) * 100);
                             return `${porcentagem}%`;
                         }
                     },
@@ -1678,7 +1682,7 @@ async function carregarGraficoFrequencia() {
                             label: function(context) {
                                 const label = context.label || '';
                                 const value = context.raw || 0;
-                                const porcentagem = total > 0 ? Math.round((value / total) * 100) : 0;
+                                const porcentagem = totalAulas > 0 ? Math.round((value / totalAulas) * 100) : 0;
                                 return `${label}: ${value} (${porcentagem}%)`;
                             }
                         }
