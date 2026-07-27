@@ -515,7 +515,7 @@
         }
 
         // CARREGAMENTO DE RESUMO DE FREQUÊNCIA COM FILTRO DE DATAS REAL
-        async function carregarResumoFrequencia() {
+     async function carregarResumoFrequencia() {
             const container = document.getElementById('resumoFrequenciaContainer');
             container.innerHTML = "<p style='color: #94a3b8;'>Buscando dados no servidor...</p>";
 
@@ -569,9 +569,18 @@
                         console.warn(`Erro ao carregar dados do aluno ${aluno.usuario}:`, e);
                     }
 
-                    const totalAulas = presencas + faltas;
-                    const pctPresenca = totalAulas > 0 ? ((presencas / totalAulas) * 100).toFixed(0) : 0;
                     const justificativasAprovadas = mapaJustificativas[aluno.usuario] || 0;
+
+                    // APLICAÇÃO DO NOVO CÁLCULO
+                    // Diminui as faltas pela quantidade de justificativas (mínimo 0)
+                    const faltasAjustadas = Math.max(0, faltas - justificativasAprovadas);
+                    
+                    // Considera as presenças somadas às justificativas abonadas
+                    const presencasEfetivas = presencas + justificativasAprovadas;
+                    const totalAulas = presencasEfetivas + faltasAjustadas;
+
+                    // Cálculo da Porcentagem Efetiva
+                    const pctPresenca = totalAulas > 0 ? ((presencasEfetivas / totalAulas) * 100).toFixed(0) : 0;
 
                     let corBadge = '#10b981'; // Verde
                     if (pctPresenca < 75) corBadge = '#ef4444'; // Vermelho
@@ -581,7 +590,7 @@
                         <tr>
                             <td style="font-weight: bold; color: #f8fafc;">${aluno.nome}</td>
                             <td style="color: #10b981; font-weight: bold;">${presencas}</td>
-                            <td style="color: #ef4444; font-weight: bold;">${faltas}</td>
+                            <td style="color: #ef4444; font-weight: bold;">${faltasAjustadas} <span style="font-size: 11px; color: #94a3b8;">(${faltas} orig.)</span></td>
                             <td style="color: #3b82f6; font-weight: bold;">${justificativasAprovadas}</td>
                             <td>
                                 <span class="badge-porcentagem" style="background: ${corBadge}22; color: ${corBadge}; border: 1px solid ${corBadge};">
@@ -599,9 +608,9 @@
                                 <tr>
                                     <th>Aluno</th>
                                     <th>Presenças</th>
-                                    <th>Faltas</th>
+                                    <th>Faltas (Ajustadas)</th>
                                     <th>Justificativas</th>
-                                    <th>Frequência</th>
+                                    <th>Frequência Final</th>
                                 </tr>
                             </thead>
                             <tbody>
