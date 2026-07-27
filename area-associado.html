@@ -1554,7 +1554,7 @@
             }
         }
 
-       // 5. CARREGAMENTO E EXIBIÇÃO DO GRÁFICO DE FREQUÊNCIA COM FILTRO DE DATAS
+// 5. CARREGAMENTO E EXIBIÇÃO DO GRÁFICO DE FREQUÊNCIA COM FILTRO DE DATAS
 let instanciaGrafico = null;
 
 async function carregarGraficoFrequencia() {
@@ -1582,7 +1582,6 @@ async function carregarGraficoFrequencia() {
     const dataFim = `${inputFim}-${String(ultimoDia).padStart(2, '0')}`;
 
     try {
-        // CORREÇÃO: Enviando dataInicio e dataFim nos parâmetros da URL
         const resFreq = await fetch(`${URL_API_SERVIDOR}/api/frequencia/${usuarioAtivo}?dataInicio=${dataInicio}&dataFim=${dataFim}`);
         if (!resFreq.ok) throw new Error("Falha ao buscar frequência do servidor");
         const dadosFreq = await resFreq.json();
@@ -1607,22 +1606,21 @@ async function carregarGraficoFrequencia() {
         }
 
         const presencas = Number(dadosFreq.presencas) || 0;
-        const faltasBrutas = Number(dadosFreq.faltas) || 0;
+        const faltasBrutas = Number(dadosFreq.faltas) || 0; // Faltas totais reais
 
-        // Garante que a justificativa deduza as faltas sem gerar valores negativos
+        // Garante que a justificativa não ultrapasse as faltas brutas
         const justificativasEfetivas = Math.min(justificativasAprovadas, faltasBrutas);
-        const faltasEfetivas = faltasBrutas - justificativasEfetivas;
+        
+        // Total de chamadas/aulas registradas no período
+        const total = presencas + faltasBrutas;
 
-        // Total real de aulas lecionadas no período
-        const total = presencas + faltasEfetivas + justificativasEfetivas;
-
-        // Atualiza elementos DOM do resumo abaixo do gráfico com os valores ajustados
+        // Atualiza elementos do resumo abaixo do gráfico com os valores totais/reais
         const elemPresencas = document.getElementById('qtdPresencas');
         const elemFaltas = document.getElementById('qtdFaltas');
         const elemJustificativas = document.getElementById('qtdJustificativas');
 
         if (elemPresencas) elemPresencas.textContent = presencas;
-        if (elemFaltas) elemFaltas.textContent = faltasEfetivas;
+        if (elemFaltas) elemFaltas.textContent = faltasBrutas; // Exibe o valor real/total de faltas
         if (elemJustificativas) elemJustificativas.textContent = justificativasEfetivas;
 
         const ctx = canvasElement.getContext('2d');
@@ -1633,17 +1631,17 @@ async function carregarGraficoFrequencia() {
 
         const plugins = (typeof ChartDataLabels !== 'undefined') ? [ChartDataLabels] : [];
 
-        // Criação do Gráfico Pizza ajustado
+        // Criação do Gráfico Pizza exibindo o valor real total de faltas na legenda
         instanciaGrafico = new Chart(ctx, {
             type: 'pie',
             data: {
                 labels: [
                     `Presenças (${presencas})`, 
-                    `Faltas (${faltasEfetivas})`,
+                    `Faltas (${faltasBrutas})`, // Exibe a quantidade total de faltas na legenda
                     `Justificativas Aprovadas (${justificativasEfetivas})`
                 ],
                 datasets: [{
-                    data: [presencas, faltasEfetivas, justificativasEfetivas],
+                    data: [presencas, faltasBrutas, justificativasEfetivas],
                     backgroundColor: ['#10b981', '#ef4444', '#f59e0b'],
                     borderWidth: 1,
                     borderColor: '#1e293b'
