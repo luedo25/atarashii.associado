@@ -1,24 +1,36 @@
-// Escuta o evento de Notificação vindo do Render / Google Push Service
-self.addEventListener('push', event => {
-  const data = event.data ? event.data.json() : {};
+// Ouve a chegada de uma notificação Push do servidor
+self.addEventListener('push', (event) => {
+    let data = { title: 'Nova Notificação', body: 'Você tem uma atualização!' };
 
-  const title = data.title || 'Notificação do App';
-  const options = {
-    body: data.body || 'Você tem uma nova mensagem.',
-    icon: 'atarashii-192.png', // Ícone do seu app
-    badge: 'atarashii-192.png',
-    vibrate: [100, 50, 100]    // Faz o celular vibrar
-  };
+    if (event.data) {
+        try {
+            data = event.data.json();
+        } catch (e) {
+            data.body = event.data.text();
+        }
+    }
 
-  event.waitUntil(
-    self.registration.showNotification(title, options)
-  );
+    const options = {
+        body: data.body,
+        icon: '/atarashii-192.png', // Caminho do ícone do seu App
+        badge: '/atarashii-192.png',
+        vibrate: [100, 50, 100],
+        data: {
+            dateOfArrival: Date.now(),
+            primaryKey: '1'
+        }
+    };
+
+    // Força o sistema operacional a exibir o banner nativo
+    event.waitUntil(
+        self.registration.showNotification(data.title, options)
+    );
 });
 
-// Ação ao clicar no pop-up da notificação no celular
-self.addEventListener('notificationclick', event => {
-  event.notification.close();
-  event.waitUntil(
-    clients.openWindow('/') // Abre a raiz do seu site
-  );
+// Ação ao clicar na notificação
+self.addEventListener('notificationclick', (event) => {
+    event.notification.close();
+    event.waitUntil(
+        clients.openWindow('/') // Abre ou foca o seu app
+    );
 });
