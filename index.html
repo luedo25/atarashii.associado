@@ -252,12 +252,14 @@
     </script>
 
     <script>
-        if ('serviceWorker' in navigator) {
-            navigator.serviceWorker.register('sw.js')
-                .then(() => console.log('Service Worker ativo.'))
-                .catch((err) => console.log('Erro no SW:', err));
-        }
-
+     // REMOVA OU COMENTE ESTAS LINHAS:
+/*
+if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('sw.js')
+        .then(() => console.log('Service Worker ativo.'))
+        .catch((err) => console.log('Erro no SW:', err));
+}
+*/
         let disparadorInstalacao = null;
         const botaoInstalarAndroid = document.getElementById('btnInstalarApp');
 
