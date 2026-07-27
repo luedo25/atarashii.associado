@@ -387,7 +387,7 @@
 
     </main>
 
-    <script>
+  <script>
         const usuarioAtivo = localStorage.getItem('usuarioAtivo');
         const tipoUsuario = localStorage.getItem('tipoUsuario');
 
@@ -423,13 +423,13 @@
             }
         }
 
-   // Popula os checkboxes da chamada e as opções dos filtros de alunos (Resumo e Justificativas)
+        // FUNÇÃO ÚNICA: Popula a chamada e TODOS os menus de filtro de alunos
         function renderizarAlunos() {
             const container = document.getElementById('listaAlunosContainer');
             const selectAlunoResumo = document.getElementById('filtroAluno');
             const selectAlunoJustificativa = document.getElementById('filtroAlunoJustificativa');
             
-            container.innerHTML = '';
+            if (container) container.innerHTML = '';
             
             if (selectAlunoResumo) {
                 selectAlunoResumo.innerHTML = '<option value="todos">Todos os Alunos</option>';
@@ -438,21 +438,24 @@
                 selectAlunoJustificativa.innerHTML = '<option value="todos">Todos os Alunos</option>';
             }
 
+            // Filtra o professor/administrador da lista
             const alunos = listaAlunos.filter(u => u.usuario !== 'luiz.costa');
 
             alunos.forEach(aluno => {
-                // Preenche a lista da chamada
-                const div = document.createElement('div');
-                div.className = 'aluno-item';
-                div.innerHTML = `
-                    <span>${aluno.nome}</span>
-                    <label style="cursor: pointer;">
-                        <input type="checkbox" data-usuario="${aluno.usuario}" class="chk-presente" checked> Presente
-                    </label>
-                `;
-                container.appendChild(div);
+                // 1. Preenche a lista da chamada
+                if (container) {
+                    const div = document.createElement('div');
+                    div.className = 'aluno-item';
+                    div.innerHTML = `
+                        <span>${aluno.nome}</span>
+                        <label style="cursor: pointer;">
+                            <input type="checkbox" data-usuario="${aluno.usuario}" class="chk-presente" checked> Presente
+                        </label>
+                    `;
+                    container.appendChild(div);
+                }
 
-                // Preenche o Select do Filtro do Resumo
+                // 2. Preenche o Filtro da aba Resumo
                 if (selectAlunoResumo) {
                     const option = document.createElement('option');
                     option.value = aluno.usuario;
@@ -460,7 +463,7 @@
                     selectAlunoResumo.appendChild(option);
                 }
 
-                // Preenche o Select do Filtro das Justificativas
+                // 3. Preenche o Filtro da aba Justificativas
                 if (selectAlunoJustificativa) {
                     const option = document.createElement('option');
                     option.value = aluno.usuario;
@@ -506,7 +509,8 @@
             return aluno ? aluno.nome : usuario;
         }
 
- async function carregarJustificativasProfessor() {
+        // CARREGAMENTO DAS JUSTIFICATIVAS COM FILTRO POR DATA E POR ALUNO
+        async function carregarJustificativasProfessor() {
             const container = document.getElementById('listaJustificativasProfessor');
             container.innerHTML = "<p style='color: #94a3b8;'>Buscando justificativas no servidor...</p>";
 
@@ -528,7 +532,7 @@
                     return;
                 }
 
-                // Filtra por PERÍODO e por ALUNO (se diferente de 'todos')
+                // Aplica Filtro por Data e Filtro por Aluno
                 const dadosFiltrados = dados.filter(item => {
                     const dataFalta = item.data_falta ? item.data_falta.substring(0, 10) : '';
                     const dentroDoPeriodo = dataFalta >= dataInicio && dataFalta <= dataFim;
@@ -595,40 +599,6 @@
             }
         }
 
-   // Popula os checkboxes da chamada e as opções do filtro de alunos
-        function renderizarAlunos() {
-            const container = document.getElementById('listaAlunosContainer');
-            const selectAluno = document.getElementById('filtroAluno');
-            
-            container.innerHTML = '';
-            if (selectAluno) {
-                selectAluno.innerHTML = '<option value="todos">Todos os Alunos</option>';
-            }
-
-            const alunos = listaAlunos.filter(u => u.usuario !== 'luiz.costa');
-
-            alunos.forEach(aluno => {
-                // Preenche a lista da chamada
-                const div = document.createElement('div');
-                div.className = 'aluno-item';
-                div.innerHTML = `
-                    <span>${aluno.nome}</span>
-                    <label style="cursor: pointer;">
-                        <input type="checkbox" data-usuario="${aluno.usuario}" class="chk-presente" checked> Presente
-                    </label>
-                `;
-                container.appendChild(div);
-
-                // Preenche o Select do Filtro
-                if (selectAluno) {
-                    const option = document.createElement('option');
-                    option.value = aluno.usuario;
-                    option.textContent = aluno.nome;
-                    selectAluno.appendChild(option);
-                }
-            });
-        }
-
         // CARREGAMENTO DE RESUMO DE FREQUÊNCIA COM FILTRO DE ALUNO E DATAS
         async function carregarResumoFrequencia() {
             const container = document.getElementById('resumoFrequenciaContainer');
@@ -643,7 +613,6 @@
                 return;
             }
 
-            // Filtra o aluno selecionado no dropdown ou mantém todos
             let alunos = listaAlunos.filter(u => u.usuario !== 'luiz.costa');
             if (usuarioSelecionado !== 'todos') {
                 alunos = alunos.filter(u => u.usuario === usuarioSelecionado);
@@ -652,7 +621,6 @@
             let linhasHTML = '';
 
             try {
-                // 1. Busca todas as justificativas registradas no servidor no período
                 let mapaJustificativas = {};
                 try {
                     const respJust = await fetch(`${URL_API_SERVIDOR}/api/justificativas`);
@@ -671,7 +639,6 @@
                     console.warn("Aviso ao carregar justificativas:", eJust);
                 }
 
-                // 2. Consulta frequência do(s) aluno(s) filtrado(s)
                 for (const aluno of alunos) {
                     let presencas = 0;
                     let faltas = 0;
@@ -692,16 +659,15 @@
 
                     const justificativasAprovadas = mapaJustificativas[aluno.usuario] || 0;
 
-                    // Cálculo com abono de faltas por justificativa
                     const faltasAjustadas = Math.max(0, faltas - justificativasAprovadas);
                     const presencasEfetivas = presencas + justificativasAprovadas;
                     const totalAulas = presencasEfetivas + faltasAjustadas;
 
                     const pctPresenca = totalAulas > 0 ? ((presencasEfetivas / totalAulas) * 100).toFixed(0) : 0;
 
-                    let corBadge = '#10b981'; // Verde
-                    if (pctPresenca < 75) corBadge = '#ef4444'; // Vermelho
-                    else if (pctPresenca < 85) corBadge = '#f59e0b'; // Amarelo
+                    let corBadge = '#10b981';
+                    if (pctPresenca < 75) corBadge = '#ef4444';
+                    else if (pctPresenca < 85) corBadge = '#f59e0b';
 
                     linhasHTML += `
                         <tr>
