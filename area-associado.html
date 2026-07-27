@@ -624,8 +624,26 @@
                 <button type="submit" class="btn-action">📤 Enviar Justificativa</button>
             </form>
 
-            <!-- HISTÓRICO E STATUS DE JUSTIFICATIVAS -->
+            <!-- HISTÓRICO E STATUS DE JUSTIFICATIVAS COM FILTRO POR MÊS -->
             <h4 style="margin-top: 25px; margin-bottom: 10px; font-size: 14px; color: var(--text-muted);">Status dos Pedidos de Justificativa</h4>
+            
+            <!-- FILTRO DE CALENDÁRIO / MÊS DA JUSTIFICATIVA -->
+            <div id="filtroJustificativa" style="display: flex; gap: 8px; align-items: center; justify-content: center; margin-bottom: 15px; background: rgba(15, 23, 42, 0.4); padding: 10px; border-radius: var(--radius-md); border: 1px solid var(--border-color); flex-wrap: wrap;">
+                <div style="display: flex; flex-direction: column; gap: 4px; flex: 1; min-width: 120px;">
+                    <label for="mesInicioJustificativa" style="font-size: 11px; color: var(--text-muted); font-weight: bold;">Mês Inicial:</label>
+                    <input type="month" id="mesInicioJustificativa" value="2026-07" style="padding: 6px 8px; border-radius: 6px; border: 1px solid var(--border-color); background: var(--bg-primary); color: var(--text-main); font-size: 12px; width: 100%;">
+                </div>
+
+                <div style="display: flex; flex-direction: column; gap: 4px; flex: 1; min-width: 120px;">
+                    <label for="mesFimJustificativa" style="font-size: 11px; color: var(--text-muted); font-weight: bold;">Mês Final:</label>
+                    <input type="month" id="mesFimJustificativa" value="2026-12" style="padding: 6px 8px; border-radius: 6px; border: 1px solid var(--border-color); background: var(--bg-primary); color: var(--text-main); font-size: 12px; width: 100%;">
+                </div>
+
+                <button onclick="carregarStatusJustificativas()" style="padding: 8px 12px; background: var(--accent-blue); color: white; border: none; border-radius: 6px; font-weight: bold; font-size: 12px; cursor: pointer; margin-top: 15px; align-self: flex-end;">
+                    🔍 Filtrar
+                </button>
+            </div>
+
             <div id="listaJustificativasAluno" style="font-size: 13px;">Carregando histórico...</div>
         </div>
         <p> </p>
@@ -1526,6 +1544,17 @@
 
         async function carregarStatusJustificativas() {
             const container = document.getElementById('listaJustificativasAluno');
+            if (!container) return;
+
+            // Obter datas dos campos de filtro
+            const inputInicio = document.getElementById('mesInicioJustificativa')?.value || '2026-07';
+            const inputFim = document.getElementById('mesFimJustificativa')?.value || '2026-12';
+
+            const dataInicio = `${inputInicio}-01`;
+            const [anoFim, mesFim] = inputFim.split('-').map(Number);
+            const ultimoDia = new Date(anoFim, mesFim, 0).getDate();
+            const dataFim = `${inputFim}-${String(ultimoDia).padStart(2, '0')}`;
+
             try {
                 const response = await fetch(`${URL_API_SERVIDOR}/api/justificativa/aluno/${usuarioAtivo}`);
                 const dados = await response.json();
@@ -1535,7 +1564,18 @@
                     return;
                 }
 
-                container.innerHTML = dados.map(item => {
+                // Filtrar os itens por intervalo de datas selecionado
+                const dadosFiltrados = dados.filter(item => {
+                    if (!item.data_falta) return false;
+                    return item.data_falta >= dataInicio && item.data_falta <= dataFim;
+                });
+
+                if (dadosFiltrados.length === 0) {
+                    container.innerHTML = "<p style='color: var(--text-muted);'>Nenhuma justificativa encontrada para o período selecionado.</p>";
+                    return;
+                }
+
+                container.innerHTML = dadosFiltrados.map(item => {
                     let corBadge = '#f59e0b'; // Pendente
                     if (item.status === 'aprovado') corBadge = '#10b981';
                     if (item.status === 'reprovado') corBadge = '#ef4444';
