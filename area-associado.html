@@ -551,7 +551,25 @@
         </div>
 
         <div class="grafico-container" style="position: relative; width: 100%; max-width: 420px; margin: 25px auto 0 auto;">
-            <h3 style="justify-content: center; margin-bottom: 15px;">📊 Frequência de Aulas (A partir de Julho 2026)</h3>
+            <h3 style="justify-content: center; margin-bottom: 15px;">📊 Frequência de Aulas</h3>
+
+            <!-- FILTRO DE CALENDÁRIO / MÊS DA FREQUÊNCIA -->
+            <div id="filtroFrequencia" style="display: flex; gap: 8px; align-items: center; justify-content: center; margin-bottom: 15px; background: rgba(15, 23, 42, 0.6); padding: 12px; border-radius: var(--radius-md); border: 1px solid var(--border-color); flex-wrap: wrap;">
+                <div style="display: flex; flex-direction: column; gap: 4px; flex: 1; min-width: 120px;">
+                    <label for="mesInicioFrequencia" style="font-size: 11px; color: var(--text-muted); font-weight: bold;">Mês Inicial:</label>
+                    <input type="month" id="mesInicioFrequencia" value="2026-07" style="padding: 6px 8px; border-radius: 6px; border: 1px solid var(--border-color); background: var(--bg-primary); color: var(--text-main); font-size: 12px; width: 100%;">
+                </div>
+
+                <div style="display: flex; flex-direction: column; gap: 4px; flex: 1; min-width: 120px;">
+                    <label for="mesFimFrequencia" style="font-size: 11px; color: var(--text-muted); font-weight: bold;">Mês Final:</label>
+                    <input type="month" id="mesFimFrequencia" value="2026-12" style="padding: 6px 8px; border-radius: 6px; border: 1px solid var(--border-color); background: var(--bg-primary); color: var(--text-main); font-size: 12px; width: 100%;">
+                </div>
+
+                <button onclick="carregarGraficoFrequencia()" style="padding: 8px 12px; background: var(--accent-blue); color: white; border: none; border-radius: 6px; font-weight: bold; font-size: 12px; cursor: pointer; margin-top: 15px; align-self: flex-end;">
+                    🔍 Filtrar
+                </button>
+            </div>
+
             <canvas id="graficoFrequencia"></canvas>
             
             <!-- Resumo de Presenças, Faltas e Justificativas Aprovadas -->
@@ -966,9 +984,6 @@
                     <span style="font-size: 10px; background: rgba(148, 163, 184, 0.2); color: #94a3b8; padding: 2px 6px; border-radius: 4px; font-weight: bold;">CONCLUÍDO</span>
                 </div>
                 <span style="font-size: 12px; color: var(--text-muted); text-decoration: line-through;">📍 Academia Bee Strong - SP</span>
-                 <p></p>
-                <span style="font-size: 12px; color: var(--text-muted); text-decoration: line-through;">🥋 Participantes: Sensei Luiz, Adriano Miguel, Kiara Dominique, Luiz Guilherme, 
-                Edson Fernandes, Ederson Freitas, Watson Moura, Cleber Oliveira, Sarah Vargas e Tamires Noa</span>
             </div>
         </div>
         
@@ -1539,7 +1554,7 @@
             }
         }
 
-        // 5. CARREGAMENTO E EXIBIÇÃO DO GRÁFICO DE FREQUÊNCIA (COM LÓGICA DE DEDUÇÃO DE FALTAS)
+        // 5. CARREGAMENTO E EXIBIÇÃO DO GRÁFICO DE FREQUÊNCIA COM FILTRO DE DATAS
         let instanciaGrafico = null;
 
         async function carregarGraficoFrequencia() {
@@ -1554,9 +1569,16 @@
                 return;
             }
 
+            // Obter datas dos campos de filtro (padrão 2026-07 a 2026-12)
+            const inputInicio = document.getElementById('mesInicioFrequencia')?.value || '2026-07';
+            const inputFim = document.getElementById('mesFimFrequencia')?.value || '2026-12';
+
+            const dataInicio = `${inputInicio}-01`;
+            const dataFim = `${inputFim}-31`;
+
             try {
-                // Busca dados de frequência
-                const resFreq = await fetch(`${URL_API_SERVIDOR}/api/frequencia/${usuarioAtivo}`);
+                // Busca dados de frequência enviando o período como parâmetro
+                const resFreq = await fetch(`${URL_API_SERVIDOR}/api/frequencia/${usuarioAtivo}?inicio=${dataInicio}&fim=${dataFim}`);
                 if (!resFreq.ok) throw new Error("Falha ao buscar frequência do servidor");
                 const dadosFreq = await resFreq.json();
 
@@ -1568,7 +1590,11 @@
                         const resJust = await fetch(`${URL_API_SERVIDOR}/api/justificativa/aluno/${usuarioAtivo}`);
                         if (resJust.ok) {
                             const listaJust = await resJust.json();
-                            justificativasAprovadas = listaJust.filter(item => item.status === 'aprovado').length;
+                            justificativasAprovadas = listaJust.filter(item => {
+                                const ehAprovado = item.status === 'aprovado';
+                                const dentroDoPeriodo = item.data_falta >= dataInicio && item.data_falta <= dataFim;
+                                return ehAprovado && dentroDoPeriodo;
+                            }).length;
                         }
                     } catch (e) {
                         console.warn("Não foi possível buscar justificativas aprovadas separadamente:", e);
@@ -1582,7 +1608,7 @@
                 const justificativasEfetivas = Math.min(justificativasAprovadas, faltasBrutas);
                 const faltasEfetivas = faltasBrutas - justificativasEfetivas;
 
-                // Total real de aulas lecionadas
+                // Total real de aulas lecionadas no período
                 const total = presencas + faltasEfetivas + justificativasEfetivas;
 
                 // Atualiza elementos DOM do resumo abaixo do gráfico com os valores ajustados
