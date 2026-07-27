@@ -1,20 +1,24 @@
-// sw.js
-const CACHE_NAME = 'associado-cache-v2';
+// Escuta o evento de Notificação vindo do Render / Google Push Service
+self.addEventListener('push', event => {
+  const data = event.data ? event.data.json() : {};
 
-// Força o PWA a se ativar imediatamente sem esperar o usuário fechar a aba
-self.addEventListener('install', (event) => {
-    self.skipWaiting();
+  const title = data.title || 'Notificação do App';
+  const options = {
+    body: data.body || 'Você tem uma nova mensagem.',
+    icon: 'atarashii-192.png', // Ícone do seu app
+    badge: 'atarashii-192.png',
+    vibrate: [100, 50, 100]    // Faz o celular vibrar
+  };
+
+  event.waitUntil(
+    self.registration.showNotification(title, options)
+  );
 });
 
-self.addEventListener('activate', (event) => {
-    event.waitUntil(clients.claim());
-});
-
-// Responde às requisições da página (obrigatório para validar o PWA no celular)
-self.addEventListener('fetch', (event) => {
-    event.respondWith(
-        fetch(event.request).catch(() => {
-            return caches.match(event.request);
-        })
-    );
+// Ação ao clicar no pop-up da notificação no celular
+self.addEventListener('notificationclick', event => {
+  event.notification.close();
+  event.waitUntil(
+    clients.openWindow('/') // Abre a raiz do seu site
+  );
 });
