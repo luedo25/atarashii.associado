@@ -1,3 +1,93 @@
+
+Gemini
+Nova conversa
+Pesquisar conversas
+Imagens
+Biblioteca
+Novo notebook
+Tabela HTML CSS Carência Kyu
+Requisitos para Treinamento de Segurança Endpoint
+Symantec EDR e Navegador Opera
+Configurar PAM para Monitorar MS SQL
+Criação de GIFs de Golpes de Karatê
+Adicionar Novos Usuários ao Código
+Abrir Calculadora no PowerShell
+Criação de Regulamento de Karate em PDF
+Ordem das Hélices DJI Neo
+Drone DJI Mini Não Decola: Causas e Soluções
+Letra do Hino Nacional de Portugal
+Corrigindo Assunto e Destinatário de Email
+Calculadora de Notas de Karatê-Do
+Atualização de Script para Salvar Notas Técnicas
+Atualização de Prompt HTML para Data.
+Atualização de Formulário de Avaliação de Karatê
+Atualização de Formulário de Avaliação Karatê
+HTML Responsivo para Avaliação de Karatê
+Formulário de Avaliação Técnica Karatê HTML
+Erro de Acesso ao Azure Storage
+Integração Symantec VIP e SEPM
+Actualizaciones del Innovation Center
+Symantec DLP Cloud e ZTNA Integração
+Integrando Symantec CloudSOC com Azure
+Exportar Sites Office 365 para CloudSOC
+Symantec PGP: Cliente e Servidor
+Criar uma postagem objetiva sobre um Workshop técnico que eu realizei na TD SYNNEX sobre a solução de ZTNA da Symantec. Neste Workshop teve Hand-ons, apresentação técnica para os parceiros. Sou engenheiro de pré vendas na TD SYNNEX
+PAM-CMN-0236: Assign Password Authority Group
+Integração LDAP Symantec Email Security.Cloud
+Permissões RDP Browser Symantec ZTNA
+Gmail SMTP Gratuito: Configuração e Limites
+Erro Automic U00050027: Falha de Autenticação SMTP
+SSH Gateway no ZTNA Symantec
+Aviso Prévio Indenizado e Multa CLT
+Análise de Edital Symantec Endpoint Security
+Melhores Marcas de Máquinas de Cortar Cabelo
+Habilitar SSH no Kali para WinSCP
+Habilitar Acesso Remoto Múltiplo Windows Server
+Edição de Foto com Roupa do Brasil
+Recuperar Acesso AD com CMD
+ZTNA Symantec Device Compliance sem IdP
+Encontrar Domain ID no Symantec SES
+Ativando Webhooks em Soluções OPSWAT
+Acesso Portal Quarentena Symantec SMG
+Bloqueio WhatsApp Desktop Microsoft Store
+Feedback e Plano de Ação
+Configurando Segment Application no ZTNA
+Configurar Host Integrity com Arquivo TXT
+PingID: Autenticação Windows Simplificada
+PingID para Login no Windows
+Verificar Último Logon no Windows 11
+Symantec VIP com Fortinet IPsec
+Formulário de Solicitação de Feature Request
+Gráfico de Evolução de Parceiros
+Conversa com o Gemini
+Está é uma página Web APP publicadada no Github.
+
+
+
+Preciso criar:
+
+
+
+- Filtro por mês na aba "Painel" no item "Status dos Pedidos de Justificativa".
+
+- Por padrão deixar o filtro do mês de julho a dezembro de 2026.
+
+
+
+Segue o código completo em anexo para realizar a correção.
+
+Me traga o código completo.
+
+Aqui está o código HTML/JS completo com a implementação do filtro por mês no item "Status dos Pedidos de Justificativa" na aba "Painel", configurado por padrão com o intervalo de julho a dezembro de 2026.
+
+O que foi alterado/adicionado:
+Interface do Filtro: Adicionado o bloco HTML contendo os inputs do tipo month (mesInicioJustificativa e mesFimJustificativa) logo acima do histórico de justificativas, com os valores padrão preenchidos como 2026-07 e 2026-12.
+
+Filtragem Lógica na API/Front-End: A função carregarStatusJustificativas() foi atualizada para ler o intervalo selecionado e filtrar dinamicamente a lista de justificativas exibidas, atualizando o histórico em tempo real.
+
+Persistência de Atualização: Ao enviar uma nova justificativa com sucesso, o histórico recalcula aplicando o filtro ativo.
+
+HTML
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
@@ -1385,6 +1475,2144 @@
                 `Nome completo: ${nomeAluno}\n` +
                 `Usuário do sistema: ${usuarioAtivo}\n` +
                 `Data/Hora do Aceite: ${dataHoraAtual}\n\n` +
+                `Este e-mail serve como registro e comprovante digital do meu aceite obrigatório.`
+            );
+
+            const mailtoUrl = `mailto:${emailDestinatarioPrincipal}?subject=${assunto}&body=${corpoEmail}`;
+            
+            localStorage.setItem(`termo_aceito_${usuarioAtivo}`, 'true');
+            localStorage.setItem(`data_aceite_${usuarioAtivo}`, dataHoraAtual);
+            verificarStatusAceite();
+
+            fetch(`${URL_API_SERVIDOR}/api/aceitar-termo`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ usuario: usuarioAtivo })
+            })
+            .then(response => response.json())
+            .then(() => {
+                verificarStatusAceite();
+                window.location.href = mailtoUrl;
+            })
+            .catch(err => {
+                console.warn("Falha de rede ao gravar termo. Mantendo cópia local offline.", err);
+                window.location.href = mailtoUrl;
+            });
+        }
+
+        function mudarAba(idDaAba, botaoClicado) {
+            const secoes = document.querySelectorAll('.tab-content');
+            secoes.forEach(secao => secao.classList.remove('active'));
+
+            const botoes = document.querySelectorAll('.nav-btn');
+            botoes.forEach(btn => btn.classList.remove('active'));
+
+            const elementoAba = document.getElementById(idDaAba);
+            if (elementoAba) elementoAba.classList.add('active');
+            if (botaoClicado) botaoClicado.classList.add('active');
+
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+
+            if (idDaAba === 'comunicados') verificarStatusAceite();
+            if (idDaAba === 'saldo') buscarSaldoMercadoPago();
+        }
+
+        function buscarSaldoMercadoPago() {
+            const elementoSaldo = document.getElementById('textoSaldo');
+            if (!elementoSaldo) return;
+            
+            elementoSaldo.textContent = "Carregando...";
+
+            fetch(`${URL_API_SERVIDOR}/api/saldo`)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.saldo !== undefined) {
+                        elementoSaldo.textContent = data.saldo.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+                    } else {
+                        elementoSaldo.textContent = "Erro ao carregar";
+                    }
+                })
+                .catch(() => {
+                    elementoSaldo.textContent = "Erro de conexão";
+                });
+        }
+
+        document.getElementById('logoutBtn').addEventListener('click', function() {
+            localStorage.removeItem('associadoAutenticado');
+            localStorage.removeItem('nomeAlunoLogado');
+            localStorage.removeItem('usuarioAtivo');
+            window.location.replace('index.html');
+        });
+
+        function alternarCampoTextoOutro() {
+            const checkOutro = document.getElementById('checkOutro');
+            const containerTexto = document.getElementById('containerTextoOutro');
+            const campoTexto = document.getElementById('textoJustificativaOutro');
+
+            if (checkOutro && checkOutro.checked) {
+                if (containerTexto) containerTexto.style.display = 'block';
+                if (campoTexto) campoTexto.focus();
+            } else {
+                if (containerTexto) containerTexto.style.display = 'none';
+                if (campoTexto) campoTexto.value = '';
+            }
+        }
+
+        document.getElementById('dataFaltaAluno').addEventListener('change', function() {
+            if (!this.value) return;
+            
+            const partes = this.value.split('-');
+            const dataSelecionada = new Date(Date.UTC(partes[0], partes[1] - 1, partes[2]));
+            const diaSemana = dataSelecionada.getUTCDay();
+
+            if (diaSemana !== 2 && diaSemana !== 4 && diaSemana !== 6) {
+                alert("Erro: Aulas ocorrem apenas Terças, Quintas e Sábados. Por favor, selecione uma data válida.");
+                this.value = '';
+            }
+        });
+
+        document.getElementById('formJustificativa').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            const dataFalta = document.getElementById('dataFaltaAluno').value;
+            const marcados = Array.from(document.querySelectorAll('input[name="motivoFalta"]:checked')).map(cb => cb.value);
+            
+            const checkOutro = document.getElementById('checkOutro');
+            const ehOutroMarcado = checkOutro ? checkOutro.checked : false;
+            const campoTextoOutro = document.getElementById('textoJustificativaOutro');
+            const textoOutro = campoTextoOutro ? campoTextoOutro.value.trim() : '';
+
+            if (!dataFalta) return alert("Por favor, selecione a data.");
+
+            const dataFaltaObj = new Date(`${dataFalta}T00:00:00`);
+            const agora = new Date();
+            const diferencaEmHoras = Math.abs(agora - dataFaltaObj) / (1000 * 60 * 60);
+
+            if (diferencaEmHoras > 48) {
+                return alert("Erro: O prazo para justificativa de falta é de até 48 horas antes ou 48 horas depois da data da aula.");
+            }
+
+            if (ehOutroMarcado && !textoOutro) {
+                return alert("Você marcou a opção 'Outro(s)'. Por favor, descreva o motivo no campo de texto.");
+            }
+
+            if (marcados.length === 0 && !ehOutroMarcado) {
+                return alert("Selecione ao menos um motivo para a falta.");
+            }
+
+            let listaMotivos = [...marcados];
+            if (ehOutroMarcado && textoOutro) {
+                listaMotivos.push(`Outro: ${textoOutro}`);
+            }
+
+            const motivoFinal = listaMotivos.join('; ');
+
+            try {
+                const response = await fetch(`${URL_API_SERVIDOR}/api/justificativa`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        usuario: usuarioAtivo,
+                        data_falta: dataFalta,
+                        motivo: motivoFinal
+                    })
+                });
+
+                const result = await response.json();
+                if (response.ok) {
+                    alert(result.mensagem || "Justificativa enviada para aprovação com sucesso!");
+                    document.getElementById('formJustificativa').reset();
+                    alternarCampoTextoOutro();
+                    carregarStatusJustificativas();
+                    carregarGraficoFrequencia(); // Atualiza gráfico e resumo após envio
+                } else {
+                    alert("Erro: " + (result.erro || "Falha ao registrar justificativa."));
+                }
+            } catch (err) {
+                alert("Erro ao enviar solicitação.");
+            }
+        });
+
+        async function carregarStatusJustificativas() {
+            const container = document.getElementById('listaJustificativasAluno');
+            if (!container) return;
+
+            // Obter datas dos campos de filtro
+            const inputInicio = document.getElementById('mesInicioJustificativa')?.value || '2026-07';
+            const inputFim = document.getElementById('mesFimJustificativa')?.value || '2026-12';
+
+            const dataInicio = `${inputInicio}-01`;
+            const [anoFim, mesFim] = inputFim.split('-').map(Number);
+            const ultimoDia = new Date(anoFim, mesFim, 0).getDate();
+            const dataFim = `${inputFim}-${String(ultimoDia).padStart(2, '0')}`;
+
+            try {
+                const response = await fetch(`${URL_API_SERVIDOR}/api/justificativa/aluno/${usuarioAtivo}`);
+                const dados = await response.json();
+
+                if (!dados || dados.length === 0) {
+                    container.innerHTML = "<p style='color: var(--text-muted);'>Nenhuma justificativa enviada até o momento.</p>";
+                    return;
+                }
+
+                // Filtrar os itens por intervalo de datas selecionado
+                const dadosFiltrados = dados.filter(item => {
+                    if (!item.data_falta) return false;
+                    return item.data_falta >= dataInicio && item.data_falta <= dataFim;
+                });
+
+                if (dadosFiltrados.length === 0) {
+                    container.innerHTML = "<p style='color: var(--text-muted);'>Nenhuma justificativa encontrada para o período selecionado.</p>";
+                    return;
+                }
+
+                container.innerHTML = dadosFiltrados.map(item => {
+                    let corBadge = '#f59e0b'; // Pendente
+                    if (item.status === 'aprovado') corBadge = '#10b981';
+                    if (item.status === 'reprovado') corBadge = '#ef4444';
+
+                    return `
+                        <div style="background: rgba(0,0,0,0.2); padding: 10px; border-radius: 6px; margin-bottom: 8px; border-left: 4px solid ${corBadge}; text-align: left;">
+                            <div><strong>Data da Falta:</strong> ${item.data_falta.split('-').reverse().join('/')}</div>
+                            <div><strong>Motivo:</strong> ${item.motivo}</div>
+                            <div><strong>Status:</strong> <span style="color: ${corBadge}; font-weight: bold; text-transform: uppercase;">${item.status}</span></div>
+                            <div style="font-size: 11px; color: var(--text-muted); margin-top: 4px;">Solicitado em: ${item.data_solicitacao}</div>
+                        </div>
+                    `;
+                }).join('');
+            } catch (err) {
+                container.innerHTML = "<p style='color: red;'>Erro ao carregar justificativas.</p>";
+            }
+        }
+
+        // ALIAS DE COMPATIBILIDADE PARA A FUNÇÃO carregarMinhasJustificativas
+        const carregarMinhasJustificativas = carregarStatusJustificativas;
+
+// 5. CARREGAMENTO E EXIBIÇÃO DO GRÁFICO DE FREQUÊNCIA COM FILTRO DE DATAS
+let instanciaGrafico = null;
+
+async function carregarGraficoFrequencia() {
+    if (!usuarioAtivo) {
+        console.warn("⚠️ Atenção: usuarioAtivo ainda não foi definido.");
+        return;
+    }
+
+    const canvasElement = document.getElementById('graficoFrequencia');
+    if (!canvasElement) {
+        console.warn("⚠️ Elemento 'graficoFrequencia' não foi encontrado na página.");
+        return;
+    }
+
+    // Obter datas dos campos de filtro
+    const inputInicio = document.getElementById('mesInicioFrequencia')?.value || '2026-07';
+    const inputFim = document.getElementById('mesFimFrequencia')?.value || '2026-12';
+
+    // Data inicial
+    const dataInicio = `${inputInicio}-01`;
+
+    // Calcula dinamicamente o último dia real do mês final selecionado
+    const [anoFim, mesFim] = inputFim.split('-').map(Number);
+    const ultimoDia = new Date(anoFim, mesFim, 0).getDate();
+    const dataFim = `${inputFim}-${String(ultimoDia).padStart(2, '0')}`;
+
+    try {
+        const resFreq = await fetch(`${URL_API_SERVIDOR}/api/frequencia/${usuarioAtivo}?dataInicio=${dataInicio}&dataFim=${dataFim}`);
+        if (!resFreq.ok) throw new Error("Falha ao buscar frequência do servidor");
+        const dadosFreq = await resFreq.json();
+
+        // Busca número de justificativas aprovadas
+        let justificativasAprovadas = Number(dadosFreq.justificativas_aprovadas) || 0;
+
+        if (dadosFreq.justificativas_aprovadas === undefined) {
+            try {
+                const resJust = await fetch(`${URL_API_SERVIDOR}/api/justificativa/aluno/${usuarioAtivo}`);
+                if (resJust.ok) {
+                    const listaJust = await resJust.json();
+                    justificativasAprovadas = listaJust.filter(item => {
+                        const ehAprovado = item.status === 'aprovado';
+                        const dentroDoPeriodo = item.data_falta >= dataInicio && item.data_falta <= dataFim;
+                        return ehAprovado && dentroDoPeriodo;
+                    }).length;
+                }
+            } catch (e) {
+                console.warn("Não foi possível buscar justificativas aprovadas separadamente:", e);
+            }
+        }
+
+        const presencas = Number(dadosFreq.presencas) || 0;
+        const faltasBrutas = Number(dadosFreq.faltas) || 0; // Faltas totais reais
+
+        // Garante que as justificativas não ultrapassem as faltas brutas
+        const justificativasEfetivas = Math.min(justificativasAprovadas, faltasBrutas);
+        
+        // Faltas descontadas para exibição da fatia do gráfico
+        const faltasDescontadas = faltasBrutas - justificativasEfetivas;
+
+        // Total geral de chamadas (Presenças + Faltas Descontadas + Justificativas)
+        const totalAulas = presencas + faltasDescontadas + justificativasEfetivas;
+
+        // Atualiza elementos do resumo abaixo do gráfico com os valores brutas e reais
+        const elemPresencas = document.getElementById('qtdPresencas');
+        const elemFaltas = document.getElementById('qtdFaltas');
+        const elemJustificativas = document.getElementById('qtdJustificativas');
+
+        if (elemPresencas) elemPresencas.textContent = presencas;
+        if (elemFaltas) elemFaltas.textContent = faltasBrutas; // Exibe o total real bruto de faltas
+        if (elemJustificativas) elemJustificativas.textContent = justificativasEfetivas;
+
+        const ctx = canvasElement.getContext('2d');
+
+        if (instanciaGrafico) {
+            instanciaGrafico.destroy();
+        }
+
+        const plugins = (typeof ChartDataLabels !== 'undefined') ? [ChartDataLabels] : [];
+
+        // Criação do Gráfico Pizza
+        instanciaGrafico = new Chart(ctx, {
+            type: 'pie',
+            data: {
+                labels: [
+                    `Presenças (${presencas})`, 
+                    `Faltas (${faltasBrutas})`, // Exibe a quantidade total de faltas na legenda
+                    `Justificativas Aprovadas (${justificativasEfetivas})`
+                ],
+                datasets: [{
+                    // O gráfico desenha as fatias considerando as faltas descontadas
+                    data: [presencas, faltasDescontadas, justificativasEfetivas],
+                    backgroundColor: ['#10b981', '#ef4444', '#f59e0b'],
+                    borderWidth: 1,
+                    borderColor: '#1e293b'
+                }]
+            },
+            plugins: plugins,
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: { 
+                        position: 'bottom', 
+                        labels: { 
+                            color: '#f8fafc',
+                            font: {
+                                size: 12,
+                                weight: 'bold'
+                            }
+                        } 
+                    },
+                    datalabels: {
+                        color: '#ffffff',
+                        font: {
+                            weight: 'bold',
+                            size: 13
+                        },
+                        formatter: (valor) => {
+                            if (totalAulas === 0 || valor === 0) return '';
+                            const porcentagem = Math.round((valor / totalAulas) * 100);
+                            return `${porcentagem}%`;
+                        }
+                    },
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                const label = context.label || '';
+                                const value = context.raw || 0;
+                                const porcentagem = totalAulas > 0 ? Math.round((value / totalAulas) * 100) : 0;
+                                return `${label}: ${value} (${porcentagem}%)`;
+                            }
+                        }
+                    }
+                }
+            }
+        });
+    } catch (err) {
+        console.error("❌ Erro ao carregar gráfico de frequência:", err);
+    }
+}
+
+        // Inicialização da página
+        document.addEventListener('DOMContentLoaded', () => {
+            try {
+                const primeiroBotao = document.querySelector('.nav-btn');
+                if (primeiroBotao) mudarAba('exame', primeiroBotao);
+
+                carregarNotasAluno();
+                carregarGraficoFrequencia();
+                carregarStatusJustificativas();
+
+                setTimeout(() => verificarStatusAceite(), 300);
+            } catch (error) {
+                console.error("Erro na inicializacao:", error);
+            }
+        });
+</script>
+</body>
+</html>
+Gostaria que transformasse esta tabela em formato HTML + CSS para eu inserir na aba "Exame" no item " Carência Mínima (Kyu)"
+
+Aqui está o código HTML e CSS para você copiar e colar na sua página ou sistema.
+
+O código foi estruturado de forma moderna, responsiva e elegante, recriando as cores exatas das faixas e mantendo a legibilidade.
+
+Código HTML + CSS (Pronto para Uso)
+HTML
+<style>
+  .tabela-carencia-container {
+    max-width: 600px;
+    margin: 20px auto;
+    font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    border-radius: 8px;
+    overflow: hidden;
+    background-color: #ffffff;
+  }
+
+  .tabela-carencia {
+    width: 100%;
+    border-collapse: collapse;
+    text-align: center;
+  }
+
+  .tabela-carencia th {
+    background-color: #1e293b;
+    color: #ffffff;
+    font-size: 16px;
+    font-weight: 600;
+    padding: 14px 12px;
+    letter-spacing: 0.5px;
+    border-bottom: 3px solid #0f172a;
+  }
+
+  .tabela-carencia td {
+    padding: 12px;
+    border-bottom: 1px solid #e2e8f0;
+    vertical-align: middle;
+    font-size: 15px;
+    color: #334155;
+  }
+
+  .tabela-carencia tr:last-child td {
+    border-bottom: none;
+  }
+
+  .tabela-carencia tr:nth-child(even) {
+    background-color: #f8fafc;
+  }
+
+  .tabela-carencia tr:hover {
+    background-color: #f1f5f9;
+  }
+
+  /* Estilização das Badge de Faixas */
+  .badge-faixa {
+    display: inline-block;
+    width: 130px;
+    padding: 6px 12px;
+    border-radius: 4px;
+    font-weight: bold;
+    font-size: 14px;
+    text-shadow: 0px 1px 1px rgba(0,0,0,0.2);
+    box-shadow: inset 0 0 0 1px rgba(0,0,0,0.15);
+  }
+
+  .faixa-branca {
+    background-color: #ffffff;
+    color: #1e293b;
+    border: 1px solid #cbd5e1;
+    text-shadow: none;
+  }
+
+  .faixa-amarela {
+    background-color: #facc15;
+    color: #000000;
+    text-shadow: none;
+  }
+
+  .faixa-vermelha {
+    background-color: #dc2626;
+    color: #ffffff;
+  }
+
+  .faixa-laranja {
+    background-color: #f97316;
+    color: #ffffff;
+  }
+
+  .faixa-verde {
+    background-color: #16a34a;
+    color: #ffffff;
+  }
+
+  .faixa-roxa {
+    background-color: #9333ea;
+    color: #ffffff;
+  }
+
+  .faixa-marrom {
+    background-color: #78350f;
+    color: #ffffff;
+  }
+
+  .faixa-preta {
+    background-color: #0f172a;
+    color: #ffffff;
+  }
+
+  .kyu-col {
+    font-weight: 600;
+    color: #0f172a;
+  }
+
+  .tempo-col {
+    font-weight: 500;
+  }
+</style>
+
+<div class="tabela-carencia-container">
+  <table class="tabela-carencia">
+    <thead>
+      <tr>
+        <th>Faixa</th>
+        <th>Kyu</th>
+        <th>Carência Mínima de Treinamento</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="badge-faixa faixa-branca">Branca</span></td>
+        <td class="kyu-col">7º</td>
+        <td class="tempo-col">3 meses</td>
+      </tr>
+      <tr>
+        <td><span class="badge-faixa faixa-amarela">Amarela</span></td>
+        <td class="kyu-col">6º</td>
+        <td class="tempo-col">6 meses</td>
+      </tr>
+      <tr>
+        <td><span class="badge-faixa faixa-vermelha">Vermelha</span></td>
+        <td class="kyu-col">5º</td>
+        <td class="tempo-col">6 meses</td>
+      </tr>
+      <tr>
+        <td><span class="badge-faixa faixa-laranja">Laranja</span></td>
+        <td class="kyu-col">4º</td>
+        <td class="tempo-col">6 meses</td>
+      </tr>
+      <tr>
+        <td><span class="badge-faixa faixa-verde">Verde</span></td>
+        <td class="kyu-col">3º</td>
+        <td class="tempo-col">1 ano</td>
+      </tr>
+      <tr>
+        <td><span class="badge-faixa faixa-roxa">Roxa</span></td>
+        <td class="kyu-col">2º</td>
+        <td class="tempo-col">1 ano e 6 meses</td>
+      </tr>
+      <tr>
+        <td><span class="badge-faixa faixa-marrom">Marrom</span></td>
+        <td class="kyu-col">1º</td>
+        <td class="tempo-col">2 anos</td>
+      </tr>
+      <tr>
+        <td><span class="badge-faixa faixa-preta">Preta</span></td>
+        <td class="kyu-col">-</td>
+        <td class="tempo-col">-</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+Destaques desta versão:
+Visual Profissional: Em vez de linhas simples tipo Word, utiliza um design moderno estilo card com cantos levemente arredondados e cores contrastantes.
+
+Badges Modulares para as Faixas: Cada nome de faixa possui a cor oficial correspondente em fundo destacado com texto legível.
+
+Efeito Hover & Listras Alternadas: Melhora a leitura ao passar o mouse ou visualizar em telas pequenas.
+
+Facilidade de Adaptação: Se o seu sistema aceitar CSS separado, basta mover todo o conteúdo da tag <style> para o seu arquivo .css principal.
+
+Gostaria que transformasse esta tabela em formato HTML + CSS para eu inserir na aba "Exame" no item " Carência Mínima (Kyu)" na página "area-associado.html" que está em anexo.
+
+Me traga o código completo atualizado.
+
+O código completo e atualizado do arquivo area-associado.html foi gerado com sucesso.
+Ícone do app HTML
+area-associado
+ HTML 
+Aberto
+
+Resumo das alterações aplicadas no item "Carência Mínima (Kyu)":
+Substituição da Imagem por Tabela HTML + CSS:
+
+A tag <img> que continha a tabela foi removida e substituída por uma tabela HTML nativa e fully responsive (.tabela-carencia-custom).
+
+Foram adicionadas badges coloridas estilizadas para cada cor de faixa (Branca, Amarela, Vermelha, Laranja, Verde, Roxa, Marrom e Preta).
+
+Estilização CSS Integrada:
+
+Adicionadas as classes CSS .container-tabela-carencia, .tabela-carencia-wrapper, .tabela-carencia-custom e .badge-faixa-item mantendo a identidade visual do painel (--bg-card, --border-color, --text-main).
+
+Suporte completo para rolagem horizontal em telas de dispositivos móveis.
+
+Código HTML + CSS Inserido na aba "Exame":
+HTML
+<!-- TABELA DE CARÊNCIA MÍNIMA DENTRO DA ABA EXAME -->
+<div class="container-tabela-carencia">
+    <h3 style="margin-top: 20px;">⏳ Carência Mínima (Kyu)</h3>
+    <div class="tabela-carencia-wrapper">
+        <table class="tabela-carencia-custom">
+            <thead>
+                <tr>
+                    <th>Faixa</th>
+                    <th>Kyu</th>
+                    <th>Carência Mínima de Treinamento</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><span class="badge-faixa-item branca">Branca</span></td>
+                    <td>7º</td>
+                    <td>3 meses</td>
+                </tr>
+                <tr>
+                    <td><span class="badge-faixa-item amarela">Amarela</span></td>
+                    <td>6º</td>
+                    <td>6 meses</td>
+                </tr>
+                <tr>
+                    <td><span class="badge-faixa-item vermelha">Vermelha</span></td>
+                    <td>5º</td>
+                    <td>6 meses</td>
+                </tr>
+                <tr>
+                    <td><span class="badge-faixa-item laranja">Laranja</span></td>
+                    <td>4º</td>
+                    <td>6 meses</td>
+                </tr>
+                <tr>
+                    <td><span class="badge-faixa-item verde">Verde</span></td>
+                    <td>3º</td>
+                    <td>1 ano</td>
+                </tr>
+                <tr>
+                    <td><span class="badge-faixa-item roxa">Roxa</span></td>
+                    <td>2º</td>
+                    <td>1 ano e 6 meses</td>
+                </tr>
+                <tr>
+                    <td><span class="badge-faixa-item marrom">Marrom</span></td>
+                    <td>1º</td>
+                    <td>2 anos</td>
+                </tr>
+                <tr>
+                    <td><span class="badge-faixa-item preta">Preta</span></td>
+                    <td>-</td>
+                    <td>-</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+
+
+O Gemini é uma IA e pode cometer erros.
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <script src="usuarios.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.2.0"></script>
+    <link rel="manifest" href="./manifest.json">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Painel Aluno">
+    <link rel="apple-touch-icon" href="icone-192.png">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Painel do Associado</title>
+    <style>
+        :root {
+            --bg-primary: #0f172a;
+            --bg-card: #1e293b;
+            --bg-card-hover: #334155;
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --accent-green: #10b981;
+            --accent-blue: #3b82f6;
+            --accent-red: #ef4444;
+            --accent-gold: #f59e0b;
+            --border-color: #334155;
+            --radius-lg: 16px;
+            --radius-md: 12px;
+            --radius-sm: 8px;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            background-color: var(--bg-primary);
+            color: var(--text-main);
+            padding-bottom: 110px;
+            min-height: 100vh;
+        }
+
+        /* HEADER */
+        header {
+            background: rgba(30, 41, 59, 0.85);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            border-bottom: 1px solid var(--border-color);
+            padding: 12px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        header h1 {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--text-main);
+            letter-spacing: 0.3px;
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .header-left img {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid var(--accent-blue);
+        }
+
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+
+        .icon-btn {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-sm);
+            width: 38px;
+            height: 38px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 18px;
+            transition: all 0.2s;
+            position: relative;
+        }
+
+        .icon-btn:active {
+            transform: scale(0.92);
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .btn-logout {
+            background: rgba(239, 68, 68, 0.15);
+            color: #fca5a5;
+            border: 1px solid rgba(239, 68, 68, 0.3);
+            padding: 8px 14px;
+            border-radius: var(--radius-sm);
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 13px;
+            transition: all 0.2s;
+        }
+
+        .btn-logout:active {
+            transform: scale(0.95);
+            background: rgba(239, 68, 68, 0.3);
+        }
+
+        .badge-count {
+            position: absolute;
+            top: -4px;
+            right: -4px;
+            background: var(--accent-red);
+            color: white;
+            font-size: 10px;
+            font-weight: bold;
+            border-radius: 50%;
+            width: 18px;
+            height: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 2px solid var(--bg-card);
+        }
+
+        /* CONTAINER PRINCIPAL */
+        .container {
+            max-width: 900px;
+            margin: 20px auto 0;
+            padding: 0 16px;
+        }
+
+        /* CARD BOAS-VINDAS */
+        .welcome-box {
+            background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+            border: 1px solid var(--border-color);
+            padding: 22px;
+            border-radius: var(--radius-lg);
+            margin-bottom: 20px;
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .welcome-box::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 150px;
+            height: 150px;
+            background: radial-gradient(circle, rgba(59,130,246,0.15) 0%, rgba(0,0,0,0) 70%);
+            pointer-events: none;
+        }
+
+        .welcome-box h2 {
+            font-size: 22px;
+            font-weight: 700;
+            margin-bottom: 6px;
+            background: linear-gradient(to right, #fff, var(--text-muted));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .welcome-box p {
+            font-size: 14px;
+            color: var(--text-muted);
+        }
+
+        /* CONTEÚDO DAS ABAS */
+        .tab-content {
+            display: none;
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            padding: 24px;
+            border-radius: var(--radius-lg);
+            margin-bottom: 20px;
+            animation: fadeIn 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+            box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .tab-content h3 {
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--text-main);
+            margin-bottom: 18px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* TABELAS RESPONSIVAS */
+        .table-container {
+            width: 100%;
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-md);
+            background: rgba(15, 23, 42, 0.6);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 600px;
+            text-align: left;
+            font-size: 13px;
+        }
+
+        th, td {
+            padding: 14px 12px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        th {
+            background: rgba(255, 255, 255, 0.03);
+            color: var(--text-muted);
+            font-weight: 600;
+            text-transform: uppercase;
+            font-size: 11px;
+            letter-spacing: 0.5px;
+        }
+
+        td {
+            color: var(--text-main);
+        }
+
+        tbody tr:last-child td {
+            border-bottom: none;
+        }
+
+        /* TABELA CARÊNCIA */
+        .container-tabela-carencia {
+            width: 100%;
+            margin-top: 25px;
+            text-align: center;
+        }
+
+        .tabela-carencia-wrapper {
+            width: 100%;
+            overflow-x: auto;
+            border-radius: var(--radius-md);
+            border: 1px solid var(--border-color);
+            background: rgba(15, 23, 42, 0.6);
+            margin-top: 12px;
+        }
+
+        .tabela-carencia-custom {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: center;
+            min-width: 320px;
+        }
+
+        .tabela-carencia-custom th {
+            background: rgba(255, 255, 255, 0.05);
+            color: var(--text-main);
+            font-size: 13px;
+            font-weight: 700;
+            padding: 12px;
+            border-bottom: 1px solid var(--border-color);
+            text-transform: none;
+            letter-spacing: normal;
+        }
+
+        .tabela-carencia-custom td {
+            padding: 10px 12px;
+            border-bottom: 1px solid var(--border-color);
+            font-size: 14px;
+        }
+
+        .tabela-carencia-custom tr:last-child td {
+            border-bottom: none;
+        }
+
+        .badge-faixa-item {
+            display: inline-block;
+            width: 110px;
+            padding: 5px 10px;
+            border-radius: 6px;
+            font-weight: bold;
+            font-size: 13px;
+            text-shadow: 0px 1px 1px rgba(0,0,0,0.3);
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        }
+
+        .badge-faixa-item.branca { background-color: #ffffff; color: #0f172a; text-shadow: none; border: 1px solid #cbd5e1; }
+        .badge-faixa-item.amarela { background-color: #facc15; color: #0f172a; text-shadow: none; }
+        .badge-faixa-item.vermelha { background-color: #ef4444; color: #ffffff; }
+        .badge-faixa-item.laranja { background-color: #f97316; color: #ffffff; }
+        .badge-faixa-item.verde { background-color: #10b981; color: #ffffff; }
+        .badge-faixa-item.roxa { background-color: #a855f7; color: #ffffff; }
+        .badge-faixa-item.marrom { background-color: #78350f; color: #ffffff; }
+        .badge-faixa-item.preta { background-color: #000000; color: #ffffff; border: 1px solid #475569; }
+
+        /* ACCORDIONS / DETAILS */
+        .modulo-faixa {
+            background: rgba(15, 23, 42, 0.4);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-md);
+            margin-bottom: 12px;
+            overflow: hidden;
+            transition: all 0.2s ease;
+        }
+
+        .modulo-faixa[open] {
+            border-color: var(--accent-blue);
+            background: rgba(15, 23, 42, 0.8);
+        }
+
+        .botao-expandir {
+            padding: 16px;
+            display: flex;
+            align-items: center;
+            font-weight: 600;
+            font-size: 15px;
+            color: var(--text-main);
+            cursor: pointer;
+            list-style: none;
+            user-select: none;
+        }
+
+        .botao-expandir::-webkit-details-marker {
+            display: none;
+        }
+
+        /* CORES DAS FAIXAS */
+        .faixa-cor {
+            width: 14px;
+            height: 14px;
+            border-radius: 4px;
+            display: inline-block;
+            margin-right: 6px;
+        }
+        .faixa-cor.branca { background-color: #ffffff; }
+        .faixa-cor.amarela { background-color: #facc15; }
+        .faixa-cor.vermelha { background-color: #ef4444; }
+        .faixa-cor.laranja { background-color: #f97316; }
+        .faixa-cor.verde { background-color: #10b981; }
+        .faixa-cor.roxa { background-color: #a855f7; }
+        .faixa-cor.marrom { background-color: #854d0e; }
+        .faixa-cor.preta { background-color: #000000; border: 1px solid #475569; margin-right: 10px; }
+
+        .seta {
+            margin-left: auto;
+            font-size: 12px;
+            color: var(--text-muted);
+            transition: transform 0.2s;
+        }
+
+        .modulo-faixa[open] .seta {
+            transform: rotate(180deg);
+        }
+
+        .bloco-extra {
+            padding: 16px;
+            border-top: 1px solid var(--border-color);
+            font-size: 13px;
+            color: var(--text-muted);
+            line-height: 1.6;
+            background: rgba(0, 0, 0, 0.2);
+        }
+
+        .bloco-extra strong {
+            color: var(--text-main);
+            display: block;
+            margin-top: 10px;
+            margin-bottom: 4px;
+        }
+
+        .texto-vermelho {
+            color: #f87171;
+            font-weight: 600;
+        }
+
+        /* CARDS E LISTAS INTERATIVAS */
+        .card-item {
+            display: flex;
+            align-items: center;
+            background: rgba(15, 23, 42, 0.5);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-md);
+            padding: 14px 16px;
+            margin-bottom: 12px;
+            gap: 14px;
+            text-decoration: none;
+            color: inherit;
+            transition: all 0.2s;
+        }
+
+        .card-item:hover, .card-item:active {
+            background: var(--bg-card-hover);
+            border-color: var(--accent-blue);
+            transform: translateY(-1px);
+        }
+
+        .card-date-badge {
+            text-align: center;
+            padding-right: 14px;
+            border-right: 1px solid var(--border-color);
+            min-width: 65px;
+        }
+
+        .card-date-badge .day {
+            display: block;
+            font-size: 22px;
+            font-weight: 800;
+            color: var(--accent-blue);
+            line-height: 1;
+        }
+
+        .card-date-badge .month {
+            display: block;
+            font-size: 11px;
+            font-weight: 700;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            margin-top: 4px;
+        }
+
+        .btn-action {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            width: 100%;
+            padding: 14px;
+            background: var(--accent-blue);
+            color: white;
+            border: none;
+            border-radius: var(--radius-md);
+            font-weight: 600;
+            font-size: 14px;
+            cursor: pointer;
+            text-decoration: none;
+            transition: all 0.2s;
+            box-shadow: 0 4px 12px rgba(59, 130, 246, 0.25);
+        }
+
+        .btn-action:active {
+            transform: scale(0.98);
+            opacity: 0.9;
+        }
+
+        .btn-whatsapp {
+            background: #22c55e;
+            box-shadow: 0 4px 12px rgba(34, 197, 94, 0.25);
+        }
+
+        /* BARRA INFERIOR DE NAVEGAÇÃO */
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background: rgba(15, 23, 42, 0.92);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            padding: 10px 6px calc(10px + env(safe-area-inset-bottom));
+            border-top: 1px solid var(--border-color);
+            z-index: 9999;
+        }
+
+        .nav-btn {
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            font-size: 10px;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+            flex: 1;
+            padding: 4px 0;
+            transition: all 0.2s;
+        }
+
+        .nav-btn .icon {
+            font-size: 20px;
+            transition: transform 0.2s;
+        }
+
+        .nav-btn .icon img.logo-icon {
+            width: 22px;
+            height: 22px;
+            object-fit: contain;
+            filter: grayscale(100%) opacity(0.6);
+            transition: all 0.2s;
+        }
+
+        .nav-btn.active {
+            color: var(--accent-blue);
+        }
+
+        .nav-btn.active .icon {
+            transform: translateY(-2px);
+        }
+
+        .nav-btn.active .icon img.logo-icon {
+            filter: grayscale(0%) opacity(1);
+        }
+
+        @keyframes balancoSininho {
+            0% { transform: rotate(-12deg); }
+            100% { transform: rotate(12deg); }
+        }
+
+        @media (max-width: 480px) {
+            header h1 { font-size: 16px; }
+            .container { padding: 0 12px; }
+            .tab-content { padding: 18px 14px; }
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <div class="header-left">
+        <img src="./logo-associacao.png" alt="Logo Associação Atarashii">
+        <h1>Painel do Aluno</h1>
+    </div>
+    
+    <div class="header-actions">
+        <div class="icon-btn" onclick="atualizarPainel()" title="Atualizar painel">
+            🔄
+        </div>
+
+        <div class="icon-btn" id="wrapperSininho" onclick="irParaAvisos()">
+            🔔
+            <span class="badge-count" id="badgeNotificacao" style="display: none;">1</span>
+        </div>
+
+        <button class="btn-logout" id="logoutBtn">Sair</button>
+    </div>
+</header>
+
+<div class="container">
+    <!-- Boas-Vindas -->
+    <div class="welcome-box">
+        <h2 id="welcomeNome">Olá, Associado!</h2>
+        <p>Acompanhe suas notas, conteúdos e avisos no menu inferior.</p>
+    </div>
+
+    <!-- SEÇÃO 1: PAINEL / NOTAS DO ALUNO -->
+    <div id="exame" class="tab-content active">
+        <h3>🥋 Exames de Faixa</h3>
+        <div class="table-container">
+            <table>
+                <thead>
+                    <tr>
+                        <th>FAIXA</th>
+                        <th>Ano</th>
+                        <th>KIHON</th>
+                        <th>KATA</th>
+                        <th>KUMITE</th>
+                        <th>Perguntas</th>
+                        <th>TOTAL</th>
+                        <th>MÉDIA</th>
+                    </tr>
+                </thead>
+                <tbody id="corpoTabelaNotas">
+                    <tr>
+                        <td colspan="8" style="text-align: center; color: var(--text-muted); padding: 20px;">
+                            Carregando histórico de exames...
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="grafico-container" style="position: relative; width: 100%; max-width: 420px; margin: 25px auto 0 auto;">
+            <h3 style="justify-content: center; margin-bottom: 15px;">📊 Frequência de Aulas</h3>
+
+            <!-- FILTRO DE CALENDÁRIO / MÊS DA FREQUÊNCIA -->
+            <div id="filtroFrequencia" style="display: flex; gap: 8px; align-items: center; justify-content: center; margin-bottom: 15px; background: rgba(15, 23, 42, 0.6); padding: 12px; border-radius: var(--radius-md); border: 1px solid var(--border-color); flex-wrap: wrap;">
+                <div style="display: flex; flex-direction: column; gap: 4px; flex: 1; min-width: 120px;">
+                    <label for="mesInicioFrequencia" style="font-size: 11px; color: var(--text-muted); font-weight: bold;">Mês Inicial:</label>
+                    <input type="month" id="mesInicioFrequencia" value="2026-07" style="padding: 6px 8px; border-radius: 6px; border: 1px solid var(--border-color); background: var(--bg-primary); color: var(--text-main); font-size: 12px; width: 100%;">
+                </div>
+
+                <div style="display: flex; flex-direction: column; gap: 4px; flex: 1; min-width: 120px;">
+                    <label for="mesFimFrequencia" style="font-size: 11px; color: var(--text-muted); font-weight: bold;">Mês Final:</label>
+                    <input type="month" id="mesFimFrequencia" value="2026-12" style="padding: 6px 8px; border-radius: 6px; border: 1px solid var(--border-color); background: var(--bg-primary); color: var(--text-main); font-size: 12px; width: 100%;">
+                </div>
+
+                <button onclick="carregarGraficoFrequencia()" style="padding: 8px 12px; background: var(--accent-blue); color: white; border: none; border-radius: 6px; font-weight: bold; font-size: 12px; cursor: pointer; margin-top: 15px; align-self: flex-end;">
+                    🔍 Filtrar
+                </button>
+            </div>
+
+            <canvas id="graficoFrequencia"></canvas>
+            
+            <!-- Resumo de Presenças, Faltas e Justificativas Aprovadas -->
+            <div id="resumoFrequencia" style="display: flex; justify-content: space-around; gap: 6px; margin-top: 15px; font-family: sans-serif;">
+                <div style="background-color: #10b98122; border: 1px solid var(--accent-green); color: var(--accent-green); padding: 8px 10px; border-radius: 12px; font-weight: bold; text-align: center; flex: 1;">
+                    <span style="font-size: 11px; display: block; color: var(--text-muted);">Presenças</span>
+                    <span id="qtdPresencas" style="font-size: 16px;">0</span>
+                </div>
+                <div style="background-color: #ef444422; border: 1px solid var(--accent-red); color: #f87171; padding: 8px 10px; border-radius: 12px; font-weight: bold; text-align: center; flex: 1;">
+                    <span style="font-size: 11px; display: block; color: var(--text-muted);">Faltas</span>
+                    <span id="qtdFaltas" style="font-size: 16px;">0</span>
+                </div>
+                <div style="background-color: #f59e0b22; border: 1px solid var(--accent-gold); color: #fbbf24; padding: 8px 10px; border-radius: 12px; font-weight: bold; text-align: center; flex: 1;">
+                    <span style="font-size: 11px; display: block; color: var(--text-muted);">Justificativas Aprovadas</span>
+                    <span id="qtdJustificativas" style="font-size: 16px;">0</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- FORMULÁRIO DE JUSTIFICATIVA DE FALTAS -->
+        <div style="margin-top: 30px; background: rgba(15, 23, 42, 0.6); border: 1px solid var(--border-color); padding: 20px; border-radius: var(--radius-md);">
+            <h3 style="margin-bottom: 12px; font-size: 16px;">📝 Justificar Falta em Aula</h3>
+            <form id="formJustificativa">
+                <label style="display: block; font-size: 13px; color: var(--text-muted); margin-bottom: 6px;">Selecione a data da falta (Terças, Quintas ou Sábados):</label>
+                <input type="date" id="dataFaltaAluno" required style="width: 100%; padding: 10px; border-radius: 6px; border: 1px solid var(--border-color); background: var(--bg-primary); color: var(--text-main); margin-bottom: 15px;">
+
+                <label style="display: block; font-size: 13px; color: var(--text-muted); margin-bottom: 8px;">Selecione o motivo da falta:</label>
+                
+                <div style="display: flex; flex-direction: column; gap: 8px; font-size: 13px; color: var(--text-main); text-align: left; margin-bottom: 15px;">
+                    <label><input type="checkbox" name="motivoFalta" value="Doença do aluno"> a) Doença do aluno.</label>
+                    <label><input type="checkbox" name="motivoFalta" value="Falecimento de familiar"> b) Falecimento de familiar.</label>
+                    <label><input type="checkbox" name="motivoFalta" value="Nascimento de irmão ou filho"> c) Nascimento de irmão ou filho.</label>
+                    <label><input type="checkbox" name="motivoFalta" value="Realização de tratamento ambulatório, em virtude de doença ou deficiência"> d) Realização de tratamento ambulatório, em virtude de doença ou deficiência.</label>
+                    <label><input type="checkbox" name="motivoFalta" value="Assistência na doença a membro do agregado familiar"> e) Assistência na doença a membro do agregado familiar.</label>
+                    <label><input type="checkbox" name="motivoFalta" value="Ato decorrente da religião professada pelo aluno"> f) Ato decorrente da religião professada pelo aluno.</label>
+                    <label><input type="checkbox" name="motivoFalta" value="Participação em atividades culturais e lazer"> g) Participação em atividades culturais e lazer.</label>
+                    <label><input type="checkbox" name="motivoFalta" value="Preparação e participação em atividades desportivas, trabalho ou escolares"> h) Preparação e participação em atividades desportivas, trabalho ou escolares.</label>
+                    <label><input type="checkbox" name="motivoFalta" value="Participação de estudo previstas no plano de atividades da escola"> i) Participação de estudo previstas no plano de atividades da escola.</label>
+                    
+                    <!-- CHECKBOX OUTRO -->
+                    <label style="font-weight: bold; color: var(--accent-blue);">
+                        <input type="checkbox" id="checkOutro" onchange="alternarCampoTextoOutro()"> j) Outro(s)
+                    </label>
+                </div>
+
+                <!-- CAMPO DE TEXTO (OCULTO POR PADRÃO) -->
+                <div id="containerTextoOutro" style="display: none; margin-bottom: 15px;">
+                    <label style="display: block; font-size: 13px; color: var(--text-muted); margin-bottom: 6px;">Especifique o motivo da falta:</label>
+                    <textarea id="textoJustificativaOutro" rows="3" placeholder="Escreva aqui o motivo detalhado da falta..." style="width: 100%; padding: 10px; border-radius: 6px; border: 1px solid var(--border-color); background: var(--bg-primary); color: var(--text-main); resize: vertical; font-size: 13px;"></textarea>
+                </div>
+
+                <button type="submit" class="btn-action">📤 Enviar Justificativa</button>
+            </form>
+
+            <!-- HISTÓRICO E STATUS DE JUSTIFICATIVAS COM FILTRO POR MÊS -->
+            <h4 style="margin-top: 25px; margin-bottom: 10px; font-size: 14px; color: var(--text-muted);">Status dos Pedidos de Justificativa</h4>
+            
+            <!-- FILTRO DE CALENDÁRIO / MÊS DA JUSTIFICATIVA -->
+            <div id="filtroJustificativa" style="display: flex; gap: 8px; align-items: center; justify-content: center; margin-bottom: 15px; background: rgba(15, 23, 42, 0.4); padding: 10px; border-radius: var(--radius-md); border: 1px solid var(--border-color); flex-wrap: wrap;">
+                <div style="display: flex; flex-direction: column; gap: 4px; flex: 1; min-width: 120px;">
+                    <label for="mesInicioJustificativa" style="font-size: 11px; color: var(--text-muted); font-weight: bold;">Mês Inicial:</label>
+                    <input type="month" id="mesInicioJustificativa" value="2026-07" style="padding: 6px 8px; border-radius: 6px; border: 1px solid var(--border-color); background: var(--bg-primary); color: var(--text-main); font-size: 12px; width: 100%;">
+                </div>
+
+                <div style="display: flex; flex-direction: column; gap: 4px; flex: 1; min-width: 120px;">
+                    <label for="mesFimJustificativa" style="font-size: 11px; color: var(--text-muted); font-weight: bold;">Mês Final:</label>
+                    <input type="month" id="mesFimJustificativa" value="2026-12" style="padding: 6px 8px; border-radius: 6px; border: 1px solid var(--border-color); background: var(--bg-primary); color: var(--text-main); font-size: 12px; width: 100%;">
+                </div>
+
+                <button onclick="carregarStatusJustificativas()" style="padding: 8px 12px; background: var(--accent-blue); color: white; border: none; border-radius: 6px; font-weight: bold; font-size: 12px; cursor: pointer; margin-top: 15px; align-self: flex-end;">
+                    🔍 Filtrar
+                </button>
+            </div>
+
+            <div id="listaJustificativasAluno" style="font-size: 13px;">Carregando histórico...</div>
+        </div>
+        <p> </p>
+        <div class="card-item" style="flex-direction: column; align-items: flex-start; gap: 10px;">
+            <strong style="font-size: 15px;">📄 Regulamento Oficial de Justificativa de Faltas</strong>
+            <p style="font-size: 12px; color: var(--text-muted);">Conteúdo detalhado sobre a justificativa de faltas.</p>
+            <a href="Regulamento de Justificativa de Faltas.pdf" target="_blank" class="btn-action" style="padding: 10px;">📖 Abrir Regulamento</a>
+        </div>
+    </div> <!-- /div#exame -->
+
+    <!-- SEÇÃO 2: CONTEÚDO PROGRAMÁTICO (EXAME) -->
+    <div id="conteudo-programatico" class="tab-content">
+        <h3>📖 Conteúdo Programático</h3>
+        
+        <!-- BRANCA PARA AMARELA -->
+        <details class="modulo-faixa">
+            <summary class="botao-expandir">
+                <span class="faixa-cor branca"></span>
+                <span class="faixa-cor amarela"></span>
+                Branca para Amarela
+                <span class="seta">▼</span>
+            </summary>
+            <div class="table-container" style="border:none; border-radius:0;">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Kihon</th>
+                            <th>Base</th>
+                            <th>Sentido</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr><td>Oi-Zuki</td><td>Zenkutsu-Dachi</td><td>Avançando 5x</td></tr>
+                        <tr><td>Ague-Uke / final (Guiako-zuki)</td><td>Zenkutsu-Dachi</td><td>Recuando 5x</td></tr>
+                        <tr><td>Mae-Gueri</td><td>Zenkutsu-Dachi</td><td>Avançando 5x</td></tr>
+                        <tr><td>Soto-Uke / final (Guiako-zuki)</td><td>Zenkutsu-Dachi</td><td>Recuando 5x</td></tr>
+                        <tr><td>Guedan-Barai / final (Guiako-zuki)</td><td>Zenkutsu-Dachi</td><td>Avançando 5x</td></tr>
+                        <tr><td>Uchi-Uke / final (Guiako-zuki)</td><td>Zenkutsu-Dachi</td><td>Recuando 5x</td></tr>
+                        <tr><td>Yoko-Gueri-Keague</td><td>Kiba-Dachi</td><td>Ida 3x</td></tr>
+                        <tr><td>Yoko-Gueri-Kekome</td><td>Kiba-Dachi</td><td>Volta 3x</td></tr>
+                    </tbody>
+                </table>
+                <div class="bloco-extra">
+                    <strong>Kihon-Gohon-Kumite:</strong>
+                    <p><span class="texto-vermelho">Ataques</span> - Jodan-zuki, Tchudan-zuki, Guedan-zuki. <span class="texto-vermelho">Defesa</span> - Jodan-Ague-uke, Tchudan-Soto-uke, Guedan-barai, final Guiako-zuki.</p>
+                    <strong>Kata:</strong> Heian-Shodan (com contagem)
+                    <strong>Exame Oral:</strong> Contagem em japonês, Dojo-Kun e Pergunta livre.
+                    <strong>Kumite:</strong> (1:30 min) Sombra luta semi-contato.
+                </div>
+            </div>
+        </details>
+
+        <!-- AMARELA PARA VERMELHA -->
+        <details class="modulo-faixa">
+            <summary class="botao-expandir">
+                <span class="faixa-cor amarela"></span>
+                <span class="faixa-cor vermelha"></span>
+                Amarela para Vermelha
+                <span class="seta">▼</span>
+            </summary>
+            <div class="table-container" style="border:none; border-radius:0;">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Kihon</th>
+                            <th>Base</th>
+                            <th>Sentido</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr><td>Oi-Zuki</td><td>Zenkutsu-Dachi</td><td>Avançando 5x</td></tr>
+                        <tr><td>Ague-Uke / final (Guiako-zuki)</td><td>Zenkutsu-Dachi</td><td>Recuando 5x</td></tr>
+                        <tr><td>Mae-Gueri</td><td>Zenkutsu-Dachi</td><td>Avançando 5x</td></tr>
+                        <tr><td>Soto-Uke / final (Guiako-zuki)</td><td>Zenkutsu-Dachi</td><td>Recuando 5x</td></tr>
+                        <tr><td>Mawachi-Gueri</td><td>Zenkutsu-Dachi</td><td>Avançando 5x</td></tr>
+                        <tr><td>Uchi-Uke / final (Guiako-zuki)</td><td>Zenkutsu-Dachi</td><td>Recuando 5x</td></tr>
+                        <tr><td>Shoto-Uke</td><td>Kokutsu-dachi</td><td>Avançando 5x</td></tr>
+                        <tr><td>Shoto-Uke / final Guiako-Yon-Nukite</td><td>Kokutsu-dachi</td><td>Recuando 5x</td></tr>
+                        <tr><td>Yoko-Gueri-Keague</td><td>Kiba-Dachi</td><td>Ida 3x</td></tr>
+                        <tr><td>Yoko-Gueri-Kekome</td><td>Kiba-Dachi</td><td>Volta 3x</td></tr>
+                    </tbody>
+                </table>
+                <div class="bloco-extra">
+                    <strong>Kihon-Gohon-Kumite:</strong>
+                    <p><span class="texto-vermelho">Ataques</span> - Jodan-zuki, Tchudan-zuki, Guedan-zuki. <span class="texto-vermelho">Defesa</span> - Jodan-Ague-uke, Tchudan-Soto-uke, Guedan-barai, final Guiako-zuki.</p>
+                    <strong>Kata:</strong> Heian-Shodan e Heian-Nidan (sem contagem)
+                    <strong>Exame Oral:</strong> Contagem em japonês, Dojo-Kun e Pergunta livre.
+                    <strong>Kumite:</strong> (2 min) Sombra luta com contato.
+                </div>
+            </div>
+        </details>
+
+        <!-- VERMELHA PARA LARANJA -->
+        <details class="modulo-faixa">
+            <summary class="botao-expandir">
+                <span class="faixa-cor vermelha"></span>
+                <span class="faixa-cor laranja"></span>
+                Vermelha para Laranja
+                <span class="seta">▼</span>
+            </summary>
+            <div class="table-container" style="border:none; border-radius:0;">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Kihon</th>
+                            <th>Base</th>
+                            <th>Sentido</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr><td>Sambom-Zuki</td><td>Zenkutsu-Dachi</td><td>Avançando 5x</td></tr>
+                        <tr><td>Ague-Uke / Guiako-zuki</td><td>Zenkutsu-Dachi</td><td>Recuando 5x</td></tr>
+                        <tr><td>Mae-Gueri / Guiako-zuki</td><td>Zenkutsu-Dachi</td><td>Avançando 5x</td></tr>
+                        <tr><td>Soto-Uke / Guiako-zuki</td><td>Zenkutsu-Dachi</td><td>Recuando 5x</td></tr>
+                        <tr><td>Mawachi-Gueri</td><td>Zenkutsu-Dachi</td><td>Avançando 5x</td></tr>
+                        <tr><td>Uchi-Uke / Guiako-zuki</td><td>Zenkutsu-Dachi</td><td>Recuando 5x</td></tr>
+                        <tr><td>Shoto-uke / Guiako-yon-Nukite</td><td>Kokutsu-dachi</td><td>Avançando 5x</td></tr>
+                        <tr><td>Shoto-uke / Guiako-yon-Nukite</td><td>Kokutsu-dachi</td><td>Recuando 5x</td></tr>
+                        <tr><td>Yoko-Gueri-Keague</td><td>Kiba-Dachi</td><td>Ida 3x</td></tr>
+                        <tr><td>Yoko-Gueri-Kekome</td><td>Kiba-Dachi</td><td>Volta 3x</td></tr>
+                    </tbody>
+                </table>
+                <div class="bloco-extra">
+                    <strong>Kihon-Ipom-Kumite:</strong>
+                    <p><span class="texto-vermelho">Ataques</span> - Jodan-zuki, Tchudan-zuki, Mae-Gueri, Yoko-Gueri, Mawachi-Gueri.</p>
+                    <strong>Kata:</strong> Heian-Nidan, Heian-Sandan, Heian Yondan
+                    <strong>Exame Oral:</strong> Contagem, Dojo-Kun e Pergunta livre.
+                    <strong>Kumite:</strong> (2 min) Luta com contato.
+                </div>
+            </div>
+        </details>
+
+        <!-- LARANJA PARA VERDE -->
+        <details class="modulo-faixa">
+            <summary class="botao-expandir">
+                <span class="faixa-cor laranja"></span>
+                <span class="faixa-cor verde"></span>
+                Laranja para Verde
+                <span class="seta">▼</span>
+            </summary>
+            <div class="table-container" style="border:none; border-radius:0;">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Kihon</th>
+                            <th>Base</th>
+                            <th>Sentido</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr><td>Sambom-Zuki</td><td>Zenkutsu-Dachi</td><td>Avançando 5x</td></tr>
+                        <tr><td>Ague-uke / Guiako-zuki</td><td>Zenkutsu-Dachi</td><td>Recuando 5x</td></tr>
+                        <tr><td>Mae-gueri / Guiako-zuki</td><td>Zenkutsu-Dachi</td><td>Avançando 5x</td></tr>
+                        <tr><td>Soto-uke / Guiako-zuki</td><td>Zenkutsu-Dachi</td><td>Recuando 5x</td></tr>
+                        <tr><td>Kizame-gueri / Mawachi-Gueri</td><td>Zenkutsu-Dachi</td><td>Avançando 5x</td></tr>
+                        <tr><td>Uchi-uke / Kizame-zuki / Guiako-zuki</td><td>Zenkutsu-Dachi</td><td>Recuando 5x</td></tr>
+                        <tr><td>Shoto-uke / Guiako-yon-Nukite</td><td>Kokutsu-Dachi</td><td>Avançando 5x</td></tr>
+                        <tr><td>Shoto-uke / Kizame-gueri / Guiako-yon-Nukite</td><td>Kokutsu-Dachi</td><td>Recuando 5x</td></tr>
+                        <tr><td>Yoko-Gueri-Keague</td><td>Kiba-Dachi</td><td>Ida 3x</td></tr>
+                        <tr><td>Yoko-Gueri-Kekome</td><td>Kiba-Dachi</td><td>Volta 3x</td></tr>
+                    </tbody>
+                </table>
+                <div class="bloco-extra">
+                    <strong>Kihon-Ipom-Kumite:</strong> Ataques e contra-ataques combinados.
+                    <strong>Kata:</strong> Heian-Sandan, Heian-Yondan e Heian-Godan.
+                    <strong>Kumite:</strong> (2 min) Sombra e luta com contato.
+                </div>
+            </div>
+        </details>
+
+        <!-- VERDE PARA ROXA -->
+        <details class="modulo-faixa">
+            <summary class="botao-expandir">
+                <span class="faixa-cor verde"></span>
+                <span class="faixa-cor roxa"></span>
+                Verde para Roxa
+                <span class="seta">▼</span>
+            </summary>
+            <div class="table-container" style="border:none; border-radius:0;">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Kihon</th>
+                            <th>Base</th>
+                            <th>Sentido</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr><td>Sonoba-zuki</td><td>Kiba-Dachi</td><td>10 repetições</td></tr>
+                        <tr><td>Sambom-Zuki</td><td>Zenkutsu-Dachi</td><td>Avançando 5x</td></tr>
+                        <tr><td>Ague-uke / Uraken / Guiako-zuki</td><td>Zenkutsu-Dachi</td><td>Recuando 5x</td></tr>
+                        <tr><td>Mae-gueri / Guiako-zuki</td><td>Zenkutsu-Dachi</td><td>Avançando 5x</td></tr>
+                        <tr><td>Soto-uke, empi / Uraken / Guiako-zuki</td><td>Zenkutsu-Dachi</td><td>Recuando 5x</td></tr>
+                        <tr><td>Kizame-gueri / Mawachi-Gueri</td><td>Zenkutsu-Dachi</td><td>Avançando 5x</td></tr>
+                        <tr><td>Uchi-Uke / Kizame-zuki / Guiako-zuki</td><td>Zenkutsu-Dachi</td><td>Recuando 5x</td></tr>
+                        <tr><td>Shoto-uke / Guiako-yon-Nukite</td><td>Kokutsu-Dachi</td><td>Avançando 5x</td></tr>
+                        <tr><td>Shoto-uke / Kizame-gueri / Guiako-yon-Nukite</td><td>Kokutsu-Dachi</td><td>Recuando 5x</td></tr>
+                        <tr><td>Yoko-Gueri-Keague / Kekome</td><td>Kiba-Dachi</td><td>Ida/Volta 3x</td></tr>
+                        <tr><td>Mae / Mawachi / Yoko / Ushiro-gueri</td><td>Zenkutsu-Dachi</td><td>Ida/Volta 1x</td></tr>
+                    </tbody>
+                </table>
+                <div class="bloco-extra">
+                    <strong>Jiu-Ipom-Kumite:</strong> Defesas e contra-ataques livres.
+                    <strong>Kata/Bunkai:</strong> Heian-Godan, Bassai-Dai. Apresentar aplicações.
+                    <strong>Kumite:</strong> Shiai-kumite 2 min / Jiu-kumite 1 min.
+                </div>
+            </div>
+        </details>
+
+        <!-- ROXA PARA MARROM -->
+        <details class="modulo-faixa">
+            <summary class="botao-expandir">
+                <span class="faixa-cor roxa"></span>
+                <span class="faixa-cor marrom"></span>
+                Roxa para Marrom
+                <span class="seta">▼</span>
+            </summary>
+            <div class="table-container" style="border:none; border-radius:0;">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Kihon</th>
+                            <th>Base</th>
+                            <th>Sentido</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr><td>Sonoba-zuki</td><td>Kiba-Dachi</td><td>10 repetições</td></tr>
+                        <tr><td>Oi-zuki</td><td>Zenkutsu-Dachi</td><td>Avançando 5x</td></tr>
+                        <tr><td>Mae-gueri / Tchudan-Oi-zuki</td><td>Zenkutsu-Dachi</td><td>Avançando 5x</td></tr>
+                        <tr><td>Guiako-zuki</td><td>Zenkutsu-Dachi</td><td>Avançando 5x</td></tr>
+                        <tr><td>Mae-gueri / Guiako-zuki</td><td>Zenkutsu-Dachi</td><td>Avançando 5x</td></tr>
+                        <tr><td>Sambom-Zuki</td><td>Zenkutsu-Dachi</td><td>Avançando 5x</td></tr>
+                        <tr><td>Ague-uke / Guiako-zuki</td><td>Zenkutsu-Dachi</td><td>Recuando 5x</td></tr>
+                        <tr><td>Yoko-Gueri-Kekome / Mawachi-Guiako empi</td><td>Zenkutsu-Dachi</td><td>Avançando 5x</td></tr>
+                        <tr><td>Soto-uke / Empi / Uraken / Guiako-zuki</td><td>Zenkutsu / Kiba</td><td>Recuando 5x</td></tr>
+                        <tr><td>Kizame-Gueri / Mawachi-Gueri</td><td>Zenkutsu-Dachi</td><td>Avançando 5x</td></tr>
+                        <tr><td>Uchi-uke / kizame-zuki / Guiako-zuki</td><td>Zenkutsu-Dachi</td><td>Recuando 5x</td></tr>
+                        <tr><td>Shoto-uke / Guiako-yon-Nukite</td><td>Kokutsu-Dachi</td><td>Avançando 5x</td></tr>
+                        <tr><td>Shoto-uke / kizame-Gueri / Guiako-yon-Nukite</td><td>Kokutsu-Dachi</td><td>Recuando 5x</td></tr>
+                        <tr><td>Yoko-Gueri-Keague</td><td>Kiba-Dachi</td><td>Ida/Volta 3x</td></tr>
+                        <tr><td>Mae / Mawachi / Yoko / Ushiro-gueri</td><td>Zenkutsu-Dachi</td><td>Ida/Volta 1x</td></tr>
+                    </tbody>
+                </table>
+                <div class="bloco-extra">
+                    <strong>Jiu-Ipom-Kumite:</strong> Defesas e contra-ataques livres.
+                    <strong>Kata/Bunkai:</strong> Tekki-shodan, Bassai-Dai, Kanku-dai e Jion.
+                    <strong>Kumite:</strong> Shiai-kumite 2 min.
+                </div>
+            </div>
+        </details>
+
+        <!-- FPK 1º DAN -->
+        <details class="modulo-faixa">
+            <summary class="botao-expandir">
+                <span class="faixa-cor preta"></span>
+                FPK - Graduação (1º Dan)
+                <span class="seta">▼</span>
+            </summary>
+            <div class="table-container" style="border:none; border-radius:0;">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Nº / Kihon</th>
+                            <th>Base</th>
+                            <th>Repetições</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr><td>1. Sonoba-Zuki</td><td>Kiba-Dachi</td><td>10 repetições</td></tr>
+                        <tr><td>2. Mae-Gueri / Oi-Zuki</td><td>Zenkutsu-Dachi</td><td>5x ida</td></tr>
+                        <tr><td>3. Mae-Gueri / Guiako-Zuki</td><td>Zenkutsu-Dachi</td><td>5x volta</td></tr>
+                        <tr><td>4. Sambom-Zuki</td><td>Zenkutsu-Dachi</td><td>5x ida</td></tr>
+                        <tr><td>5. Uchi-Uke / Kizami / Guiako</td><td>Zenkutsu-Dachi</td><td>5x recuar</td></tr>
+                        <tr><td>6. Ague-Uke / Guedan / Guiako</td><td>Zenkutsu-Dachi</td><td>5x ida</td></tr>
+                        <tr><td>7. Shuto-Uke / Nukite / Shuto</td><td>Kokutsu / Zenkutsu</td><td>5x recuar</td></tr>
+                        <tr><td>8. Oi-Zuki / Guedan / Oi-Zuki</td><td>Zenkutsu / Kiba</td><td>5x ida</td></tr>
+                        <tr><td>9. Kamae / Kizami / Uraken</td><td>Neko-ashi / Zenkutsu</td><td>5x volta</td></tr>
+                        <tr><td>10. Combinado de Chutes</td><td>Zenkutsu-Dachi</td><td>1x ida/volta</td></tr>
+                        <tr><td>11. Chutes Mesma Perna</td><td>Zenkutsu-Dachi</td><td>3x ida/volta</td></tr>
+                        <tr><td>12. Yoko-Gueri-keague</td><td>Kiba-Dachi</td><td>3x ida/volta</td></tr>
+                    </tbody>
+                </table>
+                <div class="bloco-extra">
+                    <strong>Kata Obrigatório:</strong> Heian 1º ao 5º, Tekki-Shodan.
+                    <strong>Kata Optativo:</strong> Bassai-dai, Kanku-dai, Jion.
+                </div>
+            </div>
+        </details>
+
+        <!-- TABELA DE CARÊNCIA MÍNIMA DENTRO DA ABA EXAME -->
+        <div class="container-tabela-carencia">
+            <h3 style="margin-top: 20px;">⏳ Carência Mínima (Kyu)</h3>
+            <div class="tabela-carencia-wrapper">
+                <table class="tabela-carencia-custom">
+                    <thead>
+                        <tr>
+                            <th>Faixa</th>
+                            <th>Kyu</th>
+                            <th>Carência Mínima de Treinamento</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><span class="badge-faixa-item branca">Branca</span></td>
+                            <td>7º</td>
+                            <td>3 meses</td>
+                        </tr>
+                        <tr>
+                            <td><span class="badge-faixa-item amarela">Amarela</span></td>
+                            <td>6º</td>
+                            <td>6 meses</td>
+                        </tr>
+                        <tr>
+                            <td><span class="badge-faixa-item vermelha">Vermelha</span></td>
+                            <td>5º</td>
+                            <td>6 meses</td>
+                        </tr>
+                        <tr>
+                            <td><span class="badge-faixa-item laranja">Laranja</span></td>
+                            <td>4º</td>
+                            <td>6 meses</td>
+                        </tr>
+                        <tr>
+                            <td><span class="badge-faixa-item verde">Verde</span></td>
+                            <td>3º</td>
+                            <td>1 ano</td>
+                        </tr>
+                        <tr>
+                            <td><span class="badge-faixa-item roxa">Roxa</span></td>
+                            <td>2º</td>
+                            <td>1 ano e 6 meses</td>
+                        </tr>
+                        <tr>
+                            <td><span class="badge-faixa-item marrom">Marrom</span></td>
+                            <td>1º</td>
+                            <td>2 anos</td>
+                        </tr>
+                        <tr>
+                            <td><span class="badge-faixa-item preta">Preta</span></td>
+                            <td>-</td>
+                            <td>-</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- SEÇÃO 3: AVISOS -->
+    <div id="comunicados" class="tab-content">
+        <h3>📢 Regras e Normas da Associação</h3>
+        
+        <div id="blocoTermoPendente">
+            <p style="font-size: 14px; color: var(--text-muted); margin-bottom: 16px;">
+                Por favor, toque no botão abaixo para abrir, ler o documento completo de regras e depois confirmar o seu aceite obrigatório.
+            </p>
+
+            <a href="regras-associacao.pdf" target="_blank" class="btn-action" style="margin-bottom: 16px;">
+                📖 Abrir Regras e Normas da Associação (PDF)
+            </a>
+
+            <div style="background: rgba(15, 23, 42, 0.6); border: 1px solid var(--border-color); padding: 16px; border-radius: var(--radius-md); margin-bottom: 20px;">
+                <label style="display: flex; gap: 12px; cursor: pointer; font-size: 13px; color: var(--text-main); font-weight: 500; line-height: 1.4;">
+                    <input type="checkbox" id="checkAceite" onchange="alternarBotaoAceite()" style="width: 20px; height: 20px; accent-color: var(--accent-blue);">
+                    <span>Declaro que li, compreendi e concordo integralmente com todas as Regras, Normas e Termos estabelecidos pela Associação.</span>
+                </label>
+
+                <button id="btnEnviarAceite" disabled onclick="enviarEmailAceite()" class="btn-action" style="margin-top: 14px; background: #475569; opacity: 0.6; cursor: not-allowed; box-shadow: none;">
+                    🔒 Aceitar Termos e Enviar Comprovante
+                </button>
+            </div>
+        </div>
+
+        <div id="blocoTermoAceito" style="display: none; text-align: center; padding: 20px; background: rgba(16, 185, 129, 0.1); border: 1px solid rgba(16, 185, 129, 0.3); border-radius: var(--radius-md); margin-bottom: 20px;">
+            <span style="font-size: 32px;">✅</span>
+            <h4 style="color: var(--accent-green); margin: 8px 0;">Termos Aceitos com Sucesso!</h4>
+            <p style="font-size: 13px; color: var(--text-muted);" id="textoDataAceite">
+                O seu comprovante de leitura e concordância já foi registrado e enviado para a Associação.
+            </p>
+        </div>
+
+        <!-- NOVA SEÇÃO: AÇÕES DA ASSOCIAÇÃO (CONCLUÍDAS) -->
+        <h3>🤝 Ações da Associação</h3>
+        
+        <div class="card-item" style="opacity: 0.65; border-color: rgba(255, 255, 255, 0.1);">
+            <div class="card-date-badge" style="background: #334155;">
+                <span class="day" style="color: #94a3b8; text-decoration: line-through;">08</span>
+                <span class="month" style="color: #64748b;">MAI</span>
+            </div>
+            <div style="flex: 1;">
+                <div style="display: flex; justify-content: space-between; align-items: center;">
+                    <strong style="font-size: 15px; text-decoration: line-through; color: var(--text-muted);">Churrasco da Associação</strong>
+                    <span style="font-size: 10px; background: rgba(148, 163, 184, 0.2); color: #94a3b8; padding: 2px 6px; border-radius: 4px; font-weight: bold;">CONCLUÍDO</span>
+                </div>
+                <span style="font-size: 12px; color: var(--text-muted); text-decoration: line-through;">📍 Academia Bee Strong - SP</span>
+            </div>
+        </div>
+
+        <div class="card-item" style="opacity: 0.65; border-color: rgba(255, 255, 255, 0.1);">
+            <div class="card-date-badge" style="background: #334155;">
+                <span class="day" style="color: #94a3b8; text-decoration: line-through;">18</span>
+                <span class="month" style="color: #64748b;">ABR</span>
+            </div>
+            <div style="flex: 1;">
+                <div style="display: flex; justify-content: space-between; align-items: center;">
+                    <strong style="font-size: 15px; text-decoration: line-through; color: var(--text-muted);">Palestra sobre Nutrição</strong>
+                    <span style="font-size: 10px; background: rgba(148, 163, 184, 0.2); color: #94a3b8; padding: 2px 6px; border-radius: 4px; font-weight: bold;">CONCLUÍDO</span>
+                </div>
+                <span style="font-size: 12px; color: var(--text-muted); text-decoration: line-through;">📍 Academia Bee Strong - SP</span>
+            </div>
+        </div>
+        
+        <h3 style="margin-top: 25px;">⚔️ Próximos Treinamentos</h3>
+        
+        <div class="card-item" style="opacity: 0.65; border-color: rgba(255, 255, 255, 0.1);">
+            <div class="card-date-badge" style="background: #334155;">
+                <span class="day" style="color: #94a3b8; text-decoration: line-through;">26</span>
+                <span class="month" style="color: #64748b;">JUL</span>
+            </div>
+            <div style="flex: 1;">
+                <div style="display: flex; justify-content: space-between; align-items: center;">
+                    <strong style="font-size: 15px; text-decoration: line-through; color: var(--text-muted);">Workshop com Brenda Padilha</strong>
+                    <span style="font-size: 10px; background: rgba(148, 163, 184, 0.2); color: #94a3b8; padding: 2px 6px; border-radius: 4px; font-weight: bold;">CONCLUÍDO</span>
+                </div>
+                <span style="font-size: 12px; color: var(--text-muted); text-decoration: line-through;">📍 Cidade: Hortolândia - SP</span>
+                <p></p>
+                <span style="font-size: 12px; color: var(--text-muted); text-decoration: line-through;">🥋 Participantes: Sensei Luiz, Adriano Miguel, Klara Pereira, Luiz Guilherme e Edson Fernandes</span>
+            </div>
+        </div>
+
+        <h3>🏆 Próximos Campeonatos</h3>
+        <div class="card-item">
+            <div class="card-date-badge">
+                <span class="day" style="color: var(--accent-red);">23</span>
+                <span class="month">AGO</span>
+            </div>
+            <div>
+                <strong style="display: block; font-size: 15px;">7ª Etapa ACAK</strong>
+                <span style="font-size: 12px; color: var(--text-muted);">📍 Cidade: Valinhos - SP</span>
+            </div>
+        </div>
+        
+        <h3>🥋 Próximo Exame de Faixa</h3>
+        <div class="card-item">
+            <div class="card-date-badge">
+                <span class="day">06</span>
+                <span class="month">DEZ</span>
+            </div>
+            <div>
+                <strong style="display: block; font-size: 15px;">Exame de Faixa Atarashii</strong>
+                <span style="font-size: 12px; color: var(--text-muted);">📍 Academia Bee Strong - SP</span>
+            </div>
+        </div>
+        
+        <h3>🎉 Confraternização</h3>
+        <div class="card-item">
+            <div class="card-date-badge">
+                <span class="day" style="color: var(--accent-gold);">12</span>
+                <span class="month">DEZ</span>
+            </div>
+            <div>
+                <strong style="display: block; font-size: 15px;">Confraternização Atarashii</strong>
+                <span style="font-size: 12px; color: var(--text-muted);">📍 Aguardando definição - SP</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- SEÇÃO 4: GALERIA -->
+    <div id="galeria" class="tab-content">
+        <h3>📸 Troca de Faixas (Google Drive)</h3>
+        <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 16px;">
+            Toque nos eventos abaixo para acessar as fotos do Google Drive.
+        </p>
+
+        <a href="https://drive.google.com/drive/folders/1rtRaurMIERPIMTR70KxEu5TyhQa9PsHU?usp=drive_link" target="_blank" class="card-item">
+            <span style="font-size: 20px;">📂</span>
+            <span style="font-weight: 600; font-size: 14px;">Junho 2022</span>
+            <span style="margin-left: auto; color: var(--text-muted);">➔</span>
+        </a>
+
+        <a href="https://drive.google.com/drive/folders/1HfoZP89pVxOu3PqvmENSAwpo1nGZPg8K?usp=drive_link" target="_blank" class="card-item">
+            <span style="font-size: 20px;">📂</span>
+            <span style="font-weight: 600; font-size: 14px;">Dezembro 2022</span>
+            <span style="margin-left: auto; color: var(--text-muted);">➔</span>
+        </a>
+
+        <a href="https://drive.google.com/drive/folders/1oZsy4NswTt6MIfvlF7lDb6aHcENDPphL?usp=drive_link" target="_blank" class="card-item">
+            <span style="font-size: 20px;">📂</span>
+            <span style="font-weight: 600; font-size: 14px;">Julho 2023</span>
+            <span style="margin-left: auto; color: var(--text-muted);">➔</span>
+        </a>
+
+        <a href="https://drive.google.com/drive/folders/1-4vrTGEcgKnKMgVMFR9rZMI11psFiyn8?usp=drive_link" target="_blank" class="card-item">
+            <span style="font-size: 20px;">📂</span>
+            <span style="font-weight: 600; font-size: 14px;">Dezembro 2023</span>
+            <span style="margin-left: auto; color: var(--text-muted);">➔</span>
+        </a>
+
+        <a href="https://drive.google.com/drive/folders/1f-iaokIRnn5b6lOU239L3qh6-NvOiXoH?usp=drive_link" target="_blank" class="card-item">
+            <span style="font-size: 20px;">📂</span>
+            <span style="font-weight: 600; font-size: 14px;">Dezembro 2024</span>
+            <span style="margin-left: auto; color: var(--text-muted);">➔</span>
+        </a>
+
+        <a href="https://drive.google.com/drive/folders/1NgjvDrVK4YnHowuvrwRb8EcFIPGMfuWj?usp=drive_link" target="_blank" class="card-item">
+            <span style="font-size: 20px;">📂</span>
+            <span style="font-weight: 600; font-size: 14px;">Junho 2025</span>
+            <span style="margin-left: auto; color: var(--text-muted);">➔</span>
+        </a>
+
+        <a href="https://drive.google.com/drive/folders/1QkRd6NYoWFvarpcxWSR2wMiLWuFppTmF?usp=drive_link" target="_blank" class="card-item">
+            <span style="font-size: 20px;">📂</span>
+            <span style="font-weight: 600; font-size: 14px;">Dezembro 2025</span>
+            <span style="margin-left: auto; color: var(--text-muted);">➔</span>
+        </a>
+
+        <a href="https://drive.google.com/drive/folders/1TrXjV6R5Pqk_2FconkSwJicEqpmpI86g?usp=drive_link" target="_blank" class="card-item">
+            <span style="font-size: 20px;">📂</span>
+            <span style="font-weight: 600; font-size: 14px;">Junho 2026</span>
+            <span style="margin-left: auto; color: var(--text-muted);">➔</span>
+        </a>
+    </div>
+
+    <!-- SEÇÃO 5: ESTUDO -->
+    <div id="ebook" class="tab-content">
+        <h3>📚 Materiais de Estudo</h3>
+        
+        <div class="card-item" style="flex-direction: column; align-items: flex-start; gap: 10px;">
+            <strong style="font-size: 15px;">📄 Apostila Oficial da Associação</strong>
+            <p style="font-size: 12px; color: var(--text-muted);">Conteúdo teórico completo sobre o Karatê.</p>
+            <a href="documento.pdf" target="_blank" class="btn-action" style="padding: 10px;">📖 Abrir Apostila</a>
+        </div>
+
+        <div class="card-item" style="flex-direction: column; align-items: flex-start; gap: 10px;">
+            <strong style="font-size: 15px;">📄 Numeral em Japonês</strong>
+            <p style="font-size: 12px; color: var(--text-muted);">Guia de contagem em japonês.</p>
+            <a href="Numeral em japones.pdf" target="_blank" class="btn-action" style="padding: 10px;">📖 Abrir Guia</a>
+        </div>
+
+        <div class="card-item" style="flex-direction: column; align-items: flex-start; gap: 10px;">
+            <strong style="font-size: 15px;">📄 Regulamento Kata (WKF)</strong>
+            <p style="font-size: 12px; color: var(--text-muted);">Regras oficiais de Kata.</p>
+            <a href="Regulamento de Arbitragem WKF - Kata.pdf" target="_blank" class="btn-action" style="padding: 10px;">📖 Abrir PDF</a>
+        </div>
+
+        <div class="card-item" style="flex-direction: column; align-items: flex-start; gap: 10px;">
+            <strong style="font-size: 15px;">📄 Regulamento Kumite (WKF)</strong>
+            <p style="font-size: 12px; color: var(--text-muted);">Regras oficiais de Kumite.</p>
+            <a href="Regulamento de Arbitragem WKF - Kumite.pdf" target="_blank" class="btn-action" style="padding: 10px;">📖 Abrir PDF</a>
+        </div>
+    </div>
+
+    <!-- SEÇÃO 6: ATARASHII -->
+    <div id="saldo" class="tab-content">
+        <h3>💰 Saldo em Conta da Associação</h3>
+        <p style="font-size: 32px; font-weight: 800; color: var(--accent-green); margin: 10px 0 16px 0;" id="textoSaldo">R$ --,--</p>
+        <button onclick="buscarSaldoMercadoPago()" class="btn-action" style="margin-bottom: 20px;">
+            🔄 Atualizar Saldo
+        </button>
+
+        <h3>🔗 Contatos Oficiais</h3>
+        <div style="display: flex; flex-direction: column; gap: 10px; margin-bottom: 20px;">
+            <a href="https://wa.me/5511988412917" target="_blank" class="btn-action btn-whatsapp">
+                💬 Falar com o Sensei
+            </a>
+            <a href="https://wa.me/5511965512234" target="_blank" class="btn-action btn-whatsapp" style="background: #059669;">
+                💬 Falar com a Academia
+            </a>
+        </div>
+
+        <div style="display: flex; gap: 10px; margin-bottom: 25px;">
+            <a href="https://www.facebook.com/atarashiishotokan/" target="_blank" class="btn-action" style="background: #1877f2;" title="Facebook">
+                Facebook
+            </a>
+            <a href="https://www.instagram.com/associacao_atarashii_karate/" target="_blank" class="btn-action" style="background: linear-gradient(45deg, #f09433, #dc2743, #bc1888);" title="Instagram">
+                Instagram
+            </a>
+        </div>
+
+        <h3>📜 Diplomas Oficiais (Sensei Luiz)</h3>
+        <div style="display: flex; flex-direction: column; gap: 12px;">
+            <div class="card-item" style="flex-direction: column;">
+                <a href="DIPLOMA.jpeg" target="_blank" style="text-decoration: none; width: 100%; text-align: center;">
+                    <img src="DIPLOMA.jpeg" alt="Diploma FPK" style="width: 100%; max-height: 200px; object-fit: contain; border-radius: var(--radius-sm);">
+                    <span style="display: block; margin-top: 8px; font-size: 13px; color: var(--text-main); font-weight: 600;">
+                        🥇 Diploma FPK - Faixa Preta 1º Dan
+                    </span>
+                </a>
+            </div>
+
+            <div class="card-item" style="flex-direction: column;">
+                <a href="DIPLOMA CBK.jpg" target="_blank" style="text-decoration: none; width: 100%; text-align: center;">
+                    <img src="DIPLOMA CBK.jpg" alt="Diploma CBK" style="width: 100%; max-height: 200px; object-fit: contain; border-radius: var(--radius-sm);">
+                    <span style="display: block; margin-top: 8px; font-size: 13px; color: var(--text-main); font-weight: 600;">
+                        🥇 Diploma CBK - Faixa Preta 1º Dan
+                    </span>
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- NAVEGAÇÃO INFERIOR -->
+<div class="bottom-nav">
+    <button class="nav-btn active" onclick="mudarAba('exame', this)">
+        <span class="icon">🥋</span>
+        Painel
+    </button>
+    <button class="nav-btn" onclick="mudarAba('conteudo-programatico', this)">
+        <span class="icon">📋</span>
+        Exame
+    </button>
+    <button class="nav-btn" onclick="mudarAba('comunicados', this)">
+        <span class="icon">📢</span>
+        Avisos
+    </button>
+    <button class="nav-btn" onclick="mudarAba('galeria', this)">
+        <span class="icon">📸</span>
+        Galeria
+    </button>
+    <button class="nav-btn" onclick="mudarAba('ebook', this)">
+        <span class="icon">📚</span>
+        Estudo
+    </button>
+    <button class="nav-btn" onclick="mudarAba('saldo', this)">
+        <span class="icon">
+            <img src="atarashii-192.png" alt="Logo Associação" class="logo-icon">
+        </span>
+        Atarashii
+    </button>
+</div>
+
+<script>
+        // 1. PROTEÇÃO DE ACESSO
+        if (localStorage.getItem('associadoAutenticado') !== 'true') {
+            alert('Acesso negado. Por favor, faça login.');
+            window.location.href = 'index.html';
+        }
+
+        // 2. CONFIGURAÇÕES E VARIÁVEIS GLOBAIS
+        const nomeDoAluno = localStorage.getItem('nomeAlunoLogado') || 'Associado';
+        const usuarioAtivo = localStorage.getItem('usuarioAtivo');
+        const URL_API_SERVIDOR = "https://api-associacao-mp.onrender.com";
+
+        document.getElementById('welcomeNome').textContent = `Olá, ${nomeDoAluno}!`;
+
+        // 3. FUNÇÃO QUE CARREGA E PREENCHE AS NOTAS DO ALUNO
+        function carregarNotasAluno() {
+            const tabelaBody = document.getElementById('corpoTabelaNotas');
+            if (!tabelaBody) return;
+
+            if (typeof listaAlunos === 'undefined') {
+                tabelaBody.innerHTML = `<tr><td colspan="8">Aguardando dados de alunos...</td></tr>`;
+                setTimeout(carregarNotasAluno, 500);
+                return;
+            }
+
+            const dadosAluno = listaAlunos.find(u => u.usuario === usuarioAtivo);
+
+            if (dadosAluno && dadosAluno.historico && dadosAluno.historico.length > 0) {
+                tabelaBody.innerHTML = "";
+                dadosAluno.historico.forEach(exame => {
+                    const linha = document.createElement('tr');
+                    linha.innerHTML = `
+                        <td style="background-color: ${exame.corFaixa}; color: ${exame.corTexto}; border-radius: 4px;">${exame.faixa}</td>
+                        <td>${exame.ano}</td>
+                        <td>${Number(exame.kihon).toFixed(1)}</td>
+                        <td>${Number(exame.kata).toFixed(1)}</td>
+                        <td>${Number(exame.kumite).toFixed(1)}</td>
+                        <td>${Number(exame.perguntas).toFixed(1)}</td>
+                        <td class="col-total">${Number(exame.total).toFixed(1)}</td>
+                        <td class="col-media">${Number(exame.media).toFixed(1)}</td>
+                    `;
+                    tabelaBody.appendChild(linha);
+                });
+            } else {
+                tabelaBody.innerHTML = `<tr><td colspan="8">Nenhum registro de exame encontrado para este aluno.</td></tr>`;
+            }
+        }
+
+        // 4. CONSULTA O STATUS DO TERMO
+        function verificarStatusAceite() {
+            if (!usuarioAtivo) return;
+
+            const blocoPendente = document.getElementById('blocoTermoPendente');
+            const blocoAceito = document.getElementById('blocoTermoAceito');
+            const badge = document.getElementById('badgeNotificacao');
+            const sininho = document.getElementById('wrapperSininho');
+
+            const jaAceitouLocal = localStorage.getItem(`termo_aceito_${usuarioAtivo}`);
+            const dataAceiteLocal = localStorage.getItem(`data_aceite_${usuarioAtivo}`) || '';
+            
+            if (jaAceitouLocal === 'true') {
+                aplicarLayoutAceito(blocoPendente, blocoAceito, badge, sininho, dataAceiteLocal, false);
+            } else {
+                aplicarLayoutPendente(blocoPendente, blocoAceito, badge, sininho);
+            }
+
+            const controller = new AbortController();
+            const timeoutId = setTimeout(() => controller.abort(), 90000);
+
+            fetch(`${URL_API_SERVIDOR}/api/status-termo/${usuarioAtivo}`, { signal: controller.signal })
+                .then(response => {
+                    clearTimeout(timeoutId);
+                    if (!response.ok) throw new Error("Resposta inválida do servidor");
+                    return response.json();
+                })
+                .then(data => {
+                    const verificadoNaAPI = (data && (data.aceitou === true || data.sucesso === true || data.status === 'assinado' || data.status === 'aceito'));
+                    const dataServidor = data.data || data.dataHora || data.updatedAt || new Date().toLocaleString('pt-BR');
+
+                    if (verificadoNaAPI) {
+                        localStorage.setItem(`termo_aceito_${usuarioAtivo}`, 'true');
+                        localStorage.setItem(`data_aceite_${usuarioAtivo}`, dataServidor);
+                        aplicarLayoutAceito(blocoPendente, blocoAceito, badge, sininho, dataServidor, true);
+                    } else {
+                        localStorage.removeItem(`termo_aceito_${usuarioAtivo}`);
+                        localStorage.removeItem(`data_aceite_${usuarioAtivo}`);
+                        aplicarLayoutPendente(blocoPendente, blocoAceito, badge, sininho);
+                    }
+                })
+                .catch(err => {
+                    clearTimeout(timeoutId);
+                    if (localStorage.getItem(`termo_aceito_${usuarioAtivo}`) === 'true') {
+                        aplicarLayoutAceito(blocoPendente, blocoAceito, badge, sininho, dataAceiteLocal, false);
+                    } else {
+                        aplicarLayoutPendente(blocoPendente, blocoAceito, badge, sininho);
+                    }
+                });
+        }
+
+        function aplicarLayoutAceito(blocoPendente, blocoAceito, badge, sininho, dataRegistro, ehGlobal) {
+            if (blocoPendente) blocoPendente.style.display = 'none';
+            if (blocoAceito) {
+                blocoAceito.style.display = 'block';
+                const tipoSinc = ehGlobal ? "sincronizado com a nuvem em:" : "verificado via dispositivo em:";
+                document.getElementById('textoDataAceite').innerHTML = `O seu comprovante de leitura e concordância foi ${tipoSinc} <br><strong>${dataRegistro}</strong>`;
+            }
+            if (badge) badge.style.display = 'none';
+            if (sininho) { 
+                sininho.style.animation = 'none'; 
+                sininho.title = "Nenhum aviso pendente"; 
+            }
+        }
+
+        function aplicarLayoutPendente(blocoPendente, blocoAceito, badge, sininho) {
+            if (blocoPendente) blocoPendente.style.display = 'block';
+            if (blocoAceito) blocoAceito.style.display = 'none';
+            if (badge) badge.style.display = 'flex';
+            if (sininho) {
+                sininho.style.animation = 'balancoSininho 0.5s ease-in-out infinite alternate';
+            }
+        }
+
+        function irParaAvisos() {
+            const botaoAvisosMenu = document.querySelectorAll('.nav-btn')[2]; 
+            if (botaoAvisosMenu) mudarAba('comunicados', botaoAvisosMenu);
+        }
+        
+        function atualizarPainel() {
+            window.location.reload();
+        }
+
+        function alternarBotaoAceite() {
+            const checkbox = document.getElementById('checkAceite');
+            const botao = document.getElementById('btnEnviarAceite');
+
+            if (checkbox && checkbox.checked) {
+                botao.disabled = false;
+                botao.style.backgroundColor = '#27ae60';
+                botao.style.cursor = 'pointer';
+            } else if (botao) {
+                botao.disabled = true;
+                botao.style.backgroundColor = '#95a5a6';
+                botao.style.cursor = 'not-allowed';
+            }
+        }
+
+        function enviarEmailAceite() {
+            const nomeAluno = localStorage.getItem('nomeAlunoLogado') || 'Nome Não Identificado';
+            const dataHoraAtual = new Date().toLocaleString('pt-BR');
+            
+            const emailDestinatarioPrincipal = "luedo25@msn.com"; 
+            const assunto = encodeURIComponent(`CONFIRMAÇÃO DE ACEITE: Regras da Associação - ${nomeAluno}`);
+            
+            const corpoEmail = encodeURIComponent(
+                `Prezada Diretoria,
+
+` +
+                `Por meio deste e-mail, confirmo que li e aceito voluntariamente todos os termos, regras e normas da Associação.
+
+` +
+                `DADOS DO ASSOCIADO:
+` +
+                `Nome completo: ${nomeAluno}
+` +
+                `Usuário do sistema: ${usuarioAtivo}
+` +
+                `Data/Hora do Aceite: ${dataHoraAtual}
+
+` +
                 `Este e-mail serve como registro e comprovante digital do meu aceite obrigatório.`
             );
 
