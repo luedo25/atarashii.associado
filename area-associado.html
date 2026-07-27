@@ -1554,139 +1554,144 @@
             }
         }
 
-        // 5. CARREGAMENTO E EXIBIÇÃO DO GRÁFICO DE FREQUÊNCIA COM FILTRO DE DATAS
-        let instanciaGrafico = null;
+       // 5. CARREGAMENTO E EXIBIÇÃO DO GRÁFICO DE FREQUÊNCIA COM FILTRO DE DATAS
+let instanciaGrafico = null;
 
-        async function carregarGraficoFrequencia() {
-            if (!usuarioAtivo) {
-                console.warn("⚠️ Atenção: usuarioAtivo ainda não foi definido.");
-                return;
-            }
+async function carregarGraficoFrequencia() {
+    if (!usuarioAtivo) {
+        console.warn("⚠️ Atenção: usuarioAtivo ainda não foi definido.");
+        return;
+    }
 
-            const canvasElement = document.getElementById('graficoFrequencia');
-            if (!canvasElement) {
-                console.warn("⚠️ Elemento 'graficoFrequencia' não foi encontrado na página.");
-                return;
-            }
+    const canvasElement = document.getElementById('graficoFrequencia');
+    if (!canvasElement) {
+        console.warn("⚠️ Elemento 'graficoFrequencia' não foi encontrado na página.");
+        return;
+    }
 
-            // Obter datas dos campos de filtro (padrão 2026-07 a 2026-12)
-            const inputInicio = document.getElementById('mesInicioFrequencia')?.value || '2026-07';
-            const inputFim = document.getElementById('mesFimFrequencia')?.value || '2026-12';
+    // Obter datas dos campos de filtro
+    const inputInicio = document.getElementById('mesInicioFrequencia')?.value || '2026-07';
+    const inputFim = document.getElementById('mesFimFrequencia')?.value || '2026-12';
 
-            const dataInicio = `${inputInicio}-01`;
-            const dataFim = `${inputFim}-31`;
+    // Data inicial
+    const dataInicio = `${inputInicio}-01`;
 
+    // Calcula dinamicamente o último dia real do mês final selecionado
+    const [anoFim, mesFim] = inputFim.split('-').map(Number);
+    const ultimoDia = new Date(anoFim, mesFim, 0).getDate();
+    const dataFim = `${inputFim}-${String(ultimoDia).padStart(2, '0')}`;
+
+    try {
+        // CORREÇÃO: Enviando dataInicio e dataFim nos parâmetros da URL
+        const resFreq = await fetch(`${URL_API_SERVIDOR}/api/frequencia/${usuarioAtivo}?dataInicio=${dataInicio}&dataFim=${dataFim}`);
+        if (!resFreq.ok) throw new Error("Falha ao buscar frequência do servidor");
+        const dadosFreq = await resFreq.json();
+
+        // Busca número de justificativas aprovadas
+        let justificativasAprovadas = Number(dadosFreq.justificativas_aprovadas) || 0;
+
+        if (dadosFreq.justificativas_aprovadas === undefined) {
             try {
-                // Busca dados de frequência enviando o período como parâmetro
-                const resFreq = await fetch(`${URL_API_SERVIDOR}/api/frequencia/${usuarioAtivo}?inicio=${dataInicio}&fim=${dataFim}`);
-                if (!resFreq.ok) throw new Error("Falha ao buscar frequência do servidor");
-                const dadosFreq = await resFreq.json();
-
-                // Busca número de justificativas aprovadas
-                let justificativasAprovadas = Number(dadosFreq.justificativas_aprovadas) || 0;
-
-                if (dadosFreq.justificativas_aprovadas === undefined) {
-                    try {
-                        const resJust = await fetch(`${URL_API_SERVIDOR}/api/justificativa/aluno/${usuarioAtivo}`);
-                        if (resJust.ok) {
-                            const listaJust = await resJust.json();
-                            justificativasAprovadas = listaJust.filter(item => {
-                                const ehAprovado = item.status === 'aprovado';
-                                const dentroDoPeriodo = item.data_falta >= dataInicio && item.data_falta <= dataFim;
-                                return ehAprovado && dentroDoPeriodo;
-                            }).length;
-                        }
-                    } catch (e) {
-                        console.warn("Não foi possível buscar justificativas aprovadas separadamente:", e);
-                    }
+                const resJust = await fetch(`${URL_API_SERVIDOR}/api/justificativa/aluno/${usuarioAtivo}`);
+                if (resJust.ok) {
+                    const listaJust = await resJust.json();
+                    justificativasAprovadas = listaJust.filter(item => {
+                        const ehAprovado = item.status === 'aprovado';
+                        const dentroDoPeriodo = item.data_falta >= dataInicio && item.data_falta <= dataFim;
+                        return ehAprovado && dentroDoPeriodo;
+                    }).length;
                 }
+            } catch (e) {
+                console.warn("Não foi possível buscar justificativas aprovadas separadamente:", e);
+            }
+        }
 
-                const presencas = Number(dadosFreq.presencas) || 0;
-                const faltasBrutas = Number(dadosFreq.faltas) || 0;
+        const presencas = Number(dadosFreq.presencas) || 0;
+        const faltasBrutas = Number(dadosFreq.faltas) || 0;
 
-                // Garante que a justificativa deduza as faltas sem gerar valores negativos
-                const justificativasEfetivas = Math.min(justificativasAprovadas, faltasBrutas);
-                const faltasEfetivas = faltasBrutas - justificativasEfetivas;
+        // Garante que a justificativa deduza as faltas sem gerar valores negativos
+        const justificativasEfetivas = Math.min(justificativasAprovadas, faltasBrutas);
+        const faltasEfetivas = faltasBrutas - justificativasEfetivas;
 
-                // Total real de aulas lecionadas no período
-                const total = presencas + faltasEfetivas + justificativasEfetivas;
+        // Total real de aulas lecionadas no período
+        const total = presencas + faltasEfetivas + justificativasEfetivas;
 
-                // Atualiza elementos DOM do resumo abaixo do gráfico com os valores ajustados
-                const elemPresencas = document.getElementById('qtdPresencas');
-                const elemFaltas = document.getElementById('qtdFaltas');
-                const elemJustificativas = document.getElementById('qtdJustificativas');
+        // Atualiza elementos DOM do resumo abaixo do gráfico com os valores ajustados
+        const elemPresencas = document.getElementById('qtdPresencas');
+        const elemFaltas = document.getElementById('qtdFaltas');
+        const elemJustificativas = document.getElementById('qtdJustificativas');
 
-                if (elemPresencas) elemPresencas.textContent = presencas;
-                if (elemFaltas) elemFaltas.textContent = faltasEfetivas;
-                if (elemJustificativas) elemJustificativas.textContent = justificativasEfetivas;
+        if (elemPresencas) elemPresencas.textContent = presencas;
+        if (elemFaltas) elemFaltas.textContent = faltasEfetivas;
+        if (elemJustificativas) elemJustificativas.textContent = justificativasEfetivas;
 
-                const ctx = canvasElement.getContext('2d');
+        const ctx = canvasElement.getContext('2d');
 
-                if (instanciaGrafico) {
-                    instanciaGrafico.destroy();
-                }
+        if (instanciaGrafico) {
+            instanciaGrafico.destroy();
+        }
 
-                const plugins = (typeof ChartDataLabels !== 'undefined') ? [ChartDataLabels] : [];
+        const plugins = (typeof ChartDataLabels !== 'undefined') ? [ChartDataLabels] : [];
 
-                // Criação do Gráfico Pizza ajustado
-                instanciaGrafico = new Chart(ctx, {
-                    type: 'pie',
-                    data: {
-                        labels: [
-                            `Presenças (${presencas})`, 
-                            `Faltas (${faltasEfetivas})`,
-                            `Justificativas Aprovadas (${justificativasEfetivas})`
-                        ],
-                        datasets: [{
-                            data: [presencas, faltasEfetivas, justificativasEfetivas],
-                            backgroundColor: ['#10b981', '#ef4444', '#f59e0b'],
-                            borderWidth: 1,
-                            borderColor: '#1e293b'
-                        }]
+        // Criação do Gráfico Pizza ajustado
+        instanciaGrafico = new Chart(ctx, {
+            type: 'pie',
+            data: {
+                labels: [
+                    `Presenças (${presencas})`, 
+                    `Faltas (${faltasEfetivas})`,
+                    `Justificativas Aprovadas (${justificativasEfetivas})`
+                ],
+                datasets: [{
+                    data: [presencas, faltasEfetivas, justificativasEfetivas],
+                    backgroundColor: ['#10b981', '#ef4444', '#f59e0b'],
+                    borderWidth: 1,
+                    borderColor: '#1e293b'
+                }]
+            },
+            plugins: plugins,
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: { 
+                        position: 'bottom', 
+                        labels: { 
+                            color: '#f8fafc',
+                            font: {
+                                size: 12,
+                                weight: 'bold'
+                            }
+                        } 
                     },
-                    plugins: plugins,
-                    options: {
-                        responsive: true,
-                        plugins: {
-                            legend: { 
-                                position: 'bottom', 
-                                labels: { 
-                                    color: '#f8fafc',
-                                    font: {
-                                        size: 12,
-                                        weight: 'bold'
-                                    }
-                                } 
-                            },
-                            datalabels: {
-                                color: '#ffffff',
-                                font: {
-                                    weight: 'bold',
-                                    size: 13
-                                },
-                                formatter: (valor) => {
-                                    if (total === 0 || valor === 0) return '';
-                                    const porcentagem = Math.round((valor / total) * 100);
-                                    return `${porcentagem}%`;
-                                }
-                            },
-                            tooltip: {
-                                callbacks: {
-                                    label: function(context) {
-                                        const label = context.label || '';
-                                        const value = context.raw || 0;
-                                        const porcentagem = total > 0 ? Math.round((value / total) * 100) : 0;
-                                        return `${label}: ${value} (${porcentagem}%)`;
-                                    }
-                                }
+                    datalabels: {
+                        color: '#ffffff',
+                        font: {
+                            weight: 'bold',
+                            size: 13
+                        },
+                        formatter: (valor) => {
+                            if (total === 0 || valor === 0) return '';
+                            const porcentagem = Math.round((valor / total) * 100);
+                            return `${porcentagem}%`;
+                        }
+                    },
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                const label = context.label || '';
+                                const value = context.raw || 0;
+                                const porcentagem = total > 0 ? Math.round((value / total) * 100) : 0;
+                                return `${label}: ${value} (${porcentagem}%)`;
                             }
                         }
                     }
-                });
-            } catch (err) {
-                console.error("❌ Erro ao carregar gráfico de frequência:", err);
+                }
             }
-        }
+        });
+    } catch (err) {
+        console.error("❌ Erro ao carregar gráfico de frequência:", err);
+    }
+}
 
         // Inicialização da página
         document.addEventListener('DOMContentLoaded', () => {
