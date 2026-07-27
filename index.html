@@ -206,36 +206,33 @@
     return outputArray;
   }
 
-  async function registrarPushNativo() {
+async function registrarPushNativo() {
     if ('serviceWorker' in navigator && 'PushManager' in window) {
       try {
-        // 1. Registra o Service Worker nativo
         const registro = await navigator.serviceWorker.register('sw.js');
-        console.log('Service Worker Registrado!');
-
-        // 2. Pede permissão ao usuário
         const permissao = await Notification.requestPermission();
-        if (permissao !== 'granted') {
-          console.log('Permissão para notificações negada pelo usuário.');
-          return;
-        }
+        if (permissao !== 'granted') return;
 
-        // 3. Inscreve o navegador no serviço de Push
         const assinatura = await registro.pushManager.subscribe({
           userVisibleOnly: true,
           applicationServerKey: urlBase64ToUint8Array(PUBLIC_VAPID_KEY)
         });
 
-        // 4. Envia a assinatura para o seu servidor no Render.com
-        await fetch(`${RENDER_BACKEND_URL}/subscribe`, {
+        const usuarioAtivo = localStorage.getItem('usuarioAtivo') || 'anonimo';
+
+        // Correção da URL (/api/subscribe)
+        await fetch(`${RENDER_BACKEND_URL}/api/subscribe`, {
           method: 'POST',
-          body: JSON.stringify(assinatura),
+          body: JSON.stringify({
+            subscription: assinatura,
+            usuario: usuarioAtivo
+          }),
           headers: {
             'Content-Type': 'application/json'
           }
         });
 
-        console.log('Dispositivo cadastrado com sucesso para receber notificações!');
+        console.log('Dispositivo cadastrado com sucesso!');
       } catch (err) {
         console.error('Erro ao registrar Push:', err);
       }
