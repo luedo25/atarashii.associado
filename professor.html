@@ -340,21 +340,26 @@
         <section id="aba-resumo" class="tab-content">
             <h2 style="margin-bottom: 15px;">📊 Visão Geral de Frequência</h2>
             
-            <!-- FILTRO DE PERÍODO COM 2 CALENDÁRIOS -->
-            <div class="filtro-datas-container">
-                <div class="filtro-grid">
-                    <div class="filtro-campo">
-                        <label for="dataInicio">📅 Data Inicial:</label>
-                        <input type="date" id="dataInicio" value="2026-07-01">
-                    </div>
-                    <div class="filtro-campo">
-                        <label for="dataFim">📅 Data Final:</label>
-                        <input type="date" id="dataFim" value="2026-12-31">
-                    </div>
-                </div>
-                <button onclick="carregarResumoFrequencia()" class="btn-filtrar">🔍 Consultar Período</button>
-            </div>
-
+     <!-- FILTRO DE PERÍODO E ALUNO -->
+<div class="filtro-datas-container">
+    <div class="filtro-grid" style="grid-template-columns: 1fr 1fr 1fr;">
+        <div class="filtro-campo">
+            <label for="filtroAluno">🥋 Aluno:</label>
+            <select id="filtroAluno" style="padding: 10px; font-size: 15px; margin-top: 4px; margin-bottom: 12px; width: 100%; border-radius: 6px; border: 1px solid #334155; background-color: #0f172a; color: #f8fafc;">
+                <option value="todos">Todos os Alunos</option>
+            </select>
+        </div>
+        <div class="filtro-campo">
+            <label for="dataInicio">📅 Data Inicial:</label>
+            <input type="date" id="dataInicio" value="2026-07-01">
+        </div>
+        <div class="filtro-campo">
+            <label for="dataFim">📅 Data Final:</label>
+            <input type="date" id="dataFim" value="2026-12-31">
+        </div>
+    </div>
+    <button onclick="carregarResumoFrequencia()" class="btn-filtrar">🔍 Consultar Período</button>
+</div>
             <div id="resumoFrequenciaContainer">Carregando relatório de frequência...</div>
         </section>
 
@@ -396,13 +401,20 @@
             }
         }
 
+    // Popula os checkboxes da chamada e as opções do filtro de alunos
         function renderizarAlunos() {
             const container = document.getElementById('listaAlunosContainer');
+            const selectAluno = document.getElementById('filtroAluno');
+            
             container.innerHTML = '';
+            if (selectAluno) {
+                selectAluno.innerHTML = '<option value="todos">Todos os Alunos</option>';
+            }
 
             const alunos = listaAlunos.filter(u => u.usuario !== 'luiz.costa');
 
             alunos.forEach(aluno => {
+                // Preenche a lista da chamada
                 const div = document.createElement('div');
                 div.className = 'aluno-item';
                 div.innerHTML = `
@@ -412,6 +424,14 @@
                     </label>
                 `;
                 container.appendChild(div);
+
+                // Preenche o Select do Filtro
+                if (selectAluno) {
+                    const option = document.createElement('option');
+                    option.value = aluno.usuario;
+                    option.textContent = aluno.nome;
+                    selectAluno.appendChild(option);
+                }
             });
         }
 
@@ -514,20 +534,60 @@
             }
         }
 
-        // CARREGAMENTO DE RESUMO DE FREQUÊNCIA COM FILTRO DE DATAS REAL
-     async function carregarResumoFrequencia() {
+   // Popula os checkboxes da chamada e as opções do filtro de alunos
+        function renderizarAlunos() {
+            const container = document.getElementById('listaAlunosContainer');
+            const selectAluno = document.getElementById('filtroAluno');
+            
+            container.innerHTML = '';
+            if (selectAluno) {
+                selectAluno.innerHTML = '<option value="todos">Todos os Alunos</option>';
+            }
+
+            const alunos = listaAlunos.filter(u => u.usuario !== 'luiz.costa');
+
+            alunos.forEach(aluno => {
+                // Preenche a lista da chamada
+                const div = document.createElement('div');
+                div.className = 'aluno-item';
+                div.innerHTML = `
+                    <span>${aluno.nome}</span>
+                    <label style="cursor: pointer;">
+                        <input type="checkbox" data-usuario="${aluno.usuario}" class="chk-presente" checked> Presente
+                    </label>
+                `;
+                container.appendChild(div);
+
+                // Preenche o Select do Filtro
+                if (selectAluno) {
+                    const option = document.createElement('option');
+                    option.value = aluno.usuario;
+                    option.textContent = aluno.nome;
+                    selectAluno.appendChild(option);
+                }
+            });
+        }
+
+        // CARREGAMENTO DE RESUMO DE FREQUÊNCIA COM FILTRO DE ALUNO E DATAS
+        async function carregarResumoFrequencia() {
             const container = document.getElementById('resumoFrequenciaContainer');
             container.innerHTML = "<p style='color: #94a3b8;'>Buscando dados no servidor...</p>";
 
             const dataInicio = document.getElementById('dataInicio').value;
             const dataFim = document.getElementById('dataFim').value;
+            const usuarioSelecionado = document.getElementById('filtroAluno').value;
 
             if (!dataInicio || !dataFim) {
                 alert("Por favor, selecione as datas Inicial e Final para consulta.");
                 return;
             }
 
-            const alunos = listaAlunos.filter(u => u.usuario !== 'luiz.costa');
+            // Filtra o aluno selecionado no dropdown ou mantém todos
+            let alunos = listaAlunos.filter(u => u.usuario !== 'luiz.costa');
+            if (usuarioSelecionado !== 'todos') {
+                alunos = alunos.filter(u => u.usuario === usuarioSelecionado);
+            }
+
             let linhasHTML = '';
 
             try {
@@ -550,7 +610,7 @@
                     console.warn("Aviso ao carregar justificativas:", eJust);
                 }
 
-                // 2. Consulta frequência de cada aluno enviando os parâmetros de data
+                // 2. Consulta frequência do(s) aluno(s) filtrado(s)
                 for (const aluno of alunos) {
                     let presencas = 0;
                     let faltas = 0;
@@ -571,15 +631,11 @@
 
                     const justificativasAprovadas = mapaJustificativas[aluno.usuario] || 0;
 
-                    // APLICAÇÃO DO NOVO CÁLCULO
-                    // Diminui as faltas pela quantidade de justificativas (mínimo 0)
+                    // Cálculo com abono de faltas por justificativa
                     const faltasAjustadas = Math.max(0, faltas - justificativasAprovadas);
-                    
-                    // Considera as presenças somadas às justificativas abonadas
                     const presencasEfetivas = presencas + justificativasAprovadas;
                     const totalAulas = presencasEfetivas + faltasAjustadas;
 
-                    // Cálculo da Porcentagem Efetiva
                     const pctPresenca = totalAulas > 0 ? ((presencasEfetivas / totalAulas) * 100).toFixed(0) : 0;
 
                     let corBadge = '#10b981'; // Verde
@@ -590,7 +646,7 @@
                         <tr>
                             <td style="font-weight: bold; color: #f8fafc;">${aluno.nome}</td>
                             <td style="color: #10b981; font-weight: bold;">${presencas}</td>
-                            <td style="color: #ef4444; font-weight: bold;">${faltasAjustadas} <span style="font-size: 11px; color: #94a3b8;">(${faltas} Total)</span></td>
+                            <td style="color: #ef4444; font-weight: bold;">${faltasAjustadas} <span style="font-size: 11px; color: #94a3b8;">(${faltas} orig.)</span></td>
                             <td style="color: #3b82f6; font-weight: bold;">${justificativasAprovadas}</td>
                             <td>
                                 <span class="badge-porcentagem" style="background: ${corBadge}22; color: ${corBadge}; border: 1px solid ${corBadge};">
@@ -599,6 +655,11 @@
                             </td>
                         </tr>
                     `;
+                }
+
+                if (linhasHTML === '') {
+                    container.innerHTML = "<p style='color: #94a3b8;'>Nenhum registro encontrado para o filtro selecionado.</p>";
+                    return;
                 }
 
                 container.innerHTML = `
