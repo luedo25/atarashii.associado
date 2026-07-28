@@ -801,10 +801,12 @@
 
     <!-- SEÇÃO 1: PAINEL / NOTAS DO ALUNO -->
     <div id="exame" class="tab-content active">
-        <!-- CONQUISTAS & BADGES DO ALUNO (CORRIGIDO E OTIMIZADO PARA SMARTPHONE) -->
+        
+     <!-- CONQUISTAS & BADGES DO ALUNO (DENTRO DA MESMA DIV) -->
         <div class="card-conquistas">
             <h3 class="titulo-conquistas">🏆 Minhas Conquistas</h3>
             
+            <!-- BADGE FREQUÊNCIA DE FERRO -->
             <div id="cardBadgeFerro" class="badge-card badge-bloqueado">
                 <!-- Ícone / Medalha Estilizada -->
                 <div class="badge-emblem">
@@ -828,31 +830,32 @@
                     <div id="historicoBadges" class="badge-historico"></div>
                 </div>
             </div>
-        </div>
-        <!-- BADGE GUARDIÃO -->
-<div id="cardBadgeGuardiao" class="badge-card badge-bloqueado" style="margin-top: 12px;">
-    <!-- Ícone Escudo / Guardião -->
-    <div class="badge-emblem">
-        <div class="emblem-ring">
-            <svg class="emblem-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
-            </svg>
-        </div>
-        <span class="badge-ribbon">🛡️ 85%</span>
-    </div>
 
-    <!-- Informações do Badge -->
-    <div class="badge-info">
-        <div class="badge-header">
-            <strong class="badge-title">Guardião</strong>
-            <span id="badgeTagGuardiao" class="badge-tag">Em andamento</span>
+            <!-- BADGE GUARDIÃO (AGORA INCLUÍDO DENTRO DA DIV MINHAS CONQUISTAS) -->
+            <div id="cardBadgeGuardiao" class="badge-card badge-bloqueado" style="margin-top: 12px;">
+                <!-- Ícone Escudo / Guardião -->
+                <div class="badge-emblem">
+                    <div class="emblem-ring">
+                        <svg class="emblem-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+                        </svg>
+                    </div>
+                    <span class="badge-ribbon">🛡️ 85%</span>
+                </div>
+
+                <!-- Informações do Badge -->
+                <div class="badge-info">
+                    <div class="badge-header">
+                        <strong class="badge-title">Guardião</strong>
+                        <span id="badgeTagGuardiao" class="badge-tag">Em andamento</span>
+                    </div>
+                    <p class="badge-desc">Carência mínima cumprida + presença acima de 85% por 3 meses seguidos.</p>
+                    
+                    <!-- Histórico Guardião -->
+                    <div id="historicoGuardiao" class="badge-historico"></div>
+                </div>
+            </div>
         </div>
-        <p class="badge-desc">Carência mínima cumprida + presença acima de 85% por 3 meses seguidos.</p>
-        
-        <!-- Histórico Guardião -->
-        <div id="historicoGuardiao" class="badge-historico"></div>
-    </div>
-</div>
 
         <h3>🥋 Exames de Faixa</h3>
         <div class="table-container">
