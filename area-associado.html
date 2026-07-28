@@ -624,6 +624,32 @@
     </div>
 
     <!-- SEÇÃO 1: PAINEL / NOTAS DO ALUNO -->
+    
+        <!-- CONQUISTAS & BADGES DO ALUNO -->
+        <div style="margin-top: 20px; background: rgba(15, 23, 42, 0.6); border: 1px solid var(--border-color); padding: 20px; border-radius: var(--radius-md);">
+            <h3 style="margin-bottom: 12px; font-size: 16px;">🏆 Minhas Conquistas</h3>
+            
+            <div id="cardBadgeFerro" class="card-item" style="display: flex; align-items: center; justify-content: space-between; background: rgba(30, 41, 59, 0.8);">
+                <div style="display: flex; align-items: center; gap: 12px;">
+                    <span style="font-size: 28px;">⚙️</span>
+                    <div>
+                        <strong style="font-size: 14px; display: block;">Frequência de Ferro</strong>
+                        <span style="font-size: 12px; color: var(--text-muted);">100% de presença nas aulas do mês</span>
+                    </div>
+                </div>
+
+                <div id="statusBadgeFerro" style="display: flex; align-items: center; gap: 6px; font-size: 12px; font-weight: bold; color: var(--text-muted);">
+                    <input type="checkbox" id="chkFerroConcluido" disabled style="width: 18px; height: 18px; accent-color: var(--accent-green);">
+                    <span id="txtStatusBadge">Em andamento</span>
+                </div>
+            </div>
+
+            <!-- Histórico de Meses Conquistados -->
+            <div id="historicoBadges" style="margin-top: 10px; font-size: 12px; color: var(--text-muted);">
+                <!-- Preenchido dinamicamente via JS -->
+            </div>
+        </div>
+    
     <div id="exame" class="tab-content active">
         <h3>🥋 Exames de Faixa</h3>
         <div class="table-container">
@@ -751,31 +777,6 @@
             <strong style="font-size: 15px;">📄 Regulamento Oficial de Justificativa de Faltas</strong>
             <p style="font-size: 12px; color: var(--text-muted);">Conteúdo detalhado sobre a justificativa de faltas.</p>
             <a href="Regulamento de Justificativa de Faltas.pdf" target="_blank" class="btn-action" style="padding: 10px;">📖 Abrir Regulamento</a>
-        </div>
-        
-        <!-- CONQUISTAS & BADGES DO ALUNO -->
-        <div style="margin-top: 20px; background: rgba(15, 23, 42, 0.6); border: 1px solid var(--border-color); padding: 20px; border-radius: var(--radius-md);">
-            <h3 style="margin-bottom: 12px; font-size: 16px;">🏆 Minhas Conquistas</h3>
-            
-            <div id="cardBadgeFerro" class="card-item" style="display: flex; align-items: center; justify-content: space-between; background: rgba(30, 41, 59, 0.8);">
-                <div style="display: flex; align-items: center; gap: 12px;">
-                    <span style="font-size: 28px;">⚙️</span>
-                    <div>
-                        <strong style="font-size: 14px; display: block;">Frequência de Ferro</strong>
-                        <span style="font-size: 12px; color: var(--text-muted);">100% de presença nas aulas do mês</span>
-                    </div>
-                </div>
-
-                <div id="statusBadgeFerro" style="display: flex; align-items: center; gap: 6px; font-size: 12px; font-weight: bold; color: var(--text-muted);">
-                    <input type="checkbox" id="chkFerroConcluido" disabled style="width: 18px; height: 18px; accent-color: var(--accent-green);">
-                    <span id="txtStatusBadge">Em andamento</span>
-                </div>
-            </div>
-
-            <!-- Histórico de Meses Conquistados -->
-            <div id="historicoBadges" style="margin-top: 10px; font-size: 12px; color: var(--text-muted);">
-                <!-- Preenchido dinamicamente via JS -->
-            </div>
         </div>
     </div> <!-- /div#exame -->
 
