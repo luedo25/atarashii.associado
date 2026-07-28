@@ -105,7 +105,7 @@
 
     .tab-content.active { display: block; }
 
-    /* ESTILOS DA CHAMADA */
+    /* ESTILOS DA CHAMADA E FORMULÁRIOS */
     .aluno-item { 
         display: flex; 
         justify-content: space-between; 
@@ -114,7 +114,7 @@
         border-bottom: 1px solid #334155; 
     }
 
-    input[type="date"], select { 
+    input[type="date"], input[type="text"], textarea, select { 
         padding: 10px; 
         font-size: 15px; 
         margin-top: 4px;
@@ -126,7 +126,13 @@
         color: #f8fafc;
     }
 
-    .btn-salvar { 
+    textarea {
+        resize: vertical;
+        min-height: 90px;
+        font-family: inherit;
+    }
+
+    .btn-salvar, .btn-enviar-push { 
         width: 100%; 
         padding: 12px; 
         background: #3b82f6; 
@@ -135,11 +141,12 @@
         border-radius: 8px; 
         font-weight: bold; 
         cursor: pointer; 
-        margin-top: 20px; 
+        margin-top: 10px; 
         font-size: 1rem;
+        transition: background 0.2s;
     }
 
-    .btn-salvar:hover { background: #2563eb; }
+    .btn-salvar:hover, .btn-enviar-push:hover { background: #2563eb; }
 
     /* CARD DE JUSTIFICATIVAS */
     .card-justificativas {
@@ -240,13 +247,12 @@
             padding: 12px;
         }
 
-        /* FILTROS FICAM EMPILHADOS EM 1 COLUNA NO CELULAR */
         .filtro-grid {
             grid-template-columns: 1fr !important;
             gap: 4px;
         }
 
-        input[type="date"], select {
+        input[type="date"], input[type="text"], textarea, select {
             margin-bottom: 8px;
         }
 
@@ -267,6 +273,16 @@
         .btn-header {
             padding: 6px 10px;
             font-size: 0.8rem;
+        }
+
+        .tabs-nav {
+            padding: 10px 10px 0 10px;
+            gap: 4px;
+        }
+
+        .nav-btn {
+            padding: 8px 4px;
+            font-size: 0.78rem;
         }
     }
 </style>
@@ -299,7 +315,10 @@
             📝 Justificativas
         </button>
         <button class="nav-btn" onclick="mudarAba('resumo', this)">
-            📊 Resumo de Frequência
+            📊 Resumo
+        </button>
+        <button class="nav-btn" onclick="mudarAba('notificacoes', this)">
+            🔔 Notificações
         </button>
     </nav>
 
@@ -318,7 +337,7 @@
             <button onclick="salvarChamada()" class="btn-salvar">💾 Salvar Chamada</button>
         </section>
 
-   <!-- ABA 2: JUSTIFICATIVA DE FALTAS -->
+        <!-- ABA 2: JUSTIFICATIVA DE FALTAS -->
         <section id="aba-justificativas" class="tab-content">
             <h2 style="margin-bottom: 15px;">📝 Pedidos de Justificativa de Faltas</h2>
 
@@ -327,7 +346,7 @@
                <div class="filtro-grid">
                     <div class="filtro-campo">
                         <label for="filtroAlunoJustificativa">🥋 Aluno:</label>
-                        <select id="filtroAlunoJustificativa" style="padding: 10px; font-size: 15px; margin-top: 4px; margin-bottom: 12px; width: 100%; border-radius: 6px; border: 1px solid #334155; background-color: #0f172a; color: #f8fafc;">
+                        <select id="filtroAlunoJustificativa">
                             <option value="todos">Todos os Alunos</option>
                         </select>
                     </div>
@@ -350,27 +369,52 @@
         <section id="aba-resumo" class="tab-content">
             <h2 style="margin-bottom: 15px;">📊 Visão Geral de Frequência</h2>
             
-     <!-- FILTRO DE PERÍODO E ALUNO -->
-<div class="filtro-datas-container">
-    <div class="filtro-grid">
-        <div class="filtro-campo">
-            <label for="filtroAluno">🥋 Aluno:</label>
-            <select id="filtroAluno" style="padding: 10px; font-size: 15px; margin-top: 4px; margin-bottom: 12px; width: 100%; border-radius: 6px; border: 1px solid #334155; background-color: #0f172a; color: #f8fafc;">
-                <option value="todos">Todos os Alunos</option>
-            </select>
-        </div>
-        <div class="filtro-campo">
-            <label for="dataInicio">📅 Data Inicial:</label>
-            <input type="date" id="dataInicio" value="2026-07-01">
-        </div>
-        <div class="filtro-campo">
-            <label for="dataFim">📅 Data Final:</label>
-            <input type="date" id="dataFim" value="2026-12-31">
-        </div>
-    </div>
-    <button onclick="carregarResumoFrequencia()" class="btn-filtrar">🔍 Consultar Frequência</button>
-</div>
+            <!-- FILTRO DE PERÍODO E ALUNO -->
+            <div class="filtro-datas-container">
+                <div class="filtro-grid">
+                    <div class="filtro-campo">
+                        <label for="filtroAluno">🥋 Aluno:</label>
+                        <select id="filtroAluno">
+                            <option value="todos">Todos os Alunos</option>
+                        </select>
+                    </div>
+                    <div class="filtro-campo">
+                        <label for="dataInicio">📅 Data Inicial:</label>
+                        <input type="date" id="dataInicio" value="2026-07-01">
+                    </div>
+                    <div class="filtro-campo">
+                        <label for="dataFim">📅 Data Final:</label>
+                        <input type="date" id="dataFim" value="2026-12-31">
+                    </div>
+                </div>
+                <button onclick="carregarResumoFrequencia()" class="btn-filtrar">🔍 Consultar Frequência</button>
+            </div>
             <div id="resumoFrequenciaContainer">Carregando relatório de frequência...</div>
+        </section>
+
+        <!-- ABA 4: ENVIAR NOTIFICAÇÕES PUSH -->
+        <section id="aba-notificacoes" class="tab-content">
+            <h2 style="margin-bottom: 15px;">🔔 Enviar Alertas Push</h2>
+            <p style="color: #94a3b8; font-size: 0.9rem; margin-bottom: 20px;">
+                Envie mensagens diretas na tela dos celulares cadastrados no sistema.
+            </p>
+
+            <div class="filtro-datas-container">
+                <label for="destinatarioPush" style="font-size: 0.85rem; color: #94a3b8; font-weight: bold;">📢 Destinatário:</label>
+                <select id="destinatarioPush">
+                    <option value="">🌐 Enviar para Todos os Alunos</option>
+                </select>
+
+                <label for="tituloPush" style="font-size: 0.85rem; color: #94a3b8; font-weight: bold;">📌 Título do Aviso:</label>
+                <input type="text" id="tituloPush" placeholder="Ex: Aviso Importante! / Treino Cancelado">
+
+                <label for="mensagemPush" style="font-size: 0.85rem; color: #94a3b8; font-weight: bold;">💬 Mensagem:</label>
+                <textarea id="mensagemPush" placeholder="Digite aqui o texto do seu lembrete..."></textarea>
+
+                <button onclick="enviarNotificacaoPush()" class="btn-enviar-push" id="btnDispararPush">
+                    🚀 Enviar Notificação Agora
+                </button>
+            </div>
         </section>
 
     </main>
@@ -411,11 +455,12 @@
             }
         }
 
-        // FUNÇÃO ÚNICA: Popula a chamada e TODOS os menus de filtro de alunos
+        // FUNÇÃO ÚNICA: Popula a chamada e TODOS os menus de filtro/destinatários de alunos
         function renderizarAlunos() {
             const container = document.getElementById('listaAlunosContainer');
             const selectAlunoResumo = document.getElementById('filtroAluno');
             const selectAlunoJustificativa = document.getElementById('filtroAlunoJustificativa');
+            const selectDestinatarioPush = document.getElementById('destinatarioPush');
             
             if (container) container.innerHTML = '';
             
@@ -424,6 +469,9 @@
             }
             if (selectAlunoJustificativa) {
                 selectAlunoJustificativa.innerHTML = '<option value="todos">Todos os Alunos</option>';
+            }
+            if (selectDestinatarioPush) {
+                selectDestinatarioPush.innerHTML = '<option value="">🌐 Enviar para Todos os Alunos</option>';
             }
 
             // Filtra o professor/administrador da lista
@@ -457,6 +505,14 @@
                     option.value = aluno.usuario;
                     option.textContent = aluno.nome;
                     selectAlunoJustificativa.appendChild(option);
+                }
+
+                // 4. Preenche o Destinatário da aba Notificações Push
+                if (selectDestinatarioPush) {
+                    const option = document.createElement('option');
+                    option.value = aluno.usuario;
+                    option.textContent = `👤 ${aluno.nome}`;
+                    selectDestinatarioPush.appendChild(option);
                 }
             });
         }
@@ -698,6 +754,50 @@
             } catch (err) {
                 console.error("Erro geral ao montar tabela:", err);
                 container.innerHTML = "<p style='color: #ef4444;'>Não foi possível carregar as informações de frequência.</p>";
+            }
+        }
+
+        // FUNÇÃO DE DISPARO DE NOTIFICAÇÕES PUSH
+        async function enviarNotificacaoPush() {
+            const titulo = document.getElementById('tituloPush').value.trim();
+            const body = document.getElementById('mensagemPush').value.trim();
+            const usuario = document.getElementById('destinatarioPush').value;
+            const btn = document.getElementById('btnDispararPush');
+
+            if (!titulo || !body) {
+                return alert("Por favor, preencha o Título e a Mensagem da notificação.");
+            }
+
+            btn.disabled = true;
+            btn.innerHTML = "⏳ Enviando...";
+
+            try {
+                const payload = { title: titulo, body: body };
+                if (usuario) {
+                    payload.usuario = usuario;
+                }
+
+                const response = await fetch(`${URL_API_SERVIDOR}/api/send-notification`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+
+                const result = await response.json();
+
+                if (response.ok && result.sucesso) {
+                    alert(`✅ Notificação disparada com sucesso!\n\n${result.mensagem}`);
+                    document.getElementById('tituloPush').value = '';
+                    document.getElementById('mensagemPush').value = '';
+                } else {
+                    alert(`⚠️ ${result.erro || 'Não foi possível enviar a notificação.'}`);
+                }
+            } catch (err) {
+                console.error("Erro ao enviar notificação push:", err);
+                alert("❌ Erro ao comunicar com o servidor.");
+            } finally {
+                btn.disabled = false;
+                btn.innerHTML = "🚀 Enviar Notificação Agora";
             }
         }
     </script>
