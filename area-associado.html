@@ -557,7 +557,7 @@
             🔄
         </div>
 
-        <div class="icon-btn" id="wrapperSininho" onclick="irParaAvisos()">
+        <div class="icon-btn" id="wrapperSininho" onclick="solicitarAtivacaoPushIOS()">
             🔔
             <span class="badge-count" id="badgeNotificacao" style="display: none;">1</span>
         </div>
@@ -567,6 +567,19 @@
 </header>
 
 <div class="container">
+    <!-- BANNER INFORMATIVO EXCLUSIVO PARA IOS / SAFARI WEB -->
+    <div id="bannerIosInstalar" style="display: none; background: rgba(59, 130, 246, 0.15); border: 1px solid var(--accent-blue); padding: 12px 16px; border-radius: var(--radius-md); margin-bottom: 15px; font-size: 13px;">
+        📲 <strong>Ativar Notificações no iPhone:</strong> Para receber notificações no iOS, toque no botão de <strong>Compartilhar (🔗/⬆️)</strong> do Safari e escolha <strong>"Adicionar à Tela de Início"</strong>.
+    </div>
+
+    <!-- BOTÃO MANUAL DE ATIVAÇÃO PUSH PARA DISPOSITIVOS MÓVEIS -->
+    <div id="boxAtivarPush" style="display: none; background: rgba(16, 185, 129, 0.15); border: 1px solid var(--accent-green); padding: 12px 16px; border-radius: var(--radius-md); margin-bottom: 15px; text-align: center;">
+        <span style="font-size: 13px; display: block; margin-bottom: 8px;">Deseja receber avisos e notificações de treinos no seu celular?</span>
+        <button onclick="solicitarAtivacaoPushIOS()" style="background: var(--accent-green); color: white; border: none; padding: 8px 16px; border-radius: var(--radius-sm); font-weight: bold; cursor: pointer; font-size: 13px;">
+            🔔 Ativar Notificações Push
+        </button>
+    </div>
+
     <!-- Boas-Vindas -->
     <div class="welcome-box">
         <h2 id="welcomeNome">Olá, Associado!</h2>
@@ -1348,7 +1361,7 @@
 
         document.getElementById('welcomeNome').textContent = `Olá, ${nomeDoAluno}!`;
 
-        // 3. REGISTRO DE NOTIFICAÇÃO PUSH NATIVA VINCULADA AO USUÁRIO LOGADO
+        // 3. REGISTRO DE NOTIFICAÇÃO PUSH NATIVA (COMPATÍVEL COM IOS/WEBKIT)
         function urlBase64ToUint8Array(base64String) {
             const padding = '='.repeat((4 - base64String.length % 4) % 4);
             const base64 = (base64String + padding).replace(/-/g, '+').replace(/_/g, '/');
@@ -1360,34 +1373,102 @@
             return outputArray;
         }
 
-        async function registrarPushNativo() {
-            if ('serviceWorker' in navigator && 'PushManager' in window) {
-                try {
-                    const registro = await navigator.serviceWorker.register('sw.js');
-                    const permissao = await Notification.requestPermission();
-                    if (permissao !== 'granted') return;
+        // Detecção de PWA/iOS Standalone
+        function ehIOS() {
+            return /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+        }
 
-                    const assinatura = await registro.pushManager.subscribe({
+        function ehPWAStandalone() {
+            return (window.matchMedia('(display-mode: standalone)').matches) || (window.navigator.standalone === true);
+        }
+
+        async function registrarPushNativo() {
+            if (!('serviceWorker' in navigator) || !('PushManager' in window)) {
+                console.warn('Serviço de Push não é suportado neste navegador.');
+                return;
+            }
+
+            try {
+                // Registrar o Service Worker
+                const registro = await navigator.serviceWorker.register('sw.js');
+                await navigator.serviceWorker.ready;
+
+                // Checa a permissão atual
+                let permissao = Notification.permission;
+
+                if (permissao === 'default') {
+                    // No iOS, se não for por clique do usuário, a permissão não pode ser pedida automaticamente
+                    if (ehIOS() && !ehPWAStandalone()) {
+                        const banner = document.getElementById('bannerIosInstalar');
+                        if (banner) banner.style.display = 'block';
+                        return;
+                    }
+                    
+                    const boxPush = document.getElementById('boxAtivarPush');
+                    if (boxPush) boxPush.style.display = 'block';
+                    return;
+                }
+
+                if (permissao !== 'granted') {
+                    console.warn('Permissão para notificações não foi concedida pelo usuário.');
+                    return;
+                }
+
+                // Oculta os avisos de ativação se já permitido
+                const boxPush = document.getElementById('boxAtivarPush');
+                if (boxPush) boxPush.style.display = 'none';
+
+                // Realiza a inscrição PUSH
+                let assinatura = await registro.pushManager.getSubscription();
+                if (!assinatura) {
+                    assinatura = await registro.pushManager.subscribe({
                         userVisibleOnly: true,
                         applicationServerKey: urlBase64ToUint8Array(PUBLIC_VAPID_KEY)
                     });
-
-                    if (!usuarioAtivo) return;
-
-                    // Envia para o Supabase vincular a subscription ao nome do usuário ativo/logado
-                    await fetch(`${URL_API_SERVIDOR}/api/subscribe`, {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({
-                            subscription: assinatura,
-                            usuario: usuarioAtivo
-                        })
-                    });
-
-                    console.log(`Dispositivo e Push vinculados com sucesso ao usuário: ${usuarioAtivo}`);
-                } catch (err) {
-                    console.error('Erro ao registrar Push no Supabase:', err);
                 }
+
+                if (!usuarioAtivo) return;
+
+                // Envia para o servidor Render/Supabase vincular a subscription ao nome do usuário
+                const res = await fetch(`${URL_API_SERVIDOR}/api/subscribe`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        subscription: assinatura,
+                        usuario: usuarioAtivo
+                    })
+                });
+
+                if (res.ok) {
+                    console.log(`Dispositivo e Push vinculados com sucesso ao usuário: ${usuarioAtivo}`);
+                }
+            } catch (err) {
+                console.error('Erro ao registrar Push no Supabase/Render:', err);
+            }
+        }
+
+        // Função disparada manualmente via clique no iOS/Android
+        async function solicitarAtivacaoPushIOS() {
+            if (ehIOS() && !ehPWAStandalone()) {
+                alert('No iPhone/iPad, você deve primeiro adicionar este site à Tela de Início (Aperte o botão Compartilhar do Safari > Adicionar à Tela de Início).');
+                return;
+            }
+
+            if (!('Notification' in window)) {
+                alert('Notificações não são suportadas neste navegador.');
+                return;
+            }
+
+            try {
+                const permissao = await Notification.requestPermission();
+                if (permissao === 'granted') {
+                    alert('Notificações ativadas com sucesso!');
+                    await registrarPushNativo();
+                } else if (permissao === 'denied') {
+                    alert('As notificações foram bloqueadas. Habilite-as nas Configurações do Safari/Ajustes do iOS.');
+                }
+            } catch (e) {
+                console.error("Erro ao solicitar permissão de Notificação:", e);
             }
         }
 
@@ -1694,7 +1775,7 @@
                     document.getElementById('formJustificativa').reset();
                     alternarCampoTextoOutro();
                     carregarStatusJustificativas();
-                    carregarGraficoFrequencia(); // Atualiza gráfico e resumo após envio
+                    carregarGraficoFrequencia();
                 } else {
                     alert("Erro: " + (result.erro || "Falha ao registrar justificativa."));
                 }
@@ -1707,7 +1788,6 @@
             const container = document.getElementById('listaJustificativasAluno');
             if (!container) return;
 
-            // Obter datas dos campos de filtro
             const inputInicio = document.getElementById('mesInicioJustificativa')?.value || '2026-07';
             const inputFim = document.getElementById('mesFimJustificativa')?.value || '2026-12';
 
@@ -1725,7 +1805,6 @@
                     return;
                 }
 
-                // Filtrar os itens por intervalo de datas selecionado
                 const dadosFiltrados = dados.filter(item => {
                     if (!item.data_falta) return false;
                     return item.data_falta >= dataInicio && item.data_falta <= dataFim;
@@ -1737,7 +1816,7 @@
                 }
 
                 container.innerHTML = dadosFiltrados.map(item => {
-                    let corBadge = '#f59e0b'; // Pendente
+                    let corBadge = '#f59e0b';
                     if (item.status === 'aprovado') corBadge = '#10b981';
                     if (item.status === 'reprovado') corBadge = '#ef4444';
 
@@ -1755,32 +1834,21 @@
             }
         }
 
-        // ALIAS DE COMPATIBILIDADE PARA A FUNÇÃO carregarMinhasJustificativas
         const carregarMinhasJustificativas = carregarStatusJustificativas;
 
         // 6. CARREGAMENTO E EXIBIÇÃO DO GRÁFICO DE FREQUÊNCIA COM FILTRO DE DATAS
         let instanciaGrafico = null;
 
         async function carregarGraficoFrequencia() {
-            if (!usuarioAtivo) {
-                console.warn("⚠️ Atenção: usuarioAtivo ainda não foi definido.");
-                return;
-            }
+            if (!usuarioAtivo) return;
 
             const canvasElement = document.getElementById('graficoFrequencia');
-            if (!canvasElement) {
-                console.warn("⚠️ Elemento 'graficoFrequencia' não foi encontrado na página.");
-                return;
-            }
+            if (!canvasElement) return;
 
-            // Obter datas dos campos de filtro
             const inputInicio = document.getElementById('mesInicioFrequencia')?.value || '2026-07';
             const inputFim = document.getElementById('mesFimFrequencia')?.value || '2026-12';
 
-            // Data inicial
             const dataInicio = `${inputInicio}-01`;
-
-            // Calcula dinamicamente o último dia real do mês final selecionado
             const [anoFim, mesFim] = inputFim.split('-').map(Number);
             const ultimoDia = new Date(anoFim, mesFim, 0).getDate();
             const dataFim = `${inputFim}-${String(ultimoDia).padStart(2, '0')}`;
@@ -1790,7 +1858,6 @@
                 if (!resFreq.ok) throw new Error("Falha ao buscar frequência do servidor");
                 const dadosFreq = await resFreq.json();
 
-                // Busca número de justificativas aprovadas
                 let justificativasAprovadas = Number(dadosFreq.justificativas_aprovadas) || 0;
 
                 if (dadosFreq.justificativas_aprovadas === undefined) {
@@ -1805,29 +1872,23 @@
                             }).length;
                         }
                     } catch (e) {
-                        console.warn("Não foi possível buscar justificativas aprovadas separadamente:", e);
+                        console.warn("Não foi possível buscar justificativas separadamente:", e);
                     }
                 }
 
                 const presencas = Number(dadosFreq.presencas) || 0;
-                const faltasBrutas = Number(dadosFreq.faltas) || 0; // Faltas totais reais
+                const faltasBrutas = Number(dadosFreq.faltas) || 0;
 
-                // Garante que as justificativas não ultrapassem as faltas brutas
                 const justificativasEfetivas = Math.min(justificativasAprovadas, faltasBrutas);
-                
-                // Faltas descontadas para exibição da fatia do gráfico
                 const faltasDescontadas = faltasBrutas - justificativasEfetivas;
-
-                // Total geral de chamadas (Presenças + Faltas Descontadas + Justificativas)
                 const totalAulas = presencas + faltasDescontadas + justificativasEfetivas;
 
-                // Atualiza elementos do resumo abaixo do gráfico com os valores brutas e reais
                 const elemPresencas = document.getElementById('qtdPresencas');
                 const elemFaltas = document.getElementById('qtdFaltas');
                 const elemJustificativas = document.getElementById('qtdJustificativas');
 
                 if (elemPresencas) elemPresencas.textContent = presencas;
-                if (elemFaltas) elemFaltas.textContent = faltasBrutas; // Exibe o total real bruto de faltas
+                if (elemFaltas) elemFaltas.textContent = faltasBrutas;
                 if (elemJustificativas) elemJustificativas.textContent = justificativasEfetivas;
 
                 const ctx = canvasElement.getContext('2d');
@@ -1838,17 +1899,15 @@
 
                 const plugins = (typeof ChartDataLabels !== 'undefined') ? [ChartDataLabels] : [];
 
-                // Criação do Gráfico Pizza
                 instanciaGrafico = new Chart(ctx, {
                     type: 'pie',
                     data: {
                         labels: [
                             `Presenças (${presencas})`, 
-                            `Faltas (${faltasBrutas})`, // Exibe a quantidade total de faltas na legenda
+                            `Faltas (${faltasBrutas})`,
                             `Justificativas Aprovadas (${justificativasEfetivas})`
                         ],
                         datasets: [{
-                            // O gráfico desenha as fatias considerando as faltas descontadas
                             data: [presencas, faltasDescontadas, justificativasEfetivas],
                             backgroundColor: ['#10b981', '#ef4444', '#f59e0b'],
                             borderWidth: 1,
@@ -1863,18 +1922,12 @@
                                 position: 'bottom', 
                                 labels: { 
                                     color: '#f8fafc',
-                                    font: {
-                                        size: 12,
-                                        weight: 'bold'
-                                    }
+                                    font: { size: 12, weight: 'bold' }
                                 } 
                             },
                             datalabels: {
                                 color: '#ffffff',
-                                font: {
-                                    weight: 'bold',
-                                    size: 13
-                                },
+                                font: { weight: 'bold', size: 13 },
                                 formatter: (valor) => {
                                     if (totalAulas === 0 || valor === 0) return '';
                                     const porcentagem = Math.round((valor / totalAulas) * 100);
@@ -1909,7 +1962,7 @@
                 carregarGraficoFrequencia();
                 carregarStatusJustificativas();
                 
-                // Registra o Push Nativo vinculando o usuário autenticado ao Supabase/Backend
+                // Inicialização das notificações Push para Android e iOS
                 registrarPushNativo();
 
                 setTimeout(() => verificarStatusAceite(), 300);
