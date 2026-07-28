@@ -1255,12 +1255,12 @@
             🔄 Atualizar Saldo
         </button>
 
-            <h3>💵 Ajude a Associação Atarashii</h3>
+        <h3>💵 Ajude a Associação Atarashii</h3>
         <div style="display: flex; flex-direction: column; gap: 10px; margin-bottom: 20px;">
             <a href="https://link.mercadopago.com.br/atarashii" target="_blank" class="btn-action" style="background: #1877f2;">
                 🔗 Link para ajudar Associação
             </a>
-            </div> 
+        </div> 
         <h3>🔗 Contatos Oficiais</h3>
         <div style="display: flex; flex-direction: column; gap: 10px; margin-bottom: 20px;">
             <a href="https://wa.me/5511988412917" target="_blank" class="btn-action btn-whatsapp">
@@ -1344,10 +1344,54 @@
         const nomeDoAluno = localStorage.getItem('nomeAlunoLogado') || 'Associado';
         const usuarioAtivo = localStorage.getItem('usuarioAtivo');
         const URL_API_SERVIDOR = "https://api-associacao-mp.onrender.com";
+        const PUBLIC_VAPID_KEY = 'BLUDrtrxUNlbfm3kad60QQUJzLX_p45Jp28aMTlEH1MoHwgUOF7s1Mf8JuwYh9TnH0k8pYRYvmZzO7lUkYMq2uQ';
 
         document.getElementById('welcomeNome').textContent = `Olá, ${nomeDoAluno}!`;
 
-        // 3. FUNÇÃO QUE CARREGA E PREENCHE AS NOTAS DO ALUNO
+        // 3. REGISTRO DE NOTIFICAÇÃO PUSH NATIVA VINCULADA AO USUÁRIO LOGADO
+        function urlBase64ToUint8Array(base64String) {
+            const padding = '='.repeat((4 - base64String.length % 4) % 4);
+            const base64 = (base64String + padding).replace(/-/g, '+').replace(/_/g, '/');
+            const rawData = window.atob(base64);
+            const outputArray = new Uint8Array(rawData.length);
+            for (let i = 0; i < rawData.length; ++i) {
+                outputArray[i] = rawData.charCodeAt(i);
+            }
+            return outputArray;
+        }
+
+        async function registrarPushNativo() {
+            if ('serviceWorker' in navigator && 'PushManager' in window) {
+                try {
+                    const registro = await navigator.serviceWorker.register('sw.js');
+                    const permissao = await Notification.requestPermission();
+                    if (permissao !== 'granted') return;
+
+                    const assinatura = await registro.pushManager.subscribe({
+                        userVisibleOnly: true,
+                        applicationServerKey: urlBase64ToUint8Array(PUBLIC_VAPID_KEY)
+                    });
+
+                    if (!usuarioAtivo) return;
+
+                    // Envia para o Supabase vincular a subscription ao nome do usuário ativo/logado
+                    await fetch(`${URL_API_SERVIDOR}/api/subscribe`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            subscription: assinatura,
+                            usuario: usuarioAtivo
+                        })
+                    });
+
+                    console.log(`Dispositivo e Push vinculados com sucesso ao usuário: ${usuarioAtivo}`);
+                } catch (err) {
+                    console.error('Erro ao registrar Push no Supabase:', err);
+                }
+            }
+        }
+
+        // 4. FUNÇÃO QUE CARREGA E PREENCHE AS NOTAS DO ALUNO
         function carregarNotasAluno() {
             const tabelaBody = document.getElementById('corpoTabelaNotas');
             if (!tabelaBody) return;
@@ -1381,7 +1425,7 @@
             }
         }
 
-        // 4. CONSULTA O STATUS DO TERMO
+        // 5. CONSULTA O STATUS DO TERMO
         function verificarStatusAceite() {
             if (!usuarioAtivo) return;
 
@@ -1714,146 +1758,146 @@
         // ALIAS DE COMPATIBILIDADE PARA A FUNÇÃO carregarMinhasJustificativas
         const carregarMinhasJustificativas = carregarStatusJustificativas;
 
-// 5. CARREGAMENTO E EXIBIÇÃO DO GRÁFICO DE FREQUÊNCIA COM FILTRO DE DATAS
-let instanciaGrafico = null;
+        // 6. CARREGAMENTO E EXIBIÇÃO DO GRÁFICO DE FREQUÊNCIA COM FILTRO DE DATAS
+        let instanciaGrafico = null;
 
-async function carregarGraficoFrequencia() {
-    if (!usuarioAtivo) {
-        console.warn("⚠️ Atenção: usuarioAtivo ainda não foi definido.");
-        return;
-    }
-
-    const canvasElement = document.getElementById('graficoFrequencia');
-    if (!canvasElement) {
-        console.warn("⚠️ Elemento 'graficoFrequencia' não foi encontrado na página.");
-        return;
-    }
-
-    // Obter datas dos campos de filtro
-    const inputInicio = document.getElementById('mesInicioFrequencia')?.value || '2026-07';
-    const inputFim = document.getElementById('mesFimFrequencia')?.value || '2026-12';
-
-    // Data inicial
-    const dataInicio = `${inputInicio}-01`;
-
-    // Calcula dinamicamente o último dia real do mês final selecionado
-    const [anoFim, mesFim] = inputFim.split('-').map(Number);
-    const ultimoDia = new Date(anoFim, mesFim, 0).getDate();
-    const dataFim = `${inputFim}-${String(ultimoDia).padStart(2, '0')}`;
-
-    try {
-        const resFreq = await fetch(`${URL_API_SERVIDOR}/api/frequencia/${usuarioAtivo}?dataInicio=${dataInicio}&dataFim=${dataFim}`);
-        if (!resFreq.ok) throw new Error("Falha ao buscar frequência do servidor");
-        const dadosFreq = await resFreq.json();
-
-        // Busca número de justificativas aprovadas
-        let justificativasAprovadas = Number(dadosFreq.justificativas_aprovadas) || 0;
-
-        if (dadosFreq.justificativas_aprovadas === undefined) {
-            try {
-                const resJust = await fetch(`${URL_API_SERVIDOR}/api/justificativa/aluno/${usuarioAtivo}`);
-                if (resJust.ok) {
-                    const listaJust = await resJust.json();
-                    justificativasAprovadas = listaJust.filter(item => {
-                        const ehAprovado = item.status === 'aprovado';
-                        const dentroDoPeriodo = item.data_falta >= dataInicio && item.data_falta <= dataFim;
-                        return ehAprovado && dentroDoPeriodo;
-                    }).length;
-                }
-            } catch (e) {
-                console.warn("Não foi possível buscar justificativas aprovadas separadamente:", e);
+        async function carregarGraficoFrequencia() {
+            if (!usuarioAtivo) {
+                console.warn("⚠️ Atenção: usuarioAtivo ainda não foi definido.");
+                return;
             }
-        }
 
-        const presencas = Number(dadosFreq.presencas) || 0;
-        const faltasBrutas = Number(dadosFreq.faltas) || 0; // Faltas totais reais
+            const canvasElement = document.getElementById('graficoFrequencia');
+            if (!canvasElement) {
+                console.warn("⚠️ Elemento 'graficoFrequencia' não foi encontrado na página.");
+                return;
+            }
 
-        // Garante que as justificativas não ultrapassem as faltas brutas
-        const justificativasEfetivas = Math.min(justificativasAprovadas, faltasBrutas);
-        
-        // Faltas descontadas para exibição da fatia do gráfico
-        const faltasDescontadas = faltasBrutas - justificativasEfetivas;
+            // Obter datas dos campos de filtro
+            const inputInicio = document.getElementById('mesInicioFrequencia')?.value || '2026-07';
+            const inputFim = document.getElementById('mesFimFrequencia')?.value || '2026-12';
 
-        // Total geral de chamadas (Presenças + Faltas Descontadas + Justificativas)
-        const totalAulas = presencas + faltasDescontadas + justificativasEfetivas;
+            // Data inicial
+            const dataInicio = `${inputInicio}-01`;
 
-        // Atualiza elementos do resumo abaixo do gráfico com os valores brutas e reais
-        const elemPresencas = document.getElementById('qtdPresencas');
-        const elemFaltas = document.getElementById('qtdFaltas');
-        const elemJustificativas = document.getElementById('qtdJustificativas');
+            // Calcula dinamicamente o último dia real do mês final selecionado
+            const [anoFim, mesFim] = inputFim.split('-').map(Number);
+            const ultimoDia = new Date(anoFim, mesFim, 0).getDate();
+            const dataFim = `${inputFim}-${String(ultimoDia).padStart(2, '0')}`;
 
-        if (elemPresencas) elemPresencas.textContent = presencas;
-        if (elemFaltas) elemFaltas.textContent = faltasBrutas; // Exibe o total real bruto de faltas
-        if (elemJustificativas) elemJustificativas.textContent = justificativasEfetivas;
+            try {
+                const resFreq = await fetch(`${URL_API_SERVIDOR}/api/frequencia/${usuarioAtivo}?dataInicio=${dataInicio}&dataFim=${dataFim}`);
+                if (!resFreq.ok) throw new Error("Falha ao buscar frequência do servidor");
+                const dadosFreq = await resFreq.json();
 
-        const ctx = canvasElement.getContext('2d');
+                // Busca número de justificativas aprovadas
+                let justificativasAprovadas = Number(dadosFreq.justificativas_aprovadas) || 0;
 
-        if (instanciaGrafico) {
-            instanciaGrafico.destroy();
-        }
-
-        const plugins = (typeof ChartDataLabels !== 'undefined') ? [ChartDataLabels] : [];
-
-        // Criação do Gráfico Pizza
-        instanciaGrafico = new Chart(ctx, {
-            type: 'pie',
-            data: {
-                labels: [
-                    `Presenças (${presencas})`, 
-                    `Faltas (${faltasBrutas})`, // Exibe a quantidade total de faltas na legenda
-                    `Justificativas Aprovadas (${justificativasEfetivas})`
-                ],
-                datasets: [{
-                    // O gráfico desenha as fatias considerando as faltas descontadas
-                    data: [presencas, faltasDescontadas, justificativasEfetivas],
-                    backgroundColor: ['#10b981', '#ef4444', '#f59e0b'],
-                    borderWidth: 1,
-                    borderColor: '#1e293b'
-                }]
-            },
-            plugins: plugins,
-            options: {
-                responsive: true,
-                plugins: {
-                    legend: { 
-                        position: 'bottom', 
-                        labels: { 
-                            color: '#f8fafc',
-                            font: {
-                                size: 12,
-                                weight: 'bold'
-                            }
-                        } 
-                    },
-                    datalabels: {
-                        color: '#ffffff',
-                        font: {
-                            weight: 'bold',
-                            size: 13
-                        },
-                        formatter: (valor) => {
-                            if (totalAulas === 0 || valor === 0) return '';
-                            const porcentagem = Math.round((valor / totalAulas) * 100);
-                            return `${porcentagem}%`;
+                if (dadosFreq.justificativas_aprovadas === undefined) {
+                    try {
+                        const resJust = await fetch(`${URL_API_SERVIDOR}/api/justificativa/aluno/${usuarioAtivo}`);
+                        if (resJust.ok) {
+                            const listaJust = await resJust.json();
+                            justificativasAprovadas = listaJust.filter(item => {
+                                const ehAprovado = item.status === 'aprovado';
+                                const dentroDoPeriodo = item.data_falta >= dataInicio && item.data_falta <= dataFim;
+                                return ehAprovado && dentroDoPeriodo;
+                            }).length;
                         }
+                    } catch (e) {
+                        console.warn("Não foi possível buscar justificativas aprovadas separadamente:", e);
+                    }
+                }
+
+                const presencas = Number(dadosFreq.presencas) || 0;
+                const faltasBrutas = Number(dadosFreq.faltas) || 0; // Faltas totais reais
+
+                // Garante que as justificativas não ultrapassem as faltas brutas
+                const justificativasEfetivas = Math.min(justificativasAprovadas, faltasBrutas);
+                
+                // Faltas descontadas para exibição da fatia do gráfico
+                const faltasDescontadas = faltasBrutas - justificativasEfetivas;
+
+                // Total geral de chamadas (Presenças + Faltas Descontadas + Justificativas)
+                const totalAulas = presencas + faltasDescontadas + justificativasEfetivas;
+
+                // Atualiza elementos do resumo abaixo do gráfico com os valores brutas e reais
+                const elemPresencas = document.getElementById('qtdPresencas');
+                const elemFaltas = document.getElementById('qtdFaltas');
+                const elemJustificativas = document.getElementById('qtdJustificativas');
+
+                if (elemPresencas) elemPresencas.textContent = presencas;
+                if (elemFaltas) elemFaltas.textContent = faltasBrutas; // Exibe o total real bruto de faltas
+                if (elemJustificativas) elemJustificativas.textContent = justificativasEfetivas;
+
+                const ctx = canvasElement.getContext('2d');
+
+                if (instanciaGrafico) {
+                    instanciaGrafico.destroy();
+                }
+
+                const plugins = (typeof ChartDataLabels !== 'undefined') ? [ChartDataLabels] : [];
+
+                // Criação do Gráfico Pizza
+                instanciaGrafico = new Chart(ctx, {
+                    type: 'pie',
+                    data: {
+                        labels: [
+                            `Presenças (${presencas})`, 
+                            `Faltas (${faltasBrutas})`, // Exibe a quantidade total de faltas na legenda
+                            `Justificativas Aprovadas (${justificativasEfetivas})`
+                        ],
+                        datasets: [{
+                            // O gráfico desenha as fatias considerando as faltas descontadas
+                            data: [presencas, faltasDescontadas, justificativasEfetivas],
+                            backgroundColor: ['#10b981', '#ef4444', '#f59e0b'],
+                            borderWidth: 1,
+                            borderColor: '#1e293b'
+                        }]
                     },
-                    tooltip: {
-                        callbacks: {
-                            label: function(context) {
-                                const label = context.label || '';
-                                const value = context.raw || 0;
-                                const porcentagem = totalAulas > 0 ? Math.round((value / totalAulas) * 100) : 0;
-                                return `${label}: ${value} (${porcentagem}%)`;
+                    plugins: plugins,
+                    options: {
+                        responsive: true,
+                        plugins: {
+                            legend: { 
+                                position: 'bottom', 
+                                labels: { 
+                                    color: '#f8fafc',
+                                    font: {
+                                        size: 12,
+                                        weight: 'bold'
+                                    }
+                                } 
+                            },
+                            datalabels: {
+                                color: '#ffffff',
+                                font: {
+                                    weight: 'bold',
+                                    size: 13
+                                },
+                                formatter: (valor) => {
+                                    if (totalAulas === 0 || valor === 0) return '';
+                                    const porcentagem = Math.round((valor / totalAulas) * 100);
+                                    return `${porcentagem}%`;
+                                }
+                            },
+                            tooltip: {
+                                callbacks: {
+                                    label: function(context) {
+                                        const label = context.label || '';
+                                        const value = context.raw || 0;
+                                        const porcentagem = totalAulas > 0 ? Math.round((value / totalAulas) * 100) : 0;
+                                        return `${label}: ${value} (${porcentagem}%)`;
+                                    }
+                                }
                             }
                         }
                     }
-                }
+                });
+            } catch (err) {
+                console.error("❌ Erro ao carregar gráfico de frequência:", err);
             }
-        });
-    } catch (err) {
-        console.error("❌ Erro ao carregar gráfico de frequência:", err);
-    }
-}
+        }
 
         // Inicialização da página
         document.addEventListener('DOMContentLoaded', () => {
@@ -1864,6 +1908,9 @@ async function carregarGraficoFrequencia() {
                 carregarNotasAluno();
                 carregarGraficoFrequencia();
                 carregarStatusJustificativas();
+                
+                // Registra o Push Nativo vinculando o usuário autenticado ao Supabase/Backend
+                registrarPushNativo();
 
                 setTimeout(() => verificarStatusAceite(), 300);
             } catch (error) {
