@@ -445,6 +445,43 @@
             margin-top: 4px;
         }
 
+        /* BOTOES DE CALENDÁRIO */
+        .cal-btn-group {
+            display: flex;
+            gap: 8px;
+            margin-top: 10px;
+            flex-wrap: wrap;
+        }
+
+        .btn-cal {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 12px;
+            border-radius: 6px;
+            font-size: 11px;
+            font-weight: bold;
+            color: white;
+            border: none;
+            cursor: pointer;
+            text-decoration: none;
+            transition: all 0.2s;
+        }
+
+        .btn-cal-google {
+            background-color: #4285F4;
+        }
+
+        .btn-cal-apple {
+            background-color: #333333;
+            border: 1px solid var(--border-color);
+        }
+
+        .btn-cal:active {
+            transform: scale(0.95);
+            opacity: 0.9;
+        }
+
         .btn-action {
             display: flex;
             align-items: center;
@@ -1088,11 +1125,13 @@
                 O seu comprovante de leitura e concordância já foi registrado e enviado para a Associação.
             </p>
         </div>
-  <div class="card-item" style="flex-direction: column; align-items: flex-start; gap: 10px;">
+
+        <div class="card-item" style="flex-direction: column; align-items: flex-start; gap: 10px;">
             <strong style="font-size: 15px;">📄 Regulamento Atarashii</strong>
             <p style="font-size: 12px; color: var(--text-muted);">Regras oficiais da Associação Atarashii.</p>
             <a href="regras-associacao.pdf" target="_blank" class="btn-action" style="padding: 10px;">📖 Abrir PDF</a>
         </div>
+
         <!-- NOVA SEÇÃO: AÇÕES DA ASSOCIAÇÃO (CONCLUÍDAS) -->
         <h3>🤝 Ações da Associação</h3>
         
@@ -1143,42 +1182,66 @@
         </div>
 
         <h3>🏆 Próximos Campeonatos</h3>
-        <div class="card-item">
+        <div class="card-item" style="flex-wrap: wrap;">
             <div class="card-date-badge">
                 <span class="day" style="color: var(--accent-red);">23</span>
                 <span class="month">AGO</span>
             </div>
-            <div>
+            <div style="flex: 1; min-width: 200px;">
                 <strong style="display: block; font-size: 15px;">7ª Etapa ACAK</strong>
                 <span style="font-size: 12px; color: var(--text-muted);">📍 Cidade: Valinhos - SP</span>
                 <p></p>
                 <span style="font-size: 12px; color: var(--text-muted);">Prazo de Inscrição: 19/08/2026 – Quarta-Feira</span>
                 <p></p>
                 <span style="font-size: 12px; color: var(--text-muted);">Investimento: Série A = R$ 130,00 / Série B = R$ 100,00</span>
+                <div class="cal-btn-group">
+                    <button class="btn-cal btn-cal-google" onclick="adicionarGoogleCalendar('7ª Etapa ACAK', 'Valinhos - SP', 'Prazo de Inscrição: 19/08/2026. Investimento: Série A = R$ 130,00 / Série B = R$ 100,00', '2026-08-23T08:00:00', '2026-08-23T18:00:00')">
+                        📅 Google Agenda
+                    </button>
+                    <button class="btn-cal btn-cal-apple" onclick="baixarArquivoICS('7ª Etapa ACAK', 'Valinhos - SP', 'Prazo de Inscrição: 19/08/2026. Investimento: Série A = R$ 130,00 / Série B = R$ 100,00', '2026-08-23T08:00:00', '2026-08-23T18:00:00')">
+                        🍎 iPhone / Outlook (.ics)
+                    </button>
+                </div>
             </div>
         </div>
         
         <h3>🥋 Próximo Exame de Faixa</h3>
-        <div class="card-item">
+        <div class="card-item" style="flex-wrap: wrap;">
             <div class="card-date-badge">
                 <span class="day">06</span>
                 <span class="month">DEZ</span>
             </div>
-            <div>
+            <div style="flex: 1; min-width: 200px;">
                 <strong style="display: block; font-size: 15px;">Exame de Faixa Atarashii</strong>
                 <span style="font-size: 12px; color: var(--text-muted);">📍 Academia Bee Strong - SP</span>
+                <div class="cal-btn-group">
+                    <button class="btn-cal btn-cal-google" onclick="adicionarGoogleCalendar('Exame de Faixa Atarashii', 'Academia Bee Strong - SP', 'Exame de Graduação de Faixa Atarashii', '2026-12-06T08:00:00', '2026-12-06T12:00:00')">
+                        📅 Google Agenda
+                    </button>
+                    <button class="btn-cal btn-cal-apple" onclick="baixarArquivoICS('Exame de Faixa Atarashii', 'Academia Bee Strong - SP', 'Exame de Graduação de Faixa Atarashii', '2026-12-06T08:00:00', '2026-12-06T12:00:00')">
+                        🍎 iPhone / Outlook (.ics)
+                    </button>
+                </div>
             </div>
         </div>
         
         <h3>🎉 Confraternização</h3>
-        <div class="card-item">
+        <div class="card-item" style="flex-wrap: wrap;">
             <div class="card-date-badge">
                 <span class="day" style="color: var(--accent-gold);">12</span>
                 <span class="month">DEZ</span>
             </div>
-            <div>
+            <div style="flex: 1; min-width: 200px;">
                 <strong style="display: block; font-size: 15px;">Confraternização Atarashii</strong>
                 <span style="font-size: 12px; color: var(--text-muted);">📍 Aguardando definição - SP</span>
+                <div class="cal-btn-group">
+                    <button class="btn-cal btn-cal-google" onclick="adicionarGoogleCalendar('Confraternização Atarashii', 'Aguardando definição - SP', 'Confraternização de Fim de Ano da Associação Atarashii', '2026-12-12T18:00:00', '2026-12-12T23:00:00')">
+                        📅 Google Agenda
+                    </button>
+                    <button class="btn-cal btn-cal-apple" onclick="baixarArquivoICS('Confraternização Atarashii', 'Aguardando definição - SP', 'Confraternização de Fim de Ano da Associação Atarashii', '2026-12-12T18:00:00', '2026-12-12T23:00:00')">
+                        🍎 iPhone / Outlook (.ics)
+                    </button>
+                </div>
             </div>
         </div>
     </div>
@@ -1374,6 +1437,51 @@
         const PUBLIC_VAPID_KEY = 'BLUDrtrxUNlbfm3kad60QQUJzLX_p45Jp28aMTlEH1MoHwgUOF7s1Mf8JuwYh9TnH0k8pYRYvmZzO7lUkYMq2uQ';
 
         document.getElementById('welcomeNome').textContent = `Olá, ${nomeDoAluno}!`;
+
+        // --- FUNÇÕES DE SINCRONIZAÇÃO DE CALENDÁRIO (.ICS / GOOGLE CALENDAR) ---
+        function formatarDataISO(dataISO) {
+            return dataISO.replace(/-|:|\.\d+/g, '');
+        }
+
+        function adicionarGoogleCalendar(titulo, local, descricao, dataInicioISO, dataFimISO) {
+            const start = formatarDataISO(new Date(dataInicioISO).toISOString());
+            const end = formatarDataISO(new Date(dataFimISO).toISOString());
+            
+            const url = `https://calendar.google.com/calendar/render?action=TEMPLATE` +
+                `&text=${encodeURIComponent(titulo)}` +
+                `&dates=${start}/${end}` +
+                `&details=${encodeURIComponent(descricao)}` +
+                `&location=${encodeURIComponent(local)}`;
+            
+            window.open(url, '_blank');
+        }
+
+        function baixarArquivoICS(titulo, local, descricao, dataInicioISO, dataFimISO) {
+            const start = formatarDataISO(new Date(dataInicioISO).toISOString());
+            const end = formatarDataISO(new Date(dataFimISO).toISOString());
+            
+            const conteudoICS = 
+`BEGIN:VCALENDAR
+VERSION:2.0
+PRODID:-//Associação Atarashii//PWA//PT
+BEGIN:VEVENT
+SUMMARY:${titulo}
+DESCRIPTION:${descricao}
+LOCATION:${local}
+DTSTART:${start}
+DTEND:${end}
+STATUS:CONFIRMED
+END:VEVENT
+END:VCALENDAR`;
+
+            const blob = new Blob([conteudoICS], { type: 'text/calendar;charset=utf-8' });
+            const link = document.createElement('a');
+            link.href = window.URL.createObjectURL(blob);
+            link.setAttribute('download', `${titulo.replace(/[^a-zA-Z0-9]/g, '_')}.ics`);
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
 
         // 3. REGISTRO DE NOTIFICAÇÃO PUSH NATIVA (COMPATÍVEL COM IOS/WEBKIT)
         function urlBase64ToUint8Array(base64String) {
@@ -1626,21 +1734,12 @@
             const assunto = encodeURIComponent(`CONFIRMAÇÃO DE ACEITE: Regras da Associação - ${nomeAluno}`);
             
             const corpoEmail = encodeURIComponent(
-                `Prezada Diretoria,
-
-` +
-                `Por meio deste e-mail, confirmo que li e aceito voluntariamente todos os termos, regras e normas da Associação.
-
-` +
-                `DADOS DO ASSOCIADO:
-` +
-                `Nome completo: ${nomeAluno}
-` +
-                `Usuário do sistema: ${usuarioAtivo}
-` +
-                `Data/Hora do Aceite: ${dataHoraAtual}
-
-` +
+                `Prezada Diretoria,\n\n` +
+                `Por meio deste e-mail, confirmo que li e aceito voluntariamente todos os termos, regras e normas da Associação.\n\n` +
+                `DADOS DO ASSOCIADO:\n` +
+                `Nome completo: ${nomeAluno}\n` +
+                `Usuário do sistema: ${usuarioAtivo}\n` +
+                `Data/Hora do Aceite: ${dataHoraAtual}\n\n` +
                 `Este e-mail serve como registro e comprovante digital do meu aceite obrigatório.`
             );
 
