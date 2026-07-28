@@ -829,6 +829,30 @@
                 </div>
             </div>
         </div>
+        <!-- BADGE GUARDIÃO -->
+<div id="cardBadgeGuardiao" class="badge-card badge-bloqueado" style="margin-top: 12px;">
+    <!-- Ícone Escudo / Guardião -->
+    <div class="badge-emblem">
+        <div class="emblem-ring">
+            <svg class="emblem-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+            </svg>
+        </div>
+        <span class="badge-ribbon">🛡️ 85%</span>
+    </div>
+
+    <!-- Informações do Badge -->
+    <div class="badge-info">
+        <div class="badge-header">
+            <strong class="badge-title">Guardião</strong>
+            <span id="badgeTagGuardiao" class="badge-tag">Em andamento</span>
+        </div>
+        <p class="badge-desc">Carência mínima cumprida + presença acima de 85% por 3 meses seguidos.</p>
+        
+        <!-- Histórico Guardião -->
+        <div id="historicoGuardiao" class="badge-historico"></div>
+    </div>
+</div>
 
         <h3>🥋 Exames de Faixa</h3>
         <div class="table-container">
@@ -1834,54 +1858,78 @@ END:VCALENDAR`;
     }
 
     // CONSULTA O STATUS DO BADGES
-    async function carregarBadgesAluno() {
-        if (!usuarioAtivo) return;
+   async function carregarBadgesAluno() {
+    if (!usuarioAtivo) return;
 
-        try {
-            const res = await fetch(`${URL_API_SERVIDOR}/api/badges/${usuarioAtivo}`);
-            const data = await res.json();
+    try {
+        const res = await fetch(`${URL_API_SERVIDOR}/api/badges/${usuarioAtivo}`);
+        const data = await res.json();
 
-            if (data.sucesso) {
-                const cardBadge = document.getElementById('cardBadgeFerro');
-                const tagStatus = document.getElementById('badgeTagStatus');
-                const containerHistorico = document.getElementById('historicoBadges');
+        if (data.sucesso) {
+            // --- 1. FREQUÊNCIA DE FERRO ---
+            const cardBadgeFerro = document.getElementById('cardBadgeFerro');
+            const tagStatusFerro = document.getElementById('badgeTagStatus');
+            const containerHistFerro = document.getElementById('historicoBadges');
 
-                // Verifica status do mês atual
-                if (data.frequenciaFerroMesAtual) {
-                    if (cardBadge) {
-                        cardBadge.classList.remove('badge-bloqueado');
-                        cardBadge.classList.add('badge-concluido');
-                    }
-                    if (tagStatus) {
-                        tagStatus.textContent = " Conquistado!";
-                    }
-                } else {
-                    if (cardBadge) {
-                        cardBadge.classList.remove('badge-concluido');
-                        cardBadge.classList.add('badge-bloqueado');
-                    }
-                    if (tagStatus) {
-                        tagStatus.textContent = "Em andamento";
-                    }
+            if (data.frequenciaFerroMesAtual) {
+                if (cardBadgeFerro) {
+                    cardBadgeFerro.classList.remove('badge-bloqueado');
+                    cardBadgeFerro.classList.add('badge-concluido');
                 }
-
-                // Exibe histórico de meses conquistados
-                if (containerHistorico) {
-                    const mesesConquistados = data.badges
-                        .filter(b => b.badge_key === 'frequencia_ferro' && b.concluido)
-                        .map(b => b.mes_referencia);
-
-                    if (mesesConquistados.length > 0) {
-                        containerHistorico.innerHTML = `<strong>🏅 Conquistado em:</strong> ${mesesConquistados.join(', ')}`;
-                    } else {
-                        containerHistorico.innerHTML = '';
-                    }
+                if (tagStatusFerro) tagStatusFerro.textContent = "Conquistado!";
+            } else {
+                if (cardBadgeFerro) {
+                    cardBadgeFerro.classList.remove('badge-concluido');
+                    cardBadgeFerro.classList.add('badge-bloqueado');
                 }
+                if (tagStatusFerro) tagStatusFerro.textContent = "Em andamento";
             }
-        } catch (err) {
-            console.error("Erro ao carregar conquistas:", err);
+
+            if (containerHistFerro) {
+                const mesesFerro = data.badges
+                    .filter(b => b.badge_key === 'frequencia_ferro' && b.concluido)
+                    .map(b => b.mes_referencia);
+
+                containerHistFerro.innerHTML = mesesFerro.length > 0 
+                    ? `<strong>🏅 Conquistado em:</strong> ${mesesFerro.join(', ')}` 
+                    : '';
+            }
+
+            // --- 2. GUARDIÃO ---
+            const cardGuardiao = document.getElementById('cardBadgeGuardiao');
+            const tagGuardiao = document.getElementById('badgeTagGuardiao');
+            const containerHistGuardiao = document.getElementById('historicoGuardiao');
+
+            const ehGuardiao = data.badges.some(b => b.badge_key === 'guardiao' && b.concluido);
+
+            if (ehGuardiao || data.guardiaoConquistado) {
+                if (cardGuardiao) {
+                    cardGuardiao.classList.remove('badge-bloqueado');
+                    cardGuardiao.classList.add('badge-concluido');
+                }
+                if (tagGuardiao) tagGuardiao.textContent = "Conquistado!";
+            } else {
+                if (cardGuardiao) {
+                    cardGuardiao.classList.remove('badge-concluido');
+                    cardGuardiao.classList.add('badge-bloqueado');
+                }
+                if (tagGuardiao) tagGuardiao.textContent = "Em andamento";
+            }
+
+            if (containerHistGuardiao) {
+                const mesesGuardiao = data.badges
+                    .filter(b => b.badge_key === 'guardiao' && b.concluido)
+                    .map(b => b.mes_referencia);
+
+                containerHistGuardiao.innerHTML = mesesGuardiao.length > 0 
+                    ? `<strong>🛡️ Conquistado em:</strong> ${mesesGuardiao.join(', ')}` 
+                    : '';
+            }
         }
+    } catch (err) {
+        console.error("Erro ao carregar conquistas:", err);
     }
+}
 
     // 5. CONSULTA O STATUS DO TERMO
     function verificarStatusAceite() {
