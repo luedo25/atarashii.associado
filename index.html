@@ -186,64 +186,7 @@
             <button type="submit" class="btn-login">Entrar</button>
             <div id="errorMessage" class="error-message">Usuário ou senha incorretos.</div>
         </form>
-    </div>
-
-    <script>
-  // Chave Pública VAPID gerada no passo 1.2
-  const PUBLIC_VAPID_KEY = 'BLUDrtrxUNlbfm3kad60QQUJzLX_p45Jp28aMTlEH1MoHwgUOF7s1Mf8JuwYh9TnH0k8pYRYvmZzO7lUkYMq2uQ'; 
-  // URL do seu serviço hospedado no Render
-  const RENDER_BACKEND_URL = 'https://api-associacao-mp.onrender.com';
-
-  // Função utilitária para converter a chave pública em formato de buffer de memória
-  function urlBase64ToUint8Array(base64String) {
-    const padding = '='.repeat((4 - base64String.length % 4) % 4);
-    const base64 = (base64String + padding).replace(/-/g, '+').replace(/_/g, '/');
-    const rawData = window.atob(base64);
-    const outputArray = new Uint8Array(rawData.length);
-    for (let i = 0; i < rawData.length; ++i) {
-      outputArray[i] = rawData.charCodeAt(i);
-    }
-    return outputArray;
-  }
-
-async function registrarPushNativo() {
-    if ('serviceWorker' in navigator && 'PushManager' in window) {
-      try {
-        const registro = await navigator.serviceWorker.register('sw.js');
-        const permissao = await Notification.requestPermission();
-        if (permissao !== 'granted') return;
-
-        const assinatura = await registro.pushManager.subscribe({
-          userVisibleOnly: true,
-          applicationServerKey: urlBase64ToUint8Array(PUBLIC_VAPID_KEY)
-        });
-
-        const usuarioAtivo = localStorage.getItem('usuarioAtivo') || 'anonimo';
-
-        // Correção da URL (/api/subscribe)
-        await fetch(`${RENDER_BACKEND_URL}/api/subscribe`, {
-          method: 'POST',
-          body: JSON.stringify({
-            subscription: assinatura,
-            usuario: usuarioAtivo
-          }),
-          headers: {
-            'Content-Type': 'application/json'
-          }
-        });
-
-        console.log('Dispositivo cadastrado com sucesso!');
-      } catch (err) {
-        console.error('Erro ao registrar Push:', err);
-      }
-    }
-  }
-
-  // Executa o registro assim que a página carrega
-  window.addEventListener('load', registrarPushNativo);
-        
-</script>
-        
+    </div>        
     <script>
         const scriptUsuarios = document.createElement('script');
         const timestamp = new Date().getTime();
