@@ -1655,6 +1655,20 @@
     </button>
 </div>
 
+
+                    if (banner) banner.style.display = 'block';
+                    return;
+                }
+                
+                const boxPush = document.getElementById('boxAtivarPush');
+                if (boxPush) boxPush.style.display = 'block';
+                return;
+            }
+
+            if (permissao !== 'granted') {
+                console.warn('Permissão para notificações não foi concedida pelo usuário.');
+                return;
+            }
 <script>
     // 1. PROTEÇÃO DE ACESSO
     if (localStorage.getItem('associadoAutenticado') !== 'true') {
@@ -1754,20 +1768,6 @@ END:VCALENDAR`;
                 // No iOS, se não for por clique do usuário, a permissão não pode ser pedida automaticamente
                 if (ehIOS() && !ehPWAStandalone()) {
                     const banner = document.getElementById('bannerIosInstalar');
-                    if (banner) banner.style.display = 'block';
-                    return;
-                }
-                
-                const boxPush = document.getElementById('boxAtivarPush');
-                if (boxPush) boxPush.style.display = 'block';
-                return;
-            }
-
-            if (permissao !== 'granted') {
-                console.warn('Permissão para notificações não foi concedida pelo usuário.');
-                return;
-            }
-
             // Oculta os avisos de ativação se já permitido
             const boxPush = document.getElementById('boxAtivarPush');
             if (boxPush) boxPush.style.display = 'none';
@@ -2129,32 +2129,110 @@ END:VCALENDAR`;
         }
     }
 
-    // CORREÇÃO PARA COMPATIBILIDADE COM IOS / WEBKIT
-    document.getElementById('dataFaltaAluno').addEventListener('change', function() {
-        // 1. Evita executar se o campo for limpo ou estiver vazio no iOS/Safari ao abrir
-        if (!this.value) return;
-        
-        const partes = this.value.split('-');
-        if (partes.length !== 3) return;
+// ======================================================================
+// VALIDAÇÃO DO CALENDÁRIO - COMPATÍVEL COM IOS / ANDROID / DESKTOP
+// ======================================================================
 
-        const ano = parseInt(partes[0], 10);
-        const mes = parseInt(partes[1], 10) - 1;
-        const dia = parseInt(partes[2], 10);
+const campoDataFalta = document.getElementById("dataFaltaAluno");
 
-        // 2. Garante a conversão local correta da data para evitar deslocamentos por timezone
-        const dataSelecionada = new Date(ano, mes, dia);
+function validarDiaDaSemana() {
 
-        if (isNaN(dataSelecionada.getTime())) return;
+    const valor = campoDataFalta.value;
 
-        // 0 = Domingo, 1 = Segunda, 2 = Terça, 3 = Quarta, 4 = Quinta, 5 = Sexta, 6 = Sábado
-        const diaSemana = dataSelecionada.getDay();
+    // Safari dispara eventos sem data definida
+    if (!valor || valor.trim() === "") {
+        return;
+    }
 
-        // 3. Valida se a data escolhida cai em Terça (2), Quinta (4) ou Sábado (6)
-        if (diaSemana !== 2 && diaSemana !== 4 && diaSemana !== 6) {
-            alert("Aulas ocorrem apenas Terças, Quintas e Sábados. Selecione uma data válida.");
-            this.value = '';
-        }
-    });
+    const partes = valor.split("-");
+
+    if (partes.length !== 3) {
+        return;
+    }
+
+    const ano = Number(partes[0]);
+    const mes = Number(partes[1]) - 1;
+    const dia = Number(partes[2]);
+
+    if (
+        Number.isNaN(ano) ||
+        Number.isNaN(mes) ||
+        Number.isNaN(dia)
+    ) {
+        return;
+    }
+
+    // Cria SEM timezone
+    const data = new Date(ano, mes, dia, 12, 0, 0);
+
+    if (isNaN(data.getTime())) {
+        return;
+    }
+
+    // Confirma que a data criada é exatamente a escolhida
+    if (
+        data.getFullYear() !== ano ||
+        data.getMonth() !== mes ||
+        data.getDate() !== dia
+    ) {
+        return;
+    }
+
+    const diaSemana = data.getDay();
+
+    // Terça = 2
+    // Quinta = 4
+    // Sábado = 6
+    const diasPermitidos = [2, 4, 6];
+
+    if (!diasPermitidos.includes(diaSemana)) {
+
+        // Necessário para Safari/iOS
+        setTimeout(() => {
+
+            if (campoDataFalta.value === valor) {
+
+                alert(
+                    "Aulas ocorrem apenas Terças, Quintas e Sábados. Selecione uma data válida."
+                );
+
+                campoDataFalta.value = "";
+
+            }
+
+        }, 150);
+
+    }
+
+}
+
+// Remove eventos antigos (caso existam)
+campoDataFalta.onchange = null;
+campoDataFalta.oninput = null;
+campoDataFalta.onblur = null;
+
+// Android
+campoDataFalta.addEventListener("change", validarDiaDaSemana);
+
+// iOS Safari
+campoDataFalta.addEventListener("blur", validarDiaDaSemana);
+
+// Alguns WebKit antigos
+campoDataFalta.addEventListener("input", function () {
+
+    if (campoDataFalta.value !== "") {
+
+        clearTimeout(campoDataFalta._timerIOS);
+
+        campoDataFalta._timerIOS = setTimeout(function () {
+
+            validarDiaDaSemana();
+
+        }, 250);
+
+    }
+
+});
 
     document.getElementById('formJustificativa').addEventListener('submit', async function(e) {
         e.preventDefault();
@@ -2168,7 +2246,16 @@ END:VCALENDAR`;
 
         if (!dataFalta) return alert("Por favor, selecione a data.");
 
-        const dataFaltaObj = new Date(`${dataFalta}T00:00:00`);
+       const partes = dataFalta.split("-");
+
+const dataFaltaObj = new Date(
+    Number(partes[0]),
+    Number(partes[1]) - 1,
+    Number(partes[2]),
+    12,
+    0,
+    0
+);
         const agora = new Date();
         const diferencaEmHoras = Math.abs(agora - dataFaltaObj) / (1000 * 60 * 60);
 
