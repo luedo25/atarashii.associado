@@ -697,7 +697,7 @@
             backdrop-filter: blur(16px);
             -webkit-backdrop-filter: blur(16px);
             display: flex;
-            justify-content: space-around;
+            justify-style: space-around;
             align-items: center;
             padding: 10px 6px calc(10px + env(safe-area-inset-bottom));
             border-top: 1px solid var(--border-color);
@@ -1743,15 +1743,12 @@ END:VCALENDAR`;
         }
 
         try {
-            // Registrar o Service Worker
             const registro = await navigator.serviceWorker.register('sw.js');
             await navigator.serviceWorker.ready;
 
-            // Checa a permissão atual
             let permissao = Notification.permission;
 
             if (permissao === 'default') {
-                // No iOS, se não for por clique do usuário, a permissão não pode ser pedida automaticamente
                 if (ehIOS() && !ehPWAStandalone()) {
                     const banner = document.getElementById('bannerIosInstalar');
                     if (banner) banner.style.display = 'block';
@@ -1768,11 +1765,9 @@ END:VCALENDAR`;
                 return;
             }
 
-            // Oculta os avisos de ativação se já permitido
             const boxPush = document.getElementById('boxAtivarPush');
             if (boxPush) boxPush.style.display = 'none';
 
-            // Realiza a inscrição PUSH
             let assinatura = await registro.pushManager.getSubscription();
             if (!assinatura) {
                 assinatura = await registro.pushManager.subscribe({
@@ -1783,7 +1778,6 @@ END:VCALENDAR`;
 
             if (!usuarioAtivo) return;
 
-            // Envia para o servidor Render/Supabase vincular a subscription ao nome do usuário
             const res = await fetch(`${URL_API_SERVIDOR}/api/subscribe`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
@@ -1801,7 +1795,6 @@ END:VCALENDAR`;
         }
     }
 
-    // Função disparada manualmente via clique no iOS/Android
     async function solicitarAtivacaoPushIOS() {
         if (ehIOS() && !ehPWAStandalone()) {
             alert('No iPhone/iPad, você deve primeiro adicionar este site à Tela de Início (Aperte o botão Compartilhar do Safari > Adicionar à Tela de Início).');
@@ -1861,78 +1854,78 @@ END:VCALENDAR`;
     }
 
     // CONSULTA O STATUS DO BADGES
-   async function carregarBadgesAluno() {
-    if (!usuarioAtivo) return;
+    async function carregarBadgesAluno() {
+        if (!usuarioAtivo) return;
 
-    try {
-        const res = await fetch(`${URL_API_SERVIDOR}/api/badges/${usuarioAtivo}`);
-        const data = await res.json();
+        try {
+            const res = await fetch(`${URL_API_SERVIDOR}/api/badges/${usuarioAtivo}`);
+            const data = await res.json();
 
-        if (data.sucesso) {
-            // --- 1. FREQUÊNCIA DE FERRO ---
-            const cardBadgeFerro = document.getElementById('cardBadgeFerro');
-            const tagStatusFerro = document.getElementById('badgeTagStatus');
-            const containerHistFerro = document.getElementById('historicoBadges');
+            if (data.sucesso) {
+                // --- 1. FREQUÊNCIA DE FERRO ---
+                const cardBadgeFerro = document.getElementById('cardBadgeFerro');
+                const tagStatusFerro = document.getElementById('badgeTagStatus');
+                const containerHistFerro = document.getElementById('historicoBadges');
 
-            if (data.frequenciaFerroMesAtual) {
-                if (cardBadgeFerro) {
-                    cardBadgeFerro.classList.remove('badge-bloqueado');
-                    cardBadgeFerro.classList.add('badge-concluido');
+                if (data.frequenciaFerroMesAtual) {
+                    if (cardBadgeFerro) {
+                        cardBadgeFerro.classList.remove('badge-bloqueado');
+                        cardBadgeFerro.classList.add('badge-concluido');
+                    }
+                    if (tagStatusFerro) tagStatusFerro.textContent = "Conquistado!";
+                } else {
+                    if (cardBadgeFerro) {
+                        cardBadgeFerro.classList.remove('badge-concluido');
+                        cardBadgeFerro.classList.add('badge-bloqueado');
+                    }
+                    if (tagStatusFerro) tagStatusFerro.textContent = "Em andamento";
                 }
-                if (tagStatusFerro) tagStatusFerro.textContent = "Conquistado!";
-            } else {
-                if (cardBadgeFerro) {
-                    cardBadgeFerro.classList.remove('badge-concluido');
-                    cardBadgeFerro.classList.add('badge-bloqueado');
+
+                if (containerHistFerro) {
+                    const mesesFerro = data.badges
+                        .filter(b => b.badge_key === 'frequencia_ferro' && b.concluido)
+                        .map(b => b.mes_referencia);
+
+                    containerHistFerro.innerHTML = mesesFerro.length > 0 
+                        ? `<strong>🏅 Conquistado em:</strong> ${mesesFerro.join(', ')}` 
+                        : '';
                 }
-                if (tagStatusFerro) tagStatusFerro.textContent = "Em andamento";
-            }
 
-            if (containerHistFerro) {
-                const mesesFerro = data.badges
-                    .filter(b => b.badge_key === 'frequencia_ferro' && b.concluido)
-                    .map(b => b.mes_referencia);
+                // --- 2. GUARDIÃO ---
+                const cardGuardiao = document.getElementById('cardBadgeGuardiao');
+                const tagGuardiao = document.getElementById('badgeTagGuardiao');
+                const containerHistGuardiao = document.getElementById('historicoGuardiao');
 
-                containerHistFerro.innerHTML = mesesFerro.length > 0 
-                    ? `<strong>🏅 Conquistado em:</strong> ${mesesFerro.join(', ')}` 
-                    : '';
-            }
+                const ehGuardiao = data.badges.some(b => b.badge_key === 'guardiao' && b.concluido);
 
-            // --- 2. GUARDIÃO ---
-            const cardGuardiao = document.getElementById('cardBadgeGuardiao');
-            const tagGuardiao = document.getElementById('badgeTagGuardiao');
-            const containerHistGuardiao = document.getElementById('historicoGuardiao');
-
-            const ehGuardiao = data.badges.some(b => b.badge_key === 'guardiao' && b.concluido);
-
-            if (ehGuardiao || data.guardiaoConquistado) {
-                if (cardGuardiao) {
-                    cardGuardiao.classList.remove('badge-bloqueado');
-                    cardGuardiao.classList.add('badge-concluido');
+                if (ehGuardiao || data.guardiaoConquistado) {
+                    if (cardGuardiao) {
+                        cardGuardiao.classList.remove('badge-bloqueado');
+                        cardGuardiao.classList.add('badge-concluido');
+                    }
+                    if (tagGuardiao) tagGuardiao.textContent = "Conquistado!";
+                } else {
+                    if (cardGuardiao) {
+                        cardGuardiao.classList.remove('badge-concluido');
+                        cardGuardiao.classList.add('badge-bloqueado');
+                    }
+                    if (tagGuardiao) tagGuardiao.textContent = "Em andamento";
                 }
-                if (tagGuardiao) tagGuardiao.textContent = "Conquistado!";
-            } else {
-                if (cardGuardiao) {
-                    cardGuardiao.classList.remove('badge-concluido');
-                    cardGuardiao.classList.add('badge-bloqueado');
+
+                if (containerHistGuardiao) {
+                    const mesesGuardiao = data.badges
+                        .filter(b => b.badge_key === 'guardiao' && b.concluido)
+                        .map(b => b.mes_referencia);
+
+                    containerHistGuardiao.innerHTML = mesesGuardiao.length > 0 
+                        ? `<strong>🛡️ Conquistado em:</strong> ${mesesGuardiao.join(', ')}` 
+                        : '';
                 }
-                if (tagGuardiao) tagGuardiao.textContent = "Em andamento";
             }
-
-            if (containerHistGuardiao) {
-                const mesesGuardiao = data.badges
-                    .filter(b => b.badge_key === 'guardiao' && b.concluido)
-                    .map(b => b.mes_referencia);
-
-                containerHistGuardiao.innerHTML = mesesGuardiao.length > 0 
-                    ? `<strong>🛡️ Conquistado em:</strong> ${mesesGuardiao.join(', ')}` 
-                    : '';
-            }
+        } catch (err) {
+            console.error("Erro ao carregar conquistas:", err);
         }
-    } catch (err) {
-        console.error("Erro ao carregar conquistas:", err);
     }
-}
 
     // 5. CONSULTA O STATUS DO TERMO
     function verificarStatusAceite() {
@@ -2129,11 +2122,21 @@ END:VCALENDAR`;
         }
     }
 
+    // CORREÇÃO PARA COMPATIBILIDADE COM IOS / WEBKIT
     document.getElementById('dataFaltaAluno').addEventListener('change', function() {
         if (!this.value) return;
         
         const partes = this.value.split('-');
-        const dataSelecionada = new Date(Date.UTC(partes[0], partes[1] - 1, partes[2]));
+        if (partes.length !== 3) return;
+
+        const ano = parseInt(partes[0], 10);
+        const mes = parseInt(partes[1], 10) - 1;
+        const dia = parseInt(partes[2], 10);
+
+        const dataSelecionada = new Date(Date.UTC(ano, mes, dia));
+
+        if (isNaN(dataSelecionada.getTime())) return;
+
         const diaSemana = dataSelecionada.getUTCDay();
 
         if (diaSemana !== 2 && diaSemana !== 4 && diaSemana !== 6) {
@@ -2278,117 +2281,47 @@ END:VCALENDAR`;
             const dadosFreq = await resFreq.json();
 
             let justificativasAprovadas = Number(dadosFreq.justificativas_aprovadas) || 0;
+            let presencas = Number(dadosFreq.presencas) || 0;
+            let faltas = Number(dadosFreq.faltas) || 0;
 
-            if (dadosFreq.justificativas_aprovadas === undefined) {
-                try {
-                    const resJust = await fetch(`${URL_API_SERVIDOR}/api/justificativa/aluno/${usuarioAtivo}`);
-                    if (resJust.ok) {
-                        const listaJust = await resJust.json();
-                        justificativasAprovadas = listaJust.filter(item => {
-                            const ehAprovado = item.status === 'aprovado';
-                            const dentroDoPeriodo = item.data_falta >= dataInicio && item.data_falta <= dataFim;
-                            return ehAprovado && dentroDoPeriodo;
-                        }).length;
-                    }
-                } catch (e) {
-                    console.warn("Não foi possível buscar justificativas separadamente:", e);
-                }
-            }
-
-            const presencas = Number(dadosFreq.presencas) || 0;
-            const faltasBrutas = Number(dadosFreq.faltas) || 0;
-
-            const justificativasEfetivas = Math.min(justificativasAprovadas, faltasBrutas);
-            const faltasDescontadas = faltasBrutas - justificativasEfetivas;
-            const totalAulas = presencas + faltasDescontadas + justificativasEfetivas;
-
-            const elemPresencas = document.getElementById('qtdPresencas');
-            const elemFaltas = document.getElementById('qtdFaltas');
-            const elemJustificativas = document.getElementById('qtdJustificativas');
-
-            if (elemPresencas) elemPresencas.textContent = presencas;
-            if (elemFaltas) elemFaltas.textContent = faltasBrutas;
-            if (elemJustificativas) elemJustificativas.textContent = justificativasEfetivas;
-
-            const ctx = canvasElement.getContext('2d');
+            document.getElementById('qtdPresencas').textContent = presencas;
+            document.getElementById('qtdFaltas').textContent = faltas;
+            document.getElementById('qtdJustificativas').textContent = justificativasAprovadas;
 
             if (instanciaGrafico) {
                 instanciaGrafico.destroy();
             }
 
-            const plugins = (typeof ChartDataLabels !== 'undefined') ? [ChartDataLabels] : [];
-
+            const ctx = canvasElement.getContext('2d');
             instanciaGrafico = new Chart(ctx, {
-                type: 'pie',
+                type: 'doughnut',
                 data: {
-                    labels: [
-                        `Presenças (${presencas})`, 
-                        `Faltas (${faltasBrutas})`,
-                        `Justificativas Aprovadas (${justificativasEfetivas})`
-                    ],
+                    labels: ['Presenças', 'Faltas', 'Justificativas Aprovadas'],
                     datasets: [{
-                        data: [presencas, faltasDescontadas, justificativasEfetivas],
-                        backgroundColor: ['#10b981', '#ef4444', '#f59e0b'],
-                        borderWidth: 1,
-                        borderColor: '#1e293b'
+                        data: [presencas, faltas, justificativasAprovadas],
+                        backgroundColor: ['#10b981', '#ef4444', '#f59e0b']
                     }]
                 },
-                plugins: plugins,
                 options: {
                     responsive: true,
                     plugins: {
-                        legend: { 
-                            position: 'bottom', 
-                            labels: { 
-                                color: '#f8fafc',
-                                font: { size: 12, weight: 'bold' }
-                            } 
-                        },
-                        datalabels: {
-                            color: '#ffffff',
-                            font: { weight: 'bold', size: 13 },
-                            formatter: (valor) => {
-                                if (totalAulas === 0 || valor === 0) return '';
-                                const porcentagem = Math.round((valor / totalAulas) * 100);
-                                return `${porcentagem}%`;
-                            }
-                        },
-                        tooltip: {
-                            callbacks: {
-                                label: function(context) {
-                                    const label = context.label || '';
-                                    const value = context.raw || 0;
-                                    const porcentagem = totalAulas > 0 ? Math.round((value / totalAulas) * 100) : 0;
-                                    return `${label}: ${value} (${porcentagem}%)`;
-                                }
-                            }
-                        }
+                        legend: { position: 'bottom', labels: { color: '#f8fafc' } }
                     }
                 }
             });
         } catch (err) {
-            console.error("❌ Erro ao carregar gráfico de frequência:", err);
+            console.error("Erro ao carregar gráfico de frequência:", err);
         }
     }
 
-    // Inicialização da página
+    // Inicialização ao carregar o DOM
     document.addEventListener('DOMContentLoaded', () => {
-        try {
-            const primeiroBotao = document.querySelector('.nav-btn');
-            if (primeiroBotao) mudarAba('exame', primeiroBotao);
-
-            carregarBadgesAluno();
-            carregarNotasAluno();
-            carregarGraficoFrequencia();
-            carregarStatusJustificativas();
-            
-            // Inicialização das notificações Push para Android e iOS
-            registrarPushNativo();
-
-            setTimeout(() => verificarStatusAceite(), 300);
-        } catch (error) {
-            console.error("Erro na inicializacao:", error);
-        }
+        carregarNotasAluno();
+        carregarBadgesAluno();
+        verificarStatusAceite();
+        carregarStatusJustificativas();
+        carregarGraficoFrequencia();
+        registrarPushNativo();
     });
 </script>
 </body>
