@@ -921,7 +921,7 @@
             </div>
         </div>
 
-        <!-- FORMULÁRIO DE JUSTIFICATIVA DE FALTAS -->
+     <!-- FORMULÁRIO DE JUSTIFICATIVA DE FALTAS -->
         <div style="margin-top: 30px; background: rgba(15, 23, 42, 0.6); border: 1px solid var(--border-color); padding: 20px; border-radius: var(--radius-md);">
             <h3 style="margin-bottom: 12px; font-size: 16px;">📝 Justificar Falta em Aula</h3>
             <form id="formJustificativa">
@@ -2115,7 +2115,7 @@ END:VCALENDAR`;
         window.location.replace('index.html');
     });
 
-    function alternarCampoTextoOutro() {
+  function alternarCampoTextoOutro() {
         const checkOutro = document.getElementById('checkOutro');
         const containerTexto = document.getElementById('containerTextoOutro');
         const campoTexto = document.getElementById('textoJustificativaOutro');
@@ -2129,15 +2129,29 @@ END:VCALENDAR`;
         }
     }
 
+    // CORREÇÃO PARA COMPATIBILIDADE COM IOS / WEBKIT
     document.getElementById('dataFaltaAluno').addEventListener('change', function() {
+        // 1. Evita executar se o campo for limpo ou estiver vazio no iOS/Safari ao abrir
         if (!this.value) return;
         
         const partes = this.value.split('-');
-        const dataSelecionada = new Date(Date.UTC(partes[0], partes[1] - 1, partes[2]));
-        const diaSemana = dataSelecionada.getUTCDay();
+        if (partes.length !== 3) return;
 
+        const ano = parseInt(partes[0], 10);
+        const mes = parseInt(partes[1], 10) - 1;
+        const dia = parseInt(partes[2], 10);
+
+        // 2. Garante a conversão local correta da data para evitar deslocamentos por timezone
+        const dataSelecionada = new Date(ano, mes, dia);
+
+        if (isNaN(dataSelecionada.getTime())) return;
+
+        // 0 = Domingo, 1 = Segunda, 2 = Terça, 3 = Quarta, 4 = Quinta, 5 = Sexta, 6 = Sábado
+        const diaSemana = dataSelecionada.getDay();
+
+        // 3. Valida se a data escolhida cai em Terça (2), Quinta (4) ou Sábado (6)
         if (diaSemana !== 2 && diaSemana !== 4 && diaSemana !== 6) {
-            alert("Erro: Aulas ocorrem apenas Terças, Quintas e Sábados. Por favor, selecione uma data válida.");
+            alert("Aulas ocorrem apenas Terças, Quintas e Sábados. Selecione uma data válida.");
             this.value = '';
         }
     });
