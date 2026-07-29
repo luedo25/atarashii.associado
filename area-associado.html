@@ -29,464 +29,82 @@
             --radius-md: 12px;
             --radius-sm: 8px;
         }
-
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-            -webkit-tap-highlight-color: transparent;
-        }
-
-        body {
-            background-color: var(--bg-primary);
-            color: var(--text-main);
-            padding-bottom: 110px;
-            min-height: 100vh;
-        }
-
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; -webkit-tap-highlight-color: transparent; }
+        body { background-color: var(--bg-primary); color: var(--text-main); padding-bottom: 110px; min-height: 100vh; }
+        
         /* HEADER */
-        header {
-            background: rgba(30, 41, 59, 0.85);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-            position: sticky;
-            top: 0;
-            z-index: 1000;
-            border-bottom: 1px solid var(--border-color);
-            padding: 12px 20px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        header h1 {
-            font-size: 18px;
-            font-weight: 700;
-            color: var(--text-main);
-            letter-spacing: 0.3px;
-        }
-
-        .header-left {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
-
-        .header-left img {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            object-fit: cover;
-            border: 2px solid var(--accent-blue);
-        }
-
-        .header-actions {
-            display: flex;
-            align-items: center;
-            gap: 14px;
-        }
-
-        .icon-btn {
-            background: rgba(255, 255, 255, 0.05);
-            border: 1px solid var(--border-color);
-            border-radius: var(--radius-sm);
-            width: 38px;
-            height: 38px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            font-size: 18px;
-            transition: all 0.2s;
-            position: relative;
-        }
-
-        .icon-btn:active {
-            transform: scale(0.92);
-            background: rgba(255, 255, 255, 0.1);
-        }
-
-        .btn-logout {
-            background: rgba(239, 68, 68, 0.15);
-            color: #fca5a5;
-            border: 1px solid rgba(239, 68, 68, 0.3);
-            padding: 8px 14px;
-            border-radius: var(--radius-sm);
-            cursor: pointer;
-            font-weight: 600;
-            font-size: 13px;
-            transition: all 0.2s;
-        }
-
-        .btn-logout:active {
-            transform: scale(0.95);
-            background: rgba(239, 68, 68, 0.3);
-        }
-
-        .badge-count {
-            position: absolute;
-            top: -4px;
-            right: -4px;
-            background: var(--accent-red);
-            color: white;
-            font-size: 10px;
-            font-weight: bold;
-            border-radius: 50%;
-            width: 18px;
-            height: 18px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border: 2px solid var(--bg-card);
-        }
+        header { background: rgba(30, 41, 59, 0.85); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); position: sticky; top: 0; z-index: 1000; border-bottom: 1px solid var(--border-color); padding: 12px 20px; display: flex; justify-content: space-between; align-items: center; }
+        header h1 { font-size: 18px; font-weight: 700; color: var(--text-main); letter-spacing: 0.3px; }
+        .header-left { display: flex; align-items: center; gap: 12px; }
+        .header-left img { width: 40px; height: 40px; border-radius: 50%; object-fit: cover; border: 2px solid var(--accent-blue); }
+        .header-actions { display: flex; align-items: center; gap: 14px; }
+        .icon-btn { background: rgba(255, 255, 255, 0.05); border: 1px solid var(--border-color); border-radius: var(--radius-sm); width: 38px; height: 38px; display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 18px; transition: all 0.2s; position: relative; }
+        .icon-btn:active { transform: scale(0.92); background: rgba(255, 255, 255, 0.1); }
+        .btn-logout { background: rgba(239, 68, 68, 0.15); color: #fca5a5; border: 1px solid rgba(239, 68, 68, 0.3); padding: 8px 14px; border-radius: var(--radius-sm); cursor: pointer; font-weight: 600; font-size: 13px; transition: all 0.2s; }
+        .btn-logout:active { transform: scale(0.95); background: rgba(239, 68, 68, 0.3); }
+        .badge-count { position: absolute; top: -4px; right: -4px; background: var(--accent-red); color: white; font-size: 10px; font-weight: bold; border-radius: 50%; width: 18px; height: 18px; display: flex; align-items: center; justify-content: center; border: 2px solid var(--bg-card); }
         
         /* Container Geral das Conquistas Redimensionado para Smartphone */
-        .card-conquistas {
-            margin-top: 20px;
-            margin-bottom: 20px;
-            background: rgba(15, 23, 42, 0.75);
-            border: 1px solid var(--border-color, #2e3748);
-            padding: 16px;
-            border-radius: 16px;
-            backdrop-filter: blur(8px);
-            width: 100%;
-        }
-
-        .titulo-conquistas {
-            margin-bottom: 14px;
-            font-size: 1rem;
-            color: #f8fafc;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
+        .card-conquistas { margin-top: 20px; margin-bottom: 20px; background: rgba(15, 23, 42, 0.75); border: 1px solid var(--border-color, #2e3748); padding: 16px; border-radius: 16px; backdrop-filter: blur(8px); width: 100%; }
+        .titulo-conquistas { margin-bottom: 14px; font-size: 1rem; color: #f8fafc; display: flex; align-items: center; gap: 8px; }
 
         /* Card do Badge Responsivo */
-        .badge-card {
-            display: flex;
-            flex-direction: row;
-            align-items: center;
-            gap: 16px;
-            padding: 14px;
-            border-radius: 14px;
-            background: rgba(30, 41, 59, 0.5);
-            border: 1px solid rgba(255, 255, 255, 0.05);
-            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-            width: 100%;
-        }
+        .badge-card { display: flex; flex-direction: row; align-items: center; gap: 16px; padding: 14px; border-radius: 14px; background: rgba(30, 41, 59, 0.5); border: 1px solid rgba(255, 255, 255, 0.05); transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1); width: 100%; }
+        .badge-card.badge-concluido { background: linear-gradient(135deg, rgba(30, 41, 59, 0.9) 0%, rgba(15, 23, 42, 0.9) 100%); border: 1px solid #e2e8f0; box-shadow: 0 0 20px rgba(226, 232, 240, 0.15), inset 0 0 15px rgba(255, 255, 255, 0.05); }
+        .badge-card.badge-bloqueado { opacity: 0.6; filter: grayscale(0.8); }
 
-        /* Estado Desbloqueado (Concluído) */
-        .badge-card.badge-concluido {
-            background: linear-gradient(135deg, rgba(30, 41, 59, 0.9) 0%, rgba(15, 23, 42, 0.9) 100%);
-            border: 1px solid #e2e8f0;
-            box-shadow: 0 0 20px rgba(226, 232, 240, 0.15), inset 0 0 15px rgba(255, 255, 255, 0.05);
-        }
+        .badge-emblem { position: relative; width: 56px; height: 56px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; }
+        .emblem-ring { width: 100%; height: 100%; border-radius: 50%; background: linear-gradient(135deg, #94a3b8 0%, #475569 50%, #1e293b 100%); display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3); border: 2px solid #cbd5e1; }
+        .badge-concluido .emblem-ring { background: linear-gradient(135deg, #f8fafc 0%, #94a3b8 50%, #334155 100%); border-color: #ffffff; box-shadow: 0 0 15px rgba(248, 250, 252, 0.4); animation: pulseGlow 3s infinite alternate; }
+        .emblem-icon { width: 26px; height: 26px; color: #0f172a; stroke-width: 2.2; }
+        
+        .badge-ribbon { position: absolute; bottom: -4px; background: #475569; color: #fff; font-size: 9px; font-weight: 800; padding: 1px 6px; border-radius: 8px; letter-spacing: 0.5px; box-shadow: 0 2px 5px rgba(0,0,0,0.4); white-space: nowrap; }
+        .badge-concluido .badge-ribbon { background: linear-gradient(90deg, #10b981 0%, #059669 100%); }
 
-        /* Estado Bloqueado */
-        .badge-card.badge-bloqueado {
-            opacity: 0.6;
-            filter: grayscale(0.8);
-        }
+        .badge-info { flex-grow: 1; min-width: 0; }
+        .badge-header { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-bottom: 4px; flex-wrap: wrap; }
+        .badge-title { font-size: 0.95rem; color: #f1f5f9; word-break: break-word; }
+        .badge-desc { font-size: 0.8rem; color: #94a3b8; margin: 0; line-height: 1.3; }
+        .badge-tag { font-size: 0.7rem; font-weight: 700; padding: 2px 8px; border-radius: 20px; background: rgba(148, 163, 184, 0.1); color: #94a3b8; white-space: nowrap; }
+        .badge-concluido .badge-tag { background: rgba(16, 185, 129, 0.15); color: #10b981; border: 1px solid rgba(16, 185, 129, 0.3); }
+        .badge-historico { margin-top: 6px; font-size: 0.75rem; color: #cbd5e1; word-break: break-word; }
 
-        /* Estilização da Medalha / Emblema Redimensionada */
-        .badge-emblem {
-            position: relative;
-            width: 56px;
-            height: 56px;
-            flex-shrink: 0;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
+        @keyframes pulseGlow { 0% { box-shadow: 0 0 10px rgba(248, 250, 252, 0.2); } 100% { box-shadow: 0 0 22px rgba(248, 250, 252, 0.6); } }
 
-        .emblem-ring {
-            width: 100%;
-            height: 100%;
-            border-radius: 50%;
-            background: linear-gradient(135deg, #94a3b8 0%, #475569 50%, #1e293b 100%);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
-            border: 2px solid #cbd5e1;
-        }
-
-        .badge-concluido .emblem-ring {
-            background: linear-gradient(135deg, #f8fafc 0%, #94a3b8 50%, #334155 100%);
-            border-color: #ffffff;
-            box-shadow: 0 0 15px rgba(248, 250, 252, 0.4);
-            animation: pulseGlow 3s infinite alternate;
-        }
-
-        .emblem-icon {
-            width: 26px;
-            height: 26px;
-            color: #0f172a;
-            stroke-width: 2.2;
-        }
-
-        .badge-ribbon {
-            position: absolute;
-            bottom: -4px;
-            background: #475569;
-            color: #fff;
-            font-size: 9px;
-            font-weight: 800;
-            padding: 1px 6px;
-            border-radius: 8px;
-            letter-spacing: 0.5px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.4);
-            white-space: nowrap;
-        }
-
-        .badge-concluido .badge-ribbon {
-            background: linear-gradient(90deg, #10b981 0%, #059669 100%);
-        }
-
-        /* Informações do Badge */
-        .badge-info {
-            flex-grow: 1;
-            min-width: 0;
-        }
-
-        .badge-header {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            gap: 8px;
-            margin-bottom: 4px;
-            flex-wrap: wrap;
-        }
-
-        .badge-title {
-            font-size: 0.95rem;
-            color: #f1f5f9;
-            word-break: break-word;
-        }
-
-        .badge-desc {
-            font-size: 0.8rem;
-            color: #94a3b8;
-            margin: 0;
-            line-height: 1.3;
-        }
-
-        .badge-tag {
-            font-size: 0.7rem;
-            font-weight: 700;
-            padding: 2px 8px;
-            border-radius: 20px;
-            background: rgba(148, 163, 184, 0.1);
-            color: #94a3b8;
-            white-space: nowrap;
-        }
-
-        .badge-concluido .badge-tag {
-            background: rgba(16, 185, 129, 0.15);
-            color: #10b981;
-            border: 1px solid rgba(16, 185, 129, 0.3);
-        }
-
-        .badge-historico {
-            margin-top: 6px;
-            font-size: 0.75rem;
-            color: #cbd5e1;
-            word-break: break-word;
-        }
-
-        @keyframes pulseGlow {
-            0% { box-shadow: 0 0 10px rgba(248, 250, 252, 0.2); }
-            100% { box-shadow: 0 0 22px rgba(248, 250, 252, 0.6); }
-        }
-
-        /* Adjusts para telas muito pequenas de celular */
         @media (max-width: 400px) {
-            .card-conquistas {
-                padding: 12px;
-            }
-            .badge-card {
-                flex-direction: column;
-                text-align: center;
-                padding: 12px;
-            }
-            .badge-header {
-                flex-direction: column;
-                justify-content: center;
-                gap: 4px;
-            }
+            .card-conquistas { padding: 12px; }
+            .badge-card { flex-direction: column; text-align: center; padding: 12px; }
+            .badge-header { flex-direction: column; justify-content: center; gap: 4px; }
         }
 
-        /* CONTAINER PRINCIPAL */
-        .container {
-            max-width: 900px;
-            margin: 20px auto 0;
-            padding: 0 16px;
-        }
+        .container { max-width: 900px; margin: 20px auto 0; padding: 0 16px; }
 
-        /* CARD BOAS-VINDAS */
-        .welcome-box {
-            background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
-            border: 1px solid var(--border-color);
-            padding: 22px;
-            border-radius: var(--radius-lg);
-            margin-bottom: 20px;
-            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.3);
-            position: relative;
-            overflow: hidden;
-        }
+        .welcome-box { background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%); border: 1px solid var(--border-color); padding: 22px; border-radius: var(--radius-lg); margin-bottom: 20px; box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.3); position: relative; overflow: hidden; }
+        .welcome-box::before { content: ''; position: absolute; top: 0; right: 0; width: 150px; height: 150px; background: radial-gradient(circle, rgba(59,130,246,0.15) 0%, rgba(0,0,0,0) 70%); pointer-events: none; }
+        .welcome-box h2 { font-size: 22px; font-weight: 700; margin-bottom: 6px; background: linear-gradient(to right, #fff, var(--text-muted)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .welcome-box p { font-size: 14px; color: var(--text-muted); }
 
-        .welcome-box::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            right: 0;
-            width: 150px;
-            height: 150px;
-            background: radial-gradient(circle, rgba(59,130,246,0.15) 0%, rgba(0,0,0,0) 70%);
-            pointer-events: none;
-        }
+        .tab-content { display: none; background: var(--bg-card); border: 1px solid var(--border-color); padding: 24px; border-radius: var(--radius-lg); margin-bottom: 20px; animation: fadeIn 0.35s cubic-bezier(0.16, 1, 0.3, 1); box-shadow: 0 4px 20px rgba(0,0,0,0.2); }
+        .tab-content.active { display: block; }
+        .tab-content h3 { font-size: 18px; font-weight: 600; color: var(--text-main); margin-bottom: 18px; display: flex; align-items: center; gap: 10px; }
 
-        .welcome-box h2 {
-            font-size: 22px;
-            font-weight: 700;
-            margin-bottom: 6px;
-            background: linear-gradient(to right, #fff, var(--text-muted));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
-        .welcome-box p {
-            font-size: 14px;
-            color: var(--text-muted);
-        }
+        .table-container { width: 100%; overflow-x: auto; -webkit-overflow-scrolling: touch; border: 1px solid var(--border-color); border-radius: var(--radius-md); background: rgba(15, 23, 42, 0.6); }
+        table { width: 100%; border-collapse: collapse; min-width: 600px; text-align: left; font-size: 13px; }
+        th, td { padding: 14px 12px; border-bottom: 1px solid var(--border-color); }
+        th { background: rgba(255, 255, 255, 0.03); color: var(--text-muted); font-weight: 600; text-transform: uppercase; font-size: 11px; letter-spacing: 0.5px; }
+        td { color: var(--text-main); }
+        tbody tr:last-child td { border-bottom: none; }
 
-        /* CONTEÚDO DAS ABAS */
-        .tab-content {
-            display: none;
-            background: var(--bg-card);
-            border: 1px solid var(--border-color);
-            padding: 24px;
-            border-radius: var(--radius-lg);
-            margin-bottom: 20px;
-            animation: fadeIn 0.35s cubic-bezier(0.16, 1, 0.3, 1);
-            box-shadow: 0 4px 20px rgba(0,0,0,0.2);
-        }
+        .container-tabela-carencia { width: 100%; margin-top: 25px; text-align: center; }
+        .tabela-carencia-wrapper { width: 100%; overflow-x: auto; border-radius: var(--radius-md); border: 1px solid var(--border-color); background: rgba(15, 23, 42, 0.6); margin-top: 12px; }
+        .tabela-carencia-custom { width: 100%; border-collapse: collapse; text-align: center; min-width: 320px; }
+        .tabela-carencia-custom th { background: rgba(255, 255, 255, 0.05); color: var(--text-main); font-size: 13px; font-weight: 700; padding: 12px; border-bottom: 1px solid var(--border-color); text-transform: none; letter-spacing: normal; }
+        .tabela-carencia-custom td { padding: 10px 12px; border-bottom: 1px solid var(--border-color); font-size: 14px; }
+        .tabela-carencia-custom tr:last-child td { border-bottom: none; }
 
-        .tab-content.active {
-            display: block;
-        }
-
-        .tab-content h3 {
-            font-size: 18px;
-            font-weight: 600;
-            color: var(--text-main);
-            margin-bottom: 18px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        /* TABELAS RESPONSIVAS */
-        .table-container {
-            width: 100%;
-            overflow-x: auto;
-            -webkit-overflow-scrolling: touch;
-            border: 1px solid var(--border-color);
-            border-radius: var(--radius-md);
-            background: rgba(15, 23, 42, 0.6);
-        }
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            min-width: 600px;
-            text-align: left;
-            font-size: 13px;
-        }
-
-        th, td {
-            padding: 14px 12px;
-            border-bottom: 1px solid var(--border-color);
-        }
-
-        th {
-            background: rgba(255, 255, 255, 0.03);
-            color: var(--text-muted);
-            font-weight: 600;
-            text-transform: uppercase;
-            font-size: 11px;
-            letter-spacing: 0.5px;
-        }
-
-        td {
-            color: var(--text-main);
-        }
-
-        tbody tr:last-child td {
-            border-bottom: none;
-        }
-
-        /* TABELA CARÊNCIA */
-        .container-tabela-carencia {
-            width: 100%;
-            margin-top: 25px;
-            text-align: center;
-        }
-
-        .tabela-carencia-wrapper {
-            width: 100%;
-            overflow-x: auto;
-            border-radius: var(--radius-md);
-            border: 1px solid var(--border-color);
-            background: rgba(15, 23, 42, 0.6);
-            margin-top: 12px;
-        }
-
-        .tabela-carencia-custom {
-            width: 100%;
-            border-collapse: collapse;
-            text-align: center;
-            min-width: 320px;
-        }
-
-        .tabela-carencia-custom th {
-            background: rgba(255, 255, 255, 0.05);
-            color: var(--text-main);
-            font-size: 13px;
-            font-weight: 700;
-            padding: 12px;
-            border-bottom: 1px solid var(--border-color);
-            text-transform: none;
-            letter-spacing: normal;
-        }
-
-        .tabela-carencia-custom td {
-            padding: 10px 12px;
-            border-bottom: 1px solid var(--border-color);
-            font-size: 14px;
-        }
-
-        .tabela-carencia-custom tr:last-child td {
-            border-bottom: none;
-        }
-
-        .badge-faixa-item {
-            display: inline-block;
-            width: 110px;
-            padding: 5px 10px;
-            border-radius: 6px;
-            font-weight: bold;
-            font-size: 13px;
-            text-shadow: 0px 1px 1px rgba(0,0,0,0.3);
-            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
-        }
-
+        .badge-faixa-item { display: inline-block; width: 110px; padding: 5px 10px; border-radius: 6px; font-weight: bold; font-size: 13px; text-shadow: 0px 1px 1px rgba(0,0,0,0.3); box-shadow: 0 2px 4px rgba(0,0,0,0.2); }
         .badge-faixa-item.branca { background-color: #ffffff; color: #0f172a; text-shadow: none; border: 1px solid #cbd5e1; }
         .badge-faixa-item.amarela { background-color: #facc15; color: #0f172a; text-shadow: none; }
         .badge-faixa-item.vermelha { background-color: #ef4444; color: #ffffff; }
@@ -496,45 +114,12 @@
         .badge-faixa-item.marrom { background-color: #78350f; color: #ffffff; }
         .badge-faixa-item.preta { background-color: #000000; color: #ffffff; border: 1px solid #475569; }
 
-        /* ACCORDIONS / DETAILS */
-        .modulo-faixa {
-            background: rgba(15, 23, 42, 0.4);
-            border: 1px solid var(--border-color);
-            border-radius: var(--radius-md);
-            margin-bottom: 12px;
-            overflow: hidden;
-            transition: all 0.2s ease;
-        }
+        .modulo-faixa { background: rgba(15, 23, 42, 0.4); border: 1px solid var(--border-color); border-radius: var(--radius-md); margin-bottom: 12px; overflow: hidden; transition: all 0.2s ease; }
+        .modulo-faixa[open] { border-color: var(--accent-blue); background: rgba(15, 23, 42, 0.8); }
+        .botao-expandir { padding: 16px; display: flex; align-items: center; font-weight: 600; font-size: 15px; color: var(--text-main); cursor: pointer; list-style: none; user-select: none; }
+        .botao-expandir::-webkit-details-marker { display: none; }
 
-        .modulo-faixa[open] {
-            border-color: var(--accent-blue);
-            background: rgba(15, 23, 42, 0.8);
-        }
-
-        .botao-expandir {
-            padding: 16px;
-            display: flex;
-            align-items: center;
-            font-weight: 600;
-            font-size: 15px;
-            color: var(--text-main);
-            cursor: pointer;
-            list-style: none;
-            user-select: none;
-        }
-
-        .botao-expandir::-webkit-details-marker {
-            display: none;
-        }
-
-        /* CORES DAS FAIXAS */
-        .faixa-cor {
-            width: 14px;
-            height: 14px;
-            border-radius: 4px;
-            display: inline-block;
-            margin-right: 6px;
-        }
+        .faixa-cor { width: 14px; height: 14px; border-radius: 4px; display: inline-block; margin-right: 6px; }
         .faixa-cor.branca { background-color: #ffffff; }
         .faixa-cor.amarela { background-color: #facc15; }
         .faixa-cor.vermelha { background-color: #ef4444; }
@@ -544,217 +129,40 @@
         .faixa-cor.marrom { background-color: #854d0e; }
         .faixa-cor.preta { background-color: #000000; border: 1px solid #475569; margin-right: 10px; }
 
-        .seta {
-            margin-left: auto;
-            font-size: 12px;
-            color: var(--text-muted);
-            transition: transform 0.2s;
-        }
+        .seta { margin-left: auto; font-size: 12px; color: var(--text-muted); transition: transform 0.2s; }
+        .modulo-faixa[open] .seta { transform: rotate(180deg); }
 
-        .modulo-faixa[open] .seta {
-            transform: rotate(180deg);
-        }
+        .bloco-extra { padding: 16px; border-top: 1px solid var(--border-color); font-size: 13px; color: var(--text-muted); line-height: 1.6; background: rgba(0, 0, 0, 0.2); }
+        .bloco-extra strong { color: var(--text-main); display: block; margin-top: 10px; margin-bottom: 4px; }
+        .texto-vermelho { color: #f87171; font-weight: 600; }
 
-        .bloco-extra {
-            padding: 16px;
-            border-top: 1px solid var(--border-color);
-            font-size: 13px;
-            color: var(--text-muted);
-            line-height: 1.6;
-            background: rgba(0, 0, 0, 0.2);
-        }
+        .card-item { display: flex; align-items: center; background: rgba(15, 23, 42, 0.5); border: 1px solid var(--border-color); border-radius: var(--radius-md); padding: 14px 16px; margin-bottom: 12px; gap: 14px; text-decoration: none; color: inherit; transition: all 0.2s; }
+        .card-item:hover, .card-item:active { background: var(--bg-card-hover); border-color: var(--accent-blue); transform: translateY(-1px); }
 
-        .bloco-extra strong {
-            color: var(--text-main);
-            display: block;
-            margin-top: 10px;
-            margin-bottom: 4px;
-        }
+        .card-date-badge { text-align: center; padding-right: 14px; border-right: 1px solid var(--border-color); min-width: 65px; }
+        .card-date-badge .day { display: block; font-size: 22px; font-weight: 800; color: var(--accent-blue); line-height: 1; }
+        .card-date-badge .month { display: block; font-size: 11px; font-weight: 700; color: var(--text-muted); text-transform: uppercase; margin-top: 4px; }
 
-        .texto-vermelho {
-            color: #f87171;
-            font-weight: 600;
-        }
+        .cal-btn-group { display: flex; gap: 8px; margin-top: 10px; flex-wrap: wrap; }
+        .btn-cal { display: inline-flex; align-items: center; gap: 6px; padding: 6px 12px; border-radius: 6px; font-size: 11px; font-weight: bold; color: white; border: none; cursor: pointer; text-decoration: none; transition: all 0.2s; }
+        .btn-cal-google { background-color: #4285F4; }
+        .btn-cal-apple { background-color: #333333; border: 1px solid var(--border-color); }
+        .btn-cal:active { transform: scale(0.95); opacity: 0.9; }
 
-        /* CARDS E LISTAS INTERATIVAS */
-        .card-item {
-            display: flex;
-            align-items: center;
-            background: rgba(15, 23, 42, 0.5);
-            border: 1px solid var(--border-color);
-            border-radius: var(--radius-md);
-            padding: 14px 16px;
-            margin-bottom: 12px;
-            gap: 14px;
-            text-decoration: none;
-            color: inherit;
-            transition: all 0.2s;
-        }
+        .btn-action { display: flex; align-items: center; justify-content: center; gap: 8px; width: 100%; padding: 14px; background: var(--accent-blue); color: white; border: none; border-radius: var(--radius-md); font-weight: 600; font-size: 14px; cursor: pointer; text-decoration: none; transition: all 0.2s; box-shadow: 0 4px 12px rgba(59, 130, 246, 0.25); }
+        .btn-action:active { transform: scale(0.98); opacity: 0.9; }
+        .btn-whatsapp { background: #22c55e; box-shadow: 0 4px 12px rgba(34, 197, 94, 0.25); }
 
-        .card-item:hover, .card-item:active {
-            background: var(--bg-card-hover);
-            border-color: var(--accent-blue);
-            transform: translateY(-1px);
-        }
+        .bottom-nav { position: fixed; bottom: 0; left: 0; width: 100%; background: rgba(15, 23, 42, 0.92); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); display: flex; justify-content: space-around; align-items: center; padding: 10px 6px calc(10px + env(safe-area-inset-bottom)); border-top: 1px solid var(--border-color); z-index: 9999; }
+        .nav-btn { background: none; border: none; color: var(--text-muted); font-size: 10px; font-weight: 600; cursor: pointer; display: flex; flex-direction: column; align-items: center; gap: 4px; flex: 1; padding: 4px 0; transition: all 0.2s; }
+        .nav-btn .icon { font-size: 20px; transition: transform 0.2s; }
+        .nav-btn .icon img.logo-icon { width: 22px; height: 22px; object-fit: contain; filter: grayscale(100%) opacity(0.6); transition: all 0.2s; }
+        .nav-btn.active { color: var(--accent-blue); }
+        .nav-btn.active .icon { transform: translateY(-2px); }
+        .nav-btn.active .icon img.logo-icon { filter: grayscale(0%) opacity(1); }
 
-        .card-date-badge {
-            text-align: center;
-            padding-right: 14px;
-            border-right: 1px solid var(--border-color);
-            min-width: 65px;
-        }
-
-        .card-date-badge .day {
-            display: block;
-            font-size: 22px;
-            font-weight: 800;
-            color: var(--accent-blue);
-            line-height: 1;
-        }
-
-        .card-date-badge .month {
-            display: block;
-            font-size: 11px;
-            font-weight: 700;
-            color: var(--text-muted);
-            text-transform: uppercase;
-            margin-top: 4px;
-        }
-
-        /* BOTOES DE CALENDÁRIO */
-        .cal-btn-group {
-            display: flex;
-            gap: 8px;
-            margin-top: 10px;
-            flex-wrap: wrap;
-        }
-
-        .btn-cal {
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-            padding: 6px 12px;
-            border-radius: 6px;
-            font-size: 11px;
-            font-weight: bold;
-            color: white;
-            border: none;
-            cursor: pointer;
-            text-decoration: none;
-            transition: all 0.2s;
-        }
-
-        .btn-cal-google {
-            background-color: #4285F4;
-        }
-
-        .btn-cal-apple {
-            background-color: #333333;
-            border: 1px solid var(--border-color);
-        }
-
-        .btn-cal:active {
-            transform: scale(0.95);
-            opacity: 0.9;
-        }
-
-        .btn-action {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-            width: 100%;
-            padding: 14px;
-            background: var(--accent-blue);
-            color: white;
-            border: none;
-            border-radius: var(--radius-md);
-            font-weight: 600;
-            font-size: 14px;
-            cursor: pointer;
-            text-decoration: none;
-            transition: all 0.2s;
-            box-shadow: 0 4px 12px rgba(59, 130, 246, 0.25);
-        }
-
-        .btn-action:active {
-            transform: scale(0.98);
-            opacity: 0.9;
-        }
-
-        .btn-whatsapp {
-            background: #22c55e;
-            box-shadow: 0 4px 12px rgba(34, 197, 94, 0.25);
-        }
-
-        /* BARRA INFERIOR DE NAVEGAÇÃO */
-        .bottom-nav {
-            position: fixed;
-            bottom: 0;
-            left: 0;
-            width: 100%;
-            background: rgba(15, 23, 42, 0.92);
-            backdrop-filter: blur(16px);
-            -webkit-backdrop-filter: blur(16px);
-            display: flex;
-            justify-content: space-around;
-            align-items: center;
-            padding: 10px 6px calc(10px + env(safe-area-inset-bottom));
-            border-top: 1px solid var(--border-color);
-            z-index: 9999;
-        }
-
-        .nav-btn {
-            background: none;
-            border: none;
-            color: var(--text-muted);
-            font-size: 10px;
-            font-weight: 600;
-            cursor: pointer;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 4px;
-            flex: 1;
-            padding: 4px 0;
-            transition: all 0.2s;
-        }
-
-        .nav-btn .icon {
-            font-size: 20px;
-            transition: transform 0.2s;
-        }
-
-        .nav-btn .icon img.logo-icon {
-            width: 22px;
-            height: 22px;
-            object-fit: contain;
-            filter: grayscale(100%) opacity(0.6);
-            transition: all 0.2s;
-        }
-
-        .nav-btn.active {
-            color: var(--accent-blue);
-        }
-
-        .nav-btn.active .icon {
-            transform: translateY(-2px);
-        }
-
-        .nav-btn.active .icon img.logo-icon {
-            filter: grayscale(0%) opacity(1);
-        }
-
-        @keyframes balancoSininho {
-            0% { transform: rotate(-12deg); }
-            100% { transform: rotate(12deg); }
-        }
-
-        @media (max-width: 480px) {
-            header h1 { font-size: 16px; }
-            .container { padding: 0 12px; }
-            .tab-content { padding: 18px 14px; }
-        }
+        @keyframes balancoSininho { 0% { transform: rotate(-12deg); } 100% { transform: rotate(12deg); } }
+        @media (max-width: 480px) { header h1 { font-size: 16px; } .container { padding: 0 12px; } .tab-content { padding: 18px 14px; } }
     </style>
 </head>
 <body>
@@ -766,26 +174,19 @@
     </div>
     
     <div class="header-actions">
-        <div class="icon-btn" onclick="atualizarPainel()" title="Atualizar painel">
-            🔄
-        </div>
-
+        <div class="icon-btn" onclick="atualizarPainel()" title="Atualizar painel">🔄</div>
         <div class="icon-btn" id="wrapperSininho" onclick="solicitarAtivacaoPushIOS()">
-            🔔
-            <span class="badge-count" id="badgeNotificacao" style="display: none;">1</span>
+            🔔<span class="badge-count" id="badgeNotificacao" style="display: none;">1</span>
         </div>
-
         <button class="btn-logout" id="logoutBtn">Sair</button>
     </div>
 </header>
 
 <div class="container">
-    <!-- BANNER INFORMATIVO EXCLUSIVO PARA IOS / SAFARI WEB -->
     <div id="bannerIosInstalar" style="display: none; background: rgba(59, 130, 246, 0.15); border: 1px solid var(--accent-blue); padding: 12px 16px; border-radius: var(--radius-md); margin-bottom: 15px; font-size: 13px;">
         📲 <strong>Ativar Notificações no iPhone:</strong> Para receber notificações no iOS, toque no botão de <strong>Compartilhar (🔗/⬆️)</strong> do Safari e escolha <strong>"Adicionar à Tela de Início"</strong>.
     </div>
 
-    <!-- BOTÃO MANUAL DE ATIVAÇÃO PUSH PARA DISPOSITIVOS MÓVEIS -->
     <div id="boxAtivarPush" style="display: none; background: rgba(16, 185, 129, 0.15); border: 1px solid var(--accent-green); padding: 12px 16px; border-radius: var(--radius-md); margin-bottom: 15px; text-align: center;">
         <span style="font-size: 13px; display: block; margin-bottom: 8px;">Deseja receber avisos e notificações no seu celular?</span>
         <button onclick="solicitarAtivacaoPushIOS()" style="background: var(--accent-green); color: white; border: none; padding: 8px 16px; border-radius: var(--radius-sm); font-weight: bold; cursor: pointer; font-size: 13px;">
@@ -801,13 +202,11 @@
 
     <!-- SEÇÃO 1: PAINEL / NOTAS DO ALUNO -->
     <div id="exame" class="tab-content active">
-    <!-- CONQUISTAS & BADGES DO ALUNO (DENTRO DA MESMA DIV) -->
         <div class="card-conquistas">
             <h3 class="titulo-conquistas">🏆 Minhas Conquistas</h3>
             
             <!-- BADGE FREQUÊNCIA DE FERRO -->
             <div id="cardBadgeFerro" class="badge-card badge-bloqueado">
-                <!-- Ícone / Medalha Estilizada -->
                 <div class="badge-emblem">
                     <div class="emblem-ring">
                         <svg class="emblem-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -816,23 +215,18 @@
                     </div>
                     <span class="badge-ribbon">100%</span>
                 </div>
-
-                <!-- Informações do Badge -->
                 <div class="badge-info">
                     <div class="badge-header">
                         <strong class="badge-title">Guardião</strong>
                         <span id="badgeTagStatus" class="badge-tag">Em andamento</span>
                     </div>
                     <p class="badge-desc">Objetivo: 100% de presença nas aulas do mês.</p>
-                    
-                    <!-- Histórico de meses conquistados -->
                     <div id="historicoBadges" class="badge-historico"></div>
                 </div>
             </div>
 
-            <!-- BADGE GUARDIÃO (AGORA INCLUÍDO DENTRO DA DIV MINHAS CONQUISTAS) -->
+            <!-- BADGE GUARDIÃO -->
             <div id="cardBadgeGuardiao" class="badge-card badge-bloqueado" style="margin-top: 12px;">
-                <!-- Ícone Escudo / Guardião -->
                 <div class="badge-emblem">
                     <div class="emblem-ring">
                         <svg class="emblem-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -841,17 +235,33 @@
                     </div>
                     <span class="badge-ribbon">🛡️ 85%</span>
                 </div>
-
-                <!-- Informações do Badge -->
                 <div class="badge-info">
                     <div class="badge-header">
                         <strong class="badge-title">Lenda do Dojo</strong>
                         <span id="badgeTagGuardiao" class="badge-tag">Em andamento</span>
                     </div>
                     <p class="badge-desc">Objetivo: Presença acima de 85% por 3 meses seguidos.</p>
-                    
-                    <!-- Histórico Guardião -->
                     <div id="historicoGuardiao" class="badge-historico"></div>
+                </div>
+            </div>
+
+            <!-- BADGE DESAFIADOR (NOVO) -->
+            <div id="cardBadgeDesafio" class="badge-card badge-bloqueado" style="margin-top: 12px;">
+                <div class="badge-emblem">
+                    <div class="emblem-ring">
+                        <svg class="emblem-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon>
+                        </svg>
+                    </div>
+                    <span class="badge-ribbon">🎯 Top</span>
+                </div>
+                <div class="badge-info">
+                    <div class="badge-header">
+                        <strong class="badge-title">Desafiador</strong>
+                        <span id="badgeTagDesafio" class="badge-tag">Em andamento</span>
+                    </div>
+                    <p class="badge-desc">Objetivo: Ter um vídeo de desafio prático aprovado pelo Sensei.</p>
+                    <div id="historicoDesafio" class="badge-historico"></div>
                 </div>
             </div>
         </div>
@@ -860,23 +270,10 @@
         <div class="table-container">
             <table>
                 <thead>
-                    <tr>
-                        <th>FAIXA</th>
-                        <th>Ano</th>
-                        <th>KIHON</th>
-                        <th>KATA</th>
-                        <th>KUMITE</th>
-                        <th>Perguntas</th>
-                        <th>TOTAL</th>
-                        <th>MÉDIA</th>
-                    </tr>
+                    <tr><th>FAIXA</th><th>Ano</th><th>KIHON</th><th>KATA</th><th>KUMITE</th><th>Perguntas</th><th>TOTAL</th><th>MÉDIA</th></tr>
                 </thead>
                 <tbody id="corpoTabelaNotas">
-                    <tr>
-                        <td colspan="8" style="text-align: center; color: var(--text-muted); padding: 20px;">
-                            Carregando histórico de exames...
-                        </td>
-                    </tr>
+                    <tr><td colspan="8" style="text-align: center; color: var(--text-muted); padding: 20px;">Carregando histórico de exames...</td></tr>
                 </tbody>
             </table>
         </div>
@@ -940,13 +337,11 @@
                     <label><input type="checkbox" name="motivoFalta" value="Preparação e participação em atividades desportivas, trabalho ou escolares"> h) Preparação e participação em atividades desportivas, trabalho ou escolares.</label>
                     <label><input type="checkbox" name="motivoFalta" value="Participação de estudo previstas no plano de atividades da escola"> i) Participação de estudo previstas no plano de atividades da escola.</label>
                     
-                    <!-- CHECKBOX OUTRO -->
                     <label style="font-weight: bold; color: var(--accent-blue);">
                         <input type="checkbox" id="checkOutro" onchange="alternarCampoTextoOutro()"> j) Outro(s)
                     </label>
                 </div>
 
-                <!-- CAMPO DE TEXTO (OCULTO POR PADRÃO) -->
                 <div id="containerTextoOutro" style="display: none; margin-bottom: 15px;">
                     <label style="display: block; font-size: 13px; color: var(--text-muted); margin-bottom: 6px;">Especifique o motivo da falta:</label>
                     <textarea id="textoJustificativaOutro" rows="3" placeholder="Escreva aqui o motivo detalhado da falta..." style="width: 100%; padding: 10px; border-radius: 6px; border: 1px solid var(--border-color); background: var(--bg-primary); color: var(--text-main); resize: vertical; font-size: 13px;"></textarea>
@@ -955,10 +350,8 @@
                 <button type="submit" class="btn-action">📤 Enviar Justificativa</button>
             </form>
 
-            <!-- HISTÓRICO E STATUS DE JUSTIFICATIVAS COM FILTRO POR MÊS -->
             <h4 style="margin-top: 25px; margin-bottom: 10px; font-size: 14px; color: var(--text-muted);">Status dos Pedidos de Justificativa</h4>
             
-            <!-- FILTRO DE CALENDÁRIO / MÊS DA JUSTIFICATIVA -->
             <div id="filtroJustificativa" style="display: flex; gap: 8px; align-items: center; justify-content: center; margin-bottom: 15px; background: rgba(15, 23, 42, 0.4); padding: 10px; border-radius: var(--radius-md); border: 1px solid var(--border-color); flex-wrap: wrap;">
                 <div style="display: flex; flex-direction: column; gap: 4px; flex: 1; min-width: 120px;">
                     <label for="mesInicioJustificativa" style="font-size: 11px; color: var(--text-muted); font-weight: bold;">Mês Inicial:</label>
@@ -1489,43 +882,36 @@
             <span style="font-weight: 600; font-size: 14px;">Junho 2022</span>
             <span style="margin-left: auto; color: var(--text-muted);">➔</span>
         </a>
-
         <a href="https://drive.google.com/drive/folders/1HfoZP89pVxOu3PqvmENSAwpo1nGZPg8K?usp=drive_link" target="_blank" class="card-item">
             <span style="font-size: 20px;">📂</span>
             <span style="font-weight: 600; font-size: 14px;">Dezembro 2022</span>
             <span style="margin-left: auto; color: var(--text-muted);">➔</span>
         </a>
-
         <a href="https://drive.google.com/drive/folders/1oZsy4NswTt6MIfvlF7lDb6aHcENDPphL?usp=drive_link" target="_blank" class="card-item">
             <span style="font-size: 20px;">📂</span>
             <span style="font-weight: 600; font-size: 14px;">Julho 2023</span>
             <span style="margin-left: auto; color: var(--text-muted);">➔</span>
         </a>
-
         <a href="https://drive.google.com/drive/folders/1-4vrTGEcgKnKMgVMFR9rZMI11psFiyn8?usp=drive_link" target="_blank" class="card-item">
             <span style="font-size: 20px;">📂</span>
             <span style="font-weight: 600; font-size: 14px;">Dezembro 2023</span>
             <span style="margin-left: auto; color: var(--text-muted);">➔</span>
         </a>
-
         <a href="https://drive.google.com/drive/folders/1f-iaokIRnn5b6lOU239L3qh6-NvOiXoH?usp=drive_link" target="_blank" class="card-item">
             <span style="font-size: 20px;">📂</span>
             <span style="font-weight: 600; font-size: 14px;">Dezembro 2024</span>
             <span style="margin-left: auto; color: var(--text-muted);">➔</span>
         </a>
-
         <a href="https://drive.google.com/drive/folders/1NgjvDrVK4YnHowuvrwRb8EcFIPGMfuWj?usp=drive_link" target="_blank" class="card-item">
             <span style="font-size: 20px;">📂</span>
             <span style="font-weight: 600; font-size: 14px;">Junho 2025</span>
             <span style="margin-left: auto; color: var(--text-muted);">➔</span>
         </a>
-
         <a href="https://drive.google.com/drive/folders/1QkRd6NYoWFvarpcxWSR2wMiLWuFppTmF?usp=drive_link" target="_blank" class="card-item">
             <span style="font-size: 20px;">📂</span>
             <span style="font-weight: 600; font-size: 14px;">Dezembro 2025</span>
             <span style="margin-left: auto; color: var(--text-muted);">➔</span>
         </a>
-
         <a href="https://drive.google.com/drive/folders/1TrXjV6R5Pqk_2FconkSwJicEqpmpI86g?usp=drive_link" target="_blank" class="card-item">
             <span style="font-size: 20px;">📂</span>
             <span style="font-weight: 600; font-size: 14px;">Junho 2026</span>
@@ -1533,7 +919,7 @@
         </a>
     </div>
 
-    <!-- SEÇÃO 5: ESTUDO -->
+    <!-- SEÇÃO 5: ESTUDO E DESAFIOS (NOVO) -->
     <div id="ebook" class="tab-content">
         <h3>📚 Materiais de Estudo</h3>
         
@@ -1551,7 +937,7 @@
 
         <div class="card-item" style="flex-direction: column; align-items: flex-start; gap: 10px;">
             <strong style="font-size: 15px;">📄 Dojo Kun</strong>
-            <p style="font-size: 12px; color: var(--text-muted);">O dojo kun é o conjunto de cinco regras ou lemas morais do karatê, usado para guiar o comportamento dos praticantes tanto dentro quanto fora da academia</p>
+            <p style="font-size: 12px; color: var(--text-muted);">O dojo kun é o conjunto de cinco regras ou lemas morais do karatê.</p>
             <a href="Dojo kun.pdf" target="_blank" class="btn-action" style="padding: 10px;">📖 Abrir PDF</a>
         </div>
 
@@ -1566,39 +952,54 @@
             <p style="font-size: 12px; color: var(--text-muted);">Regras oficiais de Kumite.</p>
             <a href="Regulamento de Arbitragem WKF - Kumite.pdf" target="_blank" class="btn-action" style="padding: 10px;">📖 Abrir PDF</a>
         </div>
+
+        <!-- ABA DESAFIOS INCORPORADA -->
+        <h3 style="margin-top: 35px;">🎯 Desafios Práticos em Vídeo</h3>
+        <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 16px;">
+            Grave o vídeo do seu desafio, suba no Google Drive (ou YouTube) e cole o link público abaixo para avaliação do Sensei.
+        </p>
+        <div style="background: rgba(15, 23, 42, 0.6); border: 1px solid var(--border-color); padding: 20px; border-radius: var(--radius-md);">
+            <form id="formDesafio">
+                <label style="display: block; font-size: 13px; color: var(--text-muted); margin-bottom: 6px;">Selecione o tipo de desafio:</label>
+                <select id="nomeDesafio" required style="width: 100%; padding: 10px; border-radius: 6px; border: 1px solid var(--border-color); background: var(--bg-primary); color: var(--text-main); margin-bottom: 15px;">
+                    <option value="">Escolha...</option>
+                    <option value="Kihon Básico">Kihon Básico</option>
+                    <option value="Kata Heian Shodan">Kata Heian Shodan</option>
+                    <option value="Desafio Físico (Flexão)">Desafio Físico (Flexão)</option>
+                    <option value="Desafio Livre">Desafio Livre / Outro</option>
+                </select>
+
+                <label style="display: block; font-size: 13px; color: var(--text-muted); margin-bottom: 6px;">Link do Vídeo (Deixe o acesso público):</label>
+                <input type="url" id="linkVideoDesafio" required placeholder="https://..." style="width: 100%; padding: 10px; border-radius: 6px; border: 1px solid var(--border-color); background: var(--bg-primary); color: var(--text-main); margin-bottom: 15px;">
+
+                <button type="submit" class="btn-action" style="background: #10b981;">📤 Enviar Link do Desafio</button>
+            </form>
+
+            <h4 style="margin-top: 25px; margin-bottom: 10px; font-size: 14px; color: var(--text-muted);">Status dos Meus Desafios</h4>
+            <div id="listaDesafiosAluno" style="font-size: 13px;">Nenhum desafio enviado ainda...</div>
+        </div>
+
     </div>
 
     <!-- SEÇÃO 6: ATARASHII -->
     <div id="saldo" class="tab-content">
         <h3>💰 Saldo em Conta da Associação</h3>
         <p style="font-size: 32px; font-weight: 800; color: var(--accent-green); margin: 10px 0 16px 0;" id="textoSaldo">R$ --,--</p>
-        <button onclick="buscarSaldoMercadoPago()" class="btn-action" style="margin-bottom: 20px;">
-            🔄 Atualizar Saldo
-        </button>
+        <button onclick="buscarSaldoMercadoPago()" class="btn-action" style="margin-bottom: 20px;">🔄 Atualizar Saldo</button>
 
         <h3>💵 Ajude a Associação Atarashii</h3>
         <div style="display: flex; flex-direction: column; gap: 10px; margin-bottom: 20px;">
-            <a href="https://link.mercadopago.com.br/atarashii" target="_blank" class="btn-action" style="background: #1877f2;">
-                🔗 Link para ajudar Associação
-            </a>
+            <a href="https://link.mercadopago.com.br/atarashii" target="_blank" class="btn-action" style="background: #1877f2;">🔗 Link para ajudar Associação</a>
         </div> 
         <h3>🔗 Contatos Oficiais</h3>
         <div style="display: flex; flex-direction: column; gap: 10px; margin-bottom: 20px;">
-            <a href="https://wa.me/5511988412917" target="_blank" class="btn-action btn-whatsapp">
-                💬 Falar com o Sensei
-            </a>
-            <a href="https://wa.me/5511965512234" target="_blank" class="btn-action btn-whatsapp" style="background: #059669;">
-                💬 Falar com a Academia
-            </a>
+            <a href="https://wa.me/5511988412917" target="_blank" class="btn-action btn-whatsapp">💬 Falar com o Sensei</a>
+            <a href="https://wa.me/5511965512234" target="_blank" class="btn-action btn-whatsapp" style="background: #059669;">💬 Falar com a Academia</a>
         </div>
 
         <div style="display: flex; gap: 10px; margin-bottom: 25px;">
-            <a href="https://www.facebook.com/atarashiishotokan/" target="_blank" class="btn-action" style="background: #1877f2;" title="Facebook">
-                Facebook
-            </a>
-            <a href="https://www.instagram.com/associacao_atarashii_karate/" target="_blank" class="btn-action" style="background: linear-gradient(45deg, #f09433, #dc2743, #bc1888);" title="Instagram">
-                Instagram
-            </a>
+            <a href="https://www.facebook.com/atarashiishotokan/" target="_blank" class="btn-action" style="background: #1877f2;" title="Facebook">Facebook</a>
+            <a href="https://www.instagram.com/associacao_atarashii_karate/" target="_blank" class="btn-action" style="background: linear-gradient(45deg, #f09433, #dc2743, #bc1888);" title="Instagram">Instagram</a>
         </div>
 
         <h3>📜 Diplomas Oficiais (Sensei Luiz)</h3>
@@ -1606,18 +1007,14 @@
             <div class="card-item" style="flex-direction: column;">
                 <a href="DIPLOMA.jpeg" target="_blank" style="text-decoration: none; width: 100%; text-align: center;">
                     <img src="DIPLOMA.jpeg" alt="Diploma FPK" style="width: 100%; max-height: 200px; object-fit: contain; border-radius: var(--radius-sm);">
-                    <span style="display: block; margin-top: 8px; font-size: 13px; color: var(--text-main); font-weight: 600;">
-                        🥇 Diploma FPK - Faixa Preta 1º Dan
-                    </span>
+                    <span style="display: block; margin-top: 8px; font-size: 13px; color: var(--text-main); font-weight: 600;">🥇 Diploma FPK - Faixa Preta 1º Dan</span>
                 </a>
             </div>
 
             <div class="card-item" style="flex-direction: column;">
                 <a href="DIPLOMA CBK.jpg" target="_blank" style="text-decoration: none; width: 100%; text-align: center;">
                     <img src="DIPLOMA CBK.jpg" alt="Diploma CBK" style="width: 100%; max-height: 200px; object-fit: contain; border-radius: var(--radius-sm);">
-                    <span style="display: block; margin-top: 8px; font-size: 13px; color: var(--text-main); font-weight: 600;">
-                        🥇 Diploma CBK - Faixa Preta 1º Dan
-                    </span>
+                    <span style="display: block; margin-top: 8px; font-size: 13px; color: var(--text-main); font-weight: 600;">🥇 Diploma CBK - Faixa Preta 1º Dan</span>
                 </a>
             </div>
         </div>
@@ -1626,42 +1023,22 @@
 
 <!-- NAVEGAÇÃO INFERIOR -->
 <div class="bottom-nav">
-    <button class="nav-btn active" onclick="mudarAba('exame', this)">
-        <span class="icon">🥋</span>
-        Painel
-    </button>
-    <button class="nav-btn" onclick="mudarAba('conteudo-programatico', this)">
-        <span class="icon">📋</span>
-        Exame
-    </button>
-    <button class="nav-btn" onclick="mudarAba('comunicados', this)">
-        <span class="icon">📢</span>
-        Avisos
-    </button>
-    <button class="nav-btn" onclick="mudarAba('galeria', this)">
-        <span class="icon">📸</span>
-        Galeria
-    </button>
-    <button class="nav-btn" onclick="mudarAba('ebook', this)">
-        <span class="icon">📚</span>
-        Estudo
-    </button>
+    <button class="nav-btn active" onclick="mudarAba('exame', this)"><span class="icon">🥋</span>Painel</button>
+    <button class="nav-btn" onclick="mudarAba('conteudo-programatico', this)"><span class="icon">📋</span>Exame</button>
+    <button class="nav-btn" onclick="mudarAba('comunicados', this)"><span class="icon">📢</span>Avisos</button>
+    <button class="nav-btn" onclick="mudarAba('galeria', this)"><span class="icon">📸</span>Galeria</button>
+    <button class="nav-btn" onclick="mudarAba('ebook', this)"><span class="icon">📚</span>Estudos</button>
     <button class="nav-btn" onclick="mudarAba('saldo', this)">
-        <span class="icon">
-            <img src="atarashii-192.png" alt="Logo Associação" class="logo-icon">
-        </span>
-        Atarashii
+        <span class="icon"><img src="atarashii-192.png" alt="Logo Associação" class="logo-icon"></span>Atarashii
     </button>
 </div>
 
 <script>
-    // 1. PROTEÇÃO DE ACESSO
     if (localStorage.getItem('associadoAutenticado') !== 'true') {
         alert('Acesso negado. Por favor, faça login.');
         window.location.href = 'index.html';
     }
 
-    // 2. CONFIGURAÇÕES E VARIÁVEIS GLOBAIS
     const nomeDoAluno = localStorage.getItem('nomeAlunoLogado') || 'Associado';
     const usuarioAtivo = localStorage.getItem('usuarioAtivo');
     const URL_API_SERVIDOR = "https://api-associacao-mp.onrender.com";
@@ -1669,420 +1046,221 @@
 
     document.getElementById('welcomeNome').textContent = `Olá, ${nomeDoAluno}!`;
 
-    // --- FUNÇÕES DE SINCRONIZAÇÃO DE CALENDÁRIO (.ICS / GOOGLE CALENDAR) ---
-    function formatarDataISO(dataISO) {
-        return dataISO.replace(/-|:|\.\d+/g, '');
-    }
+    function formatarDataISO(dataISO) { return dataISO.replace(/-|:|\.\d+/g, ''); }
 
     function adicionarGoogleCalendar(titulo, local, descricao, dataInicioISO, dataFimISO) {
         const start = formatarDataISO(new Date(dataInicioISO).toISOString());
         const end = formatarDataISO(new Date(dataFimISO).toISOString());
-        
-        const url = `https://calendar.google.com/calendar/render?action=TEMPLATE` +
-            `&text=${encodeURIComponent(titulo)}` +
-            `&dates=${start}/${end}` +
-            `&details=${encodeURIComponent(descricao)}` +
-            `&location=${encodeURIComponent(local)}`;
-        
+        const url = `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${encodeURIComponent(titulo)}&dates=${start}/${end}&details=${encodeURIComponent(descricao)}&location=${encodeURIComponent(local)}`;
         window.open(url, '_blank');
     }
 
     function baixarArquivoICS(titulo, local, descricao, dataInicioISO, dataFimISO) {
         const start = formatarDataISO(new Date(dataInicioISO).toISOString());
         const end = formatarDataISO(new Date(dataFimISO).toISOString());
-        
-        const conteudoICS = 
-`BEGIN:VCALENDAR
-VERSION:2.0
-PRODID:-//Associação Atarashii//PWA//PT
-BEGIN:VEVENT
-SUMMARY:${titulo}
-DESCRIPTION:${descricao}
-LOCATION:${local}
-DTSTART:${start}
-DTEND:${end}
-STATUS:CONFIRMED
-END:VEVENT
-END:VCALENDAR`;
-
+        const conteudoICS = `BEGIN:VCALENDAR\nVERSION:2.0\nPRODID:-//Associação Atarashii//PWA//PT\nBEGIN:VEVENT\nSUMMARY:${titulo}\nDESCRIPTION:${descricao}\nLOCATION:${local}\nDTSTART:${start}\nDTEND:${end}\nSTATUS:CONFIRMED\nEND:VEVENT\nEND:VCALENDAR`;
         const blob = new Blob([conteudoICS], { type: 'text/calendar;charset=utf-8' });
         const link = document.createElement('a');
         link.href = window.URL.createObjectURL(blob);
         link.setAttribute('download', `${titulo.replace(/[^a-zA-Z0-9]/g, '_')}.ics`);
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
+        document.body.appendChild(link); link.click(); document.body.removeChild(link);
     }
 
-    // 3. REGISTRO DE NOTIFICAÇÃO PUSH NATIVA (COMPATÍVEL COM IOS/WEBKIT)
     function urlBase64ToUint8Array(base64String) {
         const padding = '='.repeat((4 - base64String.length % 4) % 4);
         const base64 = (base64String + padding).replace(/-/g, '+').replace(/_/g, '/');
         const rawData = window.atob(base64);
         const outputArray = new Uint8Array(rawData.length);
-        for (let i = 0; i < rawData.length; ++i) {
-            outputArray[i] = rawData.charCodeAt(i);
-        }
+        for (let i = 0; i < rawData.length; ++i) { outputArray[i] = rawData.charCodeAt(i); }
         return outputArray;
     }
 
-    // Detecção de PWA/iOS Standalone
-    function ehIOS() {
-        return /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
-    }
-
-    function ehPWAStandalone() {
-        return (window.matchMedia('(display-mode: standalone)').matches) || (window.navigator.standalone === true);
-    }
+    function ehIOS() { return /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream; }
+    function ehPWAStandalone() { return (window.matchMedia('(display-mode: standalone)').matches) || (window.navigator.standalone === true); }
 
     async function registrarPushNativo() {
-        if (!('serviceWorker' in navigator) || !('PushManager' in window)) {
-            console.warn('Serviço de Push não é suportado neste navegador.');
-            return;
-        }
-
+        if (!('serviceWorker' in navigator) || !('PushManager' in window)) return;
         try {
-            // Registrar o Service Worker
             const registro = await navigator.serviceWorker.register('sw.js');
             await navigator.serviceWorker.ready;
-
-            // Checa a permissão atual
             let permissao = Notification.permission;
-
             if (permissao === 'default') {
-                // No iOS, se não for por clique do usuário, a permissão não pode ser pedida automaticamente
                 if (ehIOS() && !ehPWAStandalone()) {
                     const banner = document.getElementById('bannerIosInstalar');
                     if (banner) banner.style.display = 'block';
                     return;
                 }
-                
                 const boxPush = document.getElementById('boxAtivarPush');
                 if (boxPush) boxPush.style.display = 'block';
                 return;
             }
-
-            if (permissao !== 'granted') {
-                console.warn('Permissão para notificações não foi concedida pelo usuário.');
-                return;
-            }
-
-            // Oculta os avisos de ativação se já permitido
+            if (permissao !== 'granted') return;
             const boxPush = document.getElementById('boxAtivarPush');
             if (boxPush) boxPush.style.display = 'none';
 
-            // Realiza a inscrição PUSH
             let assinatura = await registro.pushManager.getSubscription();
             if (!assinatura) {
-                assinatura = await registro.pushManager.subscribe({
-                    userVisibleOnly: true,
-                    applicationServerKey: urlBase64ToUint8Array(PUBLIC_VAPID_KEY)
-                });
+                assinatura = await registro.pushManager.subscribe({ userVisibleOnly: true, applicationServerKey: urlBase64ToUint8Array(PUBLIC_VAPID_KEY) });
             }
-
             if (!usuarioAtivo) return;
-
-            // Envia para o servidor Render/Supabase vincular a subscription ao nome do usuário
-            const res = await fetch(`${URL_API_SERVIDOR}/api/subscribe`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    subscription: assinatura,
-                    usuario: usuarioAtivo
-                })
-            });
-
-            if (res.ok) {
-                console.log(`Dispositivo e Push vinculados com sucesso ao usuário: ${usuarioAtivo}`);
-            }
-        } catch (err) {
-            console.error('Erro ao registrar Push no Supabase/Render:', err);
-        }
+            await fetch(`${URL_API_SERVIDOR}/api/subscribe`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ subscription: assinatura, usuario: usuarioAtivo }) });
+        } catch (err) {}
     }
 
-    // Função disparada manualmente via clique no iOS/Android
     async function solicitarAtivacaoPushIOS() {
-        if (ehIOS() && !ehPWAStandalone()) {
-            alert('No iPhone/iPad, você deve primeiro adicionar este site à Tela de Início (Aperte o botão Compartilhar do Safari > Adicionar à Tela de Início).');
-            return;
-        }
-
-        if (!('Notification' in window)) {
-            alert('Notificações não são suportadas neste navegador.');
-            return;
-        }
-
+        if (ehIOS() && !ehPWAStandalone()) { alert('No iPhone/iPad, você deve primeiro adicionar este site à Tela de Início.'); return; }
+        if (!('Notification' in window)) return alert('Notificações não suportadas.');
         try {
             const permissao = await Notification.requestPermission();
-            if (permissao === 'granted') {
-                alert('Notificações ativadas com sucesso!');
-                await registrarPushNativo();
-            } else if (permissao === 'denied') {
-                alert('As notificações foram bloqueadas. Habilite-as nas Configurações do Safari/Ajustes do iOS.');
-            }
-        } catch (e) {
-            console.error("Erro ao solicitar permissão de Notificação:", e);
-        }
+            if (permissao === 'granted') { alert('Notificações ativadas!'); await registrarPushNativo(); }
+            else if (permissao === 'denied') alert('As notificações foram bloqueadas.');
+        } catch (e) {}
     }
 
-    // 4. FUNÇÃO QUE CARREGA E PREENCHE AS NOTAS DO ALUNO
     function carregarNotasAluno() {
         const tabelaBody = document.getElementById('corpoTabelaNotas');
         if (!tabelaBody) return;
-
         if (typeof listaAlunos === 'undefined') {
-            tabelaBody.innerHTML = `<tr><td colspan="8">Aguardando dados de alunos...</td></tr>`;
-            setTimeout(carregarNotasAluno, 500);
-            return;
+            tabelaBody.innerHTML = `<tr><td colspan="8">Aguardando dados...</td></tr>`;
+            setTimeout(carregarNotasAluno, 500); return;
         }
-
         const dadosAluno = listaAlunos.find(u => u.usuario === usuarioAtivo);
-
         if (dadosAluno && dadosAluno.historico && dadosAluno.historico.length > 0) {
             tabelaBody.innerHTML = "";
             dadosAluno.historico.forEach(exame => {
                 const linha = document.createElement('tr');
-                linha.innerHTML = `
-                    <td style="background-color: ${exame.corFaixa}; color: ${exame.corTexto}; border-radius: 4px;">${exame.faixa}</td>
-                    <td>${exame.ano}</td>
-                    <td>${Number(exame.kihon).toFixed(1)}</td>
-                    <td>${Number(exame.kata).toFixed(1)}</td>
-                    <td>${Number(exame.kumite).toFixed(1)}</td>
-                    <td>${Number(exame.perguntas).toFixed(1)}</td>
-                    <td class="col-total">${Number(exame.total).toFixed(1)}</td>
-                    <td class="col-media">${Number(exame.media).toFixed(1)}</td>
-                `;
+                linha.innerHTML = `<td style="background-color: ${exame.corFaixa}; color: ${exame.corTexto}; border-radius: 4px;">${exame.faixa}</td><td>${exame.ano}</td><td>${Number(exame.kihon).toFixed(1)}</td><td>${Number(exame.kata).toFixed(1)}</td><td>${Number(exame.kumite).toFixed(1)}</td><td>${Number(exame.perguntas).toFixed(1)}</td><td class="col-total">${Number(exame.total).toFixed(1)}</td><td class="col-media">${Number(exame.media).toFixed(1)}</td>`;
                 tabelaBody.appendChild(linha);
             });
-        } else {
-            tabelaBody.innerHTML = `<tr><td colspan="8">Nenhum registro de exame encontrado para este aluno.</td></tr>`;
-        }
+        } else { tabelaBody.innerHTML = `<tr><td colspan="8">Nenhum registro encontrado.</td></tr>`; }
     }
 
-    // CONSULTA O STATUS DO BADGES
    async function carregarBadgesAluno() {
-    if (!usuarioAtivo) return;
-
-    try {
-        const res = await fetch(`${URL_API_SERVIDOR}/api/badges/${usuarioAtivo}`);
-        const data = await res.json();
-
-        if (data.sucesso) {
-            // --- 1. FREQUÊNCIA DE FERRO ---
-            const cardBadgeFerro = document.getElementById('cardBadgeFerro');
-            const tagStatusFerro = document.getElementById('badgeTagStatus');
-            const containerHistFerro = document.getElementById('historicoBadges');
-
-            if (data.frequenciaFerroMesAtual) {
-                if (cardBadgeFerro) {
-                    cardBadgeFerro.classList.remove('badge-bloqueado');
-                    cardBadgeFerro.classList.add('badge-concluido');
+        if (!usuarioAtivo) return;
+        try {
+            const res = await fetch(`${URL_API_SERVIDOR}/api/badges/${usuarioAtivo}`);
+            const data = await res.json();
+            if (data.sucesso) {
+                // 1. FREQUÊNCIA DE FERRO
+                const cardBadgeFerro = document.getElementById('cardBadgeFerro');
+                const tagStatusFerro = document.getElementById('badgeTagStatus');
+                const containerHistFerro = document.getElementById('historicoBadges');
+                if (data.frequenciaFerroMesAtual) {
+                    if (cardBadgeFerro) { cardBadgeFerro.classList.replace('badge-bloqueado', 'badge-concluido'); }
+                    if (tagStatusFerro) tagStatusFerro.textContent = "Conquistado!";
+                } else {
+                    if (cardBadgeFerro) { cardBadgeFerro.classList.replace('badge-concluido', 'badge-bloqueado'); }
+                    if (tagStatusFerro) tagStatusFerro.textContent = "Em andamento";
                 }
-                if (tagStatusFerro) tagStatusFerro.textContent = "Conquistado!";
-            } else {
-                if (cardBadgeFerro) {
-                    cardBadgeFerro.classList.remove('badge-concluido');
-                    cardBadgeFerro.classList.add('badge-bloqueado');
+                if (containerHistFerro) {
+                    const mesesFerro = data.badges.filter(b => b.badge_key === 'frequencia_ferro' && b.concluido).map(b => b.mes_referencia);
+                    containerHistFerro.innerHTML = mesesFerro.length > 0 ? `<strong>🏅 Conquistado em:</strong> ${mesesFerro.join(', ')}` : '';
                 }
-                if (tagStatusFerro) tagStatusFerro.textContent = "Em andamento";
-            }
 
-            if (containerHistFerro) {
-                const mesesFerro = data.badges
-                    .filter(b => b.badge_key === 'frequencia_ferro' && b.concluido)
-                    .map(b => b.mes_referencia);
-
-                containerHistFerro.innerHTML = mesesFerro.length > 0 
-                    ? `<strong>🏅 Conquistado em:</strong> ${mesesFerro.join(', ')}` 
-                    : '';
-            }
-
-            // --- 2. GUARDIÃO ---
-            const cardGuardiao = document.getElementById('cardBadgeGuardiao');
-            const tagGuardiao = document.getElementById('badgeTagGuardiao');
-            const containerHistGuardiao = document.getElementById('historicoGuardiao');
-
-            const ehGuardiao = data.badges.some(b => b.badge_key === 'guardiao' && b.concluido);
-
-            if (ehGuardiao || data.guardiaoConquistado) {
-                if (cardGuardiao) {
-                    cardGuardiao.classList.remove('badge-bloqueado');
-                    cardGuardiao.classList.add('badge-concluido');
+                // 2. GUARDIÃO
+                const cardGuardiao = document.getElementById('cardBadgeGuardiao');
+                const tagGuardiao = document.getElementById('badgeTagGuardiao');
+                const containerHistGuardiao = document.getElementById('historicoGuardiao');
+                const ehGuardiao = data.badges.some(b => b.badge_key === 'guardiao' && b.concluido);
+                if (ehGuardiao || data.guardiaoConquistado) {
+                    if (cardGuardiao) { cardGuardiao.classList.replace('badge-bloqueado', 'badge-concluido'); }
+                    if (tagGuardiao) tagGuardiao.textContent = "Conquistado!";
+                } else {
+                    if (cardGuardiao) { cardGuardiao.classList.replace('badge-concluido', 'badge-bloqueado'); }
+                    if (tagGuardiao) tagGuardiao.textContent = "Em andamento";
                 }
-                if (tagGuardiao) tagGuardiao.textContent = "Conquistado!";
-            } else {
-                if (cardGuardiao) {
-                    cardGuardiao.classList.remove('badge-concluido');
-                    cardGuardiao.classList.add('badge-bloqueado');
+                if (containerHistGuardiao) {
+                    const mesesGuardiao = data.badges.filter(b => b.badge_key === 'guardiao' && b.concluido).map(b => b.mes_referencia);
+                    containerHistGuardiao.innerHTML = mesesGuardiao.length > 0 ? `<strong>🛡️ Conquistado em:</strong> ${mesesGuardiao.join(', ')}` : '';
                 }
-                if (tagGuardiao) tagGuardiao.textContent = "Em andamento";
-            }
 
-            if (containerHistGuardiao) {
-                const mesesGuardiao = data.badges
-                    .filter(b => b.badge_key === 'guardiao' && b.concluido)
-                    .map(b => b.mes_referencia);
-
-                containerHistGuardiao.innerHTML = mesesGuardiao.length > 0 
-                    ? `<strong>🛡️ Conquistado em:</strong> ${mesesGuardiao.join(', ')}` 
-                    : '';
+                // 3. DESAFIADOR
+                const cardDesafio = document.getElementById('cardBadgeDesafio');
+                const tagDesafio = document.getElementById('badgeTagDesafio');
+                const containerHistDesafio = document.getElementById('historicoDesafio');
+                const ehDesafiador = data.badges.some(b => b.badge_key === 'desafio_concluido' && b.concluido);
+                if (ehDesafiador) {
+                    if (cardDesafio) { cardDesafio.classList.replace('badge-bloqueado', 'badge-concluido'); }
+                    if (tagDesafio) tagDesafio.textContent = "Conquistado!";
+                } else {
+                    if (cardDesafio) { cardDesafio.classList.replace('badge-concluido', 'badge-bloqueado'); }
+                    if (tagDesafio) tagDesafio.textContent = "Em andamento";
+                }
+                if (containerHistDesafio) {
+                    const mesesDesafio = data.badges.filter(b => b.badge_key === 'desafio_concluido' && b.concluido).map(b => b.mes_referencia);
+                    containerHistDesafio.innerHTML = mesesDesafio.length > 0 ? `<strong>🎯 Conquistado em:</strong> ${mesesDesafio.join(', ')}` : '';
+                }
             }
-        }
-    } catch (err) {
-        console.error("Erro ao carregar conquistas:", err);
+        } catch (err) {}
     }
-}
 
-    // 5. CONSULTA O STATUS DO TERMO
     function verificarStatusAceite() {
         if (!usuarioAtivo) return;
-
-        const blocoPendente = document.getElementById('blocoTermoPendente');
-        const blocoAceito = document.getElementById('blocoTermoAceito');
-        const badge = document.getElementById('badgeNotificacao');
-        const sininho = document.getElementById('wrapperSininho');
-
-        const jaAceitouLocal = localStorage.getItem(`termo_aceito_${usuarioAtivo}`);
-        const dataAceiteLocal = localStorage.getItem(`data_aceite_${usuarioAtivo}`) || '';
-        
-        if (jaAceitouLocal === 'true') {
-            aplicarLayoutAceito(blocoPendente, blocoAceito, badge, sininho, dataAceiteLocal, false);
-        } else {
-            aplicarLayoutPendente(blocoPendente, blocoAceito, badge, sininho);
-        }
+        const blocoPendente = document.getElementById('blocoTermoPendente'), blocoAceito = document.getElementById('blocoTermoAceito'), badge = document.getElementById('badgeNotificacao'), sininho = document.getElementById('wrapperSininho');
+        const jaAceitouLocal = localStorage.getItem(`termo_aceito_${usuarioAtivo}`), dataAceiteLocal = localStorage.getItem(`data_aceite_${usuarioAtivo}`) || '';
+        if (jaAceitouLocal === 'true') aplicarLayoutAceito(blocoPendente, blocoAceito, badge, sininho, dataAceiteLocal, false);
+        else aplicarLayoutPendente(blocoPendente, blocoAceito, badge, sininho);
 
         const controller = new AbortController();
         const timeoutId = setTimeout(() => controller.abort(), 90000);
 
         fetch(`${URL_API_SERVIDOR}/api/status-termo/${usuarioAtivo}`, { signal: controller.signal })
-            .then(response => {
-                clearTimeout(timeoutId);
-                if (!response.ok) throw new Error("Resposta inválida do servidor");
-                return response.json();
-            })
+            .then(r => r.ok ? r.json() : Promise.reject())
             .then(data => {
+                clearTimeout(timeoutId);
                 const verificadoNaAPI = (data && (data.aceitou === true || data.sucesso === true || data.status === 'assinado' || data.status === 'aceito'));
                 const dataServidor = data.data || data.dataHora || data.updatedAt || new Date().toLocaleString('pt-BR');
-
                 if (verificadoNaAPI) {
-                    localStorage.setItem(`termo_aceito_${usuarioAtivo}`, 'true');
-                    localStorage.setItem(`data_aceite_${usuarioAtivo}`, dataServidor);
+                    localStorage.setItem(`termo_aceito_${usuarioAtivo}`, 'true'); localStorage.setItem(`data_aceite_${usuarioAtivo}`, dataServidor);
                     aplicarLayoutAceito(blocoPendente, blocoAceito, badge, sininho, dataServidor, true);
                 } else {
-                    localStorage.removeItem(`termo_aceito_${usuarioAtivo}`);
-                    localStorage.removeItem(`data_aceite_${usuarioAtivo}`);
+                    localStorage.removeItem(`termo_aceito_${usuarioAtivo}`); localStorage.removeItem(`data_aceite_${usuarioAtivo}`);
                     aplicarLayoutPendente(blocoPendente, blocoAceito, badge, sininho);
                 }
             })
-            .catch(err => {
-                clearTimeout(timeoutId);
-                if (localStorage.getItem(`termo_aceito_${usuarioAtivo}`) === 'true') {
-                    aplicarLayoutAceito(blocoPendente, blocoAceito, badge, sininho, dataAceiteLocal, false);
-                } else {
-                    aplicarLayoutPendente(blocoPendente, blocoAceito, badge, sininho);
-                }
-            });
+            .catch(() => clearTimeout(timeoutId));
     }
 
     function aplicarLayoutAceito(blocoPendente, blocoAceito, badge, sininho, dataRegistro, ehGlobal) {
         if (blocoPendente) blocoPendente.style.display = 'none';
-        if (blocoAceito) {
-            blocoAceito.style.display = 'block';
-            const tipoSinc = ehGlobal ? "sincronizado com a nuvem em:" : "verificado via dispositivo em:";
-            document.getElementById('textoDataAceite').innerHTML = `O seu comprovante de leitura e concordância foi ${tipoSinc} <br><strong>${dataRegistro}</strong>`;
-        }
+        if (blocoAceito) { blocoAceito.style.display = 'block'; document.getElementById('textoDataAceite').innerHTML = `O seu comprovante de leitura e concordância foi ${ehGlobal ? "sincronizado com a nuvem em:" : "verificado via dispositivo em:"} <br><strong>${dataRegistro}</strong>`; }
         if (badge) badge.style.display = 'none';
-        if (sininho) { 
-            sininho.style.animation = 'none'; 
-            sininho.title = "Nenhum aviso pendente"; 
-        }
+        if (sininho) { sininho.style.animation = 'none'; sininho.title = "Nenhum aviso pendente"; }
     }
 
     function aplicarLayoutPendente(blocoPendente, blocoAceito, badge, sininho) {
         if (blocoPendente) blocoPendente.style.display = 'block';
         if (blocoAceito) blocoAceito.style.display = 'none';
         if (badge) badge.style.display = 'flex';
-        if (sininho) {
-            sininho.style.animation = 'balancoSininho 0.5s ease-in-out infinite alternate';
-        }
+        if (sininho) sininho.style.animation = 'balancoSininho 0.5s ease-in-out infinite alternate';
     }
 
-    function irParaAvisos() {
-        const botaoAvisosMenu = document.querySelectorAll('.nav-btn')[2]; 
-        if (botaoAvisosMenu) mudarAba('comunicados', botaoAvisosMenu);
-    }
-    
-    function atualizarPainel() {
-        window.location.reload();
-    }
-
+    function atualizarPainel() { window.location.reload(); }
     function alternarBotaoAceite() {
-        const checkbox = document.getElementById('checkAceite');
-        const botao = document.getElementById('btnEnviarAceite');
-
-        if (checkbox && checkbox.checked) {
-            botao.disabled = false;
-            botao.style.backgroundColor = '#27ae60';
-            botao.style.cursor = 'pointer';
-        } else if (botao) {
-            botao.disabled = true;
-            botao.style.backgroundColor = '#95a5a6';
-            botao.style.cursor = 'not-allowed';
-        }
+        const checkbox = document.getElementById('checkAceite'), botao = document.getElementById('btnEnviarAceite');
+        if (checkbox && checkbox.checked) { botao.disabled = false; botao.style.backgroundColor = '#27ae60'; botao.style.cursor = 'pointer'; }
+        else if (botao) { botao.disabled = true; botao.style.backgroundColor = '#95a5a6'; botao.style.cursor = 'not-allowed'; }
     }
 
     function enviarEmailAceite() {
-        const nomeAluno = localStorage.getItem('nomeAlunoLogado') || 'Nome Não Identificado';
         const dataHoraAtual = new Date().toLocaleString('pt-BR');
+        const corpoEmail = encodeURIComponent(`Prezada Diretoria,\n\nPor meio deste e-mail, confirmo que li e aceito voluntariamente todos os termos, regras e normas da Associação.\n\nDADOS DO ASSOCIADO:\nNome completo: ${nomeDoAluno}\nUsuário do sistema: ${usuarioAtivo}\nData/Hora do Aceite: ${dataHoraAtual}\n\nEste e-mail serve como registro e comprovante digital do meu aceite obrigatório.`);
+        const mailtoUrl = `mailto:luedo25@msn.com?subject=${encodeURIComponent(`CONFIRMAÇÃO DE ACEITE: Regras da Associação - ${nomeDoAluno}`)}&body=${corpoEmail}`;
         
-        const emailDestinatarioPrincipal = "luedo25@msn.com"; 
-        const assunto = encodeURIComponent(`CONFIRMAÇÃO DE ACEITE: Regras da Associação - ${nomeAluno}`);
-        
-        const corpoEmail = encodeURIComponent(
-            `Prezada Diretoria,\n\n` +
-            `Por meio deste e-mail, confirmo que li e aceito voluntariamente todos os termos, regras e normas da Associação.\n\n` +
-            `DADOS DO ASSOCIADO:\n` +
-            `Nome completo: ${nomeAluno}\n` +
-            `Usuário do sistema: ${usuarioAtivo}\n` +
-            `Data/Hora do Aceite: ${dataHoraAtual}\n\n` +
-            `Este e-mail serve como registro e comprovante digital do meu aceite obrigatório.`
-        );
-
-        const mailtoUrl = `mailto:${emailDestinatarioPrincipal}?subject=${assunto}&body=${corpoEmail}`;
-        
-        localStorage.setItem(`termo_aceito_${usuarioAtivo}`, 'true');
-        localStorage.setItem(`data_aceite_${usuarioAtivo}`, dataHoraAtual);
+        localStorage.setItem(`termo_aceito_${usuarioAtivo}`, 'true'); localStorage.setItem(`data_aceite_${usuarioAtivo}`, dataHoraAtual);
         verificarStatusAceite();
-
-        fetch(`${URL_API_SERVIDOR}/api/aceitar-termo`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ usuario: usuarioAtivo })
-        })
-        .then(response => response.json())
-        .then(() => {
-            verificarStatusAceite();
-            window.location.href = mailtoUrl;
-        })
-        .catch(err => {
-            console.warn("Falha de rede ao gravar termo. Mantendo cópia local offline.", err);
-            window.location.href = mailtoUrl;
-        });
+        fetch(`${URL_API_SERVIDOR}/api/aceitar-termo`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ usuario: usuarioAtivo }) })
+        .then(() => { verificarStatusAceite(); window.location.href = mailtoUrl; })
+        .catch(() => window.location.href = mailtoUrl);
     }
 
     function mudarAba(idDaAba, botaoClicado) {
-        const secoes = document.querySelectorAll('.tab-content');
-        secoes.forEach(secao => secao.classList.remove('active'));
-
-        const botoes = document.querySelectorAll('.nav-btn');
-        botoes.forEach(btn => btn.classList.remove('active'));
-
+        document.querySelectorAll('.tab-content').forEach(secao => secao.classList.remove('active'));
+        document.querySelectorAll('.nav-btn').forEach(btn => btn.classList.remove('active'));
         const elementoAba = document.getElementById(idDaAba);
         if (elementoAba) elementoAba.classList.add('active');
         if (botaoClicado) botaoClicado.classList.add('active');
-
         window.scrollTo({ top: 0, behavior: 'smooth' });
-
         if (idDaAba === 'comunicados') verificarStatusAceite();
         if (idDaAba === 'saldo') buscarSaldoMercadoPago();
     }
@@ -2090,298 +1268,176 @@ END:VCALENDAR`;
     function buscarSaldoMercadoPago() {
         const elementoSaldo = document.getElementById('textoSaldo');
         if (!elementoSaldo) return;
-        
         elementoSaldo.textContent = "Carregando...";
-
         fetch(`${URL_API_SERVIDOR}/api/saldo`)
-            .then(response => response.json())
-            .then(data => {
-                if (data.saldo !== undefined) {
-                    elementoSaldo.textContent = data.saldo.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
-                } else {
-                    elementoSaldo.textContent = "Erro ao carregar";
-                }
-            })
-            .catch(() => {
-                elementoSaldo.textContent = "Erro de conexão";
-            });
+            .then(r => r.json())
+            .then(data => elementoSaldo.textContent = data.saldo !== undefined ? data.saldo.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' }) : "Erro ao carregar")
+            .catch(() => elementoSaldo.textContent = "Erro de conexão");
     }
 
     document.getElementById('logoutBtn').addEventListener('click', function() {
-        localStorage.removeItem('associadoAutenticado');
-        localStorage.removeItem('nomeAlunoLogado');
-        localStorage.removeItem('usuarioAtivo');
+        localStorage.removeItem('associadoAutenticado'); localStorage.removeItem('nomeAlunoLogado'); localStorage.removeItem('usuarioAtivo');
         window.location.replace('index.html');
     });
 
-function alternarCampoTextoOutro() {
-        const checkOutro = document.getElementById('checkOutro');
-        const containerTexto = document.getElementById('containerTextoOutro');
-        const campoTexto = document.getElementById('textoJustificativaOutro');
-
-        if (checkOutro && checkOutro.checked) {
-            if (containerTexto) containerTexto.style.display = 'block';
-            if (campoTexto) campoTexto.focus();
-        } else {
-            if (containerTexto) containerTexto.style.display = 'none';
-            if (campoTexto) campoTexto.value = '';
-        }
+    function alternarCampoTextoOutro() {
+        const checkOutro = document.getElementById('checkOutro'), containerTexto = document.getElementById('containerTextoOutro'), campoTexto = document.getElementById('textoJustificativaOutro');
+        if (checkOutro && checkOutro.checked) { if (containerTexto) containerTexto.style.display = 'block'; if (campoTexto) campoTexto.focus(); }
+        else { if (containerTexto) containerTexto.style.display = 'none'; if (campoTexto) campoTexto.value = ''; }
     }
 
-    // Usamos 'blur' em vez de 'change' para o Safari só validar após o usuário FECHAR/FINALIZAR o seletor de data
     document.getElementById('dataFaltaAluno').addEventListener('blur', function() {
         if (!this.value) return;
-        
-        // Trata a string 'YYYY-MM-DD' sem risco de conversão incorreta de fuso horário no Safari
-        const partes = this.value.split('-');
-        if (partes.length !== 3) return;
-
-        const ano = parseInt(partes[0], 10);
-        const mes = parseInt(partes[1], 10) - 1; // Mês no JS é base 0 (0 = Jan, 1 = Fev...)
-        const dia = parseInt(partes[2], 10);
-
-        // Criamos a data local explicitamente
-        const dataSelecionada = new Date(ano, mes, dia);
-        const diaSemana = dataSelecionada.getDay(); // 0 = Dom, 2 = Ter, 4 = Qui, 6 = Sáb
-
-        // 2 = Terça, 4 = Quinta, 6 = Sábado
-        if (diaSemana !== 2 && diaSemana !== 4 && diaSemana !== 6) {
-            alert("Erro: Aulas ocorrem apenas Terças, Quintas e Sábados. Por favor, selecione uma data válida.");
-            this.value = '';
-        }
+        const partes = this.value.split('-'); if (partes.length !== 3) return;
+        const dataSelecionada = new Date(parseInt(partes[0], 10), parseInt(partes[1], 10) - 1, parseInt(partes[2], 10));
+        const diaSemana = dataSelecionada.getDay();
+        if (diaSemana !== 2 && diaSemana !== 4 && diaSemana !== 6) { alert("Aulas ocorrem apenas Terças, Quintas e Sábados."); this.value = ''; }
     });
 
     document.getElementById('formJustificativa').addEventListener('submit', async function(e) {
         e.preventDefault();
         const dataFalta = document.getElementById('dataFaltaAluno').value;
         const marcados = Array.from(document.querySelectorAll('input[name="motivoFalta"]:checked')).map(cb => cb.value);
+        const checkOutro = document.getElementById('checkOutro'), textoOutro = document.getElementById('textoJustificativaOutro')?.value.trim();
         
-        const checkOutro = document.getElementById('checkOutro');
-        const ehOutroMarcado = checkOutro ? checkOutro.checked : false;
-        const campoTextoOutro = document.getElementById('textoJustificativaOutro');
-        const textoOutro = campoTextoOutro ? campoTextoOutro.value.trim() : '';
-
-        if (!dataFalta) return alert("Por favor, selecione a data.");
-
-        // Compatibilidade Safari para o cálculo das 48 horas
+        if (!dataFalta) return alert("Selecione a data.");
         const partes = dataFalta.split('-');
-        const dataFaltaObj = new Date(parseInt(partes[0], 10), parseInt(partes[1], 10) - 1, parseInt(partes[2], 10));
-        const agora = new Date();
-        
-        // Zera o horário do 'agora' se desejar comparar apenas por dias, ou calcula a diferença direta
-        const diferencaEmHoras = Math.abs(agora - dataFaltaObj) / (1000 * 60 * 60);
-
-        if (diferencaEmHoras > 48) {
-            return alert("Erro: O prazo para justificativa de falta é de até 48 horas antes ou 48 horas depois da data da aula.");
-        }
-
-        if (ehOutroMarcado && !textoOutro) {
-            return alert("Você marcou a opção 'Outro(s)'. Por favor, descreva o motivo no campo de texto.");
-        }
-
-        if (marcados.length === 0 && !ehOutroMarcado) {
-            return alert("Selecione ao menos um motivo para a falta.");
-        }
+        if (Math.abs(new Date() - new Date(parseInt(partes[0], 10), parseInt(partes[1], 10) - 1, parseInt(partes[2], 10))) / (1000 * 60 * 60) > 48) return alert("O prazo é de até 48 horas.");
+        if (checkOutro?.checked && !textoOutro) return alert("Descreva o motivo no campo texto.");
+        if (marcados.length === 0 && !checkOutro?.checked) return alert("Selecione ao menos um motivo.");
 
         let listaMotivos = [...marcados];
-        if (ehOutroMarcado && textoOutro) {
-            listaMotivos.push(`Outro: ${textoOutro}`);
-        }
-
-        const motivoFinal = listaMotivos.join('; ');
+        if (checkOutro?.checked && textoOutro) listaMotivos.push(`Outro: ${textoOutro}`);
 
         try {
-            const response = await fetch(`${URL_API_SERVIDOR}/api/justificativa`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    usuario: usuarioAtivo,
-                    data_falta: dataFalta,
-                    motivo: motivoFinal
-                })
-            });
-
-            const result = await response.json();
-            if (response.ok) {
-                alert(result.mensagem || "Justificativa enviada para aprovação com sucesso!");
-                document.getElementById('formJustificativa').reset();
-                alternarCampoTextoOutro();
-                carregarStatusJustificativas();
-                carregarGraficoFrequencia();
-            } else {
-                alert("Erro: " + (result.erro || "Falha ao registrar justificativa."));
-            }
-        } catch (err) {
-            alert("Erro ao enviar solicitação.");
-        }
+            const response = await fetch(`${URL_API_SERVIDOR}/api/justificativa`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ usuario: usuarioAtivo, data_falta: dataFalta, motivo: listaMotivos.join('; ') }) });
+            if (response.ok) { alert("Justificativa enviada!"); document.getElementById('formJustificativa').reset(); alternarCampoTextoOutro(); carregarStatusJustificativas(); }
+            else alert("Erro ao enviar.");
+        } catch (err) { alert("Erro ao enviar solicitação."); }
     });
     
     async function carregarStatusJustificativas() {
-        const container = document.getElementById('listaJustificativasAluno');
-        if (!container) return;
-
-        const inputInicio = document.getElementById('mesInicioJustificativa')?.value || '2026-07';
-        const inputFim = document.getElementById('mesFimJustificativa')?.value || '2026-12';
-
-        const dataInicio = `${inputInicio}-01`;
-        const [anoFim, mesFim] = inputFim.split('-').map(Number);
-        const ultimoDia = new Date(anoFim, mesFim, 0).getDate();
-        const dataFim = `${inputFim}-${String(ultimoDia).padStart(2, '0')}`;
+        const container = document.getElementById('listaJustificativasAluno'); if (!container) return;
+        const dataInicio = `${document.getElementById('mesInicioJustificativa')?.value || '2026-07'}-01`;
+        const [anoFim, mesFim] = (document.getElementById('mesFimJustificativa')?.value || '2026-12').split('-').map(Number);
+        const dataFim = `${anoFim}-${String(mesFim).padStart(2, '0')}-${String(new Date(anoFim, mesFim, 0).getDate()).padStart(2, '0')}`;
 
         try {
             const response = await fetch(`${URL_API_SERVIDOR}/api/justificativa/aluno/${usuarioAtivo}`);
             const dados = await response.json();
-
-            if (!dados || dados.length === 0) {
-                container.innerHTML = "<p style='color: var(--text-muted);'>Nenhuma justificativa enviada até o momento.</p>";
-                return;
-            }
-
-            const dadosFiltrados = dados.filter(item => {
-                if (!item.data_falta) return false;
-                return item.data_falta >= dataInicio && item.data_falta <= dataFim;
-            });
-
-            if (dadosFiltrados.length === 0) {
-                container.innerHTML = "<p style='color: var(--text-muted);'>Nenhuma justificativa encontrada para o período selecionado.</p>";
-                return;
-            }
+            if (!dados || dados.length === 0) return container.innerHTML = "<p style='color: var(--text-muted);'>Nenhuma justificativa enviada até o momento.</p>";
+            
+            const dadosFiltrados = dados.filter(item => item.data_falta && item.data_falta >= dataInicio && item.data_falta <= dataFim);
+            if (dadosFiltrados.length === 0) return container.innerHTML = "<p style='color: var(--text-muted);'>Nenhuma justificativa no período.</p>";
 
             container.innerHTML = dadosFiltrados.map(item => {
-                let corBadge = '#f59e0b';
-                if (item.status === 'aprovado') corBadge = '#10b981';
-                if (item.status === 'reprovado') corBadge = '#ef4444';
+                let corBadge = item.status === 'aprovado' ? '#10b981' : (item.status === 'reprovado' ? '#ef4444' : '#f59e0b');
+                return `<div style="background: rgba(0,0,0,0.2); padding: 10px; border-radius: 6px; margin-bottom: 8px; border-left: 4px solid ${corBadge}; text-align: left;">
+                    <div><strong>Data da Falta:</strong> ${item.data_falta.split('-').reverse().join('/')}</div>
+                    <div><strong>Motivo:</strong> ${item.motivo}</div>
+                    <div><strong>Status:</strong> <span style="color: ${corBadge}; font-weight: bold; text-transform: uppercase;">${item.status}</span></div>
+                    <div style="font-size: 11px; color: var(--text-muted); margin-top: 4px;">Solicitado em: ${item.data_solicitacao}</div></div>`;
+            }).join('');
+        } catch (err) { container.innerHTML = "<p style='color: red;'>Erro ao carregar justificativas.</p>"; }
+    }
 
+    // FORMULÁRIO E LISTAGEM DOS DESAFIOS (NOVO)
+    document.getElementById('formDesafio').addEventListener('submit', async function(e) {
+        e.preventDefault();
+        const nomeDesafio = document.getElementById('nomeDesafio').value;
+        const linkVideo = document.getElementById('linkVideoDesafio').value.trim();
+
+        if (!nomeDesafio || !linkVideo) return alert("Por favor, preencha todos os campos do desafio.");
+
+        try {
+            const response = await fetch(`${URL_API_SERVIDOR}/api/desafio`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ usuario: usuarioAtivo, nome_desafio: nomeDesafio, link_video: linkVideo })
+            });
+            const result = await response.json();
+            if (response.ok) {
+                alert(result.mensagem || "Desafio enviado com sucesso!");
+                document.getElementById('formDesafio').reset();
+                carregarMeusDesafios();
+            } else { alert("Erro: " + (result.erro || "Falha ao registrar.")); }
+        } catch (err) { alert("Erro de rede ao enviar solicitação."); }
+    });
+
+    async function carregarMeusDesafios() {
+        const container = document.getElementById('listaDesafiosAluno');
+        if (!container) return;
+
+        try {
+            const response = await fetch(`${URL_API_SERVIDOR}/api/desafio/aluno/${usuarioAtivo}`);
+            const dados = await response.json();
+
+            if (!dados || dados.length === 0) {
+                return container.innerHTML = "<p style='color: var(--text-muted);'>Nenhum desafio enviado até o momento.</p>";
+            }
+
+            container.innerHTML = dados.map(item => {
+                let corBadge = item.status === 'aprovado' ? '#10b981' : (item.status === 'reprovado' ? '#ef4444' : '#f59e0b');
                 return `
                     <div style="background: rgba(0,0,0,0.2); padding: 10px; border-radius: 6px; margin-bottom: 8px; border-left: 4px solid ${corBadge}; text-align: left;">
-                        <div><strong>Data da Falta:</strong> ${item.data_falta.split('-').reverse().join('/')}</div>
-                        <div><strong>Motivo:</strong> ${item.motivo}</div>
+                        <div><strong>Desafio:</strong> ${item.nome_desafio}</div>
+                        <div><strong>Vídeo:</strong> <a href="${item.link_video}" target="_blank" style="color: #60a5fa;">Ver link enviado</a></div>
                         <div><strong>Status:</strong> <span style="color: ${corBadge}; font-weight: bold; text-transform: uppercase;">${item.status}</span></div>
                         <div style="font-size: 11px; color: var(--text-muted); margin-top: 4px;">Solicitado em: ${item.data_solicitacao}</div>
                     </div>
                 `;
             }).join('');
-        } catch (err) {
-            container.innerHTML = "<p style='color: red;'>Erro ao carregar justificativas.</p>";
-        }
+        } catch (err) { container.innerHTML = "<p style='color: red;'>Erro ao carregar desafios.</p>"; }
     }
 
-    const carregarMinhasJustificativas = carregarStatusJustificativas;
-
-    // 6. CARREGAMENTO E EXIBIÇÃO DO GRÁFICO DE FREQUÊNCIA COM FILTRO DE DATAS
     let instanciaGrafico = null;
-
     async function carregarGraficoFrequencia() {
-        if (!usuarioAtivo) return;
-
-        const canvasElement = document.getElementById('graficoFrequencia');
-        if (!canvasElement) return;
-
-        const inputInicio = document.getElementById('mesInicioFrequencia')?.value || '2026-07';
-        const inputFim = document.getElementById('mesFimFrequencia')?.value || '2026-12';
-
-        const dataInicio = `${inputInicio}-01`;
-        const [anoFim, mesFim] = inputFim.split('-').map(Number);
-        const ultimoDia = new Date(anoFim, mesFim, 0).getDate();
-        const dataFim = `${inputFim}-${String(ultimoDia).padStart(2, '0')}`;
+        if (!usuarioAtivo || !document.getElementById('graficoFrequencia')) return;
+        const dataInicio = `${document.getElementById('mesInicioFrequencia')?.value || '2026-07'}-01`;
+        const [anoFim, mesFim] = (document.getElementById('mesFimFrequencia')?.value || '2026-12').split('-').map(Number);
+        const dataFim = `${anoFim}-${String(mesFim).padStart(2, '0')}-${String(new Date(anoFim, mesFim, 0).getDate()).padStart(2, '0')}`;
 
         try {
             const resFreq = await fetch(`${URL_API_SERVIDOR}/api/frequencia/${usuarioAtivo}?dataInicio=${dataInicio}&dataFim=${dataFim}`);
-            if (!resFreq.ok) throw new Error("Falha ao buscar frequência do servidor");
             const dadosFreq = await resFreq.json();
-
+            
             let justificativasAprovadas = Number(dadosFreq.justificativas_aprovadas) || 0;
-
             if (dadosFreq.justificativas_aprovadas === undefined) {
                 try {
                     const resJust = await fetch(`${URL_API_SERVIDOR}/api/justificativa/aluno/${usuarioAtivo}`);
                     if (resJust.ok) {
                         const listaJust = await resJust.json();
-                        justificativasAprovadas = listaJust.filter(item => {
-                            const ehAprovado = item.status === 'aprovado';
-                            const dentroDoPeriodo = item.data_falta >= dataInicio && item.data_falta <= dataFim;
-                            return ehAprovado && dentroDoPeriodo;
-                        }).length;
+                        justificativasAprovadas = listaJust.filter(item => item.status === 'aprovado' && item.data_falta >= dataInicio && item.data_falta <= dataFim).length;
                     }
-                } catch (e) {
-                    console.warn("Não foi possível buscar justificativas separadamente:", e);
-                }
+                } catch (e) {}
             }
 
-            const presencas = Number(dadosFreq.presencas) || 0;
-            const faltasBrutas = Number(dadosFreq.faltas) || 0;
-
+            const presencas = Number(dadosFreq.presencas) || 0, faltasBrutas = Number(dadosFreq.faltas) || 0;
             const justificativasEfetivas = Math.min(justificativasAprovadas, faltasBrutas);
-            const faltasDescontadas = faltasBrutas - justificativasEfetivas;
-            const totalAulas = presencas + faltasDescontadas + justificativasEfetivas;
+            const faltasDescontadas = faltasBrutas - justificativasEfetivas, totalAulas = presencas + faltasDescontadas + justificativasEfetivas;
 
-            const elemPresencas = document.getElementById('qtdPresencas');
-            const elemFaltas = document.getElementById('qtdFaltas');
-            const elemJustificativas = document.getElementById('qtdJustificativas');
+            if (document.getElementById('qtdPresencas')) document.getElementById('qtdPresencas').textContent = presencas;
+            if (document.getElementById('qtdFaltas')) document.getElementById('qtdFaltas').textContent = faltasBrutas;
+            if (document.getElementById('qtdJustificativas')) document.getElementById('qtdJustificativas').textContent = justificativasEfetivas;
 
-            if (elemPresencas) elemPresencas.textContent = presencas;
-            if (elemFaltas) elemFaltas.textContent = faltasBrutas;
-            if (elemJustificativas) elemJustificativas.textContent = justificativasEfetivas;
-
-            const ctx = canvasElement.getContext('2d');
-
-            if (instanciaGrafico) {
-                instanciaGrafico.destroy();
-            }
-
-            const plugins = (typeof ChartDataLabels !== 'undefined') ? [ChartDataLabels] : [];
-
-            instanciaGrafico = new Chart(ctx, {
+            if (instanciaGrafico) instanciaGrafico.destroy();
+            instanciaGrafico = new Chart(document.getElementById('graficoFrequencia').getContext('2d'), {
                 type: 'pie',
                 data: {
-                    labels: [
-                        `Presenças (${presencas})`, 
-                        `Faltas (${faltasBrutas})`,
-                        `Justificativas Aprovadas (${justificativasEfetivas})`
-                    ],
-                    datasets: [{
-                        data: [presencas, faltasDescontadas, justificativasEfetivas],
-                        backgroundColor: ['#10b981', '#ef4444', '#f59e0b'],
-                        borderWidth: 1,
-                        borderColor: '#1e293b'
-                    }]
+                    labels: [`Presenças (${presencas})`, `Faltas (${faltasBrutas})`, `Justificativas Aprovadas (${justificativasEfetivas})`],
+                    datasets: [{ data: [presencas, faltasDescontadas, justificativasEfetivas], backgroundColor: ['#10b981', '#ef4444', '#f59e0b'], borderWidth: 1, borderColor: '#1e293b' }]
                 },
-                plugins: plugins,
+                plugins: typeof ChartDataLabels !== 'undefined' ? [ChartDataLabels] : [],
                 options: {
                     responsive: true,
                     plugins: {
-                        legend: { 
-                            position: 'bottom', 
-                            labels: { 
-                                color: '#f8fafc',
-                                font: { size: 12, weight: 'bold' }
-                            } 
-                        },
-                        datalabels: {
-                            color: '#ffffff',
-                            font: { weight: 'bold', size: 13 },
-                            formatter: (valor) => {
-                                if (totalAulas === 0 || valor === 0) return '';
-                                const porcentagem = Math.round((valor / totalAulas) * 100);
-                                return `${porcentagem}%`;
-                            }
-                        },
-                        tooltip: {
-                            callbacks: {
-                                label: function(context) {
-                                    const label = context.label || '';
-                                    const value = context.raw || 0;
-                                    const porcentagem = totalAulas > 0 ? Math.round((value / totalAulas) * 100) : 0;
-                                    return `${label}: ${value} (${porcentagem}%)`;
-                                }
-                            }
-                        }
+                        legend: { position: 'bottom', labels: { color: '#f8fafc', font: { size: 12, weight: 'bold' } } },
+                        datalabels: { color: '#ffffff', font: { weight: 'bold', size: 13 }, formatter: v => totalAulas === 0 || v === 0 ? '' : `${Math.round((v / totalAulas) * 100)}%` },
+                        tooltip: { callbacks: { label: c => `${c.label || ''}: ${c.raw || 0} (${totalAulas > 0 ? Math.round((c.raw / totalAulas) * 100) : 0}%)` } }
                     }
                 }
             });
-        } catch (err) {
-            console.error("❌ Erro ao carregar gráfico de frequência:", err);
-        }
+        } catch (err) {}
     }
 
     // Inicialização da página
@@ -2394,14 +1450,11 @@ function alternarCampoTextoOutro() {
             carregarNotasAluno();
             carregarGraficoFrequencia();
             carregarStatusJustificativas();
-            
-            // Inicialização das notificações Push para Android e iOS
+            carregarMeusDesafios(); // Carrega lista de desafios do Aluno
             registrarPushNativo();
 
             setTimeout(() => verificarStatusAceite(), 300);
-        } catch (error) {
-            console.error("Erro na inicializacao:", error);
-        }
+        } catch (error) {}
     });
 </script>
 </body>
