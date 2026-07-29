@@ -140,6 +140,182 @@
             justify-content: center;
             border: 2px solid var(--bg-card);
         }
+        
+        /* Container Geral das Conquistas Redimensionado para Smartphone */
+        .card-conquistas {
+            margin-top: 20px;
+            margin-bottom: 20px;
+            background: rgba(15, 23, 42, 0.75);
+            border: 1px solid var(--border-color, #2e3748);
+            padding: 16px;
+            border-radius: 16px;
+            backdrop-filter: blur(8px);
+            width: 100%;
+        }
+
+        .titulo-conquistas {
+            margin-bottom: 14px;
+            font-size: 1rem;
+            color: #f8fafc;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        /* Card do Badge Responsivo */
+        .badge-card {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            gap: 16px;
+            padding: 14px;
+            border-radius: 14px;
+            background: rgba(30, 41, 59, 0.5);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            width: 100%;
+        }
+
+        /* Estado Desbloqueado (Concluído) */
+        .badge-card.badge-concluido {
+            background: linear-gradient(135deg, rgba(30, 41, 59, 0.9) 0%, rgba(15, 23, 42, 0.9) 100%);
+            border: 1px solid #e2e8f0;
+            box-shadow: 0 0 20px rgba(226, 232, 240, 0.15), inset 0 0 15px rgba(255, 255, 255, 0.05);
+        }
+
+        /* Estado Bloqueado */
+        .badge-card.badge-bloqueado {
+            opacity: 0.6;
+            filter: grayscale(0.8);
+        }
+
+        /* Estilização da Medalha / Emblema Redimensionada */
+        .badge-emblem {
+            position: relative;
+            width: 56px;
+            height: 56px;
+            flex-shrink: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .emblem-ring {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #94a3b8 0%, #475569 50%, #1e293b 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+            border: 2px solid #cbd5e1;
+        }
+
+        .badge-concluido .emblem-ring {
+            background: linear-gradient(135deg, #f8fafc 0%, #94a3b8 50%, #334155 100%);
+            border-color: #ffffff;
+            box-shadow: 0 0 15px rgba(248, 250, 252, 0.4);
+            animation: pulseGlow 3s infinite alternate;
+        }
+
+        .emblem-icon {
+            width: 26px;
+            height: 26px;
+            color: #0f172a;
+            stroke-width: 2.2;
+        }
+
+        .badge-ribbon {
+            position: absolute;
+            bottom: -4px;
+            background: #475569;
+            color: #fff;
+            font-size: 9px;
+            font-weight: 800;
+            padding: 1px 6px;
+            border-radius: 8px;
+            letter-spacing: 0.5px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.4);
+            white-space: nowrap;
+        }
+
+        .badge-concluido .badge-ribbon {
+            background: linear-gradient(90deg, #10b981 0%, #059669 100%);
+        }
+
+        /* Informações do Badge */
+        .badge-info {
+            flex-grow: 1;
+            min-width: 0;
+        }
+
+        .badge-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 8px;
+            margin-bottom: 4px;
+            flex-wrap: wrap;
+        }
+
+        .badge-title {
+            font-size: 0.95rem;
+            color: #f1f5f9;
+            word-break: break-word;
+        }
+
+        .badge-desc {
+            font-size: 0.8rem;
+            color: #94a3b8;
+            margin: 0;
+            line-height: 1.3;
+        }
+
+        .badge-tag {
+            font-size: 0.7rem;
+            font-weight: 700;
+            padding: 2px 8px;
+            border-radius: 20px;
+            background: rgba(148, 163, 184, 0.1);
+            color: #94a3b8;
+            white-space: nowrap;
+        }
+
+        .badge-concluido .badge-tag {
+            background: rgba(16, 185, 129, 0.15);
+            color: #10b981;
+            border: 1px solid rgba(16, 185, 129, 0.3);
+        }
+
+        .badge-historico {
+            margin-top: 6px;
+            font-size: 0.75rem;
+            color: #cbd5e1;
+            word-break: break-word;
+        }
+
+        @keyframes pulseGlow {
+            0% { box-shadow: 0 0 10px rgba(248, 250, 252, 0.2); }
+            100% { box-shadow: 0 0 22px rgba(248, 250, 252, 0.6); }
+        }
+
+        /* Adjusts para telas muito pequenas de celular */
+        @media (max-width: 400px) {
+            .card-conquistas {
+                padding: 12px;
+            }
+            .badge-card {
+                flex-direction: column;
+                text-align: center;
+                padding: 12px;
+            }
+            .badge-header {
+                flex-direction: column;
+                justify-content: center;
+                gap: 4px;
+            }
+        }
 
         /* CONTAINER PRINCIPAL */
         .container {
@@ -521,7 +697,7 @@
             backdrop-filter: blur(16px);
             -webkit-backdrop-filter: blur(16px);
             display: flex;
-            justify-content: space-around;
+            justify-style: space-around;
             align-items: center;
             padding: 10px 6px calc(10px + env(safe-area-inset-bottom));
             border-top: 1px solid var(--border-color);
@@ -624,33 +800,63 @@
     </div>
 
     <!-- SEÇÃO 1: PAINEL / NOTAS DO ALUNO -->
-    
-        <!-- CONQUISTAS & BADGES DO ALUNO -->
-        <div style="margin-top: 20px; background: rgba(15, 23, 42, 0.6); border: 1px solid var(--border-color); padding: 20px; border-radius: var(--radius-md);">
-            <h3 style="margin-bottom: 12px; font-size: 16px;">🏆 Minhas Conquistas</h3>
+    <div id="exame" class="tab-content active">
+        
+     <!-- CONQUISTAS & BADGES DO ALUNO (DENTRO DA MESMA DIV) -->
+        <div class="card-conquistas">
+            <h3 class="titulo-conquistas">🏆 Minhas Conquistas</h3>
             
-            <div id="cardBadgeFerro" class="card-item" style="display: flex; align-items: center; justify-content: space-between; background: rgba(30, 41, 59, 0.8);">
-                <div style="display: flex; align-items: center; gap: 12px;">
-                    <span style="font-size: 28px;">⚙️</span>
-                    <div>
-                        <strong style="font-size: 14px; display: block;">Frequência de Ferro</strong>
-                        <span style="font-size: 12px; color: var(--text-muted);">100% de presença nas aulas do mês</span>
+            <!-- BADGE FREQUÊNCIA DE FERRO -->
+            <div id="cardBadgeFerro" class="badge-card badge-bloqueado">
+                <!-- Ícone / Medalha Estilizada -->
+                <div class="badge-emblem">
+                    <div class="emblem-ring">
+                        <svg class="emblem-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
+                        </svg>
                     </div>
+                    <span class="badge-ribbon">100%</span>
                 </div>
 
-                <div id="statusBadgeFerro" style="display: flex; align-items: center; gap: 6px; font-size: 12px; font-weight: bold; color: var(--text-muted);">
-                    <input type="checkbox" id="chkFerroConcluido" disabled style="width: 18px; height: 18px; accent-color: var(--accent-green);">
-                    <span id="txtStatusBadge">Em andamento</span>
+                <!-- Informações do Badge -->
+                <div class="badge-info">
+                    <div class="badge-header">
+                        <strong class="badge-title">Guardião</strong>
+                        <span id="badgeTagStatus" class="badge-tag">Em andamento</span>
+                    </div>
+                    <p class="badge-desc">Objetivo: 100% de presença nas aulas do mês.</p>
+                    
+                    <!-- Histórico de meses conquistados -->
+                    <div id="historicoBadges" class="badge-historico"></div>
                 </div>
             </div>
 
-            <!-- Histórico de Meses Conquistados -->
-            <div id="historicoBadges" style="margin-top: 10px; font-size: 12px; color: var(--text-muted);">
-                <!-- Preenchido dinamicamente via JS -->
+            <!-- BADGE GUARDIÃO (AGORA INCLUÍDO DENTRO DA DIV MINHAS CONQUISTAS) -->
+            <div id="cardBadgeGuardiao" class="badge-card badge-bloqueado" style="margin-top: 12px;">
+                <!-- Ícone Escudo / Guardião -->
+                <div class="badge-emblem">
+                    <div class="emblem-ring">
+                        <svg class="emblem-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+                        </svg>
+                    </div>
+                    <span class="badge-ribbon">🛡️ 85%</span>
+                </div>
+
+                <!-- Informações do Badge -->
+                <div class="badge-info">
+                    <div class="badge-header">
+                        <strong class="badge-title">Lenda do Dojo</strong>
+                        <span id="badgeTagGuardiao" class="badge-tag">Em andamento</span>
+                    </div>
+                    <p class="badge-desc">Objetivo: Presença acima de 85% por 3 meses seguidos.</p>
+                    
+                    <!-- Histórico Guardião -->
+                    <div id="historicoGuardiao" class="badge-historico"></div>
+                </div>
             </div>
         </div>
-    
-    <div id="exame" class="tab-content active">
+
         <h3>🥋 Exames de Faixa</h3>
         <div class="table-container">
             <table>
@@ -773,7 +979,7 @@
             <div id="listaJustificativasAluno" style="font-size: 13px;">Carregando histórico...</div>
         </div>
         <p> </p>
-        <div class="card-item" style="flex-direction: column; align-items: flex-start; gap: 10px;">
+        <div class="card-item" style="flex-direction: column; align-items: flex-start; gap: 10px; margin-top: 15px;">
             <strong style="font-size: 15px;">📄 Regulamento Oficial de Justificativa de Faltas</strong>
             <p style="font-size: 12px; color: var(--text-muted);">Conteúdo detalhado sobre a justificativa de faltas.</p>
             <a href="Regulamento de Justificativa de Faltas.pdf" target="_blank" class="btn-action" style="padding: 10px;">📖 Abrir Regulamento</a>
@@ -1344,7 +1550,7 @@
             <a href="Numeral em japones.pdf" target="_blank" class="btn-action" style="padding: 10px;">📖 Abrir Guia</a>
         </div>
 
-          <div class="card-item" style="flex-direction: column; align-items: flex-start; gap: 10px;">
+        <div class="card-item" style="flex-direction: column; align-items: flex-start; gap: 10px;">
             <strong style="font-size: 15px;">📄 Dojo Kun</strong>
             <p style="font-size: 12px; color: var(--text-muted);">O dojo kun é o conjunto de cinco regras ou lemas morais do karatê, usado para guiar o comportamento dos praticantes tanto dentro quanto fora da academia</p>
             <a href="Dojo kun.pdf" target="_blank" class="btn-action" style="padding: 10px;">📖 Abrir PDF</a>
@@ -1450,43 +1656,43 @@
 </div>
 
 <script>
-        // 1. PROTEÇÃO DE ACESSO
-        if (localStorage.getItem('associadoAutenticado') !== 'true') {
-            alert('Acesso negado. Por favor, faça login.');
-            window.location.href = 'index.html';
-        }
+    // 1. PROTEÇÃO DE ACESSO
+    if (localStorage.getItem('associadoAutenticado') !== 'true') {
+        alert('Acesso negado. Por favor, faça login.');
+        window.location.href = 'index.html';
+    }
 
-        // 2. CONFIGURAÇÕES E VARIÁVEIS GLOBAIS
-        const nomeDoAluno = localStorage.getItem('nomeAlunoLogado') || 'Associado';
-        const usuarioAtivo = localStorage.getItem('usuarioAtivo');
-        const URL_API_SERVIDOR = "https://api-associacao-mp.onrender.com";
-        const PUBLIC_VAPID_KEY = 'BLUDrtrxUNlbfm3kad60QQUJzLX_p45Jp28aMTlEH1MoHwgUOF7s1Mf8JuwYh9TnH0k8pYRYvmZzO7lUkYMq2uQ';
+    // 2. CONFIGURAÇÕES E VARIÁVEIS GLOBAIS
+    const nomeDoAluno = localStorage.getItem('nomeAlunoLogado') || 'Associado';
+    const usuarioAtivo = localStorage.getItem('usuarioAtivo');
+    const URL_API_SERVIDOR = "https://api-associacao-mp.onrender.com";
+    const PUBLIC_VAPID_KEY = 'BLUDrtrxUNlbfm3kad60QQUJzLX_p45Jp28aMTlEH1MoHwgUOF7s1Mf8JuwYh9TnH0k8pYRYvmZzO7lUkYMq2uQ';
 
-        document.getElementById('welcomeNome').textContent = `Olá, ${nomeDoAluno}!`;
+    document.getElementById('welcomeNome').textContent = `Olá, ${nomeDoAluno}!`;
 
-        // --- FUNÇÕES DE SINCRONIZAÇÃO DE CALENDÁRIO (.ICS / GOOGLE CALENDAR) ---
-        function formatarDataISO(dataISO) {
-            return dataISO.replace(/-|:|\.\d+/g, '');
-        }
+    // --- FUNÇÕES DE SINCRONIZAÇÃO DE CALENDÁRIO (.ICS / GOOGLE CALENDAR) ---
+    function formatarDataISO(dataISO) {
+        return dataISO.replace(/-|:|\.\d+/g, '');
+    }
 
-        function adicionarGoogleCalendar(titulo, local, descricao, dataInicioISO, dataFimISO) {
-            const start = formatarDataISO(new Date(dataInicioISO).toISOString());
-            const end = formatarDataISO(new Date(dataFimISO).toISOString());
-            
-            const url = `https://calendar.google.com/calendar/render?action=TEMPLATE` +
-                `&text=${encodeURIComponent(titulo)}` +
-                `&dates=${start}/${end}` +
-                `&details=${encodeURIComponent(descricao)}` +
-                `&location=${encodeURIComponent(local)}`;
-            
-            window.open(url, '_blank');
-        }
+    function adicionarGoogleCalendar(titulo, local, descricao, dataInicioISO, dataFimISO) {
+        const start = formatarDataISO(new Date(dataInicioISO).toISOString());
+        const end = formatarDataISO(new Date(dataFimISO).toISOString());
+        
+        const url = `https://calendar.google.com/calendar/render?action=TEMPLATE` +
+            `&text=${encodeURIComponent(titulo)}` +
+            `&dates=${start}/${end}` +
+            `&details=${encodeURIComponent(descricao)}` +
+            `&location=${encodeURIComponent(local)}`;
+        
+        window.open(url, '_blank');
+    }
 
-        function baixarArquivoICS(titulo, local, descricao, dataInicioISO, dataFimISO) {
-            const start = formatarDataISO(new Date(dataInicioISO).toISOString());
-            const end = formatarDataISO(new Date(dataFimISO).toISOString());
-            
-            const conteudoICS = 
+    function baixarArquivoICS(titulo, local, descricao, dataInicioISO, dataFimISO) {
+        const start = formatarDataISO(new Date(dataInicioISO).toISOString());
+        const end = formatarDataISO(new Date(dataFimISO).toISOString());
+        
+        const conteudoICS = 
 `BEGIN:VCALENDAR
 VERSION:2.0
 PRODID:-//Associação Atarashii//PWA//PT
@@ -1500,666 +1706,624 @@ STATUS:CONFIRMED
 END:VEVENT
 END:VCALENDAR`;
 
-            const blob = new Blob([conteudoICS], { type: 'text/calendar;charset=utf-8' });
-            const link = document.createElement('a');
-            link.href = window.URL.createObjectURL(blob);
-            link.setAttribute('download', `${titulo.replace(/[^a-zA-Z0-9]/g, '_')}.ics`);
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
-        }
-
-        // 3. REGISTRO DE NOTIFICAÇÃO PUSH NATIVA (COMPATÍVEL COM IOS/WEBKIT)
-        function urlBase64ToUint8Array(base64String) {
-            const padding = '='.repeat((4 - base64String.length % 4) % 4);
-            const base64 = (base64String + padding).replace(/-/g, '+').replace(/_/g, '/');
-            const rawData = window.atob(base64);
-            const outputArray = new Uint8Array(rawData.length);
-            for (let i = 0; i < rawData.length; ++i) {
-                outputArray[i] = rawData.charCodeAt(i);
-            }
-            return outputArray;
-        }
-
-        // Detecção de PWA/iOS Standalone
-        function ehIOS() {
-            return /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
-        }
-
-        function ehPWAStandalone() {
-            return (window.matchMedia('(display-mode: standalone)').matches) || (window.navigator.standalone === true);
-        }
-
-        async function registrarPushNativo() {
-            if (!('serviceWorker' in navigator) || !('PushManager' in window)) {
-                console.warn('Serviço de Push não é suportado neste navegador.');
-                return;
-            }
-
-            try {
-                // Registrar o Service Worker
-                const registro = await navigator.serviceWorker.register('sw.js');
-                await navigator.serviceWorker.ready;
-
-                // Checa a permissão atual
-                let permissao = Notification.permission;
-
-                if (permissao === 'default') {
-                    // No iOS, se não for por clique do usuário, a permissão não pode ser pedida automaticamente
-                    if (ehIOS() && !ehPWAStandalone()) {
-                        const banner = document.getElementById('bannerIosInstalar');
-                        if (banner) banner.style.display = 'block';
-                        return;
-                    }
-                    
-                    const boxPush = document.getElementById('boxAtivarPush');
-                    if (boxPush) boxPush.style.display = 'block';
-                    return;
-                }
-
-                if (permissao !== 'granted') {
-                    console.warn('Permissão para notificações não foi concedida pelo usuário.');
-                    return;
-                }
-
-                // Oculta os avisos de ativação se já permitido
-                const boxPush = document.getElementById('boxAtivarPush');
-                if (boxPush) boxPush.style.display = 'none';
-
-                // Realiza a inscrição PUSH
-                let assinatura = await registro.pushManager.getSubscription();
-                if (!assinatura) {
-                    assinatura = await registro.pushManager.subscribe({
-                        userVisibleOnly: true,
-                        applicationServerKey: urlBase64ToUint8Array(PUBLIC_VAPID_KEY)
-                    });
-                }
-
-                if (!usuarioAtivo) return;
-
-                // Envia para o servidor Render/Supabase vincular a subscription ao nome do usuário
-                const res = await fetch(`${URL_API_SERVIDOR}/api/subscribe`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        subscription: assinatura,
-                        usuario: usuarioAtivo
-                    })
-                });
-
-                if (res.ok) {
-                    console.log(`Dispositivo e Push vinculados com sucesso ao usuário: ${usuarioAtivo}`);
-                }
-            } catch (err) {
-                console.error('Erro ao registrar Push no Supabase/Render:', err);
-            }
-        }
-
-        // Função disparada manualmente via clique no iOS/Android
-        async function solicitarAtivacaoPushIOS() {
-            if (ehIOS() && !ehPWAStandalone()) {
-                alert('No iPhone/iPad, você deve primeiro adicionar este site à Tela de Início (Aperte o botão Compartilhar do Safari > Adicionar à Tela de Início).');
-                return;
-            }
-
-            if (!('Notification' in window)) {
-                alert('Notificações não são suportadas neste navegador.');
-                return;
-            }
-
-            try {
-                const permissao = await Notification.requestPermission();
-                if (permissao === 'granted') {
-                    alert('Notificações ativadas com sucesso!');
-                    await registrarPushNativo();
-                } else if (permissao === 'denied') {
-                    alert('As notificações foram bloqueadas. Habilite-as nas Configurações do Safari/Ajustes do iOS.');
-                }
-            } catch (e) {
-                console.error("Erro ao solicitar permissão de Notificação:", e);
-            }
-        }
-
-        // 4. FUNÇÃO QUE CARREGA E PREENCHE AS NOTAS DO ALUNO
-        function carregarNotasAluno() {
-            const tabelaBody = document.getElementById('corpoTabelaNotas');
-            if (!tabelaBody) return;
-
-            if (typeof listaAlunos === 'undefined') {
-                tabelaBody.innerHTML = `<tr><td colspan="8">Aguardando dados de alunos...</td></tr>`;
-                setTimeout(carregarNotasAluno, 500);
-                return;
-            }
-
-            const dadosAluno = listaAlunos.find(u => u.usuario === usuarioAtivo);
-
-            if (dadosAluno && dadosAluno.historico && dadosAluno.historico.length > 0) {
-                tabelaBody.innerHTML = "";
-                dadosAluno.historico.forEach(exame => {
-                    const linha = document.createElement('tr');
-                    linha.innerHTML = `
-                        <td style="background-color: ${exame.corFaixa}; color: ${exame.corTexto}; border-radius: 4px;">${exame.faixa}</td>
-                        <td>${exame.ano}</td>
-                        <td>${Number(exame.kihon).toFixed(1)}</td>
-                        <td>${Number(exame.kata).toFixed(1)}</td>
-                        <td>${Number(exame.kumite).toFixed(1)}</td>
-                        <td>${Number(exame.perguntas).toFixed(1)}</td>
-                        <td class="col-total">${Number(exame.total).toFixed(1)}</td>
-                        <td class="col-media">${Number(exame.media).toFixed(1)}</td>
-                    `;
-                    tabelaBody.appendChild(linha);
-                });
-            } else {
-                tabelaBody.innerHTML = `<tr><td colspan="8">Nenhum registro de exame encontrado para este aluno.</td></tr>`;
-            }
-        }
-    
-   // CONSULTA O STATUS DO BADGES
-    async function carregarBadgesAluno() {
-    if (!usuarioAtivo) return;
-
-    try {
-        const res = await fetch(`${URL_API_SERVIDOR}/api/badges/${usuarioAtivo}`);
-        const data = await res.json();
-
-        if (data.sucesso) {
-            const chkFerro = document.getElementById('chkFerroConcluido');
-            const txtStatus = document.getElementById('txtStatusBadge');
-            const cardBadge = document.getElementById('cardBadgeFerro');
-            const containerHistorico = document.getElementById('historicoBadges');
-
-            // Verifica status do mês atual
-            if (data.frequenciaFerroMesAtual) {
-                if (chkFerro) chkFerro.checked = true;
-                if (txtStatus) {
-                    txtStatus.textContent = "Concluído!";
-                    txtStatus.style.color = "var(--accent-green)";
-                }
-                if (cardBadge) cardBadge.style.borderColor = "var(--accent-green)";
-            } else {
-                if (chkFerro) chkFerro.checked = false;
-                if (txtStatus) {
-                    txtStatus.textContent = "Em andamento";
-                    txtStatus.style.color = "var(--text-muted)";
-                }
-            }
-
-            // Exibe histórico de meses conquistados
-            if (containerHistorico && data.badges.length > 0) {
-                const mesesConquistados = data.badges
-                    .filter(b => b.badge_key === 'frequencia_ferro' && b.concluido)
-                    .map(b => b.mes_referencia);
-
-                if (mesesConquistados.length > 0) {
-                    containerHistorico.innerHTML = `<strong>🏅 Meses conquistados:</strong> ${mesesConquistados.join(', ')}`;
-                }
-            }
-        }
-    } catch (err) {
-        console.error("Erro ao carregar conquistas:", err);
+        const blob = new Blob([conteudoICS], { type: 'text/calendar;charset=utf-8' });
+        const link = document.createElement('a');
+        link.href = window.URL.createObjectURL(blob);
+        link.setAttribute('download', `${titulo.replace(/[^a-zA-Z0-9]/g, '_')}.ics`);
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
     }
-}
 
-// Chame a função na inicialização do painel
-document.addEventListener('DOMContentLoaded', () => {
-    carregarBadgesAluno();
-});
-    
-        // 5. CONSULTA O STATUS DO TERMO
-        function verificarStatusAceite() {
+    // 3. REGISTRO DE NOTIFICAÇÃO PUSH NATIVA (COMPATÍVEL COM IOS/WEBKIT)
+    function urlBase64ToUint8Array(base64String) {
+        const padding = '='.repeat((4 - base64String.length % 4) % 4);
+        const base64 = (base64String + padding).replace(/-/g, '+').replace(/_/g, '/');
+        const rawData = window.atob(base64);
+        const outputArray = new Uint8Array(rawData.length);
+        for (let i = 0; i < rawData.length; ++i) {
+            outputArray[i] = rawData.charCodeAt(i);
+        }
+        return outputArray;
+    }
+
+    // Detecção de PWA/iOS Standalone
+    function ehIOS() {
+        return /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+    }
+
+    function ehPWAStandalone() {
+        return (window.matchMedia('(display-mode: standalone)').matches) || (window.navigator.standalone === true);
+    }
+
+    async function registrarPushNativo() {
+        if (!('serviceWorker' in navigator) || !('PushManager' in window)) {
+            console.warn('Serviço de Push não é suportado neste navegador.');
+            return;
+        }
+
+        try {
+            const registro = await navigator.serviceWorker.register('sw.js');
+            await navigator.serviceWorker.ready;
+
+            let permissao = Notification.permission;
+
+            if (permissao === 'default') {
+                if (ehIOS() && !ehPWAStandalone()) {
+                    const banner = document.getElementById('bannerIosInstalar');
+                    if (banner) banner.style.display = 'block';
+                    return;
+                }
+                
+                const boxPush = document.getElementById('boxAtivarPush');
+                if (boxPush) boxPush.style.display = 'block';
+                return;
+            }
+
+            if (permissao !== 'granted') {
+                console.warn('Permissão para notificações não foi concedida pelo usuário.');
+                return;
+            }
+
+            const boxPush = document.getElementById('boxAtivarPush');
+            if (boxPush) boxPush.style.display = 'none';
+
+            let assinatura = await registro.pushManager.getSubscription();
+            if (!assinatura) {
+                assinatura = await registro.pushManager.subscribe({
+                    userVisibleOnly: true,
+                    applicationServerKey: urlBase64ToUint8Array(PUBLIC_VAPID_KEY)
+                });
+            }
+
             if (!usuarioAtivo) return;
 
-            const blocoPendente = document.getElementById('blocoTermoPendente');
-            const blocoAceito = document.getElementById('blocoTermoAceito');
-            const badge = document.getElementById('badgeNotificacao');
-            const sininho = document.getElementById('wrapperSininho');
-
-            const jaAceitouLocal = localStorage.getItem(`termo_aceito_${usuarioAtivo}`);
-            const dataAceiteLocal = localStorage.getItem(`data_aceite_${usuarioAtivo}`) || '';
-            
-            if (jaAceitouLocal === 'true') {
-                aplicarLayoutAceito(blocoPendente, blocoAceito, badge, sininho, dataAceiteLocal, false);
-            } else {
-                aplicarLayoutPendente(blocoPendente, blocoAceito, badge, sininho);
-            }
-
-            const controller = new AbortController();
-            const timeoutId = setTimeout(() => controller.abort(), 90000);
-
-            fetch(`${URL_API_SERVIDOR}/api/status-termo/${usuarioAtivo}`, { signal: controller.signal })
-                .then(response => {
-                    clearTimeout(timeoutId);
-                    if (!response.ok) throw new Error("Resposta inválida do servidor");
-                    return response.json();
-                })
-                .then(data => {
-                    const verificadoNaAPI = (data && (data.aceitou === true || data.sucesso === true || data.status === 'assinado' || data.status === 'aceito'));
-                    const dataServidor = data.data || data.dataHora || data.updatedAt || new Date().toLocaleString('pt-BR');
-
-                    if (verificadoNaAPI) {
-                        localStorage.setItem(`termo_aceito_${usuarioAtivo}`, 'true');
-                        localStorage.setItem(`data_aceite_${usuarioAtivo}`, dataServidor);
-                        aplicarLayoutAceito(blocoPendente, blocoAceito, badge, sininho, dataServidor, true);
-                    } else {
-                        localStorage.removeItem(`termo_aceito_${usuarioAtivo}`);
-                        localStorage.removeItem(`data_aceite_${usuarioAtivo}`);
-                        aplicarLayoutPendente(blocoPendente, blocoAceito, badge, sininho);
-                    }
-                })
-                .catch(err => {
-                    clearTimeout(timeoutId);
-                    if (localStorage.getItem(`termo_aceito_${usuarioAtivo}`) === 'true') {
-                        aplicarLayoutAceito(blocoPendente, blocoAceito, badge, sininho, dataAceiteLocal, false);
-                    } else {
-                        aplicarLayoutPendente(blocoPendente, blocoAceito, badge, sininho);
-                    }
-                });
-        }
-
-        function aplicarLayoutAceito(blocoPendente, blocoAceito, badge, sininho, dataRegistro, ehGlobal) {
-            if (blocoPendente) blocoPendente.style.display = 'none';
-            if (blocoAceito) {
-                blocoAceito.style.display = 'block';
-                const tipoSinc = ehGlobal ? "sincronizado com a nuvem em:" : "verificado via dispositivo em:";
-                document.getElementById('textoDataAceite').innerHTML = `O seu comprovante de leitura e concordância foi ${tipoSinc} <br><strong>${dataRegistro}</strong>`;
-            }
-            if (badge) badge.style.display = 'none';
-            if (sininho) { 
-                sininho.style.animation = 'none'; 
-                sininho.title = "Nenhum aviso pendente"; 
-            }
-        }
-
-        function aplicarLayoutPendente(blocoPendente, blocoAceito, badge, sininho) {
-            if (blocoPendente) blocoPendente.style.display = 'block';
-            if (blocoAceito) blocoAceito.style.display = 'none';
-            if (badge) badge.style.display = 'flex';
-            if (sininho) {
-                sininho.style.animation = 'balancoSininho 0.5s ease-in-out infinite alternate';
-            }
-        }
-
-        function irParaAvisos() {
-            const botaoAvisosMenu = document.querySelectorAll('.nav-btn')[2]; 
-            if (botaoAvisosMenu) mudarAba('comunicados', botaoAvisosMenu);
-        }
-        
-        function atualizarPainel() {
-            window.location.reload();
-        }
-
-        function alternarBotaoAceite() {
-            const checkbox = document.getElementById('checkAceite');
-            const botao = document.getElementById('btnEnviarAceite');
-
-            if (checkbox && checkbox.checked) {
-                botao.disabled = false;
-                botao.style.backgroundColor = '#27ae60';
-                botao.style.cursor = 'pointer';
-            } else if (botao) {
-                botao.disabled = true;
-                botao.style.backgroundColor = '#95a5a6';
-                botao.style.cursor = 'not-allowed';
-            }
-        }
-
-        function enviarEmailAceite() {
-            const nomeAluno = localStorage.getItem('nomeAlunoLogado') || 'Nome Não Identificado';
-            const dataHoraAtual = new Date().toLocaleString('pt-BR');
-            
-            const emailDestinatarioPrincipal = "luedo25@msn.com"; 
-            const assunto = encodeURIComponent(`CONFIRMAÇÃO DE ACEITE: Regras da Associação - ${nomeAluno}`);
-            
-            const corpoEmail = encodeURIComponent(
-                `Prezada Diretoria,\n\n` +
-                `Por meio deste e-mail, confirmo que li e aceito voluntariamente todos os termos, regras e normas da Associação.\n\n` +
-                `DADOS DO ASSOCIADO:\n` +
-                `Nome completo: ${nomeAluno}\n` +
-                `Usuário do sistema: ${usuarioAtivo}\n` +
-                `Data/Hora do Aceite: ${dataHoraAtual}\n\n` +
-                `Este e-mail serve como registro e comprovante digital do meu aceite obrigatório.`
-            );
-
-            const mailtoUrl = `mailto:${emailDestinatarioPrincipal}?subject=${assunto}&body=${corpoEmail}`;
-            
-            localStorage.setItem(`termo_aceito_${usuarioAtivo}`, 'true');
-            localStorage.setItem(`data_aceite_${usuarioAtivo}`, dataHoraAtual);
-            verificarStatusAceite();
-
-            fetch(`${URL_API_SERVIDOR}/api/aceitar-termo`, {
+            const res = await fetch(`${URL_API_SERVIDOR}/api/subscribe`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ usuario: usuarioAtivo })
+                body: JSON.stringify({
+                    subscription: assinatura,
+                    usuario: usuarioAtivo
+                })
+            });
+
+            if (res.ok) {
+                console.log(`Dispositivo e Push vinculados com sucesso ao usuário: ${usuarioAtivo}`);
+            }
+        } catch (err) {
+            console.error('Erro ao registrar Push no Supabase/Render:', err);
+        }
+    }
+
+    async function solicitarAtivacaoPushIOS() {
+        if (ehIOS() && !ehPWAStandalone()) {
+            alert('No iPhone/iPad, você deve primeiro adicionar este site à Tela de Início (Aperte o botão Compartilhar do Safari > Adicionar à Tela de Início).');
+            return;
+        }
+
+        if (!('Notification' in window)) {
+            alert('Notificações não são suportadas neste navegador.');
+            return;
+        }
+
+        try {
+            const permissao = await Notification.requestPermission();
+            if (permissao === 'granted') {
+                alert('Notificações ativadas com sucesso!');
+                await registrarPushNativo();
+            } else if (permissao === 'denied') {
+                alert('As notificações foram bloqueadas. Habilite-as nas Configurações do Safari/Ajustes do iOS.');
+            }
+        } catch (e) {
+            console.error("Erro ao solicitar permissão de Notificação:", e);
+        }
+    }
+
+    // 4. FUNÇÃO QUE CARREGA E PREENCHE AS NOTAS DO ALUNO
+    function carregarNotasAluno() {
+        const tabelaBody = document.getElementById('corpoTabelaNotas');
+        if (!tabelaBody) return;
+
+        if (typeof listaAlunos === 'undefined') {
+            tabelaBody.innerHTML = `<tr><td colspan="8">Aguardando dados de alunos...</td></tr>`;
+            setTimeout(carregarNotasAluno, 500);
+            return;
+        }
+
+        const dadosAluno = listaAlunos.find(u => u.usuario === usuarioAtivo);
+
+        if (dadosAluno && dadosAluno.historico && dadosAluno.historico.length > 0) {
+            tabelaBody.innerHTML = "";
+            dadosAluno.historico.forEach(exame => {
+                const linha = document.createElement('tr');
+                linha.innerHTML = `
+                    <td style="background-color: ${exame.corFaixa}; color: ${exame.corTexto}; border-radius: 4px;">${exame.faixa}</td>
+                    <td>${exame.ano}</td>
+                    <td>${Number(exame.kihon).toFixed(1)}</td>
+                    <td>${Number(exame.kata).toFixed(1)}</td>
+                    <td>${Number(exame.kumite).toFixed(1)}</td>
+                    <td>${Number(exame.perguntas).toFixed(1)}</td>
+                    <td class="col-total">${Number(exame.total).toFixed(1)}</td>
+                    <td class="col-media">${Number(exame.media).toFixed(1)}</td>
+                `;
+                tabelaBody.appendChild(linha);
+            });
+        } else {
+            tabelaBody.innerHTML = `<tr><td colspan="8">Nenhum registro de exame encontrado para este aluno.</td></tr>`;
+        }
+    }
+
+    // CONSULTA O STATUS DO BADGES
+    async function carregarBadgesAluno() {
+        if (!usuarioAtivo) return;
+
+        try {
+            const res = await fetch(`${URL_API_SERVIDOR}/api/badges/${usuarioAtivo}`);
+            const data = await res.json();
+
+            if (data.sucesso) {
+                // --- 1. FREQUÊNCIA DE FERRO ---
+                const cardBadgeFerro = document.getElementById('cardBadgeFerro');
+                const tagStatusFerro = document.getElementById('badgeTagStatus');
+                const containerHistFerro = document.getElementById('historicoBadges');
+
+                if (data.frequenciaFerroMesAtual) {
+                    if (cardBadgeFerro) {
+                        cardBadgeFerro.classList.remove('badge-bloqueado');
+                        cardBadgeFerro.classList.add('badge-concluido');
+                    }
+                    if (tagStatusFerro) tagStatusFerro.textContent = "Conquistado!";
+                } else {
+                    if (cardBadgeFerro) {
+                        cardBadgeFerro.classList.remove('badge-concluido');
+                        cardBadgeFerro.classList.add('badge-bloqueado');
+                    }
+                    if (tagStatusFerro) tagStatusFerro.textContent = "Em andamento";
+                }
+
+                if (containerHistFerro) {
+                    const mesesFerro = data.badges
+                        .filter(b => b.badge_key === 'frequencia_ferro' && b.concluido)
+                        .map(b => b.mes_referencia);
+
+                    containerHistFerro.innerHTML = mesesFerro.length > 0 
+                        ? `<strong>🏅 Conquistado em:</strong> ${mesesFerro.join(', ')}` 
+                        : '';
+                }
+
+                // --- 2. GUARDIÃO ---
+                const cardGuardiao = document.getElementById('cardBadgeGuardiao');
+                const tagGuardiao = document.getElementById('badgeTagGuardiao');
+                const containerHistGuardiao = document.getElementById('historicoGuardiao');
+
+                const ehGuardiao = data.badges.some(b => b.badge_key === 'guardiao' && b.concluido);
+
+                if (ehGuardiao || data.guardiaoConquistado) {
+                    if (cardGuardiao) {
+                        cardGuardiao.classList.remove('badge-bloqueado');
+                        cardGuardiao.classList.add('badge-concluido');
+                    }
+                    if (tagGuardiao) tagGuardiao.textContent = "Conquistado!";
+                } else {
+                    if (cardGuardiao) {
+                        cardGuardiao.classList.remove('badge-concluido');
+                        cardGuardiao.classList.add('badge-bloqueado');
+                    }
+                    if (tagGuardiao) tagGuardiao.textContent = "Em andamento";
+                }
+
+                if (containerHistGuardiao) {
+                    const mesesGuardiao = data.badges
+                        .filter(b => b.badge_key === 'guardiao' && b.concluido)
+                        .map(b => b.mes_referencia);
+
+                    containerHistGuardiao.innerHTML = mesesGuardiao.length > 0 
+                        ? `<strong>🛡️ Conquistado em:</strong> ${mesesGuardiao.join(', ')}` 
+                        : '';
+                }
+            }
+        } catch (err) {
+            console.error("Erro ao carregar conquistas:", err);
+        }
+    }
+
+    // 5. CONSULTA O STATUS DO TERMO
+    function verificarStatusAceite() {
+        if (!usuarioAtivo) return;
+
+        const blocoPendente = document.getElementById('blocoTermoPendente');
+        const blocoAceito = document.getElementById('blocoTermoAceito');
+        const badge = document.getElementById('badgeNotificacao');
+        const sininho = document.getElementById('wrapperSininho');
+
+        const jaAceitouLocal = localStorage.getItem(`termo_aceito_${usuarioAtivo}`);
+        const dataAceiteLocal = localStorage.getItem(`data_aceite_${usuarioAtivo}`) || '';
+        
+        if (jaAceitouLocal === 'true') {
+            aplicarLayoutAceito(blocoPendente, blocoAceito, badge, sininho, dataAceiteLocal, false);
+        } else {
+            aplicarLayoutPendente(blocoPendente, blocoAceito, badge, sininho);
+        }
+
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), 90000);
+
+        fetch(`${URL_API_SERVIDOR}/api/status-termo/${usuarioAtivo}`, { signal: controller.signal })
+            .then(response => {
+                clearTimeout(timeoutId);
+                if (!response.ok) throw new Error("Resposta inválida do servidor");
+                return response.json();
             })
-            .then(response => response.json())
-            .then(() => {
-                verificarStatusAceite();
-                window.location.href = mailtoUrl;
+            .then(data => {
+                const verificadoNaAPI = (data && (data.aceitou === true || data.sucesso === true || data.status === 'assinado' || data.status === 'aceito'));
+                const dataServidor = data.data || data.dataHora || data.updatedAt || new Date().toLocaleString('pt-BR');
+
+                if (verificadoNaAPI) {
+                    localStorage.setItem(`termo_aceito_${usuarioAtivo}`, 'true');
+                    localStorage.setItem(`data_aceite_${usuarioAtivo}`, dataServidor);
+                    aplicarLayoutAceito(blocoPendente, blocoAceito, badge, sininho, dataServidor, true);
+                } else {
+                    localStorage.removeItem(`termo_aceito_${usuarioAtivo}`);
+                    localStorage.removeItem(`data_aceite_${usuarioAtivo}`);
+                    aplicarLayoutPendente(blocoPendente, blocoAceito, badge, sininho);
+                }
             })
             .catch(err => {
-                console.warn("Falha de rede ao gravar termo. Mantendo cópia local offline.", err);
-                window.location.href = mailtoUrl;
-            });
-        }
-
-        function mudarAba(idDaAba, botaoClicado) {
-            const secoes = document.querySelectorAll('.tab-content');
-            secoes.forEach(secao => secao.classList.remove('active'));
-
-            const botoes = document.querySelectorAll('.nav-btn');
-            botoes.forEach(btn => btn.classList.remove('active'));
-
-            const elementoAba = document.getElementById(idDaAba);
-            if (elementoAba) elementoAba.classList.add('active');
-            if (botaoClicado) botaoClicado.classList.add('active');
-
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-
-            if (idDaAba === 'comunicados') verificarStatusAceite();
-            if (idDaAba === 'saldo') buscarSaldoMercadoPago();
-        }
-
-        function buscarSaldoMercadoPago() {
-            const elementoSaldo = document.getElementById('textoSaldo');
-            if (!elementoSaldo) return;
-            
-            elementoSaldo.textContent = "Carregando...";
-
-            fetch(`${URL_API_SERVIDOR}/api/saldo`)
-                .then(response => response.json())
-                .then(data => {
-                    if (data.saldo !== undefined) {
-                        elementoSaldo.textContent = data.saldo.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
-                    } else {
-                        elementoSaldo.textContent = "Erro ao carregar";
-                    }
-                })
-                .catch(() => {
-                    elementoSaldo.textContent = "Erro de conexão";
-                });
-        }
-
-        document.getElementById('logoutBtn').addEventListener('click', function() {
-            localStorage.removeItem('associadoAutenticado');
-            localStorage.removeItem('nomeAlunoLogado');
-            localStorage.removeItem('usuarioAtivo');
-            window.location.replace('index.html');
-        });
-
-        function alternarCampoTextoOutro() {
-            const checkOutro = document.getElementById('checkOutro');
-            const containerTexto = document.getElementById('containerTextoOutro');
-            const campoTexto = document.getElementById('textoJustificativaOutro');
-
-            if (checkOutro && checkOutro.checked) {
-                if (containerTexto) containerTexto.style.display = 'block';
-                if (campoTexto) campoTexto.focus();
-            } else {
-                if (containerTexto) containerTexto.style.display = 'none';
-                if (campoTexto) campoTexto.value = '';
-            }
-        }
-
-        document.getElementById('dataFaltaAluno').addEventListener('change', function() {
-            if (!this.value) return;
-            
-            const partes = this.value.split('-');
-            const dataSelecionada = new Date(Date.UTC(partes[0], partes[1] - 1, partes[2]));
-            const diaSemana = dataSelecionada.getUTCDay();
-
-            if (diaSemana !== 2 && diaSemana !== 4 && diaSemana !== 6) {
-                alert("Erro: Aulas ocorrem apenas Terças, Quintas e Sábados. Por favor, selecione uma data válida.");
-                this.value = '';
-            }
-        });
-
-        document.getElementById('formJustificativa').addEventListener('submit', async function(e) {
-            e.preventDefault();
-            const dataFalta = document.getElementById('dataFaltaAluno').value;
-            const marcados = Array.from(document.querySelectorAll('input[name="motivoFalta"]:checked')).map(cb => cb.value);
-            
-            const checkOutro = document.getElementById('checkOutro');
-            const ehOutroMarcado = checkOutro ? checkOutro.checked : false;
-            const campoTextoOutro = document.getElementById('textoJustificativaOutro');
-            const textoOutro = campoTextoOutro ? campoTextoOutro.value.trim() : '';
-
-            if (!dataFalta) return alert("Por favor, selecione a data.");
-
-            const dataFaltaObj = new Date(`${dataFalta}T00:00:00`);
-            const agora = new Date();
-            const diferencaEmHoras = Math.abs(agora - dataFaltaObj) / (1000 * 60 * 60);
-
-            if (diferencaEmHoras > 48) {
-                return alert("Erro: O prazo para justificativa de falta é de até 48 horas antes ou 48 horas depois da data da aula.");
-            }
-
-            if (ehOutroMarcado && !textoOutro) {
-                return alert("Você marcou a opção 'Outro(s)'. Por favor, descreva o motivo no campo de texto.");
-            }
-
-            if (marcados.length === 0 && !ehOutroMarcado) {
-                return alert("Selecione ao menos um motivo para a falta.");
-            }
-
-            let listaMotivos = [...marcados];
-            if (ehOutroMarcado && textoOutro) {
-                listaMotivos.push(`Outro: ${textoOutro}`);
-            }
-
-            const motivoFinal = listaMotivos.join('; ');
-
-            try {
-                const response = await fetch(`${URL_API_SERVIDOR}/api/justificativa`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        usuario: usuarioAtivo,
-                        data_falta: dataFalta,
-                        motivo: motivoFinal
-                    })
-                });
-
-                const result = await response.json();
-                if (response.ok) {
-                    alert(result.mensagem || "Justificativa enviada para aprovação com sucesso!");
-                    document.getElementById('formJustificativa').reset();
-                    alternarCampoTextoOutro();
-                    carregarStatusJustificativas();
-                    carregarGraficoFrequencia();
+                clearTimeout(timeoutId);
+                if (localStorage.getItem(`termo_aceito_${usuarioAtivo}`) === 'true') {
+                    aplicarLayoutAceito(blocoPendente, blocoAceito, badge, sininho, dataAceiteLocal, false);
                 } else {
-                    alert("Erro: " + (result.erro || "Falha ao registrar justificativa."));
+                    aplicarLayoutPendente(blocoPendente, blocoAceito, badge, sininho);
                 }
-            } catch (err) {
-                alert("Erro ao enviar solicitação.");
-            }
+            });
+    }
+
+    function aplicarLayoutAceito(blocoPendente, blocoAceito, badge, sininho, dataRegistro, ehGlobal) {
+        if (blocoPendente) blocoPendente.style.display = 'none';
+        if (blocoAceito) {
+            blocoAceito.style.display = 'block';
+            const tipoSinc = ehGlobal ? "sincronizado com a nuvem em:" : "verificado via dispositivo em:";
+            document.getElementById('textoDataAceite').innerHTML = `O seu comprovante de leitura e concordância foi ${tipoSinc} <br><strong>${dataRegistro}</strong>`;
+        }
+        if (badge) badge.style.display = 'none';
+        if (sininho) { 
+            sininho.style.animation = 'none'; 
+            sininho.title = "Nenhum aviso pendente"; 
+        }
+    }
+
+    function aplicarLayoutPendente(blocoPendente, blocoAceito, badge, sininho) {
+        if (blocoPendente) blocoPendente.style.display = 'block';
+        if (blocoAceito) blocoAceito.style.display = 'none';
+        if (badge) badge.style.display = 'flex';
+        if (sininho) {
+            sininho.style.animation = 'balancoSininho 0.5s ease-in-out infinite alternate';
+        }
+    }
+
+    function irParaAvisos() {
+        const botaoAvisosMenu = document.querySelectorAll('.nav-btn')[2]; 
+        if (botaoAvisosMenu) mudarAba('comunicados', botaoAvisosMenu);
+    }
+    
+    function atualizarPainel() {
+        window.location.reload();
+    }
+
+    function alternarBotaoAceite() {
+        const checkbox = document.getElementById('checkAceite');
+        const botao = document.getElementById('btnEnviarAceite');
+
+        if (checkbox && checkbox.checked) {
+            botao.disabled = false;
+            botao.style.backgroundColor = '#27ae60';
+            botao.style.cursor = 'pointer';
+        } else if (botao) {
+            botao.disabled = true;
+            botao.style.backgroundColor = '#95a5a6';
+            botao.style.cursor = 'not-allowed';
+        }
+    }
+
+    function enviarEmailAceite() {
+        const nomeAluno = localStorage.getItem('nomeAlunoLogado') || 'Nome Não Identificado';
+        const dataHoraAtual = new Date().toLocaleString('pt-BR');
+        
+        const emailDestinatarioPrincipal = "luedo25@msn.com"; 
+        const assunto = encodeURIComponent(`CONFIRMAÇÃO DE ACEITE: Regras da Associação - ${nomeAluno}`);
+        
+        const corpoEmail = encodeURIComponent(
+            `Prezada Diretoria,\n\n` +
+            `Por meio deste e-mail, confirmo que li e aceito voluntariamente todos os termos, regras e normas da Associação.\n\n` +
+            `DADOS DO ASSOCIADO:\n` +
+            `Nome completo: ${nomeAluno}\n` +
+            `Usuário do sistema: ${usuarioAtivo}\n` +
+            `Data/Hora do Aceite: ${dataHoraAtual}\n\n` +
+            `Este e-mail serve como registro e comprovante digital do meu aceite obrigatório.`
+        );
+
+        const mailtoUrl = `mailto:${emailDestinatarioPrincipal}?subject=${assunto}&body=${corpoEmail}`;
+        
+        localStorage.setItem(`termo_aceito_${usuarioAtivo}`, 'true');
+        localStorage.setItem(`data_aceite_${usuarioAtivo}`, dataHoraAtual);
+        verificarStatusAceite();
+
+        fetch(`${URL_API_SERVIDOR}/api/aceitar-termo`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ usuario: usuarioAtivo })
+        })
+        .then(response => response.json())
+        .then(() => {
+            verificarStatusAceite();
+            window.location.href = mailtoUrl;
+        })
+        .catch(err => {
+            console.warn("Falha de rede ao gravar termo. Mantendo cópia local offline.", err);
+            window.location.href = mailtoUrl;
         });
+    }
 
-        async function carregarStatusJustificativas() {
-            const container = document.getElementById('listaJustificativasAluno');
-            if (!container) return;
+    function mudarAba(idDaAba, botaoClicado) {
+        const secoes = document.querySelectorAll('.tab-content');
+        secoes.forEach(secao => secao.classList.remove('active'));
 
-            const inputInicio = document.getElementById('mesInicioJustificativa')?.value || '2026-07';
-            const inputFim = document.getElementById('mesFimJustificativa')?.value || '2026-12';
+        const botoes = document.querySelectorAll('.nav-btn');
+        botoes.forEach(btn => btn.classList.remove('active'));
 
-            const dataInicio = `${inputInicio}-01`;
-            const [anoFim, mesFim] = inputFim.split('-').map(Number);
-            const ultimoDia = new Date(anoFim, mesFim, 0).getDate();
-            const dataFim = `${inputFim}-${String(ultimoDia).padStart(2, '0')}`;
+        const elementoAba = document.getElementById(idDaAba);
+        if (elementoAba) elementoAba.classList.add('active');
+        if (botaoClicado) botaoClicado.classList.add('active');
 
-            try {
-                const response = await fetch(`${URL_API_SERVIDOR}/api/justificativa/aluno/${usuarioAtivo}`);
-                const dados = await response.json();
+        window.scrollTo({ top: 0, behavior: 'smooth' });
 
-                if (!dados || dados.length === 0) {
-                    container.innerHTML = "<p style='color: var(--text-muted);'>Nenhuma justificativa enviada até o momento.</p>";
-                    return;
+        if (idDaAba === 'comunicados') verificarStatusAceite();
+        if (idDaAba === 'saldo') buscarSaldoMercadoPago();
+    }
+
+    function buscarSaldoMercadoPago() {
+        const elementoSaldo = document.getElementById('textoSaldo');
+        if (!elementoSaldo) return;
+        
+        elementoSaldo.textContent = "Carregando...";
+
+        fetch(`${URL_API_SERVIDOR}/api/saldo`)
+            .then(response => response.json())
+            .then(data => {
+                if (data.saldo !== undefined) {
+                    elementoSaldo.textContent = data.saldo.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+                } else {
+                    elementoSaldo.textContent = "Erro ao carregar";
                 }
+            })
+            .catch(() => {
+                elementoSaldo.textContent = "Erro de conexão";
+            });
+    }
 
-                const dadosFiltrados = dados.filter(item => {
-                    if (!item.data_falta) return false;
-                    return item.data_falta >= dataInicio && item.data_falta <= dataFim;
-                });
+    document.getElementById('logoutBtn').addEventListener('click', function() {
+        localStorage.removeItem('associadoAutenticado');
+        localStorage.removeItem('nomeAlunoLogado');
+        localStorage.removeItem('usuarioAtivo');
+        window.location.replace('index.html');
+    });
 
-                if (dadosFiltrados.length === 0) {
-                    container.innerHTML = "<p style='color: var(--text-muted);'>Nenhuma justificativa encontrada para o período selecionado.</p>";
-                    return;
-                }
+    function alternarCampoTextoOutro() {
+        const checkOutro = document.getElementById('checkOutro');
+        const containerTexto = document.getElementById('containerTextoOutro');
+        const campoTexto = document.getElementById('textoJustificativaOutro');
 
-                container.innerHTML = dadosFiltrados.map(item => {
-                    let corBadge = '#f59e0b';
-                    if (item.status === 'aprovado') corBadge = '#10b981';
-                    if (item.status === 'reprovado') corBadge = '#ef4444';
+        if (checkOutro && checkOutro.checked) {
+            if (containerTexto) containerTexto.style.display = 'block';
+            if (campoTexto) campoTexto.focus();
+        } else {
+            if (containerTexto) containerTexto.style.display = 'none';
+            if (campoTexto) campoTexto.value = '';
+        }
+    }
 
-                    return `
-                        <div style="background: rgba(0,0,0,0.2); padding: 10px; border-radius: 6px; margin-bottom: 8px; border-left: 4px solid ${corBadge}; text-align: left;">
-                            <div><strong>Data da Falta:</strong> ${item.data_falta.split('-').reverse().join('/')}</div>
-                            <div><strong>Motivo:</strong> ${item.motivo}</div>
-                            <div><strong>Status:</strong> <span style="color: ${corBadge}; font-weight: bold; text-transform: uppercase;">${item.status}</span></div>
-                            <div style="font-size: 11px; color: var(--text-muted); margin-top: 4px;">Solicitado em: ${item.data_solicitacao}</div>
-                        </div>
-                    `;
-                }).join('');
-            } catch (err) {
-                container.innerHTML = "<p style='color: red;'>Erro ao carregar justificativas.</p>";
-            }
+    // CORREÇÃO PARA COMPATIBILIDADE COM IOS / WEBKIT
+    document.getElementById('dataFaltaAluno').addEventListener('change', function() {
+        // 1. Evita executar se o campo for limpo ou estiver vazio no iOS/Safari ao abrir
+        if (!this.value) return;
+        
+        const partes = this.value.split('-');
+        if (partes.length !== 3) return;
+
+        const ano = parseInt(partes[0], 10);
+        const mes = parseInt(partes[1], 10) - 1;
+        const dia = parseInt(partes[2], 10);
+
+        // 2. Garante a conversão local correta da data para evitar deslocamentos por timezone
+        const dataSelecionada = new Date(ano, mes, dia);
+
+        if (isNaN(dataSelecionada.getTime())) return;
+
+        // 0 = Domingo, 1 = Segunda, 2 = Terça, 3 = Quarta, 4 = Quinta, 5 = Sexta, 6 = Sábado
+        const diaSemana = dataSelecionada.getDay();
+
+        // 3. Valida se a data escolhida cai em Terça (2), Quinta (4) ou Sábado (6)
+        if (diaSemana !== 2 && diaSemana !== 4 && diaSemana !== 6) {
+            alert("Aulas ocorrem apenas Terças, Quintas e Sábados. Selecione uma data válida.");
+            this.value = '';
+        }
+    });
+
+    document.getElementById('formJustificativa').addEventListener('submit', async function(e) {
+        e.preventDefault();
+        const dataFalta = document.getElementById('dataFaltaAluno').value;
+        const marcados = Array.from(document.querySelectorAll('input[name="motivoFalta"]:checked')).map(cb => cb.value);
+        
+        const checkOutro = document.getElementById('checkOutro');
+        const ehOutroMarcado = checkOutro ? checkOutro.checked : false;
+        const campoTextoOutro = document.getElementById('textoJustificativaOutro');
+        const textoOutro = campoTextoOutro ? campoTextoOutro.value.trim() : '';
+
+        if (!dataFalta) return alert("Por favor, selecione a data.");
+
+        const dataFaltaObj = new Date(`${dataFalta}T00:00:00`);
+        const agora = new Date();
+        const diferencaEmHoras = Math.abs(agora - dataFaltaObj) / (1000 * 60 * 60);
+
+        if (diferencaEmHoras > 48) {
+            return alert("Erro: O prazo para justificativa de falta é de até 48 horas antes ou 48 horas depois da data da aula.");
         }
 
-        const carregarMinhasJustificativas = carregarStatusJustificativas;
-
-        // 6. CARREGAMENTO E EXIBIÇÃO DO GRÁFICO DE FREQUÊNCIA COM FILTRO DE DATAS
-        let instanciaGrafico = null;
-
-        async function carregarGraficoFrequencia() {
-            if (!usuarioAtivo) return;
-
-            const canvasElement = document.getElementById('graficoFrequencia');
-            if (!canvasElement) return;
-
-            const inputInicio = document.getElementById('mesInicioFrequencia')?.value || '2026-07';
-            const inputFim = document.getElementById('mesFimFrequencia')?.value || '2026-12';
-
-            const dataInicio = `${inputInicio}-01`;
-            const [anoFim, mesFim] = inputFim.split('-').map(Number);
-            const ultimoDia = new Date(anoFim, mesFim, 0).getDate();
-            const dataFim = `${inputFim}-${String(ultimoDia).padStart(2, '0')}`;
-
-            try {
-                const resFreq = await fetch(`${URL_API_SERVIDOR}/api/frequencia/${usuarioAtivo}?dataInicio=${dataInicio}&dataFim=${dataFim}`);
-                if (!resFreq.ok) throw new Error("Falha ao buscar frequência do servidor");
-                const dadosFreq = await resFreq.json();
-
-                let justificativasAprovadas = Number(dadosFreq.justificativas_aprovadas) || 0;
-
-                if (dadosFreq.justificativas_aprovadas === undefined) {
-                    try {
-                        const resJust = await fetch(`${URL_API_SERVIDOR}/api/justificativa/aluno/${usuarioAtivo}`);
-                        if (resJust.ok) {
-                            const listaJust = await resJust.json();
-                            justificativasAprovadas = listaJust.filter(item => {
-                                const ehAprovado = item.status === 'aprovado';
-                                const dentroDoPeriodo = item.data_falta >= dataInicio && item.data_falta <= dataFim;
-                                return ehAprovado && dentroDoPeriodo;
-                            }).length;
-                        }
-                    } catch (e) {
-                        console.warn("Não foi possível buscar justificativas separadamente:", e);
-                    }
-                }
-
-                const presencas = Number(dadosFreq.presencas) || 0;
-                const faltasBrutas = Number(dadosFreq.faltas) || 0;
-
-                const justificativasEfetivas = Math.min(justificativasAprovadas, faltasBrutas);
-                const faltasDescontadas = faltasBrutas - justificativasEfetivas;
-                const totalAulas = presencas + faltasDescontadas + justificativasEfetivas;
-
-                const elemPresencas = document.getElementById('qtdPresencas');
-                const elemFaltas = document.getElementById('qtdFaltas');
-                const elemJustificativas = document.getElementById('qtdJustificativas');
-
-                if (elemPresencas) elemPresencas.textContent = presencas;
-                if (elemFaltas) elemFaltas.textContent = faltasBrutas;
-                if (elemJustificativas) elemJustificativas.textContent = justificativasEfetivas;
-
-                const ctx = canvasElement.getContext('2d');
-
-                if (instanciaGrafico) {
-                    instanciaGrafico.destroy();
-                }
-
-                const plugins = (typeof ChartDataLabels !== 'undefined') ? [ChartDataLabels] : [];
-
-                instanciaGrafico = new Chart(ctx, {
-                    type: 'pie',
-                    data: {
-                        labels: [
-                            `Presenças (${presencas})`, 
-                            `Faltas (${faltasBrutas})`,
-                            `Justificativas Aprovadas (${justificativasEfetivas})`
-                        ],
-                        datasets: [{
-                            data: [presencas, faltasDescontadas, justificativasEfetivas],
-                            backgroundColor: ['#10b981', '#ef4444', '#f59e0b'],
-                            borderWidth: 1,
-                            borderColor: '#1e293b'
-                        }]
-                    },
-                    plugins: plugins,
-                    options: {
-                        responsive: true,
-                        plugins: {
-                            legend: { 
-                                position: 'bottom', 
-                                labels: { 
-                                    color: '#f8fafc',
-                                    font: { size: 12, weight: 'bold' }
-                                } 
-                            },
-                            datalabels: {
-                                color: '#ffffff',
-                                font: { weight: 'bold', size: 13 },
-                                formatter: (valor) => {
-                                    if (totalAulas === 0 || valor === 0) return '';
-                                    const porcentagem = Math.round((valor / totalAulas) * 100);
-                                    return `${porcentagem}%`;
-                                }
-                            },
-                            tooltip: {
-                                callbacks: {
-                                    label: function(context) {
-                                        const label = context.label || '';
-                                        const value = context.raw || 0;
-                                        const porcentagem = totalAulas > 0 ? Math.round((value / totalAulas) * 100) : 0;
-                                        return `${label}: ${value} (${porcentagem}%)`;
-                                    }
-                                }
-                            }
-                        }
-                    }
-                });
-            } catch (err) {
-                console.error("❌ Erro ao carregar gráfico de frequência:", err);
-            }
+        if (ehOutroMarcado && !textoOutro) {
+            return alert("Você marcou a opção 'Outro(s)'. Por favor, descreva o motivo no campo de texto.");
         }
 
-        // Inicialização da página
-        document.addEventListener('DOMContentLoaded', () => {
-            try {
-                const primeiroBotao = document.querySelector('.nav-btn');
-                if (primeiroBotao) mudarAba('exame', primeiroBotao);
+        if (marcados.length === 0 && !ehOutroMarcado) {
+            return alert("Selecione ao menos um motivo para a falta.");
+        }
 
-                carregarNotasAluno();
-                carregarGraficoFrequencia();
+        let listaMotivos = [...marcados];
+        if (ehOutroMarcado && textoOutro) {
+            listaMotivos.push(`Outro: ${textoOutro}`);
+        }
+
+        const motivoFinal = listaMotivos.join('; ');
+
+        try {
+            const response = await fetch(`${URL_API_SERVIDOR}/api/justificativa`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    usuario: usuarioAtivo,
+                    data_falta: dataFalta,
+                    motivo: motivoFinal
+                })
+            });
+
+            const result = await response.json();
+            if (response.ok) {
+                alert(result.mensagem || "Justificativa enviada para aprovação com sucesso!");
+                document.getElementById('formJustificativa').reset();
+                alternarCampoTextoOutro();
                 carregarStatusJustificativas();
-                
-                // Inicialização das notificações Push para Android e iOS
-                registrarPushNativo();
-
-                setTimeout(() => verificarStatusAceite(), 300);
-            } catch (error) {
-                console.error("Erro na inicializacao:", error);
+                carregarGraficoFrequencia();
+            } else {
+                alert("Erro: " + (result.erro || "Falha ao registrar justificativa."));
             }
-        });
+        } catch (err) {
+            alert("Erro ao enviar solicitação.");
+        }
+    });
+
+    async function carregarStatusJustificativas() {
+        const container = document.getElementById('listaJustificativasAluno');
+        if (!container) return;
+
+        const inputInicio = document.getElementById('mesInicioJustificativa')?.value || '2026-07';
+        const inputFim = document.getElementById('mesFimJustificativa')?.value || '2026-12';
+
+        const dataInicio = `${inputInicio}-01`;
+        const [anoFim, mesFim] = inputFim.split('-').map(Number);
+        const ultimoDia = new Date(anoFim, mesFim, 0).getDate();
+        const dataFim = `${inputFim}-${String(ultimoDia).padStart(2, '0')}`;
+
+        try {
+            const response = await fetch(`${URL_API_SERVIDOR}/api/justificativa/aluno/${usuarioAtivo}`);
+            const dados = await response.json();
+
+            if (!dados || dados.length === 0) {
+                container.innerHTML = "<p style='color: var(--text-muted);'>Nenhuma justificativa enviada até o momento.</p>";
+                return;
+            }
+
+            const dadosFiltrados = dados.filter(item => {
+                if (!item.data_falta) return false;
+                return item.data_falta >= dataInicio && item.data_falta <= dataFim;
+            });
+
+            if (dadosFiltrados.length === 0) {
+                container.innerHTML = "<p style='color: var(--text-muted);'>Nenhuma justificativa encontrada para o período selecionado.</p>";
+                return;
+            }
+
+            container.innerHTML = dadosFiltrados.map(item => {
+                let corBadge = '#f59e0b';
+                if (item.status === 'aprovado') corBadge = '#10b981';
+                if (item.status === 'reprovado') corBadge = '#ef4444';
+
+                return `
+                    <div style="background: rgba(0,0,0,0.2); padding: 10px; border-radius: 6px; margin-bottom: 8px; border-left: 4px solid ${corBadge}; text-align: left;">
+                        <div><strong>Data da Falta:</strong> ${item.data_falta.split('-').reverse().join('/')}</div>
+                        <div><strong>Motivo:</strong> ${item.motivo}</div>
+                        <div><strong>Status:</strong> <span style="color: ${corBadge}; font-weight: bold; text-transform: uppercase;">${item.status}</span></div>
+                        <div style="font-size: 11px; color: var(--text-muted); margin-top: 4px;">Solicitado em: ${item.data_solicitacao}</div>
+                    </div>
+                `;
+            }).join('');
+        } catch (err) {
+            container.innerHTML = "<p style='color: red;'>Erro ao carregar justificativas.</p>";
+        }
+    }
+
+    const carregarMinhasJustificativas = carregarStatusJustificativas;
+
+    // 6. CARREGAMENTO E EXIBIÇÃO DO GRÁFICO DE FREQUÊNCIA COM FILTRO DE DATAS
+    let instanciaGrafico = null;
+
+    async function carregarGraficoFrequencia() {
+        if (!usuarioAtivo) return;
+
+        const canvasElement = document.getElementById('graficoFrequencia');
+        if (!canvasElement) return;
+
+        const inputInicio = document.getElementById('mesInicioFrequencia')?.value || '2026-07';
+        const inputFim = document.getElementById('mesFimFrequencia')?.value || '2026-12';
+
+        const dataInicio = `${inputInicio}-01`;
+        const [anoFim, mesFim] = inputFim.split('-').map(Number);
+        const ultimoDia = new Date(anoFim, mesFim, 0).getDate();
+        const dataFim = `${inputFim}-${String(ultimoDia).padStart(2, '0')}`;
+
+        try {
+            const resFreq = await fetch(`${URL_API_SERVIDOR}/api/frequencia/${usuarioAtivo}?dataInicio=${dataInicio}&dataFim=${dataFim}`);
+            if (!resFreq.ok) throw new Error("Falha ao buscar frequência do servidor");
+            const dadosFreq = await resFreq.json();
+
+            let justificativasAprovadas = Number(dadosFreq.justificativas_aprovadas) || 0;
+            let presencas = Number(dadosFreq.presencas) || 0;
+            let faltas = Number(dadosFreq.faltas) || 0;
+
+            document.getElementById('qtdPresencas').textContent = presencas;
+            document.getElementById('qtdFaltas').textContent = faltas;
+            document.getElementById('qtdJustificativas').textContent = justificativasAprovadas;
+
+            if (instanciaGrafico) instanciaGrafico.destroy();
+
+            instanciaGrafico = new Chart(canvasElement, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Presenças', 'Faltas', 'Justificativas Aprovadas'],
+                    datasets: [{
+                        data: [presencas, faltas, justificativasAprovadas],
+                        backgroundColor: ['#10b981', '#ef4444', '#f59e0b']
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: { position: 'bottom', labels: { color: '#f8fafc' } }
+                    }
+                }
+            });
+        } catch (err) {
+            console.error("Erro ao carregar gráfico de frequência:", err);
+        }
+    }
+
+    // CARREGAMENTO INICIAL DAS FUNÇÕES
+    window.addEventListener('DOMContentLoaded', () => {
+        carregarNotasAluno();
+        carregarBadgesAluno();
+        verificarStatusAceite();
+        carregarStatusJustificativas();
+        carregarGraficoFrequencia();
+        registrarPushNativo();
+    });
 </script>
 </body>
 </html>
