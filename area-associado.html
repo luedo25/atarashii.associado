@@ -801,8 +801,7 @@
 
     <!-- SEÇÃO 1: PAINEL / NOTAS DO ALUNO -->
     <div id="exame" class="tab-content active">
-        
-     <!-- CONQUISTAS & BADGES DO ALUNO (DENTRO DA MESMA DIV) -->
+        <!-- CONQUISTAS & BADGES DO ALUNO -->
         <div class="card-conquistas">
             <h3 class="titulo-conquistas">🏆 Minhas Conquistas</h3>
             
@@ -821,17 +820,17 @@
                 <!-- Informações do Badge -->
                 <div class="badge-info">
                     <div class="badge-header">
-                        <strong class="badge-title">Guardião</strong>
+                        <strong class="badge-title">Frequência de Ferro</strong>
                         <span id="badgeTagStatus" class="badge-tag">Em andamento</span>
                     </div>
-                    <p class="badge-desc">Objetivo: 100% de presença nas aulas do mês.</p>
+                    <p class="badge-desc">100% de presença nas aulas do mês.</p>
                     
                     <!-- Histórico de meses conquistados -->
                     <div id="historicoBadges" class="badge-historico"></div>
                 </div>
             </div>
 
-            <!-- BADGE GUARDIÃO (AGORA INCLUÍDO DENTRO DA DIV MINHAS CONQUISTAS) -->
+            <!-- BADGE GUARDIÃO INCLUÍDO DENTRO DA DIV -->
             <div id="cardBadgeGuardiao" class="badge-card badge-bloqueado" style="margin-top: 12px;">
                 <!-- Ícone Escudo / Guardião -->
                 <div class="badge-emblem">
@@ -846,10 +845,10 @@
                 <!-- Informações do Badge -->
                 <div class="badge-info">
                     <div class="badge-header">
-                        <strong class="badge-title">Lenda do Dojo</strong>
+                        <strong class="badge-title">Guardião</strong>
                         <span id="badgeTagGuardiao" class="badge-tag">Em andamento</span>
                     </div>
-                    <p class="badge-desc">Objetivo: Presença acima de 85% por 3 meses seguidos.</p>
+                    <p class="badge-desc">Carência mínima cumprida + presença acima de 85% por 3 meses seguidos.</p>
                     
                     <!-- Histórico Guardião -->
                     <div id="historicoGuardiao" class="badge-historico"></div>
@@ -921,7 +920,7 @@
             </div>
         </div>
 
-     <!-- FORMULÁRIO DE JUSTIFICATIVA DE FALTAS -->
+        <!-- FORMULÁRIO DE JUSTIFICATIVA DE FALTAS -->
         <div style="margin-top: 30px; background: rgba(15, 23, 42, 0.6); border: 1px solid var(--border-color); padding: 20px; border-radius: var(--radius-md);">
             <h3 style="margin-bottom: 12px; font-size: 16px;">📝 Justificar Falta em Aula</h3>
             <form id="formJustificativa">
@@ -1751,7 +1750,6 @@ END:VCALENDAR`;
             let permissao = Notification.permission;
 
             if (permissao === 'default') {
-                // No iOS, se não for por clique do usuário, a permissão não pode ser pedida automaticamente
                 if (ehIOS() && !ehPWAStandalone()) {
                     const banner = document.getElementById('bannerIosInstalar');
                     if (banner) banner.style.display = 'block';
@@ -1768,11 +1766,9 @@ END:VCALENDAR`;
                 return;
             }
 
-            // Oculta os avisos de ativação se já permitido
             const boxPush = document.getElementById('boxAtivarPush');
             if (boxPush) boxPush.style.display = 'none';
 
-            // Realiza a inscrição PUSH
             let assinatura = await registro.pushManager.getSubscription();
             if (!assinatura) {
                 assinatura = await registro.pushManager.subscribe({
@@ -1783,7 +1779,6 @@ END:VCALENDAR`;
 
             if (!usuarioAtivo) return;
 
-            // Envia para o servidor Render/Supabase vincular a subscription ao nome do usuário
             const res = await fetch(`${URL_API_SERVIDOR}/api/subscribe`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
@@ -1801,7 +1796,6 @@ END:VCALENDAR`;
         }
     }
 
-    // Função disparada manualmente via clique no iOS/Android
     async function solicitarAtivacaoPushIOS() {
         if (ehIOS() && !ehPWAStandalone()) {
             alert('No iPhone/iPad, você deve primeiro adicionar este site à Tela de Início (Aperte o botão Compartilhar do Safari > Adicionar à Tela de Início).');
@@ -1861,78 +1855,78 @@ END:VCALENDAR`;
     }
 
     // CONSULTA O STATUS DOS BADGES
-    async function carregarBadgesAluno() {
-        if (!usuarioAtivo) return;
+   async function carregarBadgesAluno() {
+    if (!usuarioAtivo) return;
 
-        try {
-            const res = await fetch(`${URL_API_SERVIDOR}/api/badges/${usuarioAtivo}`);
-            const data = await res.json();
+    try {
+        const res = await fetch(`${URL_API_SERVIDOR}/api/badges/${usuarioAtivo}`);
+        const data = await res.json();
 
-            if (data.sucesso) {
-                // --- 1. FREQUÊNCIA DE FERRO ---
-                const cardBadgeFerro = document.getElementById('cardBadgeFerro');
-                const tagStatusFerro = document.getElementById('badgeTagStatus');
-                const containerHistFerro = document.getElementById('historicoBadges');
+        if (data.sucesso) {
+            // --- 1. FREQUÊNCIA DE FERRO ---
+            const cardBadgeFerro = document.getElementById('cardBadgeFerro');
+            const tagStatusFerro = document.getElementById('badgeTagStatus');
+            const containerHistFerro = document.getElementById('historicoBadges');
 
-                if (data.frequenciaFerroMesAtual) {
-                    if (cardBadgeFerro) {
-                        cardBadgeFerro.classList.remove('badge-bloqueado');
-                        cardBadgeFerro.classList.add('badge-concluido');
-                    }
-                    if (tagStatusFerro) tagStatusFerro.textContent = "Conquistado!";
-                } else {
-                    if (cardBadgeFerro) {
-                        cardBadgeFerro.classList.remove('badge-concluido');
-                        cardBadgeFerro.classList.add('badge-bloqueado');
-                    }
-                    if (tagStatusFerro) tagStatusFerro.textContent = "Em andamento";
+            if (data.frequenciaFerroMesAtual) {
+                if (cardBadgeFerro) {
+                    cardBadgeFerro.classList.remove('badge-bloqueado');
+                    cardBadgeFerro.classList.add('badge-concluido');
                 }
-
-                if (containerHistFerro) {
-                    const mesesFerro = data.badges
-                        .filter(b => b.badge_key === 'frequencia_ferro' && b.concluido)
-                        .map(b => b.mes_referencia);
-
-                    containerHistFerro.innerHTML = mesesFerro.length > 0 
-                        ? `<strong>🏅 Conquistado em:</strong> ${mesesFerro.join(', ')}` 
-                        : '';
+                if (tagStatusFerro) tagStatusFerro.textContent = "Conquistado!";
+            } else {
+                if (cardBadgeFerro) {
+                    cardBadgeFerro.classList.remove('badge-concluido');
+                    cardBadgeFerro.classList.add('badge-bloqueado');
                 }
-
-                // --- 2. GUARDIÃO ---
-                const cardGuardiao = document.getElementById('cardBadgeGuardiao');
-                const tagGuardiao = document.getElementById('badgeTagGuardiao');
-                const containerHistGuardiao = document.getElementById('historicoGuardiao');
-
-                const ehGuardiao = data.badges.some(b => b.badge_key === 'guardiao' && b.concluido);
-
-                if (ehGuardiao || data.guardiaoConquistado) {
-                    if (cardGuardiao) {
-                        cardGuardiao.classList.remove('badge-bloqueado');
-                        cardGuardiao.classList.add('badge-concluido');
-                    }
-                    if (tagGuardiao) tagGuardiao.textContent = "Conquistado!";
-                } else {
-                    if (cardGuardiao) {
-                        cardGuardiao.classList.remove('badge-concluido');
-                        cardGuardiao.classList.add('badge-bloqueado');
-                    }
-                    if (tagGuardiao) tagGuardiao.textContent = "Em andamento";
-                }
-
-                if (containerHistGuardiao) {
-                    const mesesGuardiao = data.badges
-                        .filter(b => b.badge_key === 'guardiao' && b.concluido)
-                        .map(b => b.mes_referencia);
-
-                    containerHistGuardiao.innerHTML = mesesGuardiao.length > 0 
-                        ? `<strong>🛡️ Conquistado em:</strong> ${mesesGuardiao.join(', ')}` 
-                        : '';
-                }
+                if (tagStatusFerro) tagStatusFerro.textContent = "Em andamento";
             }
-        } catch (err) {
-            console.error("Erro ao carregar conquistas:", err);
+
+            if (containerHistFerro) {
+                const mesesFerro = data.badges
+                    .filter(b => b.badge_key === 'frequencia_ferro' && b.concluido)
+                    .map(b => b.mes_referencia);
+
+                containerHistFerro.innerHTML = mesesFerro.length > 0 
+                    ? `<strong>🏅 Conquistado em:</strong> ${mesesFerro.join(', ')}` 
+                    : '';
+            }
+
+            // --- 2. GUARDIÃO ---
+            const cardGuardiao = document.getElementById('cardBadgeGuardiao');
+            const tagGuardiao = document.getElementById('badgeTagGuardiao');
+            const containerHistGuardiao = document.getElementById('historicoGuardiao');
+
+            const ehGuardiao = data.badges.some(b => b.badge_key === 'guardiao' && b.concluido);
+
+            if (ehGuardiao || data.guardiaoConquistado) {
+                if (cardGuardiao) {
+                    cardGuardiao.classList.remove('badge-bloqueado');
+                    cardGuardiao.classList.add('badge-concluido');
+                }
+                if (tagGuardiao) tagGuardiao.textContent = "Conquistado!";
+            } else {
+                if (cardGuardiao) {
+                    cardGuardiao.classList.remove('badge-concluido');
+                    cardGuardiao.classList.add('badge-bloqueado');
+                }
+                if (tagGuardiao) tagGuardiao.textContent = "Em andamento";
+            }
+
+            if (containerHistGuardiao) {
+                const mesesGuardiao = data.badges
+                    .filter(b => b.badge_key === 'guardiao' && b.concluido)
+                    .map(b => b.mes_referencia);
+
+                containerHistGuardiao.innerHTML = mesesGuardiao.length > 0 
+                    ? `<strong>🛡️ Conquistado em:</strong> ${mesesGuardiao.join(', ')}` 
+                    : '';
+            }
         }
+    } catch (err) {
+        console.error("Erro ao carregar conquistas:", err);
     }
+}
 
     // 5. CONSULTA O STATUS DO TERMO
     function verificarStatusAceite() {
@@ -2129,105 +2123,18 @@ END:VCALENDAR`;
         }
     }
 
-    // ======================================================================
-    // VALIDAÇÃO DO CALENDÁRIO - COMPATÍVEL COM IOS / ANDROID / DESKTOP
-    // ======================================================================
+    document.getElementById('dataFaltaAluno').addEventListener('change', function() {
+        if (!this.value) return;
+        
+        const partes = this.value.split('-');
+        const dataSelecionada = new Date(Date.UTC(partes[0], partes[1] - 1, partes[2]));
+        const diaSemana = dataSelecionada.getUTCDay();
 
-    const campoDataFalta = document.getElementById("dataFaltaAluno");
-
-    function validarDiaDaSemana() {
-
-        const valor = campoDataFalta.value;
-
-        // Safari dispara eventos sem data definida
-        if (!valor || valor.trim() === "") {
-            return;
+        if (diaSemana !== 2 && diaSemana !== 4 && diaSemana !== 6) {
+            alert("Erro: Aulas ocorrem apenas Terças, Quintas e Sábados. Por favor, selecione uma data válida.");
+            this.value = '';
         }
-
-        const partes = valor.split("-");
-
-        if (partes.length !== 3) {
-            return;
-        }
-
-        const ano = Number(partes[0]);
-        const mes = Number(partes[1]) - 1;
-        const dia = Number(partes[2]);
-
-        if (
-            Number.isNaN(ano) ||
-            Number.isNaN(mes) ||
-            Number.isNaN(dia)
-        ) {
-            return;
-        }
-
-        // Cria SEM timezone
-        const data = new Date(ano, mes, dia, 12, 0, 0);
-
-        if (isNaN(data.getTime())) {
-            return;
-        }
-
-        // Confirma que a data criada é exatamente a escolhida
-        if (
-            data.getFullYear() !== ano ||
-            data.getMonth() !== mes ||
-            data.getDate() !== dia
-        ) {
-            return;
-        }
-
-        const diaSemana = data.getDay();
-
-        // Terça = 2
-        // Quinta = 4
-        // Sábado = 6
-        const diasPermitidos = [2, 4, 6];
-
-        if (!diasPermitidos.includes(diaSemana)) {
-
-            // Necessário para Safari/iOS
-            setTimeout(() => {
-
-                if (campoDataFalta.value === valor) {
-
-                    alert(
-                        "Aulas ocorrem apenas Terças, Quintas e Sábados. Selecione uma data válida."
-                    );
-
-                    campoDataFalta.value = "";
-
-                }
-
-            }, 150);
-
-        }
-
-    }
-
-    // Remove eventos antigos (caso existam)
-    if (campoDataFalta) {
-        campoDataFalta.onchange = null;
-        campoDataFalta.oninput = null;
-        campoDataFalta.onblur = null;
-
-        // Android
-        campoDataFalta.addEventListener("change", validarDiaDaSemana);
-
-        // iOS Safari
-        campoDataFalta.addEventListener("blur", validarDiaDaSemana);
-
-        // Alguns WebKit antigos
-        campoDataFalta.addEventListener("input", function () {
-            if (campoDataFalta.value !== "") {
-                clearTimeout(campoDataFalta._timerIOS);
-                campoDataFalta._timerIOS = setTimeout(function () {
-                    validarDiaDaSemana();
-                }, 250);
-            }
-        });
-    }
+    });
 
     document.getElementById('formJustificativa').addEventListener('submit', async function(e) {
         e.preventDefault();
@@ -2241,16 +2148,7 @@ END:VCALENDAR`;
 
         if (!dataFalta) return alert("Por favor, selecione a data.");
 
-        const partes = dataFalta.split("-");
-
-        const dataFaltaObj = new Date(
-            Number(partes[0]),
-            Number(partes[1]) - 1,
-            Number(partes[2]),
-            12,
-            0,
-            0
-        );
+        const dataFaltaObj = new Date(`${dataFalta}T00:00:00`);
         const agora = new Date();
         const diferencaEmHoras = Math.abs(agora - dataFaltaObj) / (1000 * 60 * 60);
 
@@ -2339,23 +2237,111 @@ END:VCALENDAR`;
                     <div style="background: rgba(0,0,0,0.2); padding: 10px; border-radius: 6px; margin-bottom: 8px; border-left: 4px solid ${corBadge}; text-align: left;">
                         <div><strong>Data da Falta:</strong> ${item.data_falta.split('-').reverse().join('/')}</div>
                         <div><strong>Motivo:</strong> ${item.motivo}</div>
-                        <div><strong>Status:</strong> <span style="color: ${corBadge}; font-weight: bold;">${item.status ? item.status.toUpperCase() : 'PENDENTE'}</span></div>
-                        ${item.resposta_admin ? `<div style="margin-top: 4px; color: var(--text-muted); font-size: 12px;"><strong>Obs Sensei:</strong> ${item.resposta_admin}</div>` : ''}
+                        <div><strong>Status:</strong> <span style="color: ${corBadge}; font-weight: bold; text-transform: uppercase;">${item.status}</span></div>
+                        <div style="font-size: 11px; color: var(--text-muted); margin-top: 4px;">Solicitado em: ${item.data_solicitacao}</div>
                     </div>
                 `;
             }).join('');
         } catch (err) {
-            console.error("Erro ao carregar justificativas:", err);
-            container.innerHTML = "<p style='color: var(--accent-red);'>Erro ao carregar justificativas.</p>";
+            container.innerHTML = "<p style='color: red;'>Erro ao carregar justificativas.</p>";
         }
     }
 
-    // CARREGAMENTO INICIAL QUANDO O DOM ESTIVER PRONTO
-    document.addEventListener('DOMContentLoaded', () => {
-        verificarStatusAceite();
+    const carregarMinhasJustificativas = carregarStatusJustificativas;
+
+    // 6. CARREGAMENTO E EXIBIÇÃO DO GRÁFICO DE FREQUÊNCIA COM FILTRO DE DATAS
+    let instanciaGrafico = null;
+
+    async function carregarGraficoFrequencia() {
+        if (!usuarioAtivo) return;
+
+        const canvasElement = document.getElementById('graficoFrequencia');
+        if (!canvasElement) return;
+
+        const inputInicio = document.getElementById('mesInicioFrequencia')?.value || '2026-07';
+        const inputFim = document.getElementById('mesFimFrequencia')?.value || '2026-12';
+
+        const dataInicio = `${inputInicio}-01`;
+        const [anoFim, mesFim] = inputFim.split('-').map(Number);
+        const ultimoDia = new Date(anoFim, mesFim, 0).getDate();
+        const dataFim = `${inputFim}-${String(ultimoDia).padStart(2, '0')}`;
+
+        try {
+            const resFreq = await fetch(`${URL_API_SERVIDOR}/api/frequencia/${usuarioAtivo}?dataInicio=${dataInicio}&dataFim=${dataFim}`);
+            if (!resFreq.ok) throw new Error("Falha ao buscar frequência do servidor");
+            const dadosFreq = await resFreq.json();
+
+            let justificativasAprovadas = Number(dadosFreq.justificativas_aprovadas) || 0;
+
+            if (dadosFreq.justificativas_aprovadas === undefined) {
+                try {
+                    const resJust = await fetch(`${URL_API_SERVIDOR}/api/justificativa/aluno/${usuarioAtivo}`);
+                    if (resJust.ok) {
+                        const listaJust = await resJust.json();
+                        justificativasAprovadas = listaJust.filter(item => {
+                            const ehAprovado = item.status === 'aprovado';
+                            const dentroDoPeriodo = item.data_falta >= dataInicio && item.data_falta <= dataFim;
+                            return ehAprovado && dentroDoPeriodo;
+                        }).length;
+                    }
+                } catch (e) {
+                    console.warn("Não foi possível buscar justificativas separadamente:", e);
+                }
+            }
+
+            const presencas = Number(dadosFreq.presencas) || 0;
+            const faltasBrutas = Number(dadosFreq.faltas) || 0;
+
+            const justificativasEfetivas = Math.min(justificativasAprovadas, faltasBrutas);
+            const faltasDescontadas = faltasBrutas - justificativasEfetivas;
+
+            const elemPresencas = document.getElementById('qtdPresencas');
+            const elemFaltas = document.getElementById('qtdFaltas');
+            const elemJustificativas = document.getElementById('qtdJustificativas');
+
+            if (elemPresencas) elemPresencas.textContent = presencas;
+            if (elemFaltas) elemFaltas.textContent = faltasDescontadas;
+            if (elemJustificativas) elemJustificativas.textContent = justificativasEfetivas;
+
+            if (instanciaGrafico) {
+                instanciaGrafico.destroy();
+            }
+
+            const ctx = canvasElement.getContext('2d');
+            instanciaGrafico = new Chart(ctx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Presenças', 'Faltas', 'Justificativas'],
+                    datasets: [{
+                        data: [presencas, faltasDescontadas, justificativasEfetivas],
+                        backgroundColor: ['#10b981', '#ef4444', '#f59e0b'],
+                        borderWidth: 2,
+                        borderColor: '#1e293b'
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'bottom',
+                            labels: { color: '#f8fafc', font: { size: 12 } }
+                        }
+                    }
+                }
+            });
+        } catch (err) {
+            console.error("Erro ao carregar gráfico de frequência:", err);
+        }
+    }
+
+    // INICIALIZAÇÃO AO CARREGAR A PÁGINA
+    window.addEventListener('DOMContentLoaded', () => {
         carregarNotasAluno();
         carregarBadgesAluno();
+        verificarStatusAceite();
         carregarStatusJustificativas();
+        carregarGraficoFrequencia();
         registrarPushNativo();
     });
 </script>
