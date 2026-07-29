@@ -2124,7 +2124,6 @@ END:VCALENDAR`;
 
     // CORREÇÃO PARA COMPATIBILIDADE COM IOS / WEBKIT
     document.getElementById('dataFaltaAluno').addEventListener('change', function() {
-        // 1. Evita executar se o campo for limpo ou estiver vazio no iOS/Safari ao abrir
         if (!this.value) return;
         
         const partes = this.value.split('-');
@@ -2134,17 +2133,14 @@ END:VCALENDAR`;
         const mes = parseInt(partes[1], 10) - 1;
         const dia = parseInt(partes[2], 10);
 
-        // 2. Garante a conversão local correta da data para evitar deslocamentos por timezone
-        const dataSelecionada = new Date(ano, mes, dia);
+        const dataSelecionada = new Date(Date.UTC(ano, mes, dia));
 
         if (isNaN(dataSelecionada.getTime())) return;
 
-        // 0 = Domingo, 1 = Segunda, 2 = Terça, 3 = Quarta, 4 = Quinta, 5 = Sexta, 6 = Sábado
-        const diaSemana = dataSelecionada.getDay();
+        const diaSemana = dataSelecionada.getUTCDay();
 
-        // 3. Valida se a data escolhida cai em Terça (2), Quinta (4) ou Sábado (6)
         if (diaSemana !== 2 && diaSemana !== 4 && diaSemana !== 6) {
-            alert("Aulas ocorrem apenas Terças, Quintas e Sábados. Selecione uma data válida.");
+            alert("Erro: Aulas ocorrem apenas Terças, Quintas e Sábados. Por favor, selecione uma data válida.");
             this.value = '';
         }
     });
@@ -2292,9 +2288,12 @@ END:VCALENDAR`;
             document.getElementById('qtdFaltas').textContent = faltas;
             document.getElementById('qtdJustificativas').textContent = justificativasAprovadas;
 
-            if (instanciaGrafico) instanciaGrafico.destroy();
+            if (instanciaGrafico) {
+                instanciaGrafico.destroy();
+            }
 
-            instanciaGrafico = new Chart(canvasElement, {
+            const ctx = canvasElement.getContext('2d');
+            instanciaGrafico = new Chart(ctx, {
                 type: 'doughnut',
                 data: {
                     labels: ['Presenças', 'Faltas', 'Justificativas Aprovadas'],
@@ -2315,8 +2314,8 @@ END:VCALENDAR`;
         }
     }
 
-    // CARREGAMENTO INICIAL DAS FUNÇÕES
-    window.addEventListener('DOMContentLoaded', () => {
+    // Inicialização ao carregar o DOM
+    document.addEventListener('DOMContentLoaded', () => {
         carregarNotasAluno();
         carregarBadgesAluno();
         verificarStatusAceite();
