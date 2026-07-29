@@ -2114,7 +2114,7 @@ END:VCALENDAR`;
         window.location.replace('index.html');
     });
 
-    function alternarCampoTextoOutro() {
+function alternarCampoTextoOutro() {
         const checkOutro = document.getElementById('checkOutro');
         const containerTexto = document.getElementById('containerTextoOutro');
         const campoTexto = document.getElementById('textoJustificativaOutro');
@@ -2128,13 +2128,23 @@ END:VCALENDAR`;
         }
     }
 
-    document.getElementById('dataFaltaAluno').addEventListener('change', function() {
+    // Usamos 'blur' em vez de 'change' para o Safari só validar após o usuário FECHAR/FINALIZAR o seletor de data
+    document.getElementById('dataFaltaAluno').addEventListener('blur', function() {
         if (!this.value) return;
         
+        // Trata a string 'YYYY-MM-DD' sem risco de conversão incorreta de fuso horário no Safari
         const partes = this.value.split('-');
-        const dataSelecionada = new Date(Date.UTC(partes[0], partes[1] - 1, partes[2]));
-        const diaSemana = dataSelecionada.getUTCDay();
+        if (partes.length !== 3) return;
 
+        const ano = parseInt(partes[0], 10);
+        const mes = parseInt(partes[1], 10) - 1; // Mês no JS é base 0 (0 = Jan, 1 = Fev...)
+        const dia = parseInt(partes[2], 10);
+
+        // Criamos a data local explicitamente
+        const dataSelecionada = new Date(ano, mes, dia);
+        const diaSemana = dataSelecionada.getDay(); // 0 = Dom, 2 = Ter, 4 = Qui, 6 = Sáb
+
+        // 2 = Terça, 4 = Quinta, 6 = Sábado
         if (diaSemana !== 2 && diaSemana !== 4 && diaSemana !== 6) {
             alert("Erro: Aulas ocorrem apenas Terças, Quintas e Sábados. Por favor, selecione uma data válida.");
             this.value = '';
@@ -2153,8 +2163,12 @@ END:VCALENDAR`;
 
         if (!dataFalta) return alert("Por favor, selecione a data.");
 
-        const dataFaltaObj = new Date(`${dataFalta}T00:00:00`);
+        // Compatibilidade Safari para o cálculo das 48 horas
+        const partes = dataFalta.split('-');
+        const dataFaltaObj = new Date(parseInt(partes[0], 10), parseInt(partes[1], 10) - 1, parseInt(partes[2], 10));
         const agora = new Date();
+        
+        // Zera o horário do 'agora' se desejar comparar apenas por dias, ou calcula a diferença direta
         const diferencaEmHoras = Math.abs(agora - dataFaltaObj) / (1000 * 60 * 60);
 
         if (diferencaEmHoras > 48) {
@@ -2201,7 +2215,7 @@ END:VCALENDAR`;
             alert("Erro ao enviar solicitação.");
         }
     });
-
+    
     async function carregarStatusJustificativas() {
         const container = document.getElementById('listaJustificativasAluno');
         if (!container) return;
