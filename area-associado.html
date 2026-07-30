@@ -856,10 +856,10 @@
         </a>
     </div>
 
-    <!-- SEÇÃO 5: ESTUDO E DESAFIOS (NOVO) -->
+    <!-- SEÇÃO 5: ESTUDO E DESAFIOS (MEDALHAS) -->
     <div id="ebook" class="tab-content">
 
-            <div class="card-conquistas">
+        <div class="card-conquistas">
             <h3 class="titulo-conquistas">🏆 Minhas Conquistas</h3>
             
             <!-- BADGE FREQUÊNCIA DE FERRO -->
@@ -878,11 +878,10 @@
                         <span id="badgeTagStatus" class="badge-tag">Em andamento</span>
                     </div>
                     <p class="badge-desc">Objetivo: 100% de presença nas aulas do mês.</p>
-                    <div id="historicoBadges" class="badge-historico"></div>
                 </div>
             </div>
 
-            <!-- BADGE GUARDIÃO -->
+            <!-- BADGE GUARDIÃO (MUDANÇA DE COR/ESTILO SE APLICAR) -->
             <div id="cardBadgeGuardiao" class="badge-card badge-bloqueado" style="margin-top: 12px;">
                 <div class="badge-emblem">
                     <div class="emblem-ring">
@@ -898,29 +897,87 @@
                         <span id="badgeTagGuardiao" class="badge-tag">Em andamento</span>
                     </div>
                     <p class="badge-desc">Objetivo: Presença acima de 85% por 3 meses seguidos.</p>
-                    <div id="historicoGuardiao" class="badge-historico"></div>
                 </div>
             </div>
 
-            <!-- BADGE DESAFIADOR (NOVO) -->
-            <div id="cardBadgeDesafio" class="badge-card badge-bloqueado" style="margin-top: 12px;">
+            <!-- 1. BADGE: KATA ACIMA DA FAIXA -->
+            <div id="cardBadgeKata" class="badge-card badge-bloqueado" style="margin-top: 12px;">
+                <div class="badge-emblem">
+                    <div class="emblem-ring">
+                        <svg class="emblem-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                            <circle cx="12" cy="12" r="3"></circle>
+                        </svg>
+                    </div>
+                    <span class="badge-ribbon" style="background: linear-gradient(90deg, #6366f1 0%, #4338ca 100%);">🥋 Visão</span>
+                </div>
+                <div class="badge-info">
+                    <div class="badge-header">
+                        <strong class="badge-title">Espírito Samurai</strong>
+                        <span id="badgeTagKata" class="badge-tag">Em andamento</span>
+                    </div>
+                    <p class="badge-desc">Objetivo: Aprovação do Sensei em um Kata acima da sua faixa atual.</p>
+                </div>
+            </div>
+
+            <!-- 2. BADGE: MAE GERI -->
+            <div id="cardBadgeMaeGeri" class="badge-card badge-bloqueado" style="margin-top: 12px;">
                 <div class="badge-emblem">
                     <div class="emblem-ring">
                         <svg class="emblem-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                             <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon>
                         </svg>
                     </div>
-                    <span class="badge-ribbon">🎯 Top</span>
+                    <span class="badge-ribbon" style="background: linear-gradient(90deg, #f59e0b 0%, #d97706 100%);">⚡ Aço</span>
                 </div>
                 <div class="badge-info">
                     <div class="badge-header">
-                        <strong class="badge-title">Desafiador</strong>
-                        <span id="badgeTagDesafio" class="badge-tag">Em andamento</span>
+                        <strong class="badge-title">Tempestade Frontal</strong>
+                        <span id="badgeTagMaeGeri" class="badge-tag">Em andamento</span>
                     </div>
-                    <p class="badge-desc">Objetivo: Ter um vídeo de desafio prático aprovado pelo Sensei.</p>
-                    <div id="historicoDesafio" class="badge-historico"></div>
+                    <p class="badge-desc">Objetivo: Desafio Prático - 100x Mae Geri (Chute Frontal).</p>
                 </div>
             </div>
+
+            <!-- 3. BADGE: ABDOMINAL -->
+            <div id="cardBadgeAbs" class="badge-card badge-bloqueado" style="margin-top: 12px;">
+                <div class="badge-emblem">
+                    <div class="emblem-ring">
+                        <svg class="emblem-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+                            <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+                        </svg>
+                    </div>
+                    <span class="badge-ribbon" style="background: linear-gradient(90deg, #3b82f6 0%, #1d4ed8 100%);">🛡️ Núcleo</span>
+                </div>
+                <div class="badge-info">
+                    <div class="badge-header">
+                        <strong class="badge-title">Núcleo de Ferro</strong>
+                        <span id="badgeTagAbs" class="badge-tag">Em andamento</span>
+                    </div>
+                    <p class="badge-desc">Objetivo: Desafio Físico - 150x Abdominal.</p>
+                </div>
+            </div>
+
+            <!-- 4. BADGE: TSUKI -->
+            <div id="cardBadgeTsuki" class="badge-card badge-bloqueado" style="margin-top: 12px;">
+                <div class="badge-emblem">
+                    <div class="emblem-ring">
+                        <svg class="emblem-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M8.5 14.5A2.5 2.5 0 0011 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 11-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 002.5 2.5z"></path>
+                        </svg>
+                    </div>
+                    <span class="badge-ribbon" style="background: linear-gradient(90deg, #ef4444 0%, #b91c1c 100%);">🔥 Fogo</span>
+                </div>
+                <div class="badge-info">
+                    <div class="badge-header">
+                        <strong class="badge-title">Punhos de Fogo</strong>
+                        <span id="badgeTagTsuki" class="badge-tag">Em andamento</span>
+                    </div>
+                    <p class="badge-desc">Objetivo: Desafio Prático - 200x Tsuki (Soco Frontal).</p>
+                </div>
+            </div>
+
         </div>
 
         <!-- ABA DESAFIOS INCORPORADA -->
@@ -931,12 +988,13 @@
         <div style="background: rgba(15, 23, 42, 0.6); border: 1px solid var(--border-color); padding: 20px; border-radius: var(--radius-md);">
             <form id="formDesafio">
                 <label style="display: block; font-size: 13px; color: var(--text-muted); margin-bottom: 6px;">Selecione o tipo de desafio:</label>
+                <!-- Os VALUES aqui foram corrigidos para o backend conseguir identificar o Badge exato -->
                 <select id="nomeDesafio" required style="width: 100%; padding: 10px; border-radius: 6px; border: 1px solid var(--border-color); background: var(--bg-primary); color: var(--text-main); margin-bottom: 15px;">
                     <option value="">Escolha...</option>
-                    <option value="Kihon Básico">Kata - Acima da Faixa</option>
-                    <option value="Kata Heian Shodan">100x Mae Geri (Chute Frontal)</option>
-                    <option value="Desafio Físico (Flexão)">Desafio Físico (150x abdominal)</option>
-                    <option value="Desafio Livre">200x Tsuki (Soco frontal)</option>
+                    <option value="Kata - Acima da Faixa">Kata - Acima da Faixa</option>
+                    <option value="100x Mae Geri">100x Mae Geri (Chute Frontal)</option>
+                    <option value="150x Abdominal">Desafio Físico (150x abdominal)</option>
+                    <option value="200x Tsuki">200x Tsuki (Soco frontal)</option>
                 </select>
 
                 <label style="display: block; font-size: 13px; color: var(--text-muted); margin-bottom: 6px;">Link do Vídeo (Deixe o acesso público):</label>
@@ -1136,63 +1194,60 @@
         } else { tabelaBody.innerHTML = `<tr><td colspan="8">Nenhum registro encontrado.</td></tr>`; }
     }
 
-   async function carregarBadgesAluno() {
+    // Função auxiliar para atualizar o visual dos Badges
+    function atualizarUIBadge(badgesArray, badgeKey, cardId, tagId, tituloConcluido = "Conquistado!") {
+        const card = document.getElementById(cardId);
+        const tag = document.getElementById(tagId);
+        const ehConquistado = badgesArray.some(b => b.badge_key === badgeKey && b.concluido);
+        
+        if (ehConquistado) {
+            if (card) card.classList.replace('badge-bloqueado', 'badge-concluido');
+            if (tag) tag.textContent = tituloConcluido;
+        } else {
+            if (card) card.classList.replace('badge-concluido', 'badge-bloqueado');
+            if (tag) tag.textContent = "Em andamento";
+        }
+    }
+
+    async function carregarBadgesAluno() {
         if (!usuarioAtivo) return;
         try {
             const res = await fetch(`${URL_API_SERVIDOR}/api/badges/${usuarioAtivo}`);
             const data = await res.json();
+            
             if (data.sucesso) {
                 // 1. FREQUÊNCIA DE FERRO
                 const cardBadgeFerro = document.getElementById('cardBadgeFerro');
                 const tagStatusFerro = document.getElementById('badgeTagStatus');
-                const containerHistFerro = document.getElementById('historicoBadges');
                 if (data.frequenciaFerroMesAtual) {
-                    if (cardBadgeFerro) { cardBadgeFerro.classList.replace('badge-bloqueado', 'badge-concluido'); }
+                    if (cardBadgeFerro) cardBadgeFerro.classList.replace('badge-bloqueado', 'badge-concluido');
                     if (tagStatusFerro) tagStatusFerro.textContent = "Conquistado!";
                 } else {
-                    if (cardBadgeFerro) { cardBadgeFerro.classList.replace('badge-concluido', 'badge-bloqueado'); }
+                    if (cardBadgeFerro) cardBadgeFerro.classList.replace('badge-concluido', 'badge-bloqueado');
                     if (tagStatusFerro) tagStatusFerro.textContent = "Em andamento";
-                }
-                if (containerHistFerro) {
-                    const mesesFerro = data.badges.filter(b => b.badge_key === 'frequencia_ferro' && b.concluido).map(b => b.mes_referencia);
-                    containerHistFerro.innerHTML = mesesFerro.length > 0 ? `<strong>🏅 Conquistado em:</strong> ${mesesFerro.join(', ')}` : '';
                 }
 
                 // 2. GUARDIÃO
                 const cardGuardiao = document.getElementById('cardBadgeGuardiao');
                 const tagGuardiao = document.getElementById('badgeTagGuardiao');
-                const containerHistGuardiao = document.getElementById('historicoGuardiao');
                 const ehGuardiao = data.badges.some(b => b.badge_key === 'guardiao' && b.concluido);
                 if (ehGuardiao || data.guardiaoConquistado) {
-                    if (cardGuardiao) { cardGuardiao.classList.replace('badge-bloqueado', 'badge-concluido'); }
+                    if (cardGuardiao) cardGuardiao.classList.replace('badge-bloqueado', 'badge-concluido');
                     if (tagGuardiao) tagGuardiao.textContent = "Conquistado!";
                 } else {
-                    if (cardGuardiao) { cardGuardiao.classList.replace('badge-concluido', 'badge-bloqueado'); }
+                    if (cardGuardiao) cardGuardiao.classList.replace('badge-concluido', 'badge-bloqueado');
                     if (tagGuardiao) tagGuardiao.textContent = "Em andamento";
                 }
-                if (containerHistGuardiao) {
-                    const mesesGuardiao = data.badges.filter(b => b.badge_key === 'guardiao' && b.concluido).map(b => b.mes_referencia);
-                    containerHistGuardiao.innerHTML = mesesGuardiao.length > 0 ? `<strong>🛡️ Conquistado em:</strong> ${mesesGuardiao.join(', ')}` : '';
-                }
 
-                // 3. DESAFIADOR
-                const cardDesafio = document.getElementById('cardBadgeDesafio');
-                const tagDesafio = document.getElementById('badgeTagDesafio');
-                const containerHistDesafio = document.getElementById('historicoDesafio');
-                const ehDesafiador = data.badges.some(b => b.badge_key === 'desafio_concluido' && b.concluido);
-                if (ehDesafiador) {
-                    if (cardDesafio) { cardDesafio.classList.replace('badge-bloqueado', 'badge-concluido'); }
-                    if (tagDesafio) tagDesafio.textContent = "Conquistado!";
-                } else {
-                    if (cardDesafio) { cardDesafio.classList.replace('badge-concluido', 'badge-bloqueado'); }
-                    if (tagDesafio) tagDesafio.textContent = "Em andamento";
-                }
-                if (containerHistDesafio) {
-                    const mesesDesafio = data.badges.filter(b => b.badge_key === 'desafio_concluido' && b.concluido).map(b => b.mes_referencia);
-                    containerHistDesafio.innerHTML = mesesDesafio.length > 0 ? `<strong>🎯 Conquistado em:</strong> ${mesesDesafio.join(', ')}` : '';
-                }
+                // 3. BADGES DE DESAFIOS EM VÍDEO
+                atualizarUIBadge(data.badges, 'badge_kata_avancado', 'cardBadgeKata', 'badgeTagKata');
+                atualizarUIBadge(data.badges, 'badge_mae_geri', 'cardBadgeMaeGeri', 'badgeTagMaeGeri');
+                atualizarUIBadge(data.badges, 'badge_fisico_abs', 'cardBadgeAbs', 'badgeTagAbs');
+                atualizarUIBadge(data.badges, 'badge_tsuki', 'cardBadgeTsuki', 'badgeTagTsuki');
             }
-        } catch (err) {}
+        } catch (err) {
+            console.error(err);
+        }
     }
 
     function verificarStatusAceite() {
@@ -1342,7 +1397,7 @@
         } catch (err) { container.innerHTML = "<p style='color: red;'>Erro ao carregar justificativas.</p>"; }
     }
 
-    // FORMULÁRIO E LISTAGEM DOS DESAFIOS (NOVO)
+    // FORMULÁRIO E LISTAGEM DOS DESAFIOS
     document.getElementById('formDesafio').addEventListener('submit', async function(e) {
         e.preventDefault();
         const nomeDesafio = document.getElementById('nomeDesafio').value;
@@ -1451,7 +1506,7 @@
             carregarNotasAluno();
             carregarGraficoFrequencia();
             carregarStatusJustificativas();
-            carregarMeusDesafios(); // Carrega lista de desafios do Aluno
+            carregarMeusDesafios(); 
             registrarPushNativo();
 
             setTimeout(() => verificarStatusAceite(), 300);
