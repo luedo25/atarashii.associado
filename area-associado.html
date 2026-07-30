@@ -1440,7 +1440,20 @@
         
         if (!dataFalta) return alert("Selecione a data.");
         const partes = dataFalta.split('-');
-        if (Math.abs(new Date() - new Date(parseInt(partes[0], 10), parseInt(partes[1], 10) - 1, parseInt(partes[2], 10))) / (1000 * 60 * 60) > 48) return alert("O prazo é de até 48 horas.");
+        
+        // Zera as horas para comparar apenas os dias corridos
+        const dataAtual = new Date();
+        dataAtual.setHours(0, 0, 0, 0);
+        
+        const dataSelecionada = new Date(parseInt(partes[0], 10), parseInt(partes[1], 10) - 1, parseInt(partes[2], 10));
+        dataSelecionada.setHours(0, 0, 0, 0);
+
+        const diffEmHoras = Math.abs(dataAtual - dataSelecionada) / (1000 * 60 * 60);
+
+        if (diffEmHoras > 48) {
+            return alert("O prazo para justificar é de até 48 horas (2 dias) antes ou após a data da aula.");
+        }
+
         if (checkOutro?.checked && !textoOutro) return alert("Descreva o motivo no campo texto.");
         if (marcados.length === 0 && !checkOutro?.checked) return alert("Selecione ao menos um motivo.");
 
@@ -1585,7 +1598,7 @@
             if (primeiroBotao) mudarAba('exame', primeiroBotao);
 
             carregarBadgesAluno();
-            carregarRanking(); // <-- NOVO!
+            carregarRanking(); 
             carregarNotasAluno();
             carregarGraficoFrequencia();
             carregarStatusJustificativas();
