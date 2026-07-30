@@ -67,9 +67,27 @@
         .badge-desc { font-size: 0.8rem; color: #94a3b8; margin: 0; line-height: 1.3; }
         .badge-tag { font-size: 0.7rem; font-weight: 700; padding: 2px 8px; border-radius: 20px; background: rgba(148, 163, 184, 0.1); color: #94a3b8; white-space: nowrap; }
         .badge-concluido .badge-tag { background: rgba(16, 185, 129, 0.15); color: #10b981; border: 1px solid rgba(16, 185, 129, 0.3); }
-        .badge-historico { margin-top: 6px; font-size: 0.75rem; color: #cbd5e1; word-break: break-word; }
 
         @keyframes pulseGlow { 0% { box-shadow: 0 0 10px rgba(248, 250, 252, 0.2); } 100% { box-shadow: 0 0 22px rgba(248, 250, 252, 0.6); } }
+
+        /* Estilização do Ranking */
+        .ranking-container { margin-top: 30px; background: rgba(15, 23, 42, 0.6); border: 1px solid var(--border-color); padding: 20px; border-radius: var(--radius-md); box-shadow: 0 4px 15px rgba(0,0,0,0.2); }
+        .ranking-title { font-size: 18px; color: #fbbf24; margin-bottom: 8px; text-align: center; display: flex; align-items: center; justify-content: center; gap: 8px; text-transform: uppercase; letter-spacing: 1px;}
+        .ranking-list { display: flex; flex-direction: column; gap: 10px; margin-top: 20px;}
+        .ranking-item { display: flex; align-items: center; background: rgba(30, 41, 59, 0.7); padding: 12px 16px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.05); gap: 15px; transition: transform 0.2s; }
+        .ranking-item:hover { transform: scale(1.02); }
+        .ranking-item.top-1 { background: linear-gradient(135deg, rgba(245, 158, 11, 0.15), rgba(30, 41, 59, 0.9)); border-color: rgba(245, 158, 11, 0.5); box-shadow: 0 0 10px rgba(245, 158, 11, 0.2); }
+        .ranking-item.top-2 { background: linear-gradient(135deg, rgba(148, 163, 184, 0.15), rgba(30, 41, 59, 0.9)); border-color: rgba(148, 163, 184, 0.5); }
+        .ranking-item.top-3 { background: linear-gradient(135deg, rgba(180, 83, 9, 0.15), rgba(30, 41, 59, 0.9)); border-color: rgba(180, 83, 9, 0.5); }
+        
+        .ranking-pos { font-size: 20px; font-weight: 800; width: 35px; text-align: center; color: var(--text-muted); }
+        .top-1 .ranking-pos { font-size: 24px; color: #fbbf24; text-shadow: 0 0 10px rgba(251, 191, 36, 0.5); }
+        .top-2 .ranking-pos { font-size: 22px; color: #e2e8f0; }
+        .top-3 .ranking-pos { font-size: 22px; color: #d97706; }
+        
+        .ranking-info { flex: 1; display: flex; flex-direction: column; }
+        .ranking-nome { font-size: 15px; font-weight: 700; color: #f8fafc; }
+        .ranking-pontos { font-size: 16px; font-weight: 800; color: var(--accent-green); text-align: right; }
 
         @media (max-width: 400px) {
             .card-conquistas { padding: 12px; }
@@ -1007,6 +1025,17 @@
             <div id="listaDesafiosAluno" style="font-size: 13px;">Nenhum desafio enviado ainda...</div>
         </div>
 
+        <!-- NOVO SISTEMA DE RANKING -->
+        <div class="ranking-container">
+            <h3 class="ranking-title">🏆 Ranking Geral do Dojo</h3>
+            <p style="font-size: 13px; color: var(--text-muted); text-align: center; margin-bottom: 20px;">
+                Ganhe 25 pontos por cada conquista adquirida e 2 pontos por cada aula presente!
+            </p>
+            <div id="listaRanking" class="ranking-list">
+                <p style="text-align: center; color: var(--text-muted);">Carregando ranking oficial...</p>
+            </div>
+        </div>
+
     </div>
 
     <!-- SEÇÃO 6: ATARASHII -->
@@ -1216,7 +1245,6 @@
             const data = await res.json();
             
             if (data.sucesso) {
-                // 1. FREQUÊNCIA DE FERRO
                 const cardBadgeFerro = document.getElementById('cardBadgeFerro');
                 const tagStatusFerro = document.getElementById('badgeTagStatus');
                 if (data.frequenciaFerroMesAtual) {
@@ -1227,7 +1255,6 @@
                     if (tagStatusFerro) tagStatusFerro.textContent = "Em andamento";
                 }
 
-                // 2. GUARDIÃO
                 const cardGuardiao = document.getElementById('cardBadgeGuardiao');
                 const tagGuardiao = document.getElementById('badgeTagGuardiao');
                 const ehGuardiao = data.badges.some(b => b.badge_key === 'guardiao' && b.concluido);
@@ -1239,7 +1266,6 @@
                     if (tagGuardiao) tagGuardiao.textContent = "Em andamento";
                 }
 
-                // 3. BADGES DE DESAFIOS EM VÍDEO
                 atualizarUIBadge(data.badges, 'badge_kata_avancado', 'cardBadgeKata', 'badgeTagKata');
                 atualizarUIBadge(data.badges, 'badge_mae_geri', 'cardBadgeMaeGeri', 'badgeTagMaeGeri');
                 atualizarUIBadge(data.badges, 'badge_fisico_abs', 'cardBadgeAbs', 'badgeTagAbs');
@@ -1247,6 +1273,62 @@
             }
         } catch (err) {
             console.error(err);
+        }
+    }
+
+    async function carregarRanking() {
+        const container = document.getElementById('listaRanking');
+        if (!container) return;
+
+        try {
+            const res = await fetch(`${URL_API_SERVIDOR}/api/ranking`);
+            const data = await res.json();
+            
+            let mapPontos = {};
+            if (data.sucesso && data.ranking) {
+                data.ranking.forEach(r => mapPontos[r.usuario] = r.pontos);
+            }
+
+            // Pega a lista oficial do usuários.js e une com a pontuação do banco
+            let rankingFinal = listaAlunos
+                .filter(a => a.tipo !== 'professor') // Filtra o Sensei ou admins
+                .map(a => ({
+                    nome: a.nome,
+                    pontos: mapPontos[a.usuario] || 0 // Se não tiver pontos, fica 0
+                }))
+                .sort((a, b) => b.pontos - a.pontos); // Ordena do maior pro menor
+
+            if (rankingFinal.length === 0) {
+                container.innerHTML = "<p style='text-align:center; color:var(--text-muted);'>Nenhuma pontuação registrada ainda.</p>";
+                return;
+            }
+
+            let rankingHTML = '';
+            rankingFinal.forEach((aluno, index) => {
+                const pos = index + 1;
+                let classePos = '';
+                let icone = `${pos}º`;
+                
+                if (pos === 1) { classePos = 'top-1'; icone = '🥇'; }
+                else if (pos === 2) { classePos = 'top-2'; icone = '🥈'; }
+                else if (pos === 3) { classePos = 'top-3'; icone = '🥉'; }
+
+                rankingHTML += `
+                    <div class="ranking-item ${classePos}">
+                        <div class="ranking-pos">${icone}</div>
+                        <div class="ranking-info">
+                            <div class="ranking-nome">${aluno.nome}</div>
+                        </div>
+                        <div class="ranking-pontos">${aluno.pontos} pts</div>
+                    </div>
+                `;
+            });
+            
+            container.innerHTML = rankingHTML;
+
+        } catch (err) {
+            console.error("Erro ao carregar o ranking:", err);
+            container.innerHTML = "<p style='text-align:center; color:red;'>Erro ao carregar ranking.</p>";
         }
     }
 
@@ -1503,6 +1585,7 @@
             if (primeiroBotao) mudarAba('exame', primeiroBotao);
 
             carregarBadgesAluno();
+            carregarRanking(); // <-- NOVO!
             carregarNotasAluno();
             carregarGraficoFrequencia();
             carregarStatusJustificativas();
