@@ -44,7 +44,7 @@
         .btn-logout:active { transform: scale(0.95); background: rgba(239, 68, 68, 0.3); }
         .badge-count { position: absolute; top: -4px; right: -4px; background: var(--accent-red); color: white; font-size: 10px; font-weight: bold; border-radius: 50%; width: 18px; height: 18px; display: flex; align-items: center; justify-content: center; border: 2px solid var(--bg-card); }
         
-        /* Container Geral das Conquistas Redimensionado para Smartphone */
+        /* Container Geral das Conquistas */
         .card-conquistas { margin-top: 20px; margin-bottom: 20px; background: rgba(15, 23, 42, 0.75); border: 1px solid var(--border-color, #2e3748); padding: 16px; border-radius: 16px; backdrop-filter: blur(8px); width: 100%; }
         .titulo-conquistas { margin-bottom: 14px; font-size: 1rem; color: #f8fafc; display: flex; align-items: center; gap: 8px; }
 
@@ -268,6 +268,18 @@
                 <div style="background-color: #f59e0b22; border: 1px solid var(--accent-gold); color: #fbbf24; padding: 8px 10px; border-radius: 12px; font-weight: bold; text-align: center; flex: 1;">
                     <span style="font-size: 11px; display: block; color: var(--text-muted);">Justificativas Aprovadas</span>
                     <span id="qtdJustificativas" style="font-size: 16px;">0</span>
+                </div>
+            </div>
+
+            <!-- BOTÃO E CONTAINER PARA O RELATÓRIO DETALHADO -->
+            <button onclick="toggleRelatorioFrequencia()" class="btn-action" style="margin-top: 15px; background-color: #475569; padding: 10px;">
+                📄 Ver Relatório Detalhado
+            </button>
+
+            <div id="containerRelatorioFrequencia" style="display: none; margin-top: 15px; text-align: left; background: rgba(15, 23, 42, 0.6); padding: 15px; border-radius: var(--radius-md); border: 1px solid var(--border-color); max-height: 250px; overflow-y: auto;">
+                <h4 style="margin-bottom: 10px; color: var(--text-main); font-size: 14px; text-align: center;">Datas de Frequência</h4>
+                <div id="listaRelatorioFrequencia" style="font-size: 13px; color: var(--text-muted);">
+                    Carregando histórico...
                 </div>
             </div>
         </div>
@@ -1223,7 +1235,6 @@
         } else { tabelaBody.innerHTML = `<tr><td colspan="8">Nenhum registro encontrado.</td></tr>`; }
     }
 
-    // Função auxiliar para atualizar o visual dos Badges
     function atualizarUIBadge(badgesArray, badgeKey, cardId, tagId, tituloConcluido = "Conquistado!") {
         const card = document.getElementById(cardId);
         const tag = document.getElementById(tagId);
@@ -1289,14 +1300,10 @@
                 data.ranking.forEach(r => mapPontos[r.usuario] = r.pontos);
             }
 
-            // Pega a lista oficial do usuários.js e une com a pontuação do banco
             let rankingFinal = listaAlunos
-                .filter(a => a.tipo !== 'professor') // Filtra o Sensei ou admins
-                .map(a => ({
-                    nome: a.nome,
-                    pontos: mapPontos[a.usuario] || 0 // Se não tiver pontos, fica 0
-                }))
-                .sort((a, b) => b.pontos - a.pontos); // Ordena do maior pro menor
+                .filter(a => a.tipo !== 'professor')
+                .map(a => ({ nome: a.nome, pontos: mapPontos[a.usuario] || 0 }))
+                .sort((a, b) => b.pontos - a.pontos);
 
             if (rankingFinal.length === 0) {
                 container.innerHTML = "<p style='text-align:center; color:var(--text-muted);'>Nenhuma pontuação registrada ainda.</p>";
@@ -1441,7 +1448,6 @@
         if (!dataFalta) return alert("Selecione a data.");
         const partes = dataFalta.split('-');
         
-        // Zera as horas para comparar apenas os dias corridos
         const dataAtual = new Date();
         dataAtual.setHours(0, 0, 0, 0);
         
@@ -1492,7 +1498,6 @@
         } catch (err) { container.innerHTML = "<p style='color: red;'>Erro ao carregar justificativas.</p>"; }
     }
 
-    // FORMULÁRIO E LISTAGEM DOS DESAFIOS
     document.getElementById('formDesafio').addEventListener('submit', async function(e) {
         e.preventDefault();
         const nomeDesafio = document.getElementById('nomeDesafio').value;
@@ -1539,6 +1544,60 @@
                 `;
             }).join('');
         } catch (err) { container.innerHTML = "<p style='color: red;'>Erro ao carregar desafios.</p>"; }
+    }
+
+    // --- FUNÇÕES DO RELATÓRIO DE FREQUÊNCIA ---
+    let relatorioFrequenciaAberto = false;
+
+    async function toggleRelatorioFrequencia() {
+        const container = document.getElementById('containerRelatorioFrequencia');
+        relatorioFrequenciaAberto = !relatorioFrequenciaAberto;
+        
+        if (relatorioFrequenciaAberto) {
+            container.style.display = 'block';
+            await carregarRelatorioFrequencia();
+        } else {
+            container.style.display = 'none';
+        }
+    }
+
+    async function carregarRelatorioFrequencia() {
+        const containerLista = document.getElementById('listaRelatorioFrequencia');
+        if (!usuarioAtivo || !containerLista) return;
+
+        const dataInicio = `${document.getElementById('mesInicioFrequencia')?.value || '2026-07'}-01`;
+        const [anoFim, mesFim] = (document.getElementById('mesFimFrequencia')?.value || '2026-12').split('-').map(Number);
+        const dataFim = `${anoFim}-${String(mesFim).padStart(2, '0')}-${String(new Date(anoFim, mesFim, 0).getDate()).padStart(2, '0')}`;
+
+        containerLista.innerHTML = "Carregando histórico detalhado...";
+
+        try {
+            const response = await fetch(`${URL_API_SERVIDOR}/api/frequencia/relatorio/${usuarioAtivo}?dataInicio=${dataInicio}&dataFim=${dataFim}`);
+            const dados = await response.json();
+
+            if (!dados || dados.length === 0) {
+                containerLista.innerHTML = "<p style='text-align:center;'>Nenhum registro de aula encontrado neste período.</p>";
+                return;
+            }
+
+            let html = dados.map(item => {
+                const dataFormatada = item.data_aula.split('-').reverse().join('/');
+                const statusHtml = item.presente 
+                    ? '<span style="color: #10b981; font-weight: bold;">PRESENTE</span>' 
+                    : '<span style="color: #ef4444; font-weight: bold;">FALTA</span>';
+                
+                return `
+                    <div style="display: flex; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid rgba(255,255,255,0.05);">
+                        <span>📅 ${dataFormatada}</span>
+                        <span>${statusHtml}</span>
+                    </div>
+                `;
+            }).join('');
+
+            containerLista.innerHTML = html;
+        } catch (err) {
+            containerLista.innerHTML = "<p style='color: red; text-align:center;'>Erro ao carregar relatório detalhado.</p>";
+        }
     }
 
     let instanciaGrafico = null;
@@ -1588,6 +1647,12 @@
                     }
                 }
             });
+
+            // Se o relatório detalhado estiver aberto, atualiza ele também com as novas datas
+            if (relatorioFrequenciaAberto) {
+                carregarRelatorioFrequencia();
+            }
+
         } catch (err) {}
     }
 
