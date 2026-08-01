@@ -2,266 +2,372 @@
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Área do Professor</title>
     <script src="usuarios.js"></script>
-   <style>
-    * { box-sizing: border-box; margin: 0; padding: 0; }
-    body { background-color: #0f172a; color: #f8fafc; font-family: sans-serif; }
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { background-color: #0f172a; color: #f8fafc; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; -webkit-tap-highlight-color: transparent; }
 
-    /* CABEÇALHO / NAVBAR */
-    .top-bar {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        background-color: #1e293b;
-        padding: 12px 24px;
-        border-bottom: 2px solid #334155;
-    }
+        /* CABEÇALHO / NAVBAR */
+        .top-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 12px;
+            background-color: #1e293b;
+            padding: 14px 20px;
+            border-bottom: 2px solid #334155;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
 
-    .logo-container {
-        display: flex;
-        align-items: center;
-        gap: 12px;
-    }
+        .logo-container {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
 
-    .logo-img {
-        height: 40px;
-        width: auto;
-        object-fit: contain;
-    }
+        .logo-img {
+            height: 38px;
+            width: auto;
+            object-fit: contain;
+        }
 
-    .header-title {
-        font-size: 1.2rem;
-        font-weight: bold;
-    }
+        .header-title {
+            font-size: 1.1rem;
+            font-weight: bold;
+        }
 
-    /* GRUPO DE BOTÕES DE AÇÃO DO HEADER */
-    .header-actions {
-        display: flex;
-        align-items: center;
-        gap: 10px;
-    }
+        /* GRUPO DE BOTÕES DE AÇÃO DO HEADER */
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
 
-    .btn-header {
-        display: inline-flex;
-        align-items: center;
-        gap: 6px;
-        padding: 8px 16px;
-        border-radius: 6px;
-        text-decoration: none;
-        font-weight: bold;
-        font-size: 0.9rem;
-        border: none;
-        cursor: pointer;
-        transition: background-color 0.2s;
-    }
+        .btn-header {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            padding: 10px 16px;
+            border-radius: 6px;
+            text-decoration: none;
+            font-weight: bold;
+            font-size: 0.9rem;
+            border: none;
+            cursor: pointer;
+            transition: background-color 0.2s;
+            min-height: 40px;
+        }
 
-    .btn-atualizar { background-color: #3b82f6; color: #ffffff; }
-    .btn-atualizar:hover { background-color: #2563eb; }
+        .btn-atualizar { background-color: #3b82f6; color: #ffffff; }
+        .btn-atualizar:hover { background-color: #2563eb; }
 
-    .btn-sair { background-color: #ef4444; color: #ffffff; }
-    .btn-sair:hover { background-color: #dc2626; }
+        .btn-sair { background-color: #ef4444; color: #ffffff; }
+        .btn-sair:hover { background-color: #dc2626; }
 
-    /* NAVEGAÇÃO POR ABAS (AJUSTADO PARA SCROLL HORIZONTAL NO CELULAR) */
-    .tabs-nav {
-        display: flex;
-        gap: 8px;
-        background-color: #0f172a;
-        padding: 16px 24px 0 24px;
-        max-width: 800px;
-        margin: 0 auto;
-        overflow-x: auto;
-        white-space: nowrap;
-        -webkit-overflow-scrolling: touch;
-        scrollbar-width: none;
-    }
+        /* NAVEGAÇÃO POR ABAS (SCROLL HORIZONTAL NO CELULAR) */
+        .tabs-nav {
+            display: flex;
+            gap: 6px;
+            background-color: #0f172a;
+            padding: 16px 16px 0 16px;
+            max-width: 800px;
+            margin: 0 auto;
+            overflow-x: auto;
+            white-space: nowrap;
+            -webkit-overflow-scrolling: touch;
+            scrollbar-width: none;
+        }
 
-    .tabs-nav::-webkit-scrollbar {
-        display: none;
-    }
+        .tabs-nav::-webkit-scrollbar {
+            display: none;
+        }
 
-    .nav-btn {
-        flex: 1;
-        min-width: max-content;
-        background-color: #1e293b;
-        color: #94a3b8;
-        border: none;
-        padding: 12px 16px;
-        font-size: 0.9rem;
-        font-weight: bold;
-        cursor: pointer;
-        border-radius: 8px 8px 0 0;
-        transition: all 0.2s ease;
-    }
+        .nav-btn {
+            flex: 1;
+            min-width: max-content;
+            background-color: #1e293b;
+            color: #94a3b8;
+            border: none;
+            padding: 14px 18px;
+            font-size: 0.9rem;
+            font-weight: bold;
+            cursor: pointer;
+            border-radius: 8px 8px 0 0;
+            transition: all 0.2s ease;
+        }
 
-    .nav-btn:hover { color: #f8fafc; background-color: #334155; }
-    .nav-btn.active { background-color: #2563eb; color: #ffffff; }
+        .nav-btn:hover { color: #f8fafc; background-color: #334155; }
+        .nav-btn.active { background-color: #2563eb; color: #ffffff; }
 
-    /* CONTEÚDO DAS ABAS */
-    .content-container {
-        max-width: 800px;
-        margin: 0 auto;
-        padding: 20px;
-    }
+        /* CONTEÚDO DAS ABAS */
+        .content-container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 16px;
+        }
 
-    .tab-content {
-        display: none;
-        background: #1e293b;
-        padding: 20px;
-        border-radius: 0 0 12px 12px;
-    }
+        .tab-content {
+            display: none;
+            background: #1e293b;
+            padding: 20px;
+            border-radius: 0 0 12px 12px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
 
-    .tab-content.active { display: block; }
+        .tab-content.active { display: block; }
 
-    /* ESTILOS DA CHAMADA E FORMULÁRIOS */
-    .aluno-item { 
-        display: flex; 
-        justify-content: space-between; 
-        align-items: center; 
-        padding: 12px 0; 
-        border-bottom: 1px solid #334155; 
-    }
+        /* ESTILOS DA CHAMADA E FORMULÁRIOS */
+        .aluno-item { 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center; 
+            padding: 14px 0; 
+            border-bottom: 1px solid #334155;
+            font-size: 1rem;
+        }
 
-    input[type="date"], input[type="text"], textarea, select { 
-        padding: 10px; 
-        font-size: 15px; 
-        margin-top: 4px;
-        margin-bottom: 12px; 
-        width: 100%; 
-        border-radius: 6px; 
-        border: 1px solid #334155;
-        background-color: #0f172a;
-        color: #f8fafc;
-    }
+        .chk-label {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+            padding: 6px;
+            border-radius: 6px;
+            background: rgba(255, 255, 255, 0.05);
+        }
 
-    textarea {
-        resize: vertical;
-        min-height: 90px;
-        font-family: inherit;
-    }
+        .chk-presente {
+            width: 18px;
+            height: 18px;
+            accent-color: #10b981;
+        }
 
-    .btn-salvar, .btn-enviar-push { 
-        width: 100%; 
-        padding: 12px; 
-        background: #3b82f6; 
-        color: white; 
-        border: none; 
-        border-radius: 8px; 
-        font-weight: bold; 
-        cursor: pointer; 
-        margin-top: 10px; 
-        font-size: 1rem;
-        transition: background 0.2s;
-    }
+        input[type="date"], input[type="text"], textarea, select { 
+            padding: 12px; 
+            font-size: 15px; 
+            margin-top: 6px;
+            margin-bottom: 14px; 
+            width: 100%; 
+            border-radius: 8px; 
+            border: 1px solid #334155;
+            background-color: #0f172a;
+            color: #f8fafc;
+            -webkit-appearance: none; /* Melhora renderização no iOS */
+            appearance: none;
+        }
 
-    .btn-salvar:hover, .btn-enviar-push:hover { background: #2563eb; }
+        textarea {
+            resize: vertical;
+            min-height: 100px;
+            font-family: inherit;
+        }
 
-    /* CARD DE JUSTIFICATIVAS / DESAFIOS */
-    .card-justificativas {
-        background: #0f172a;
-        padding: 20px;
-        border-radius: 8px;
-        border: 1px solid #334155;
-        color: #94a3b8;
-        text-align: center;
-    }
+        .btn-salvar, .btn-enviar-push { 
+            width: 100%; 
+            padding: 14px; 
+            background: #3b82f6; 
+            color: white; 
+            border: none; 
+            border-radius: 8px; 
+            font-weight: bold; 
+            cursor: pointer; 
+            margin-top: 10px; 
+            font-size: 1rem;
+            transition: background 0.2s;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
 
-    /* CAIXA DE FILTROS */
-    .filtro-datas-container {
-        background-color: #0f172a;
-        padding: 16px;
-        border-radius: 8px;
-        border: 1px solid #334155;
-        margin-bottom: 15px;
-    }
+        .btn-salvar:hover, .btn-enviar-push:hover { background: #2563eb; }
 
-    /* GRADE DOS FILTROS */
-    .filtro-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-        gap: 12px;
-    }
+        /* CARD VAZIO / MENSAGENS */
+        .card-mensagem {
+            background: #0f172a;
+            padding: 20px;
+            border-radius: 8px;
+            border: 1px solid #334155;
+            color: #94a3b8;
+            text-align: center;
+        }
 
-    .filtro-campo label {
-        font-size: 0.85rem;
-        color: #94a3b8;
-        font-weight: bold;
-        display: block;
-    }
+        /* CLASSES PARA OS CARTÕES DINÂMICOS (JUSTIFICATIVAS/DESAFIOS) */
+        .card-list-item {
+            background: #0f172a;
+            padding: 16px;
+            border-radius: 10px;
+            border: 1px solid #334155;
+            margin-bottom: 14px;
+            text-align: left;
+        }
 
-    .btn-filtrar {
-        width: 100%;
-        padding: 12px;
-        background-color: #3b82f6;
-        color: #fff;
-        border: none;
-        border-radius: 6px;
-        font-weight: bold;
-        cursor: pointer;
-        transition: background 0.2s;
-        margin-top: 8px;
-        font-size: 0.95rem;
-    }
+        .card-list-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 10px;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
 
-    .btn-filtrar:hover { background-color: #2563eb; }
+        .card-list-title {
+            font-size: 1rem;
+            color: #f8fafc;
+        }
 
-    /* ESTILOS DA TABELA DE RESUMO DE FREQUÊNCIA */
-    .table-responsive {
-        width: 100%;
-        overflow-x: auto;
-        -webkit-overflow-scrolling: touch;
-        margin-top: 15px;
-        border-radius: 8px;
-        border: 1px solid #334155;
-    }
+        .card-list-badge {
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 0.75rem;
+            font-weight: bold;
+            text-transform: uppercase;
+            border: 1px solid transparent;
+            white-space: nowrap;
+        }
 
-    .tabela-resumo {
-        width: 100%;
-        min-width: 550px;
-        border-collapse: collapse;
-        font-size: 0.95rem;
-    }
+        .card-list-detail {
+            font-size: 0.9rem;
+            color: #94a3b8;
+            margin-bottom: 6px;
+            word-wrap: break-word;
+        }
+        
+        .card-list-detail strong {
+            color: #cbd5e1;
+        }
 
-    .tabela-resumo th, .tabela-resumo td {
-        padding: 12px 10px;
-        text-align: left;
-        border-bottom: 1px solid #334155;
-        white-space: nowrap;
-    }
+        .card-list-date {
+            font-size: 0.75rem;
+            color: #64748b;
+            margin-bottom: 14px;
+        }
 
-    .tabela-resumo th {
-        background-color: #0f172a;
-        color: #94a3b8;
-        font-weight: bold;
-    }
+        .card-list-actions {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
 
-    .tabela-resumo tr:hover { background-color: #33415522; }
+        .btn-acao {
+            flex: 1;
+            min-width: 120px;
+            padding: 12px;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-weight: bold;
+            cursor: pointer;
+            font-size: 0.9rem;
+            text-align: center;
+            transition: opacity 0.2s;
+        }
+        
+        .btn-acao:active { opacity: 0.8; }
+        .btn-aprovar { background: #10b981; }
+        .btn-reprovar { background: #ef4444; }
 
-    .badge-porcentagem {
-        padding: 4px 8px;
-        border-radius: 6px;
-        font-weight: bold;
-        font-size: 0.85rem;
-        display: inline-block;
-    }
+        /* CAIXA DE FILTROS */
+        .filtro-datas-container {
+            background-color: #0f172a;
+            padding: 16px;
+            border-radius: 10px;
+            border: 1px solid #334155;
+            margin-bottom: 20px;
+        }
 
-    /* OTIMIZAÇÃO RESPONSIVA PARA SMARTPHONES */
-    @media (max-width: 768px) {
-        .top-bar { padding: 10px 14px; }
-        .header-title { font-size: 0.95rem; }
-        .logo-img { height: 32px; }
-        .btn-header { padding: 6px 10px; font-size: 0.8rem; }
-        .tabs-nav { padding: 10px 10px 0 10px; gap: 6px; justify-content: flex-start; }
-        .nav-btn { padding: 10px 14px; font-size: 0.85rem; border-radius: 6px 6px 0 0; }
-        .content-container { padding: 10px; }
-        .tab-content { padding: 14px; border-radius: 8px; }
-        .filtro-grid { grid-template-columns: 1fr !important; gap: 4px; }
-        input[type="date"], input[type="text"], textarea, select { margin-bottom: 8px; font-size: 14px; }
-        .tabela-resumo th, .tabela-resumo td { padding: 8px 6px; font-size: 0.85rem; }
-        .badge-porcentagem { font-size: 0.75rem; padding: 2px 6px; }
-    }
-</style>
+        /* GRADE DOS FILTROS */
+        .filtro-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 12px;
+        }
+
+        .filtro-campo label {
+            font-size: 0.85rem;
+            color: #94a3b8;
+            font-weight: bold;
+            display: block;
+            margin-bottom: 4px;
+        }
+
+        .btn-filtrar {
+            width: 100%;
+            padding: 14px;
+            background-color: #3b82f6;
+            color: #fff;
+            border: none;
+            border-radius: 8px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background 0.2s;
+            margin-top: 10px;
+            font-size: 0.95rem;
+        }
+
+        .btn-filtrar:hover { background-color: #2563eb; }
+
+        /* ESTILOS DA TABELA DE RESUMO DE FREQUÊNCIA */
+        .table-responsive {
+            width: 100%;
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+            margin-top: 15px;
+            border-radius: 8px;
+            border: 1px solid #334155;
+            background: #0f172a;
+        }
+
+        .tabela-resumo {
+            width: 100%;
+            min-width: 600px;
+            border-collapse: collapse;
+            font-size: 0.9rem;
+        }
+
+        .tabela-resumo th, .tabela-resumo td {
+            padding: 14px 12px;
+            text-align: left;
+            border-bottom: 1px solid #334155;
+            white-space: nowrap;
+        }
+
+        .tabela-resumo th {
+            background-color: rgba(255, 255, 255, 0.03);
+            color: #94a3b8;
+            font-weight: bold;
+            text-transform: uppercase;
+            font-size: 0.8rem;
+        }
+
+        .tabela-resumo tr:hover { background-color: #33415522; }
+
+        .badge-porcentagem {
+            padding: 6px 10px;
+            border-radius: 6px;
+            font-weight: bold;
+            font-size: 0.85rem;
+            display: inline-block;
+        }
+
+        /* OTIMIZAÇÃO EXTRA PARA SMARTPHONES PEQUENOS */
+        @media (max-width: 480px) {
+            .top-bar { justify-content: center; text-align: center; padding: 12px; }
+            .header-actions { width: 100%; }
+            .btn-header { flex: 1; font-size: 0.85rem; padding: 10px; }
+            .tabs-nav { padding: 10px 10px 0 10px; gap: 4px; }
+            .nav-btn { padding: 12px 14px; font-size: 0.85rem; }
+            .content-container { padding: 12px; }
+            .tab-content { padding: 16px; }
+            .filtro-grid { grid-template-columns: 1fr; }
+            .btn-acao { width: 100%; }
+            h2 { font-size: 1.3rem; }
+        }
+    </style>
 </head>
 <body>
 
@@ -274,7 +380,7 @@
 
         <div class="header-actions">
             <button onclick="location.reload()" class="btn-header btn-atualizar" title="Atualizar página">
-                🔄
+                🔄 Atualizar
             </button>
             <a href="index.html" class="btn-header btn-sair" title="Sair do sistema">
                 🚪 Sair
@@ -297,7 +403,7 @@
         <!-- ABA 1: CHAMADA -->
         <section id="aba-chamada" class="tab-content active">
             <h2 style="margin-bottom: 15px;">🥋 Chamada dos Alunos</h2>
-            <label for="dataAula">Selecione a Data da Aula (Ter, Qui ou Sáb):</label>
+            <label for="dataAula" style="font-size: 0.85rem; color: #94a3b8; font-weight: bold;">Selecione a Data da Aula (Ter, Qui ou Sáb):</label>
             <input type="date" id="dataAula">
             <div id="listaAlunosContainer"></div>
             <button onclick="salvarChamada()" class="btn-salvar">💾 Salvar Chamada</button>
@@ -371,18 +477,24 @@
         <!-- ABA 4: ENVIAR NOTIFICAÇÕES PUSH -->
         <section id="aba-notificacoes" class="tab-content">
             <h2 style="margin-bottom: 15px;">🔔 Enviar Alertas Push</h2>
-            <p style="color: #94a3b8; font-size: 0.85rem; margin-bottom: 15px;">
+            <p style="color: #94a3b8; font-size: 0.9rem; margin-bottom: 15px; line-height: 1.4;">
                 Envie alertas que chegarão na tela inicial do celular dos alunos.
             </p>
             <div class="filtro-datas-container">
-                <label for="destinatarioPush" style="font-size: 0.85rem; color: #94a3b8; font-weight: bold;">📢 Destinatário:</label>
-                <select id="destinatarioPush">
-                    <option value="">🌐 Enviar para Todos os Alunos</option>
-                </select>
-                <label for="tituloPush" style="font-size: 0.85rem; color: #94a3b8; font-weight: bold;">📌 Título do Aviso:</label>
-                <input type="text" id="tituloPush" placeholder="Ex: Treino Cancelado">
-                <label for="mensagemPush" style="font-size: 0.85rem; color: #94a3b8; font-weight: bold;">💬 Mensagem:</label>
-                <textarea id="mensagemPush" placeholder="Digite aqui a notificação..."></textarea>
+                <div class="filtro-campo">
+                    <label for="destinatarioPush">📢 Destinatário:</label>
+                    <select id="destinatarioPush">
+                        <option value="">🌐 Enviar para Todos os Alunos</option>
+                    </select>
+                </div>
+                <div class="filtro-campo">
+                    <label for="tituloPush">📌 Título do Aviso:</label>
+                    <input type="text" id="tituloPush" placeholder="Ex: Treino Cancelado">
+                </div>
+                <div class="filtro-campo">
+                    <label for="mensagemPush">💬 Mensagem:</label>
+                    <textarea id="mensagemPush" placeholder="Digite aqui a notificação..."></textarea>
+                </div>
                 <button onclick="enviarNotificacaoPush()" class="btn-enviar-push" id="btnDispararPush">
                     🚀 Enviar Notificação Agora
                 </button>
@@ -446,8 +558,8 @@
                     const div = document.createElement('div');
                     div.className = 'aluno-item';
                     div.innerHTML = `
-                        <span>${aluno.nome}</span>
-                        <label style="cursor: pointer;">
+                        <strong>${aluno.nome}</strong>
+                        <label class="chk-label">
                             <input type="checkbox" data-usuario="${aluno.usuario}" class="chk-presente" checked> Presente
                         </label>
                     `;
@@ -507,7 +619,7 @@
         // CARREGAMENTO DAS JUSTIFICATIVAS
         async function carregarJustificativasProfessor() {
             const container = document.getElementById('listaJustificativasProfessor');
-            container.innerHTML = "<p style='color: #94a3b8;'>Buscando justificativas no servidor...</p>";
+            container.innerHTML = "<p style='color: #94a3b8; text-align:center;'>Buscando justificativas no servidor...</p>";
 
             const dataInicio = document.getElementById('dataInicioJustificativa').value;
             const dataFim = document.getElementById('dataFimJustificativa').value;
@@ -523,7 +635,7 @@
                 const dados = await response.json();
 
                 if (!Array.isArray(dados) || dados.length === 0) {
-                    container.innerHTML = "<div class='card-justificativas'><p>Nenhum pedido encontrado.</p></div>";
+                    container.innerHTML = "<div class='card-mensagem'><p>Nenhum pedido encontrado.</p></div>";
                     return;
                 }
 
@@ -535,7 +647,7 @@
                 });
 
                 if (dadosFiltrados.length === 0) {
-                    container.innerHTML = "<div class='card-justificativas'><p>Nenhum pedido encontrado nos filtros.</p></div>";
+                    container.innerHTML = "<div class='card-mensagem'><p>Nenhum pedido encontrado nos filtros.</p></div>";
                     return;
                 }
 
@@ -544,28 +656,28 @@
                     let corStatus = item.status === 'aprovado' ? '#10b981' : (item.status === 'reprovado' ? '#ef4444' : '#f59e0b');
 
                     return `
-                        <div style="background: #0f172a; padding: 16px; border-radius: 8px; border: 1px solid #334155; margin-bottom: 12px; text-align: left;">
-                            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
-                                <strong style="font-size: 16px; color: #f8fafc;">🥋 ${obterNomeAluno(item.usuario)}</strong>
-                                <span style="background: ${corStatus}22; color: ${corStatus}; border: 1px solid ${corStatus}; padding: 2px 8px; border-radius: 12px; font-size: 12px; font-weight: bold; text-transform: uppercase;">
+                        <div class="card-list-item">
+                            <div class="card-list-header">
+                                <strong class="card-list-title">🥋 ${obterNomeAluno(item.usuario)}</strong>
+                                <span class="card-list-badge" style="background: ${corStatus}22; color: ${corStatus}; border-color: ${corStatus};">
                                     ${item.status}
                                 </span>
                             </div>
-                            <div style="font-size: 14px; color: #94a3b8; margin-bottom: 4px;"><strong>Data da Falta:</strong> ${item.data_falta.split('-').reverse().join('/')}</div>
-                            <div style="font-size: 14px; color: #94a3b8; margin-bottom: 8px;"><strong>Motivo:</strong> ${item.motivo}</div>
-                            <div style="font-size: 11px; color: #64748b; margin-bottom: 12px;">Enviado em: ${item.data_solicitacao}</div>
+                            <div class="card-list-detail"><strong>Data da Falta:</strong> ${item.data_falta.split('-').reverse().join('/')}</div>
+                            <div class="card-list-detail"><strong>Motivo:</strong> ${item.motivo}</div>
+                            <div class="card-list-date">Enviado em: ${item.data_solicitacao}</div>
 
                             ${ehPendente ? `
-                                <div style="display: flex; gap: 10px;">
-                                    <button onclick="responderJustificativa(${item.id}, 'aprovado')" style="flex: 1; padding: 10px; background: #10b981; color: white; border: none; border-radius: 6px; font-weight: bold; cursor: pointer;">✅ Aprovar</button>
-                                    <button onclick="responderJustificativa(${item.id}, 'reprovado')" style="flex: 1; padding: 10px; background: #ef4444; color: white; border: none; border-radius: 6px; font-weight: bold; cursor: pointer;">❌ Reprovar</button>
+                                <div class="card-list-actions">
+                                    <button onclick="responderJustificativa(${item.id}, 'aprovado')" class="btn-acao btn-aprovar">✅ Aprovar</button>
+                                    <button onclick="responderJustificativa(${item.id}, 'reprovado')" class="btn-acao btn-reprovar">❌ Reprovar</button>
                                 </div>
                             ` : ''}
                         </div>
                     `;
                 }).join('');
             } catch (err) {
-                container.innerHTML = "<p style='color: #ef4444;'>Erro ao carregar justificativas.</p>";
+                container.innerHTML = "<p style='color: #ef4444; text-align:center;'>Erro ao carregar justificativas.</p>";
             }
         }
 
@@ -588,7 +700,7 @@
         // CARREGAMENTO DOS DESAFIOS EM VÍDEO
         async function carregarDesafiosProfessor() {
             const container = document.getElementById('listaDesafiosProfessor');
-            container.innerHTML = "<p style='color: #94a3b8;'>Buscando desafios...</p>";
+            container.innerHTML = "<p style='color: #94a3b8; text-align:center;'>Buscando desafios...</p>";
 
             const usuarioSelecionado = document.getElementById('filtroAlunoDesafio').value;
 
@@ -597,7 +709,7 @@
                 const dados = await response.json();
 
                 if (!Array.isArray(dados) || dados.length === 0) {
-                    container.innerHTML = "<div class='card-justificativas'><p>Nenhum desafio enviado até o momento.</p></div>";
+                    container.innerHTML = "<div class='card-mensagem'><p>Nenhum desafio enviado até o momento.</p></div>";
                     return;
                 }
 
@@ -606,7 +718,7 @@
                     : dados.filter(item => item.usuario === usuarioSelecionado);
 
                 if (dadosFiltrados.length === 0) {
-                    container.innerHTML = "<div class='card-justificativas'><p>Nenhum desafio para o aluno selecionado.</p></div>";
+                    container.innerHTML = "<div class='card-mensagem'><p>Nenhum desafio para o aluno selecionado.</p></div>";
                     return;
                 }
 
@@ -615,30 +727,30 @@
                     let corStatus = item.status === 'aprovado' ? '#10b981' : (item.status === 'reprovado' ? '#ef4444' : '#f59e0b');
 
                     return `
-                        <div style="background: #0f172a; padding: 16px; border-radius: 8px; border: 1px solid #334155; margin-bottom: 12px; text-align: left;">
-                            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
-                                <strong style="font-size: 16px; color: #f8fafc;">🥋 ${obterNomeAluno(item.usuario)}</strong>
-                                <span style="background: ${corStatus}22; color: ${corStatus}; border: 1px solid ${corStatus}; padding: 2px 8px; border-radius: 12px; font-size: 12px; font-weight: bold; text-transform: uppercase;">
+                        <div class="card-list-item">
+                            <div class="card-list-header">
+                                <strong class="card-list-title">🥋 ${obterNomeAluno(item.usuario)}</strong>
+                                <span class="card-list-badge" style="background: ${corStatus}22; color: ${corStatus}; border-color: ${corStatus};">
                                     ${item.status}
                                 </span>
                             </div>
-                            <div style="font-size: 14px; color: #94a3b8; margin-bottom: 4px;"><strong>Desafio:</strong> ${item.nome_desafio}</div>
-                            <div style="font-size: 14px; color: #3b82f6; margin-bottom: 8px;">
-                                <strong>Vídeo:</strong> <a href="${item.link_video}" target="_blank" style="color: #60a5fa; text-decoration: underline;">Assistir ao Vídeo ↗️</a>
+                            <div class="card-list-detail"><strong>Desafio:</strong> ${item.nome_desafio}</div>
+                            <div class="card-list-detail">
+                                <strong>Vídeo:</strong> <a href="${item.link_video}" target="_blank" style="color: #60a5fa; text-decoration: none; border-bottom: 1px solid #60a5fa;">Assistir ao Vídeo ↗️</a>
                             </div>
-                            <div style="font-size: 11px; color: #64748b; margin-bottom: 12px;">Enviado em: ${item.data_solicitacao}</div>
+                            <div class="card-list-date">Enviado em: ${item.data_solicitacao}</div>
 
                             ${ehPendente ? `
-                                <div style="display: flex; gap: 10px;">
-                                    <button onclick="responderDesafio(${item.id}, 'aprovado', '${item.usuario}', '${item.nome_desafio}')" style="flex: 1; padding: 10px; background: #10b981; color: white; border: none; border-radius: 6px; font-weight: bold; cursor: pointer;">✅ Aprovar (Gerar Badge)</button>
-                                    <button onclick="responderDesafio(${item.id}, 'reprovado', '${item.usuario}', '${item.nome_desafio}')" style="flex: 1; padding: 10px; background: #ef4444; color: white; border: none; border-radius: 6px; font-weight: bold; cursor: pointer;">❌ Reprovar</button>
+                                <div class="card-list-actions">
+                                    <button onclick="responderDesafio(${item.id}, 'aprovado', '${item.usuario}', '${item.nome_desafio}')" class="btn-acao btn-aprovar">✅ Aprovar (Gerar Badge)</button>
+                                    <button onclick="responderDesafio(${item.id}, 'reprovado', '${item.usuario}', '${item.nome_desafio}')" class="btn-acao btn-reprovar">❌ Reprovar</button>
                                 </div>
                             ` : ''}
                         </div>
                     `;
                 }).join('');
             } catch (err) {
-                container.innerHTML = "<p style='color: #ef4444;'>Erro ao carregar desafios.</p>";
+                container.innerHTML = "<p style='color: #ef4444; text-align:center;'>Erro ao carregar desafios.</p>";
             }
         }
 
@@ -661,7 +773,7 @@
         // CARREGAMENTO DE RESUMO DE FREQUÊNCIA
         async function carregarResumoFrequencia() {
             const container = document.getElementById('resumoFrequenciaContainer');
-            container.innerHTML = "<p style='color: #94a3b8;'>Buscando dados no servidor...</p>";
+            container.innerHTML = "<p style='color: #94a3b8; text-align:center;'>Buscando dados no servidor...</p>";
 
             const dataInicio = document.getElementById('dataInicio').value;
             const dataFim = document.getElementById('dataFim').value;
@@ -718,19 +830,19 @@
                             <td style="color: #10b981; font-weight: bold;">${presencas}</td>
                             <td style="color: #ef4444; font-weight: bold;">${faltasAjustadas} <span style="font-size: 11px; color: #94a3b8;">(${faltas} Total)</span></td>
                             <td style="color: #3b82f6; font-weight: bold;">${justificativasAprovadas}</td>
-                            <td><span class="badge-porcentagem" style="background: ${corBadge}22; color: ${corBadge}; border: 1px solid ${corBadge};">${pctPresenca}% Presença</span></td>
+                            <td><span class="badge-porcentagem" style="background: ${corBadge}22; color: ${corBadge}; border: 1px solid ${corBadge};">${pctPresenca}%</span></td>
                         </tr>
                     `;
                 }
 
                 if (linhasHTML === '') {
-                    container.innerHTML = "<p style='color: #94a3b8;'>Nenhum registro encontrado para o filtro selecionado.</p>";
+                    container.innerHTML = "<p style='color: #94a3b8; text-align:center;'>Nenhum registro encontrado para o filtro selecionado.</p>";
                     return;
                 }
 
                 container.innerHTML = `<div class="table-responsive"><table class="tabela-resumo"><thead><tr><th>Aluno</th><th>Presenças</th><th>Faltas</th><th>Justificativas</th><th>Frequência</th></tr></thead><tbody>${linhasHTML}</tbody></table></div>`;
             } catch (err) {
-                container.innerHTML = "<p style='color: #ef4444;'>Não foi possível carregar as informações.</p>";
+                container.innerHTML = "<p style='color: #ef4444; text-align:center;'>Não foi possível carregar as informações.</p>";
             }
         }
 
