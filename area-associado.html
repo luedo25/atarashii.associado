@@ -32,7 +32,6 @@
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; -webkit-tap-highlight-color: transparent; }
         body { background-color: var(--bg-primary); color: var(--text-main); padding-bottom: 110px; min-height: 100vh; }
         
-        /* HEADER */
         header { background: rgba(30, 41, 59, 0.85); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); position: sticky; top: 0; z-index: 1000; border-bottom: 1px solid var(--border-color); padding: 12px 20px; display: flex; justify-content: space-between; align-items: center; }
         header h1 { font-size: 18px; font-weight: 700; color: var(--text-main); letter-spacing: 0.3px; }
         .header-left { display: flex; align-items: center; gap: 12px; }
@@ -44,24 +43,11 @@
         .btn-logout:active { transform: scale(0.95); background: rgba(239, 68, 68, 0.3); }
         .badge-count { position: absolute; top: -4px; right: -4px; background: var(--accent-red); color: white; font-size: 10px; font-weight: bold; border-radius: 50%; width: 18px; height: 18px; display: flex; align-items: center; justify-content: center; border: 2px solid var(--bg-card); }
         
-        /* CONTAINER DE CONQUISTAS E LINHA DO TEMPO */
         .card-conquistas { margin-top: 20px; margin-bottom: 20px; background: rgba(15, 23, 42, 0.75); border: 1px solid var(--border-color, #2e3748); padding: 16px; border-radius: 16px; backdrop-filter: blur(8px); width: 100%; }
         .titulo-conquistas { margin-bottom: 14px; font-size: 1rem; color: #f8fafc; display: flex; align-items: center; gap: 8px; }
 
-        /* LINHA DO TEMPO DE GRADUAÇÕES */
-        .timeline-container { position: relative; padding-left: 20px; margin-top: 15px; }
-        .timeline-container::before { content: ''; position: absolute; left: 6px; top: 5px; bottom: 5px; width: 2px; background: var(--border-color); }
-        .timeline-item { position: relative; margin-bottom: 16px; padding-left: 15px; }
-        .timeline-dot { position: absolute; left: -17.5px; top: 3px; width: 12px; height: 12px; border-radius: 50%; border: 2px solid var(--bg-primary); }
-        .timeline-content { background: rgba(30, 41, 59, 0.6); border: 1px solid var(--border-color); padding: 12px; border-radius: var(--radius-sm); }
-        .timeline-title { font-size: 14px; font-weight: bold; color: #f8fafc; display: flex; justify-content: space-between; align-items: center; }
-        .timeline-date { font-size: 11px; color: var(--text-muted); }
-        .timeline-details { font-size: 12px; color: var(--text-muted); margin-top: 4px; }
-
-        /* NOVA GRADE COMPACTA PARA BADGES */
         .badges-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 10px; margin-top: 10px; }
 
-        /* Card do Badge Responsivo e Compacto */
         .badge-card { display: flex; flex-direction: row; align-items: center; gap: 12px; padding: 10px; border-radius: 12px; background: rgba(30, 41, 59, 0.5); border: 1px solid rgba(255, 255, 255, 0.05); transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1); width: 100%; }
         .badge-card.badge-concluido { background: linear-gradient(135deg, rgba(30, 41, 59, 0.9) 0%, rgba(15, 23, 42, 0.9) 100%); border: 1px solid #e2e8f0; box-shadow: 0 0 15px rgba(226, 232, 240, 0.15), inset 0 0 10px rgba(255, 255, 255, 0.05); }
         .badge-card.badge-bloqueado { opacity: 0.6; filter: grayscale(0.8); }
@@ -83,7 +69,6 @@
 
         @keyframes pulseGlow { 0% { box-shadow: 0 0 10px rgba(248, 250, 252, 0.2); } 100% { box-shadow: 0 0 22px rgba(248, 250, 252, 0.6); } }
 
-        /* Estilização do Ranking */
         .ranking-container { margin-top: 30px; background: rgba(15, 23, 42, 0.6); border: 1px solid var(--border-color); padding: 20px; border-radius: var(--radius-md); box-shadow: 0 4px 15px rgba(0,0,0,0.2); }
         .ranking-title { font-size: 18px; color: #fbbf24; margin-bottom: 8px; text-align: center; display: flex; align-items: center; justify-content: center; gap: 8px; text-transform: uppercase; letter-spacing: 1px;}
         .ranking-list { display: flex; flex-direction: column; gap: 10px; margin-top: 20px;}
@@ -225,7 +210,6 @@
         </button>
     </div>
 
-    <!-- Boas-Vindas -->
     <div class="welcome-box">
         <h2 id="welcomeNome">Olá, Associado!</h2>
         <p>Acompanhe suas notas, conteúdos e avisos no menu inferior.</p>
@@ -246,18 +230,9 @@
             </table>
         </div>
 
-        <!-- LINHA DO TEMPO DE GRADUAÇÕES -->
-        <div class="card-conquistas" style="margin-top: 25px;">
-            <h3 class="titulo-conquistas">⏳ Linha do Tempo de Graduações</h3>
-            <div id="timelineGraduacoes" class="timeline-container">
-                <p style="color: var(--text-muted); font-size: 13px; text-align: center;">Carregando linha do tempo...</p>
-            </div>
-        </div>
-
         <div class="grafico-container" style="position: relative; width: 100%; max-width: 420px; margin: 25px auto 0 auto;">
             <h3 style="justify-content: center; margin-bottom: 15px;">📊 Frequência de Aulas</h3>
 
-            <!-- FILTRO DE CALENDÁRIO / MÊS DA FREQUÊNCIA -->
             <div id="filtroFrequencia" style="display: flex; gap: 8px; align-items: center; justify-content: center; margin-bottom: 15px; background: rgba(15, 23, 42, 0.6); padding: 12px; border-radius: var(--radius-md); border: 1px solid var(--border-color); flex-wrap: wrap;">
                 <div style="display: flex; flex-direction: column; gap: 4px; flex: 1; min-width: 120px;">
                     <label for="mesInicioFrequencia" style="font-size: 11px; color: var(--text-muted); font-weight: bold;">Mês Inicial:</label>
@@ -276,7 +251,6 @@
 
             <canvas id="graficoFrequencia"></canvas>
             
-            <!-- Resumo de Presenças, Faltas e Justificativas Aprovadas -->
             <div id="resumoFrequencia" style="display: flex; justify-content: space-around; gap: 6px; margin-top: 15px; font-family: sans-serif;">
                 <div style="background-color: #10b98122; border: 1px solid var(--accent-green); color: var(--accent-green); padding: 8px 10px; border-radius: 12px; font-weight: bold; text-align: center; flex: 1;">
                     <span style="font-size: 11px; display: block; color: var(--text-muted);">Presenças</span>
@@ -292,7 +266,6 @@
                 </div>
             </div>
 
-            <!-- BOTÃO E CONTAINER PARA O RELATÓRIO DETALHADO -->
             <button onclick="toggleRelatorioFrequencia()" class="btn-action" style="margin-top: 15px; background-color: #475569; padding: 10px;">
                 📄 Ver Relatório Detalhado
             </button>
@@ -305,7 +278,6 @@
             </div>
         </div>
 
-        <!-- FORMULÁRIO DE JUSTIFICATIVA DE FALTAS -->
         <div style="margin-top: 30px; background: rgba(15, 23, 42, 0.6); border: 1px solid var(--border-color); padding: 20px; border-radius: var(--radius-md);">
             <h3 style="margin-bottom: 12px; font-size: 16px;">📝 Justificar Falta em Aula</h3>
             <form id="formJustificativa">
@@ -320,7 +292,7 @@
                     <label><input type="checkbox" name="motivoFalta" value="Nascimento de irmão ou filho"> c) Nascimento de irmão ou filho.</label>
                     <label><input type="checkbox" name="motivoFalta" value="Realização de tratamento ambulatório, em virtude de doença ou deficiência"> d) Realização de tratamento ambulatório, em virtude de doença ou deficiência.</label>
                     <label><input type="checkbox" name="motivoFalta" value="Assistência na doença a membro do agregado familiar"> e) Assistência na doença a membro do agregado familiar.</label>
-                    <label><input type="checkbox" name="motivoFalta" value="Aто decorrente da religião professada pelo aluno"> f) Ato decorrente da religião professada pelo aluno.</label>
+                    <label><input type="checkbox" name="motivoFalta" value="Ato decorrente da religião professada pelo aluno"> f) Ato decorrente da religião professada pelo aluno.</label>
                     <label><input type="checkbox" name="motivoFalta" value="Participação em atividades culturais e lazer"> g) Participação em atividades culturais e lazer.</label>
                     <label><input type="checkbox" name="motivoFalta" value="Preparação e participação em atividades desportivas, trabalho ou escolares"> h) Preparação e participação em atividades desportivas, trabalho ou escolares.</label>
                     <label><input type="checkbox" name="motivoFalta" value="Participação de estudo previstas no plano de atividades da escola"> i) Participação de estudo previstas no plano de atividades da escola.</label>
@@ -364,13 +336,12 @@
             <p style="font-size: 12px; color: var(--text-muted);">Conteúdo detalhado sobre a justificativa de faltas.</p>
             <a href="Regulamento de Justificativa de Faltas.pdf" target="_blank" class="btn-action" style="padding: 10px;">📖 Abrir Regulamento</a>
         </div>
-    </div> <!-- /div#exame -->
+    </div>
 
     <!-- SEÇÃO 2: CONTEÚDO PROGRAMÁTICO (EXAME) -->
     <div id="conteudo-programatico" class="tab-content">
         <h3>📖 Conteúdo Programático</h3>
         
-        <!-- BRANCA PARA AMARELA -->
         <details class="modulo-faixa">
             <summary class="botao-expandir">
                 <span class="faixa-cor branca"></span>
@@ -380,13 +351,7 @@
             </summary>
             <div class="table-container" style="border:none; border-radius:0;">
                 <table>
-                    <thead>
-                        <tr>
-                            <th>Kihon</th>
-                            <th>Base</th>
-                            <th>Sentido</th>
-                        </tr>
-                    </thead>
+                    <thead><tr><th>Kihon</th><th>Base</th><th>Sentido</th></tr></thead>
                     <tbody>
                         <tr><td>Oi-Zuki</td><td>Zenkutsu-Dachi</td><td>Avançando 5x</td></tr>
                         <tr><td>Ague-Uke / final (Guiako-zuki)</td><td>Zenkutsu-Dachi</td><td>Recuando 5x</td></tr>
@@ -408,7 +373,6 @@
             </div>
         </details>
 
-        <!-- AMARELA PARA VERMELHA -->
         <details class="modulo-faixa">
             <summary class="botao-expandir">
                 <span class="faixa-cor amarela"></span>
@@ -418,13 +382,7 @@
             </summary>
             <div class="table-container" style="border:none; border-radius:0;">
                 <table>
-                    <thead>
-                        <tr>
-                            <th>Kihon</th>
-                            <th>Base</th>
-                            <th>Sentido</th>
-                        </tr>
-                    </thead>
+                    <thead><tr><th>Kihon</th><th>Base</th><th>Sentido</th></tr></thead>
                     <tbody>
                         <tr><td>Oi-Zuki</td><td>Zenkutsu-Dachi</td><td>Avançando 5x</td></tr>
                         <tr><td>Ague-Uke / final (Guiako-zuki)</td><td>Zenkutsu-Dachi</td><td>Recuando 5x</td></tr>
@@ -448,7 +406,6 @@
             </div>
         </details>
 
-        <!-- VERMELHA PARA LARANJA -->
         <details class="modulo-faixa">
             <summary class="botao-expandir">
                 <span class="faixa-cor vermelha"></span>
@@ -458,13 +415,7 @@
             </summary>
             <div class="table-container" style="border:none; border-radius:0;">
                 <table>
-                    <thead>
-                        <tr>
-                            <th>Kihon</th>
-                            <th>Base</th>
-                            <th>Sentido</th>
-                        </tr>
-                    </thead>
+                    <thead><tr><th>Kihon</th><th>Base</th><th>Sentido</th></tr></thead>
                     <tbody>
                         <tr><td>Sambom-Zuki</td><td>Zenkutsu-Dachi</td><td>Avançando 5x</td></tr>
                         <tr><td>Ague-Uke / Guiako-zuki</td><td>Zenkutsu-Dachi</td><td>Recuando 5x</td></tr>
@@ -488,7 +439,6 @@
             </div>
         </details>
 
-        <!-- LARANJA PARA VERDE -->
         <details class="modulo-faixa">
             <summary class="botao-expandir">
                 <span class="faixa-cor laranja"></span>
@@ -498,13 +448,7 @@
             </summary>
             <div class="table-container" style="border:none; border-radius:0;">
                 <table>
-                    <thead>
-                        <tr>
-                            <th>Kihon</th>
-                            <th>Base</th>
-                            <th>Sentido</th>
-                        </tr>
-                    </thead>
+                    <thead><tr><th>Kihon</th><th>Base</th><th>Sentido</th></tr></thead>
                     <tbody>
                         <tr><td>Sambom-Zuki</td><td>Zenkutsu-Dachi</td><td>Avançando 5x</td></tr>
                         <tr><td>Ague-uke / Guiako-zuki</td><td>Zenkutsu-Dachi</td><td>Recuando 5x</td></tr>
@@ -526,7 +470,6 @@
             </div>
         </details>
 
-        <!-- VERDE PARA ROXA -->
         <details class="modulo-faixa">
             <summary class="botao-expandir">
                 <span class="faixa-cor verde"></span>
@@ -536,13 +479,7 @@
             </summary>
             <div class="table-container" style="border:none; border-radius:0;">
                 <table>
-                    <thead>
-                        <tr>
-                            <th>Kihon</th>
-                            <th>Base</th>
-                            <th>Sentido</th>
-                        </tr>
-                    </thead>
+                    <thead><tr><th>Kihon</th><th>Base</th><th>Sentido</th></tr></thead>
                     <tbody>
                         <tr><td>Sonoba-zuki</td><td>Kiba-Dachi</td><td>10 repetições</td></tr>
                         <tr><td>Sambom-Zuki</td><td>Zenkutsu-Dachi</td><td>Avançando 5x</td></tr>
@@ -565,7 +502,6 @@
             </div>
         </details>
 
-        <!-- ROXA PARA MARROM -->
         <details class="modulo-faixa">
             <summary class="botao-expandir">
                 <span class="faixa-cor roxa"></span>
@@ -575,13 +511,7 @@
             </summary>
             <div class="table-container" style="border:none; border-radius:0;">
                 <table>
-                    <thead>
-                        <tr>
-                            <th>Kihon</th>
-                            <th>Base</th>
-                            <th>Sentido</th>
-                        </tr>
-                    </thead>
+                    <thead><tr><th>Kihon</th><th>Base</th><th>Sentido</th></tr></thead>
                     <tbody>
                         <tr><td>Sonoba-zuki</td><td>Kiba-Dachi</td><td>10 repetições</td></tr>
                         <tr><td>Oi-zuki</td><td>Zenkutsu-Dachi</td><td>Avançando 5x</td></tr>
@@ -608,7 +538,6 @@
             </div>
         </details>
 
-        <!-- FPK 1º DAN -->
         <details class="modulo-faixa">
             <summary class="botao-expandir">
                 <span class="faixa-cor preta"></span>
@@ -617,13 +546,7 @@
             </summary>
             <div class="table-container" style="border:none; border-radius:0;">
                 <table>
-                    <thead>
-                        <tr>
-                            <th>Nº / Kihon</th>
-                            <th>Base</th>
-                            <th>Repetições</th>
-                        </tr>
-                    </thead>
+                    <thead><tr><th>Nº / Kihon</th><th>Base</th><th>Repetições</th></tr></thead>
                     <tbody>
                         <tr><td>1. Sonoba-Zuki</td><td>Kiba-Dachi</td><td>10 repetições</td></tr>
                         <tr><td>2. Mae-Gueri / Oi-Zuki</td><td>Zenkutsu-Dachi</td><td>5x ida</td></tr>
@@ -646,59 +569,20 @@
             </div>
         </details>
 
-        <!-- TABELA DE CARÊNCIA MÍNIMA DENTRO DA ABA EXAME -->
         <div class="container-tabela-carencia">
             <h3 style="margin-top: 20px;">⏳ Carência Mínima (Kyu)</h3>
             <div class="tabela-carencia-wrapper">
                 <table class="tabela-carencia-custom">
-                    <thead>
-                        <tr>
-                            <th>Faixa</th>
-                            <th>Kyu</th>
-                            <th>Carência Mínima de Treinamento</th>
-                        </tr>
-                    </thead>
+                    <thead><tr><th>Faixa</th><th>Kyu</th><th>Carência Mínima de Treinamento</th></tr></thead>
                     <tbody>
-                        <tr>
-                            <td><span class="badge-faixa-item branca">Branca</span></td>
-                            <td>7º</td>
-                            <td>3 meses</td>
-                        </tr>
-                        <tr>
-                            <td><span class="badge-faixa-item amarela">Amarela</span></td>
-                            <td>6º</td>
-                            <td>6 meses</td>
-                        </tr>
-                        <tr>
-                            <td><span class="badge-faixa-item vermelha">Vermelha</span></td>
-                            <td>5º</td>
-                            <td>6 meses</td>
-                        </tr>
-                        <tr>
-                            <td><span class="badge-faixa-item laranja">Laranja</span></td>
-                            <td>4º</td>
-                            <td>6 meses</td>
-                        </tr>
-                        <tr>
-                            <td><span class="badge-faixa-item verde">Verde</span></td>
-                            <td>3º</td>
-                            <td>1 ano</td>
-                        </tr>
-                        <tr>
-                            <td><span class="badge-faixa-item roxa">Roxa</span></td>
-                            <td>2º</td>
-                            <td>1 ano e 6 meses</td>
-                        </tr>
-                        <tr>
-                            <td><span class="badge-faixa-item marrom">Marrom</span></td>
-                            <td>1º</td>
-                            <td>2 anos</td>
-                        </tr>
-                        <tr>
-                            <td><span class="badge-faixa-item preta">Preta</span></td>
-                            <td>-</td>
-                            <td>-</td>
-                        </tr>
+                        <tr><td><span class="badge-faixa-item branca">Branca</span></td><td>7º</td><td>3 meses</td></tr>
+                        <tr><td><span class="badge-faixa-item amarela">Amarela</span></td><td>6º</td><td>6 meses</td></tr>
+                        <tr><td><span class="badge-faixa-item vermelha">Vermelha</span></td><td>5º</td><td>6 meses</td></tr>
+                        <tr><td><span class="badge-faixa-item laranja">Laranja</span></td><td>4º</td><td>6 meses</td></tr>
+                        <tr><td><span class="badge-faixa-item verde">Verde</span></td><td>3º</td><td>1 ano</td></tr>
+                        <tr><td><span class="badge-faixa-item roxa">Roxa</span></td><td>2º</td><td>1 ano e 6 meses</td></tr>
+                        <tr><td><span class="badge-faixa-item marrom">Marrom</span></td><td>1º</td><td>2 anos</td></tr>
+                        <tr><td><span class="badge-faixa-item preta">Preta</span></td><td>-</td><td>-</td></tr>
                     </tbody>
                 </table>
             </div>
@@ -744,8 +628,7 @@
             <a href="regras-associacao.pdf" target="_blank" class="btn-action" style="padding: 10px;">📖 Abrir PDF</a>
         </div>
 
-        <!-- CALENDÁRIO -->
-        <h3 style="margin-top: 25px;">🤝 Ações da Associação</h3>
+        <h3>🤝 Ações da Associação</h3>
         
         <div class="card-item" style="opacity: 0.65; border-color: rgba(255, 255, 255, 0.1);">
             <div class="card-date-badge" style="background: #334155;">
@@ -865,46 +748,14 @@
             Toque nos eventos abaixo para acessar as fotos do Google Drive.
         </p>
 
-        <a href="https://drive.google.com/drive/folders/1rtRaurMIERPIMTR70KxEu5TyhQa9PsHU?usp=drive_link" target="_blank" class="card-item">
-            <span style="font-size: 20px;">📂</span>
-            <span style="font-weight: 600; font-size: 14px;">Junho 2022</span>
-            <span style="margin-left: auto; color: var(--text-muted);">➔</span>
-        </a>
-        <a href="https://drive.google.com/drive/folders/1HfoZP89pVxOu3PqvmENSAwpo1nGZPg8K?usp=drive_link" target="_blank" class="card-item">
-            <span style="font-size: 20px;">📂</span>
-            <span style="font-weight: 600; font-size: 14px;">Dezembro 2022</span>
-            <span style="margin-left: auto; color: var(--text-muted);">➔</span>
-        </a>
-        <a href="https://drive.google.com/drive/folders/1oZsy4NswTt6MIfvlF7lDb6aHcENDPphL?usp=drive_link" target="_blank" class="card-item">
-            <span style="font-size: 20px;">📂</span>
-            <span style="font-weight: 600; font-size: 14px;">Julho 2023</span>
-            <span style="margin-left: auto; color: var(--text-muted);">➔</span>
-        </a>
-        <a href="https://drive.google.com/drive/folders/1-4vrTGEcgKnKMgVMFR9rZMI11psFiyn8?usp=drive_link" target="_blank" class="card-item">
-            <span style="font-size: 20px;">📂</span>
-            <span style="font-weight: 600; font-size: 14px;">Dezembro 2023</span>
-            <span style="margin-left: auto; color: var(--text-muted);">➔</span>
-        </a>
-        <a href="https://drive.google.com/drive/folders/1f-iaokIRnn5b6lOU239L3qh6-NvOiXoH?usp=drive_link" target="_blank" class="card-item">
-            <span style="font-size: 20px;">📂</span>
-            <span style="font-weight: 600; font-size: 14px;">Dezembro 2024</span>
-            <span style="margin-left: auto; color: var(--text-muted);">➔</span>
-        </a>
-        <a href="https://drive.google.com/drive/folders/1NgjvDrVK4YnHowuvrwRb8EcFIPGMfuWj?usp=drive_link" target="_blank" class="card-item">
-            <span style="font-size: 20px;">📂</span>
-            <span style="font-weight: 600; font-size: 14px;">Junho 2025</span>
-            <span style="margin-left: auto; color: var(--text-muted);">➔</span>
-        </a>
-        <a href="https://drive.google.com/drive/folders/1QkRd6NYoWFvarpcxWSR2wMiLWuFppTmF?usp=drive_link" target="_blank" class="card-item">
-            <span style="font-size: 20px;">📂</span>
-            <span style="font-weight: 600; font-size: 14px;">Dezembro 2025</span>
-            <span style="margin-left: auto; color: var(--text-muted);">➔</span>
-        </a>
-        <a href="https://drive.google.com/drive/folders/1TrXjV6R5Pqk_2FconkSwJicEqpmpI86g?usp=drive_link" target="_blank" class="card-item">
-            <span style="font-size: 20px;">📂</span>
-            <span style="font-weight: 600; font-size: 14px;">Junho 2026</span>
-            <span style="margin-left: auto; color: var(--text-muted);">➔</span>
-        </a>
+        <a href="https://drive.google.com/drive/folders/1rtRaurMIERPIMTR70KxEu5TyhQa9PsHU?usp=drive_link" target="_blank" class="card-item"><span style="font-size: 20px;">📂</span><span style="font-weight: 600; font-size: 14px;">Junho 2022</span><span style="margin-left: auto; color: var(--text-muted);">➔</span></a>
+        <a href="https://drive.google.com/drive/folders/1HfoZP89pVxOu3PqvmENSAwpo1nGZPg8K?usp=drive_link" target="_blank" class="card-item"><span style="font-size: 20px;">📂</span><span style="font-weight: 600; font-size: 14px;">Dezembro 2022</span><span style="margin-left: auto; color: var(--text-muted);">➔</span></a>
+        <a href="https://drive.google.com/drive/folders/1oZsy4NswTt6MIfvlF7lDb6aHcENDPphL?usp=drive_link" target="_blank" class="card-item"><span style="font-size: 20px;">📂</span><span style="font-weight: 600; font-size: 14px;">Julho 2023</span><span style="margin-left: auto; color: var(--text-muted);">➔</span></a>
+        <a href="https://drive.google.com/drive/folders/1-4vrTGEcgKnKMgVMFR9rZMI11psFiyn8?usp=drive_link" target="_blank" class="card-item"><span style="font-size: 20px;">📂</span><span style="font-weight: 600; font-size: 14px;">Dezembro 2023</span><span style="margin-left: auto; color: var(--text-muted);">➔</span></a>
+        <a href="https://drive.google.com/drive/folders/1f-iaokIRnn5b6lOU239L3qh6-NvOiXoH?usp=drive_link" target="_blank" class="card-item"><span style="font-size: 20px;">📂</span><span style="font-weight: 600; font-size: 14px;">Dezembro 2024</span><span style="margin-left: auto; color: var(--text-muted);">➔</span></a>
+        <a href="https://drive.google.com/drive/folders/1NgjvDrVK4YnHowuvrwRb8EcFIPGMfuWj?usp=drive_link" target="_blank" class="card-item"><span style="font-size: 20px;">📂</span><span style="font-weight: 600; font-size: 14px;">Junho 2025</span><span style="margin-left: auto; color: var(--text-muted);">➔</span></a>
+        <a href="https://drive.google.com/drive/folders/1QkRd6NYoWFvarpcxWSR2wMiLWuFppTmF?usp=drive_link" target="_blank" class="card-item"><span style="font-size: 20px;">📂</span><span style="font-weight: 600; font-size: 14px;">Dezembro 2025</span><span style="margin-left: auto; color: var(--text-muted);">➔</span></a>
+        <a href="https://drive.google.com/drive/folders/1TrXjV6R5Pqk_2FconkSwJicEqpmpI86g?usp=drive_link" target="_blank" class="card-item"><span style="font-size: 20px;">📂</span><span style="font-weight: 600; font-size: 14px;">Junho 2026</span><span style="margin-left: auto; color: var(--text-muted);">➔</span></a>
     </div>
 
     <!-- SEÇÃO 5: ESTUDO E DESAFIOS (MEDALHAS) -->
@@ -914,13 +765,11 @@
             <h3 class="titulo-conquistas">🏆 Minhas Conquistas</h3>
             
             <div class="badges-grid">
-                <!-- BADGE FREQUÊNCIA DE FERRO -->
+                <!-- FREQUÊNCIA DE FERRO -->
                 <div id="cardBadgeFerro" class="badge-card badge-bloqueado">
                     <div class="badge-emblem">
                         <div class="emblem-ring">
-                            <svg class="emblem-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
-                            </svg>
+                            <svg class="emblem-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
                         </div>
                         <span class="badge-ribbon">100%</span>
                     </div>
@@ -933,13 +782,11 @@
                     </div>
                 </div>
 
-                <!-- BADGE GUARDIÃO -->
+                <!-- GUARDIÃO -->
                 <div id="cardBadgeGuardiao" class="badge-card badge-bloqueado">
                     <div class="badge-emblem">
                         <div class="emblem-ring">
-                            <svg class="emblem-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
-                            </svg>
+                            <svg class="emblem-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
                         </div>
                         <span class="badge-ribbon">🛡️ 85%</span>
                     </div>
@@ -952,14 +799,11 @@
                     </div>
                 </div>
 
-                <!-- 1. BADGE: KATA ACIMA DA FAIXA -->
+                <!-- KATA ACIMA DA FAIXA -->
                 <div id="cardBadgeKata" class="badge-card badge-bloqueado">
                     <div class="badge-emblem">
                         <div class="emblem-ring">
-                            <svg class="emblem-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
-                                <circle cx="12" cy="12" r="3"></circle>
-                            </svg>
+                            <svg class="emblem-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
                         </div>
                         <span class="badge-ribbon" style="background: linear-gradient(90deg, #6366f1 0%, #4338ca 100%);">🥋 Visão</span>
                     </div>
@@ -972,13 +816,11 @@
                     </div>
                 </div>
 
-                <!-- 2. BADGE: MAE GERI -->
+                <!-- MAE GERI -->
                 <div id="cardBadgeMaeGeri" class="badge-card badge-bloqueado">
                     <div class="badge-emblem">
                         <div class="emblem-ring">
-                            <svg class="emblem-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon>
-                            </svg>
+                            <svg class="emblem-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon></svg>
                         </div>
                         <span class="badge-ribbon" style="background: linear-gradient(90deg, #f59e0b 0%, #d97706 100%);">⚡ Aço</span>
                     </div>
@@ -991,14 +833,11 @@
                     </div>
                 </div>
 
-                <!-- 3. BADGE: ABDOMINAL -->
+                <!-- ABDOMINAL -->
                 <div id="cardBadgeAbs" class="badge-card badge-bloqueado">
                     <div class="badge-emblem">
                         <div class="emblem-ring">
-                            <svg class="emblem-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
-                                <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
-                            </svg>
+                            <svg class="emblem-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
                         </div>
                         <span class="badge-ribbon" style="background: linear-gradient(90deg, #3b82f6 0%, #1d4ed8 100%);">🛡️ Cavaleiro</span>
                     </div>
@@ -1011,13 +850,11 @@
                     </div>
                 </div>
 
-                <!-- 4. BADGE: TSUKI -->
+                <!-- TSUKI -->
                 <div id="cardBadgeTsuki" class="badge-card badge-bloqueado">
                     <div class="badge-emblem">
                         <div class="emblem-ring">
-                            <svg class="emblem-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                <path d="M8.5 14.5A2.5 2.5 0 0011 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 11-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 002.5 2.5z"></path>
-                            </svg>
+                            <svg class="emblem-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8.5 14.5A2.5 2.5 0 0011 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 11-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 002.5 2.5z"></path></svg>
                         </div>
                         <span class="badge-ribbon" style="background: linear-gradient(90deg, #ef4444 0%, #b91c1c 100%);">🔥 Fogo</span>
                     </div>
@@ -1029,10 +866,61 @@
                         <p class="badge-desc">Objetivo: Desafio Prático - 200x Tsuki (Soco Frontal) na base Kiba-Dachi.</p>
                     </div>
                 </div>
-            </div> <!-- /badges-grid -->
+
+                <!-- NOVO BADGE 1: PRANCHA BAIXA 2 MIN -->
+                <div id="cardBadgePrancha" class="badge-card badge-bloqueado">
+                    <div class="badge-emblem">
+                        <div class="emblem-ring">
+                            <svg class="emblem-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"></path><line x1="4" y1="22" x2="4" y2="15"></line></svg>
+                        </div>
+                        <span class="badge-ribbon" style="background: linear-gradient(90deg, #06b6d4 0%, #0e7490 100%);">⏱️ Foco</span>
+                    </div>
+                    <div class="badge-info">
+                        <div class="badge-header">
+                            <strong class="badge-title">Rocha Inabalável</strong>
+                            <span id="badgeTagPrancha" class="badge-tag">Em andamento</span>
+                        </div>
+                        <p class="badge-desc">Objetivo: Prancha baixa por 2 minutos (Sem levantar o quadril).</p>
+                    </div>
+                </div>
+
+                <!-- NOVO BADGE 2: 150X POLICHINELO -->
+                <div id="cardBadgePolichinelo" class="badge-card badge-bloqueado">
+                    <div class="badge-emblem">
+                        <div class="emblem-ring">
+                            <svg class="emblem-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="5" r="1"></circle><path d="m9 20 3-6 3 6"></path><path d="m6 8 6 2 6-2"></path><path d="M12 10v4"></path></svg>
+                        </div>
+                        <span class="badge-ribbon" style="background: linear-gradient(90deg, #8b5cf6 0%, #6d28d9 100%);">⚡ Cardio</span>
+                    </div>
+                    <div class="badge-info">
+                        <div class="badge-header">
+                            <strong class="badge-title">Energia Pura</strong>
+                            <span id="badgeTagPolichinelo" class="badge-tag">Em andamento</span>
+                        </div>
+                        <p class="badge-desc">Objetivo: 150x Polichinelo (Sem pausa).</p>
+                    </div>
+                </div>
+
+                <!-- NOVO BADGE 3: KIBADACHI PAREDE 3 MIN -->
+                <div id="cardBadgeKibadachiParede" class="badge-card badge-bloqueado">
+                    <div class="badge-emblem">
+                        <div class="emblem-ring">
+                            <svg class="emblem-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2z"></path><path d="M9 9h6v6H9z"></path></svg>
+                        </div>
+                        <span class="badge-ribbon" style="background: linear-gradient(90deg, #14b8a6 0%, #0f766e 100%);">🧱 Base</span>
+                    </div>
+                    <div class="badge-info">
+                        <div class="badge-header">
+                            <strong class="badge-title">Raízes de Aço</strong>
+                            <span id="badgeTagKibadachiParede" class="badge-tag">Em andamento</span>
+                        </div>
+                        <p class="badge-desc">Objetivo: 3 minutos na base Kibadachi com as costas na parede.</p>
+                    </div>
+                </div>
+
+            </div>
         </div>
 
-        <!-- ABA DESAFIOS INCORPORADA -->
         <h3 style="margin-top: 35px;">🎯 Desafios Práticos em Vídeo</h3>
         <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 16px;">
             Grave o vídeo do seu desafio, suba no Google Drive (ou YouTube) e cole o link público abaixo para avaliação do Sensei.
@@ -1046,6 +934,9 @@
                     <option value="100x Mae Geri">100x Mae Geri (Chute Frontal)</option>
                     <option value="150x Abdominal">Desafio Físico (150x abdominal)</option>
                     <option value="200x Tsuki">200x Tsuki (Soco frontal)</option>
+                    <option value="Prancha Baixa 2 Min">Prancha Baixa por 2 Minutos</option>
+                    <option value="150x Polichinelo">150x Polichinelo (Sem pausa)</option>
+                    <option value="Kibadachi Parede 3 Min">Base Kibadachi com as Costas na Parede (3 min)</option>
                 </select>
 
                 <label style="display: block; font-size: 13px; color: var(--text-muted); margin-bottom: 6px;">Link do Vídeo (Deixe o acesso público):</label>
@@ -1058,7 +949,6 @@
             <div id="listaDesafiosAluno" style="font-size: 13px;">Nenhum desafio enviado ainda...</div>
         </div>
 
-        <!-- NOVO SISTEMA DE RANKING -->
         <div class="ranking-container">
             <h3 class="ranking-title">🏆 Ranking Geral do Dojo</h3>
             <p style="font-size: 13px; color: var(--text-muted); text-align: center; margin-bottom: 20px;">
@@ -1142,7 +1032,6 @@
     </div>
 </div>
 
-<!-- NAVEGAÇÃO INFERIOR -->
 <div class="bottom-nav">
     <button class="nav-btn active" onclick="mudarAba('exame', this)"><span class="icon">🥋</span>Painel</button>
     <button class="nav-btn" onclick="mudarAba('conteudo-programatico', this)"><span class="icon">📋</span>Exame</button>
@@ -1240,108 +1129,20 @@
 
     function carregarNotasAluno() {
         const tabelaBody = document.getElementById('corpoTabelaNotas');
-        const timelineContainer = document.getElementById('timelineGraduacoes');
-        
         if (!tabelaBody) return;
         if (typeof listaAlunos === 'undefined') {
             tabelaBody.innerHTML = `<tr><td colspan="8">Aguardando dados...</td></tr>`;
-            if (timelineContainer) timelineContainer.innerHTML = `<p style="color: var(--text-muted); font-size: 13px; text-align: center;">Aguardando dados...</p>`;
             setTimeout(carregarNotasAluno, 500); return;
         }
-
         const dadosAluno = listaAlunos.find(u => u.usuario === usuarioAtivo);
         if (dadosAluno && dadosAluno.historico && dadosAluno.historico.length > 0) {
             tabelaBody.innerHTML = "";
-            let timelineHtml = "";
-
             dadosAluno.historico.forEach(exame => {
-                // Preenche tabela de exames
                 const linha = document.createElement('tr');
                 linha.innerHTML = `<td style="background-color: ${exame.corFaixa}; color: ${exame.corTexto}; border-radius: 4px;">${exame.faixa}</td><td>${exame.ano}</td><td>${Number(exame.kihon).toFixed(1)}</td><td>${Number(exame.kata).toFixed(1)}</td><td>${Number(exame.kumite).toFixed(1)}</td><td>${Number(exame.perguntas).toFixed(1)}</td><td class="col-total">${Number(exame.total).toFixed(1)}</td><td class="col-media">${Number(exame.media).toFixed(1)}</td>`;
                 tabelaBody.appendChild(linha);
-
-                // Monta item da linha do tempo
-                timelineHtml += `
-                    <div class="timeline-item">
-                        <div class="timeline-dot" style="background-color: ${exame.corFaixa}; border-color: ${exame.corTexto || '#fff'};"></div>
-                        <div class="timeline-content">
-                            <div class="timeline-title">
-                                <span>🥋 ${exame.faixa}</span>
-                                <span class="timeline-date">Ano: ${exame.ano}</span>
-                            </div>
-                            <div class="timeline-details">
-                                Média Final: <strong>${Number(exame.media).toFixed(1)}</strong> | Total: ${Number(exame.total).toFixed(1)} pts
-                            </div>
-                        </div>
-                    </div>
-                `;
             });
-
-            if (timelineContainer) {
-                timelineContainer.innerHTML = timelineHtml;
-            }
-        } else { 
-            tabelaBody.innerHTML = `<tr><td colspan="8">Nenhum registro encontrado.</td></tr>`; 
-            if (timelineContainer) timelineContainer.innerHTML = `<p style="color: var(--text-muted); font-size: 13px; text-align: center;">Nenhuma graduação registrada.</p>`;
-        }
-    }
-
-    // --- FUNÇÕES DE RSVP DE EVENTOS ---
-    async function carregarEventosRsvp() {
-        const container = document.getElementById('listaEventosRsvpContainer');
-        if (!container || !usuarioAtivo) return;
-
-        try {
-            const response = await fetch(`${URL_API_SERVIDOR}/api/eventos/${usuarioAtivo}`);
-            const eventos = await response.json();
-
-            if (!Array.isArray(eventos) || eventos.length === 0) {
-                container.innerHTML = "<p style='color: var(--text-muted); text-align:center; font-size: 13px;'>Nenhum evento com RSVP no momento.</p>";
-                return;
-            }
-
-            container.innerHTML = eventos.map(ev => {
-                const confirmado = ev.meu_status === 'confirmado';
-                const recusado = ev.meu_status === 'recusado';
-
-                return `
-                    <div class="card-item" style="flex-direction: column; align-items: flex-start; gap: 8px; margin-bottom: 12px;">
-                        <strong style="font-size: 15px;">${ev.titulo}</strong>
-                        <span style="font-size: 12px; color: var(--text-muted);">📍 ${ev.local || 'Local a definir'} - 📅 ${ev.data_evento || ''}</span>
-                        <p style="font-size: 12px; color: var(--text-muted);">${ev.descricao || ''}</p>
-                        
-                        <div style="display: flex; gap: 10px; width: 100%; margin-top: 8px;">
-                            <button onclick="enviarRsvp(${ev.id}, 'confirmado')" class="btn-action" style="background: ${confirmado ? '#059669' : '#10b981'}; padding: 10px; font-size: 12px;">
-                                ${confirmado ? '✅ Presença Confirmada' : '👍 Vou Comparecer'}
-                            </button>
-                            <button onclick="enviarRsvp(${ev.id}, 'recusado')" class="btn-action" style="background: ${recusado ? '#991b1b' : '#ef4444'}; padding: 10px; font-size: 12px;">
-                                ${recusado ? '❌ Não Poderei Ir' : '👎 Não Vou'}
-                            </button>
-                        </div>
-                    </div>
-                `;
-            }).join('');
-        } catch (err) {
-            container.innerHTML = "<p style='color: red; text-align: center; font-size: 13px;'>Erro ao carregar eventos de RSVP.</p>";
-        }
-    }
-
-    async function enviarRsvp(eventoId, status) {
-        try {
-            const response = await fetch(`${URL_API_SERVIDOR}/api/rsvp`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ evento_id: eventoId, usuario: usuarioAtivo, status: status })
-            });
-            const result = await response.json();
-            if (response.ok) {
-                carregarEventosRsvp();
-            } else {
-                alert("Erro: " + result.erro);
-            }
-        } catch (err) {
-            alert("Erro de conexão ao salvar RSVP.");
-        }
+        } else { tabelaBody.innerHTML = `<tr><td colspan="8">Nenhum registro encontrado.</td></tr>`; }
     }
 
     function atualizarUIBadge(badgesArray, badgeKey, cardId, tagId, tituloConcluido = "Conquistado!") {
@@ -1390,6 +1191,9 @@
                 atualizarUIBadge(data.badges, 'badge_mae_geri', 'cardBadgeMaeGeri', 'badgeTagMaeGeri');
                 atualizarUIBadge(data.badges, 'badge_fisico_abs', 'cardBadgeAbs', 'badgeTagAbs');
                 atualizarUIBadge(data.badges, 'badge_tsuki', 'cardBadgeTsuki', 'badgeTagTsuki');
+                atualizarUIBadge(data.badges, 'badge_prancha_baixa', 'cardBadgePrancha', 'badgeTagPrancha');
+                atualizarUIBadge(data.badges, 'badge_polichinelo', 'cardBadgePolichinelo', 'badgeTagPolichinelo');
+                atualizarUIBadge(data.badges, 'badge_kibadachi_parede', 'cardBadgeKibadachiParede', 'badgeTagKibadachiParede');
             }
         } catch (err) {
             console.error(err);
@@ -1515,10 +1319,7 @@
         if (elementoAba) elementoAba.classList.add('active');
         if (botaoClicado) botaoClicado.classList.add('active');
         window.scrollTo({ top: 0, behavior: 'smooth' });
-        if (idDaAba === 'comunicados') {
-            verificarStatusAceite();
-            carregarEventosRsvp();
-        }
+        if (idDaAba === 'comunicados') verificarStatusAceite();
         if (idDaAba === 'saldo') buscarSaldoMercadoPago();
     }
 
@@ -1658,7 +1459,6 @@
         } catch (err) { container.innerHTML = "<p style='color: red;'>Erro ao carregar desafios.</p>"; }
     }
 
-    // --- FUNÇÕES DO RELATÓRIO DE FREQUÊNCIA ---
     let relatorioFrequenciaAberto = false;
 
     async function toggleRelatorioFrequencia() {
@@ -1767,7 +1567,6 @@
         } catch (err) {}
     }
 
-    // Inicialização da página
     document.addEventListener('DOMContentLoaded', () => {
         try {
             const primeiroBotao = document.querySelector('.nav-btn');
@@ -1779,7 +1578,6 @@
             carregarGraficoFrequencia();
             carregarStatusJustificativas();
             carregarMeusDesafios(); 
-            carregarEventosRsvp();
             registrarPushNativo();
 
             setTimeout(() => verificarStatusAceite(), 300);
