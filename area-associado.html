@@ -923,11 +923,20 @@
 
         <h3 style="margin-top: 35px;">🎯 Desafios Práticos em Vídeo</h3>
         <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 16px;">
-            Grave o vídeo do seu desafio, suba no Google Drive (ou YouTube) e cole o link público abaixo para avaliação do Sensei.
+            Grave o vídeo do seu desafio e envie através do nosso formulário oficial. Após o envio, selecione o desafio abaixo e clique em notificar.
         </p>
         <div style="background: rgba(15, 23, 42, 0.6); border: 1px solid var(--border-color); padding: 20px; border-radius: var(--radius-md);">
+            
+            <div style="margin-bottom: 20px; padding: 15px; background: rgba(59, 130, 246, 0.1); border: 1px solid var(--accent-blue); border-radius: 8px; text-align: center;">
+                <strong style="display: block; font-size: 14px; color: var(--text-main); margin-bottom: 10px;">Passo 1: Enviar Vídeo</strong>
+                <a href="https://forms.gle/uozSLmYvnwACC9t7A" target="_blank" class="btn-action" style="background: #3b82f6; display: inline-flex; width: auto; padding: 10px 20px;">
+                    📹 Abrir Google Forms para Upload
+                </a>
+            </div>
+
             <form id="formDesafio">
-                <label style="display: block; font-size: 13px; color: var(--text-muted); margin-bottom: 6px;">Selecione o tipo de desafio:</label>
+                <strong style="display: block; font-size: 14px; color: var(--text-main); margin-bottom: 10px;">Passo 2: Notificar o Sensei</strong>
+                <label style="display: block; font-size: 13px; color: var(--text-muted); margin-bottom: 6px;">Selecione o desafio que você enviou no formulário:</label>
                 <select id="nomeDesafio" required style="width: 100%; padding: 10px; border-radius: 6px; border: 1px solid var(--border-color); background: var(--bg-primary); color: var(--text-main); margin-bottom: 15px;">
                     <option value="">Escolha...</option>
                     <option value="Kata - Acima da Faixa">Kata - Acima da Faixa</option>
@@ -939,10 +948,7 @@
                     <option value="Kibadachi Parede 3 Min">Base Kibadachi com as Costas na Parede (3 min)</option>
                 </select>
 
-                <label style="display: block; font-size: 13px; color: var(--text-muted); margin-bottom: 6px;">Link do Vídeo (Deixe o acesso público):</label>
-                <input type="url" id="linkVideoDesafio" required placeholder="https://..." style="width: 100%; padding: 10px; border-radius: 6px; border: 1px solid var(--border-color); background: var(--bg-primary); color: var(--text-main); margin-bottom: 15px;">
-
-                <button type="submit" class="btn-action" style="background: #10b981;">📤 Enviar Link do Desafio</button>
+                <button type="submit" class="btn-action" style="background: #10b981;">📤 Notificar Envio do Desafio</button>
             </form>
 
             <h4 style="margin-top: 25px; margin-bottom: 10px; font-size: 14px; color: var(--text-muted);">Status dos Meus Desafios</h4>
@@ -1414,19 +1420,18 @@
     document.getElementById('formDesafio').addEventListener('submit', async function(e) {
         e.preventDefault();
         const nomeDesafio = document.getElementById('nomeDesafio').value;
-        const linkVideo = document.getElementById('linkVideoDesafio').value.trim();
 
-        if (!nomeDesafio || !linkVideo) return alert("Por favor, preencha todos os campos do desafio.");
+        if (!nomeDesafio) return alert("Por favor, selecione o desafio que foi enviado.");
 
         try {
             const response = await fetch(`${URL_API_SERVIDOR}/api/desafio`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ usuario: usuarioAtivo, nome_desafio: nomeDesafio, link_video: linkVideo })
+                body: JSON.stringify({ usuario: usuarioAtivo, nome_desafio: nomeDesafio })
             });
             const result = await response.json();
             if (response.ok) {
-                alert(result.mensagem || "Desafio enviado com sucesso!");
+                alert(result.mensagem || "Desafio notificado com sucesso!");
                 document.getElementById('formDesafio').reset();
                 carregarMeusDesafios();
             } else { alert("Erro: " + (result.erro || "Falha ao registrar.")); }
@@ -1450,7 +1455,7 @@
                 return `
                     <div style="background: rgba(0,0,0,0.2); padding: 10px; border-radius: 6px; margin-bottom: 8px; border-left: 4px solid ${corBadge}; text-align: left;">
                         <div><strong>Desafio:</strong> ${item.nome_desafio}</div>
-                        <div><strong>Vídeo:</strong> <a href="${item.link_video}" target="_blank" style="color: #60a5fa;">Ver link enviado</a></div>
+                        <div><strong>Vídeo:</strong> <span style="color: #60a5fa;">Enviado via Google Forms</span></div>
                         <div><strong>Status:</strong> <span style="color: ${corBadge}; font-weight: bold; text-transform: uppercase;">${item.status}</span></div>
                         <div style="font-size: 11px; color: var(--text-muted); margin-top: 4px;">Solicitado em: ${item.data_solicitacao}</div>
                     </div>
