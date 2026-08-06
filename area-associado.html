@@ -244,7 +244,7 @@
                     <input type="month" id="mesFimFrequencia" value="2026-12" style="padding: 6px 8px; border-radius: 6px; border: 1px solid var(--border-color); background: var(--bg-primary); color: var(--text-main); font-size: 12px; width: 100%;">
                 </div>
 
-                <button onclick="carregarGraficoFrequencia()" style="padding: 8px 12px; background: var(--accent-blue); color: white; border: none; border-radius: 6px; font-weight: bold; font-size: 12px; cursor: pointer; margin-top: 15px; align-self: flex-end;">
+                <button onclick="carregarGraficoFrequencia()" style="padding: 8px 12px; background: var(--accent-blue); color: white; border: none; border-radius: 6px; font-weight: bold; font-size: 12px; cursor: margin-top: 15px; align-self: flex-end;">
                     🔍 Filtrar
                 </button>
             </div>
@@ -867,7 +867,7 @@
                     </div>
                 </div>
 
-                <!-- NOVO BADGE 1: PRANCHA BAIXA 2 MIN -->
+                <!-- PRANCHA BAIXA 2 MIN -->
                 <div id="cardBadgePrancha" class="badge-card badge-bloqueado">
                     <div class="badge-emblem">
                         <div class="emblem-ring">
@@ -884,7 +884,7 @@
                     </div>
                 </div>
 
-                <!-- NOVO BADGE 2: 150X POLICHINELO -->
+                <!-- 150X POLICHINELO -->
                 <div id="cardBadgePolichinelo" class="badge-card badge-bloqueado">
                     <div class="badge-emblem">
                         <div class="emblem-ring">
@@ -901,7 +901,7 @@
                     </div>
                 </div>
 
-                <!-- NOVO BADGE 3: KIBADACHI PAREDE 3 MIN -->
+                <!-- KIBADACHI PAREDE 3 MIN -->
                 <div id="cardBadgeKibadachiParede" class="badge-card badge-bloqueado">
                     <div class="badge-emblem">
                         <div class="emblem-ring">
@@ -915,6 +915,57 @@
                             <span id="badgeTagKibadachiParede" class="badge-tag">Em andamento</span>
                         </div>
                         <p class="badge-desc">Objetivo: 3 minutos na base Kibadachi com as costas na parede.</p>
+                    </div>
+                </div>
+
+                <!-- NOVO BADGE: ZEN-KOKYU -->
+                <div id="cardBadgeZenKokyu" class="badge-card badge-bloqueado">
+                    <div class="badge-emblem">
+                        <div class="emblem-ring">
+                            <svg class="emblem-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9.59 4.59A2 2 0 1 1 11 8H2m10.59 11.41A2 2 0 1 0 14 16H2m15.73-8.27A2.5 2.5 0 1 1 19.5 12H2"/></svg>
+                        </div>
+                        <span class="badge-ribbon" style="background: linear-gradient(90deg, #64748b 0%, #475569 100%);">💨 Abdômen</span>
+                    </div>
+                    <div class="badge-info">
+                        <div class="badge-header">
+                            <strong class="badge-title">Respiração Zen</strong>
+                            <span id="badgeTagZenKokyu" class="badge-tag">Em andamento</span>
+                        </div>
+                        <p class="badge-desc">Objetivo: 2 minutos na posição Zen-Kokyu (prancha isométrica abdominal).</p>
+                    </div>
+                </div>
+
+                <!-- NOVO BADGE: PRANCHA ALTA -->
+                <div id="cardBadgePranchaAlta" class="badge-card badge-bloqueado">
+                    <div class="badge-emblem">
+                        <div class="emblem-ring">
+                            <svg class="emblem-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 22h14"></path><path d="M5 2h14"></path><path d="M17 22v-4.172a2 2 0 0 0-.586-1.414L12 12l-4.414 4.414A2 2 0 0 0 7 17.828V22"></path><path d="M7 2v4.172a2 2 0 0 0 .586 1.414L12 12l4.414-4.414A2 2 0 0 0 17 6.172V2"></path></svg>
+                        </div>
+                        <span class="badge-ribbon" style="background: linear-gradient(90deg, #b45309 0%, #78350f 100%);">💪 Braço</span>
+                    </div>
+                    <div class="badge-info">
+                        <div class="badge-header">
+                            <strong class="badge-title">Muralha Estática</strong>
+                            <span id="badgeTagPranchaAlta" class="badge-tag">Em andamento</span>
+                        </div>
+                        <p class="badge-desc">Objetivo: 3 minutos na prancha isométrica alta com o tronco ereto.</p>
+                    </div>
+                </div>
+
+                <!-- NOVO BADGE: SALTOS ZENKUTSU -->
+                <div id="cardBadgeSaltosZenkutsu" class="badge-card badge-bloqueado">
+                    <div class="badge-emblem">
+                        <div class="emblem-ring">
+                            <svg class="emblem-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5M5 12l7-7 7 7"></path><path d="M19 12l-7-7"></path></svg>
+                        </div>
+                        <span class="badge-ribbon" style="background: linear-gradient(90deg, #ea580c 0%, #c2410c 100%);">⚡ Potência</span>
+                    </div>
+                    <div class="badge-info">
+                        <div class="badge-header">
+                            <strong class="badge-title">Pernas de Mola</strong>
+                            <span id="badgeTagSaltosZenkutsu" class="badge-tag">Em andamento</span>
+                        </div>
+                        <p class="badge-desc">Objetivo: Saltos alternando base Zenkutsu-Dachi por 2 min.</p>
                     </div>
                 </div>
 
@@ -946,6 +997,10 @@
                     <option value="Prancha Baixa 2 Min">Prancha Baixa por 2 Minutos</option>
                     <option value="150x Polichinelo">150x Polichinelo (Sem pausa)</option>
                     <option value="Kibadachi Parede 3 Min">Base Kibadachi com as Costas na Parede (3 min)</option>
+                    <!-- NOVOS DESAFIOS ADICIONADOS -->
+                    <option value="Zen-Kokyu 2 Min">Zen-Kokyu (Resistência de Abdômen)</option>
+                    <option value="Prancha Alta 3 Min">Prancha Isométrica Alta (3 min)</option>
+                    <option value="Saltos Zenkutsu 2 Min">Saltos na Base Zenkutsu-Dachi (2 min)</option>
                 </select>
 
                 <button type="submit" class="btn-action" style="background: #10b981;">📤 Notificar Envio do Desafio</button>
@@ -1200,6 +1255,10 @@
                 atualizarUIBadge(data.badges, 'badge_prancha_baixa', 'cardBadgePrancha', 'badgeTagPrancha');
                 atualizarUIBadge(data.badges, 'badge_polichinelo', 'cardBadgePolichinelo', 'badgeTagPolichinelo');
                 atualizarUIBadge(data.badges, 'badge_kibadachi_parede', 'cardBadgeKibadachiParede', 'badgeTagKibadachiParede');
+                // Novos Badges
+                atualizarUIBadge(data.badges, 'badge_zen_kokyu', 'cardBadgeZenKokyu', 'badgeTagZenKokyu');
+                atualizarUIBadge(data.badges, 'badge_prancha_alta', 'cardBadgePranchaAlta', 'badgeTagPranchaAlta');
+                atualizarUIBadge(data.badges, 'badge_saltos_zenkutsu', 'cardBadgeSaltosZenkutsu', 'badgeTagSaltosZenkutsu');
             }
         } catch (err) {
             console.error(err);
