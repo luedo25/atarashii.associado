@@ -1227,27 +1227,14 @@
             const data = await res.json();
             
             if (data.sucesso) {
-                const cardBadgeFerro = document.getElementById('cardBadgeFerro');
-                const tagStatusFerro = document.getElementById('badgeTagStatus');
-                if (data.frequenciaFerroMesAtual) {
-                    if (cardBadgeFerro) cardBadgeFerro.classList.replace('badge-bloqueado', 'badge-concluido');
-                    if (tagStatusFerro) tagStatusFerro.textContent = "Conquistado!";
-                } else {
-                    if (cardBadgeFerro) cardBadgeFerro.classList.replace('badge-concluido', 'badge-bloqueado');
-                    if (tagStatusFerro) tagStatusFerro.textContent = "Em andamento";
-                }
+                // "Guardião" (100% de presença) vinculado à chave 'frequencia_ferro' ou 'guardiao' do banco.
+                // Agora, ele vai usar atualizarUIBadge que procura em *todo* o histórico (não apenas no mês atual).
+                atualizarUIBadge(data.badges, 'frequencia_ferro', 'cardBadgeFerro', 'badgeTagStatus');
+                
+                // "Lenda do Dojo" (85% em 3 meses)
+                atualizarUIBadge(data.badges, 'guardiao', 'cardBadgeGuardiao', 'badgeTagGuardiao');
 
-                const cardGuardiao = document.getElementById('cardBadgeGuardiao');
-                const tagGuardiao = document.getElementById('badgeTagGuardiao');
-                const ehGuardiao = data.badges.some(b => b.badge_key === 'guardiao' && b.concluido);
-                if (ehGuardiao || data.guardiaoConquistado) {
-                    if (cardGuardiao) cardGuardiao.classList.replace('badge-bloqueado', 'badge-concluido');
-                    if (tagGuardiao) tagGuardiao.textContent = "Conquistado!";
-                } else {
-                    if (cardGuardiao) cardGuardiao.classList.replace('badge-concluido', 'badge-bloqueado');
-                    if (tagGuardiao) tagGuardiao.textContent = "Em andamento";
-                }
-
+                // Atualiza as demais badges dinâmicas
                 atualizarUIBadge(data.badges, 'badge_kata_avancado', 'cardBadgeKata', 'badgeTagKata');
                 atualizarUIBadge(data.badges, 'badge_mae_geri', 'cardBadgeMaeGeri', 'badgeTagMaeGeri');
                 atualizarUIBadge(data.badges, 'badge_fisico_abs', 'cardBadgeAbs', 'badgeTagAbs');
@@ -1255,6 +1242,7 @@
                 atualizarUIBadge(data.badges, 'badge_prancha_baixa', 'cardBadgePrancha', 'badgeTagPrancha');
                 atualizarUIBadge(data.badges, 'badge_polichinelo', 'cardBadgePolichinelo', 'badgeTagPolichinelo');
                 atualizarUIBadge(data.badges, 'badge_kibadachi_parede', 'cardBadgeKibadachiParede', 'badgeTagKibadachiParede');
+                
                 // Novos Badges
                 atualizarUIBadge(data.badges, 'badge_zen_kokyu', 'cardBadgeZenKokyu', 'badgeTagZenKokyu');
                 atualizarUIBadge(data.badges, 'badge_prancha_alta', 'cardBadgePranchaAlta', 'badgeTagPranchaAlta');
