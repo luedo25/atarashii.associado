@@ -179,9 +179,84 @@
 
         @keyframes balancoSininho { 0% { transform: rotate(-12deg); } 100% { transform: rotate(12deg); } }
         @media (max-width: 480px) { header h1 { font-size: 16px; } .container { padding: 0 12px; } .tab-content { padding: 18px 14px; } }
+
+        /* Estilos do Popup de Avisos */
+        .modal-overlay {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 10000;
+            backdrop-filter: blur(4px);
+        }
+        .modal-content-aviso {
+            background: var(--bg-card);
+            padding: 25px;
+            border-radius: var(--radius-lg);
+            border: 1px solid var(--accent-blue);
+            width: 90%;
+            max-width: 400px;
+            text-align: center;
+            color: var(--text-main);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6);
+        }
+        .modal-content-aviso h2 {
+            color: var(--accent-blue);
+            margin-bottom: 15px;
+            font-size: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+        .aviso-detalhes {
+            text-align: left;
+            background: rgba(15, 23, 42, 0.6);
+            padding: 15px;
+            border-radius: var(--radius-md);
+            margin-bottom: 20px;
+            font-size: 14px;
+            line-height: 1.6;
+        }
+        .aviso-detalhes p {
+            margin-bottom: 8px;
+        }
+        .aviso-detalhes p:last-child {
+            margin-bottom: 0;
+        }
+        .modal-content-aviso button {
+            width: 100%;
+            padding: 14px;
+            background: var(--accent-green);
+            color: white;
+            border: none;
+            border-radius: var(--radius-md);
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 15px;
+            transition: all 0.2s;
+        }
+        .modal-content-aviso button:active {
+            transform: scale(0.96);
+        }
     </style>
 </head>
 <body>
+
+<!-- POPUP DE AVISO (Campeonato ACAK) -->
+<div id="modalAvisoInfo" class="modal-overlay" style="display: none;">
+    <div class="modal-content-aviso">
+        <h2>📢 Fique Atento!</h2>
+        <div class="aviso-detalhes">
+            <p><strong>🏆 7º Etapa Acak</strong> - 23/08 - Domingo</p>
+            <p><strong>⏳ Prazo para inscrição:</strong> 19/08</p>
+            <p><strong>💵 Investimento:</strong><br>Série A = R$ 130,00<br>Série B = R$ 100,00</p>
+        </div>
+        <button onclick="fecharAvisoPopup()">OK, Entendi</button>
+    </div>
+</div>
 
 <header>
     <div class="header-left">
@@ -1117,6 +1192,30 @@
 
     document.getElementById('welcomeNome').textContent = `Olá, ${nomeDoAluno}!`;
 
+    // ----------------------------------------------------
+    // FUNÇÕES DO POPUP DE AVISO (ACAK)
+    // ----------------------------------------------------
+    function checarPopupLogin() {
+        if (!usuarioAtivo) return;
+
+        // Chave única para este aviso específico, assim se você mudar o aviso no futuro,
+        // basta mudar essa chave (ex: popup_aviso_setembro_2026) para que o aluno veja o novo aviso.
+        const jaViu = localStorage.getItem(`popup_acak_agosto_2026_${usuarioAtivo}`);
+        
+        if (!jaViu) {
+            document.getElementById('modalAvisoInfo').style.display = 'flex';
+        }
+    }
+
+    function fecharAvisoPopup() {
+        if (usuarioAtivo) {
+            // Registra que o usuário visualizou e aceitou, para não mostrar novamente
+            localStorage.setItem(`popup_acak_agosto_2026_${usuarioAtivo}`, 'true');
+        }
+        document.getElementById('modalAvisoInfo').style.display = 'none';
+    }
+    // ----------------------------------------------------
+
     function formatarDataISO(dataISO) { return dataISO.replace(/-|:|\.\d+/g, ''); }
 
     function adicionarGoogleCalendar(titulo, local, descricao, dataInicioISO, dataFimISO) {
@@ -1631,6 +1730,9 @@
             carregarStatusJustificativas();
             carregarMeusDesafios(); 
             registrarPushNativo();
+
+            // Ativação do Popup de Notificação
+            checarPopupLogin();
 
             setTimeout(() => verificarStatusAceite(), 300);
         } catch (error) {}
