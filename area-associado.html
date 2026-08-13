@@ -241,6 +241,20 @@
         .modal-content-aviso button:active {
             transform: scale(0.96);
         }
+
+        /* Estilos do Loading Spinner */
+        .spinner {
+            width: 50px;
+            height: 50px;
+            border: 5px solid rgba(255, 255, 255, 0.2);
+            border-top-color: var(--accent-blue);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto;
+        }
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
     </style>
 </head>
 <body>
@@ -255,6 +269,14 @@
             <p><strong>💵 Investimento:</strong><br>Série A = R$ 130,00<br>Série B = R$ 100,00</p>
         </div>
         <button onclick="fecharAvisoPopup()">OK, Entendi</button>
+    </div>
+</div>
+
+<!-- POPUP DE CARREGAMENTO (SPINNER) -->
+<div id="modalLoading" class="modal-overlay" style="display: none; z-index: 10005;">
+    <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 15px;">
+        <div class="spinner"></div>
+        <p style="color: white; font-weight: bold; font-size: 16px;">Processando, aguarde...</p>
     </div>
 </div>
 
@@ -1506,6 +1528,7 @@
 
     document.getElementById('formJustificativa').addEventListener('submit', async function(e) {
         e.preventDefault();
+        
         const dataFalta = document.getElementById('dataFaltaAluno').value;
         const marcados = Array.from(document.querySelectorAll('input[name="motivoFalta"]:checked')).map(cb => cb.value);
         const checkOutro = document.getElementById('checkOutro'), textoOutro = document.getElementById('textoJustificativaOutro')?.value.trim();
@@ -1531,11 +1554,34 @@
         let listaMotivos = [...marcados];
         if (checkOutro?.checked && textoOutro) listaMotivos.push(`Outro: ${textoOutro}`);
 
+        // Mostrar o Modal de Loading e Desativar o botão
+        const btnSubmit = this.querySelector('button[type="submit"]');
+        document.getElementById('modalLoading').style.display = 'flex';
+        btnSubmit.disabled = true;
+        btnSubmit.style.opacity = '0.6';
+
         try {
-            const response = await fetch(`${URL_API_SERVIDOR}/api/justificativa`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ usuario: usuarioAtivo, data_falta: dataFalta, motivo: listaMotivos.join('; ') }) });
-            if (response.ok) { alert("Justificativa enviada!"); document.getElementById('formJustificativa').reset(); alternarCampoTextoOutro(); carregarStatusJustificativas(); }
-            else alert("Erro ao enviar.");
-        } catch (err) { alert("Erro ao enviar solicitação."); }
+            const response = await fetch(`${URL_API_SERVIDOR}/api/justificativa`, { 
+                method: 'POST', 
+                headers: { 'Content-Type': 'application/json' }, 
+                body: JSON.stringify({ usuario: usuarioAtivo, data_falta: dataFalta, motivo: listaMotivos.join('; ') }) 
+            });
+            if (response.ok) { 
+                alert("Justificativa enviada!"); 
+                document.getElementById('formJustificativa').reset(); 
+                alternarCampoTextoOutro(); 
+                carregarStatusJustificativas(); 
+            } else {
+                alert("Erro ao enviar.");
+            }
+        } catch (err) { 
+            alert("Erro ao enviar solicitação."); 
+        } finally {
+            // Ocultar o Modal de Loading e Reativar o botão independente do resultado
+            document.getElementById('modalLoading').style.display = 'none';
+            btnSubmit.disabled = false;
+            btnSubmit.style.opacity = '1';
+        }
     });
     
     async function carregarStatusJustificativas() {
@@ -1569,6 +1615,12 @@
 
         if (!nomeDesafio) return alert("Por favor, selecione o desafio que foi enviado.");
 
+        // Mostrar o Modal de Loading e Desativar o botão
+        const btnSubmit = this.querySelector('button[type="submit"]');
+        document.getElementById('modalLoading').style.display = 'flex';
+        btnSubmit.disabled = true;
+        btnSubmit.style.opacity = '0.6';
+
         try {
             const response = await fetch(`${URL_API_SERVIDOR}/api/desafio`, {
                 method: 'POST',
@@ -1581,7 +1633,14 @@
                 document.getElementById('formDesafio').reset();
                 carregarMeusDesafios();
             } else { alert("Erro: " + (result.erro || "Falha ao registrar.")); }
-        } catch (err) { alert("Erro de rede ao enviar solicitação."); }
+        } catch (err) { 
+            alert("Erro de rede ao enviar solicitação."); 
+        } finally {
+            // Ocultar o Modal de Loading e Reativar o botão independente do resultado
+            document.getElementById('modalLoading').style.display = 'none';
+            btnSubmit.disabled = false;
+            btnSubmit.style.opacity = '1';
+        }
     });
 
     async function carregarMeusDesafios() {
