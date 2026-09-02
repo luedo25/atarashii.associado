@@ -255,21 +255,26 @@
         @keyframes spin {
             to { transform: rotate(360deg); }
         }
+        
+        /* CORREÇÃO AQUI - width: 100% adicionado */
         .video-responsivo {
-    position: relative;
-    padding-bottom: 56.25%; /* Proporção de 16:9 do YouTube */
-    height: 0;
-    overflow: hidden;
-    max-width: 100%;
-}
+            position: relative;
+            width: 100%; 
+            padding-bottom: 56.25%; /* Proporção de 16:9 do YouTube */
+            height: 0;
+            overflow: hidden;
+            max-width: 100%;
+            border-radius: 8px; /* Opcional: para deixar as bordas arredondadas e bonitas */
+        }
 
-.video-responsivo iframe {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-}
+        .video-responsivo iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
     </style>
 </head>
 <body>
@@ -1176,30 +1181,32 @@
             <strong style="font-size: 15px;">📄 Numeral em Japonês</strong>
             <p style="font-size: 12px; color: var(--text-muted);">Guia de contagem em japonês.</p>
             <a href="Numeral em japones.pdf" target="_blank" class="btn-action" style="padding: 10px;">📖 Abrir Guia</a>
+            
+            <!-- CORREÇÃO AQUI - Link "embed" -->
             <div class="video-responsivo">
-    <iframe 
-        src="https://www.youtube.com/watch?v=dZARRSQ7VjA&t=390s" 
-        title="Números em Japonês: Guia completo de 1 a 1.000.000" 
-        frameborder="0" 
-        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
-        allowfullscreen>
-    </iframe>
-</div>
+                <iframe 
+                    src="https://www.youtube.com/embed/dZARRSQ7VjA?start=390" 
+                    title="Números em Japonês: Guia completo de 1 a 1.000.000" 
+                    frameborder="0" 
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
+                    allowfullscreen>
+                </iframe>
+            </div>
         </div>
 
         <div class="card-item" style="flex-direction: column; align-items: flex-start; gap: 10px;">
             <strong style="font-size: 15px;">📄 Dojo Kun</strong>
             <p style="font-size: 12px; color: var(--text-muted);">O dojo kun é o conjunto de cinco regras ou lemas morais do karatê.</p>
             <a href="Dojo kun.pdf" target="_blank" class="btn-action" style="padding: 10px;">📖 Abrir PDF</a>
-          <div class="video-responsivo">
-    <iframe 
-        src="https://www.youtube.com/embed/6zRWz06DNa4" 
-        title="DOJO KUN SHOTOKAN EM JAPONÊS" 
-        frameborder="0" 
-        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
-        allowfullscreen>
-    </iframe>
-</div>
+            <div class="video-responsivo">
+                <iframe 
+                    src="https://www.youtube.com/embed/6zRWz06DNa4" 
+                    title="DOJO KUN SHOTOKAN EM JAPONÊS" 
+                    frameborder="0" 
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
+                    allowfullscreen>
+                </iframe>
+            </div>
         </div>
 
         <div class="card-item" style="flex-direction: column; align-items: flex-start; gap: 10px;">
