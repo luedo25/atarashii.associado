@@ -1386,24 +1386,30 @@
         } catch (e) {}
     }
 
-    function carregarNotasAluno() {
-        const tabelaBody = document.getElementById('corpoTabelaNotas');
-        if (!tabelaBody) return;
-        if (typeof listaAlunos === 'undefined') {
-            tabelaBody.innerHTML = `<tr><td colspan="8">Aguardando dados...</td></tr>`;
-            setTimeout(carregarNotasAluno, 500); return;
-        }
-        const dadosAluno = listaAlunos.find(u => u.usuario === usuarioAtivo);
-        if (dadosAluno && dadosAluno.historico && dadosAluno.historico.length > 0) {
+let listaAlunos = []; // Declarar globalmente
+
+async function carregarNotasAluno() {
+    const tabelaBody = document.getElementById('corpoTabelaNotas');
+    if (!tabelaBody) return;
+    
+    try {
+        const res = await fetch(`${URL_API_SERVIDOR}/api/exames/${usuarioAtivo}`);
+        const historico = await res.json();
+        
+        if (historico && historico.length > 0) {
             tabelaBody.innerHTML = "";
-            dadosAluno.historico.forEach(exame => {
+            historico.forEach(exame => {
                 const linha = document.createElement('tr');
-                linha.innerHTML = `<td style="background-color: ${exame.corFaixa}; color: ${exame.corTexto}; border-radius: 4px;">${exame.faixa}</td><td>${exame.ano}</td><td>${Number(exame.kihon).toFixed(1)}</td><td>${Number(exame.kata).toFixed(1)}</td><td>${Number(exame.kumite).toFixed(1)}</td><td>${Number(exame.perguntas).toFixed(1)}</td><td class="col-total">${Number(exame.total).toFixed(1)}</td><td class="col-media">${Number(exame.media).toFixed(1)}</td>`;
+                linha.innerHTML = `<td style="background-color: ${exame.cor_faixa}; color: ${exame.cor_texto}; border-radius: 4px;">${exame.faixa}</td><td>${exame.ano}</td><td>${Number(exame.kihon).toFixed(1)}</td><td>${Number(exame.kata).toFixed(1)}</td><td>${Number(exame.kumite).toFixed(1)}</td><td>${Number(exame.perguntas).toFixed(1)}</td><td class="col-total">${Number(exame.total).toFixed(1)}</td><td class="col-media">${Number(exame.media).toFixed(1)}</td>`;
                 tabelaBody.appendChild(linha);
             });
-        } else { tabelaBody.innerHTML = `<tr><td colspan="8">Nenhum registro encontrado.</td></tr>`; }
+        } else { 
+            tabelaBody.innerHTML = `<tr><td colspan="8">Nenhum registro encontrado.</td></tr>`; 
+        }
+    } catch (err) {
+        tabelaBody.innerHTML = `<tr><td colspan="8">Erro ao carregar exames.</td></tr>`;
     }
-
+}
     function atualizarUIBadge(badgesArray, badgeKey, cardId, tagId, tituloConcluido = "Conquistado!") {
         const card = document.getElementById(cardId);
         const tag = document.getElementById(tagId);
