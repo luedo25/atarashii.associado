@@ -159,7 +159,7 @@
             border: 1px solid #334155;
             background-color: #0f172a;
             color: #f8fafc;
-            -webkit-appearance: none; /* Melhora renderização no iOS */
+            -webkit-appearance: none;
             appearance: none;
         }
 
@@ -665,6 +665,7 @@
                             </div>
                             <div class="card-list-detail"><strong>Data da Falta:</strong> ${item.data_falta.split('-').reverse().join('/')}</div>
                             <div class="card-list-detail"><strong>Motivo:</strong> ${item.motivo}</div>
+                            ${item.comentario_professor ? `<div class="card-list-detail"><strong>Comentário do Sensei:</strong> ${item.comentario_professor}</div>` : ''}
                             <div class="card-list-date">Enviado em: ${item.data_solicitacao}</div>
 
                             ${ehPendente ? `
@@ -682,12 +683,23 @@
         }
 
         async function responderJustificativa(id, status) {
-            if (!confirm(`Deseja alterar o status desta justificativa para ${status.toUpperCase()}?`)) return;
+            let comentario = null;
+            if (status === 'reprovado') {
+                comentario = prompt(`Deseja alterar o status desta justificativa para REPROVADO?\n\nPor favor, insira o motivo da reprovação (Obrigatório):`);
+                if (comentario === null) return; 
+                if (comentario.trim() === '') {
+                    alert("O comentário é obrigatório ao reprovar uma justificativa.");
+                    return;
+                }
+            } else {
+                if (!confirm(`Deseja alterar o status desta justificativa para APROVADO?`)) return;
+            }
+            
             try {
                 const response = await fetch(`${URL_API_SERVIDOR}/api/justificativa/resposta`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ id, status })
+                    body: JSON.stringify({ id, status, comentario })
                 });
                 const result = await response.json();
                 if (response.ok) {
