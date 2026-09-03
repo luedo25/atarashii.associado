@@ -256,15 +256,14 @@
             to { transform: rotate(360deg); }
         }
         
-        /* CORREÇÃO AQUI - width: 100% adicionado */
         .video-responsivo {
             position: relative;
             width: 100%; 
-            padding-bottom: 56.25%; /* Proporção de 16:9 do YouTube */
+            padding-bottom: 56.25%;
             height: 0;
             overflow: hidden;
             max-width: 100%;
-            border-radius: 8px; /* Opcional: para deixar as bordas arredondadas e bonitas */
+            border-radius: 8px; 
         }
 
         .video-responsivo iframe {
@@ -1182,7 +1181,6 @@
             <p style="font-size: 12px; color: var(--text-muted);">Guia de contagem em japonês.</p>
             <a href="Numeral em japones.pdf" target="_blank" class="btn-action" style="padding: 10px;">📖 Abrir Guia</a>
             
-            <!-- CORREÇÃO AQUI - Link "embed" -->
             <div class="video-responsivo">
                 <iframe 
                     src="https://www.youtube.com/embed/dZARRSQ7VjA?start=390" 
@@ -1263,14 +1261,9 @@
 
     document.getElementById('welcomeNome').textContent = `Olá, ${nomeDoAluno}!`;
 
-    // ----------------------------------------------------
-    // FUNÇÕES DO POPUP DE AVISO (ACAK)
-    // ----------------------------------------------------
     function checarPopupLogin() {
         if (!usuarioAtivo) return;
 
-        // Chave única para este aviso específico, assim se você mudar o aviso no futuro,
-        // basta mudar essa chave (ex: popup_aviso_setembro_2026) para que o aluno veja o novo aviso.
         const jaViu = localStorage.getItem(`popup_acak_agosto_2026_${usuarioAtivo}`);
         
         if (!jaViu) {
@@ -1280,12 +1273,10 @@
 
     function fecharAvisoPopup() {
         if (usuarioAtivo) {
-            // Registra que o usuário visualizou e aceitou, para não mostrar novamente
             localStorage.setItem(`popup_acak_agosto_2026_${usuarioAtivo}`, 'true');
         }
         document.getElementById('modalAvisoInfo').style.display = 'none';
     }
-    // ----------------------------------------------------
 
     function formatarDataISO(dataISO) { return dataISO.replace(/-|:|\.\d+/g, ''); }
 
@@ -1397,14 +1388,8 @@
             const data = await res.json();
             
             if (data.sucesso) {
-                // "Guardião" (100% de presença) vinculado à chave 'frequencia_ferro' ou 'guardiao' do banco.
-                // Agora, ele vai usar atualizarUIBadge que procura em *todo* o histórico (não apenas no mês atual).
                 atualizarUIBadge(data.badges, 'frequencia_ferro', 'cardBadgeFerro', 'badgeTagStatus');
-                
-                // "Lenda do Dojo" (85% em 3 meses)
                 atualizarUIBadge(data.badges, 'guardiao', 'cardBadgeGuardiao', 'badgeTagGuardiao');
-
-                // Atualiza as demais badges dinâmicas
                 atualizarUIBadge(data.badges, 'badge_kata_avancado', 'cardBadgeKata', 'badgeTagKata');
                 atualizarUIBadge(data.badges, 'badge_mae_geri', 'cardBadgeMaeGeri', 'badgeTagMaeGeri');
                 atualizarUIBadge(data.badges, 'badge_fisico_abs', 'cardBadgeAbs', 'badgeTagAbs');
@@ -1412,8 +1397,6 @@
                 atualizarUIBadge(data.badges, 'badge_prancha_baixa', 'cardBadgePrancha', 'badgeTagPrancha');
                 atualizarUIBadge(data.badges, 'badge_polichinelo', 'cardBadgePolichinelo', 'badgeTagPolichinelo');
                 atualizarUIBadge(data.badges, 'badge_kibadachi_parede', 'cardBadgeKibadachiParede', 'badgeTagKibadachiParede');
-                
-                // Novos Badges
                 atualizarUIBadge(data.badges, 'badge_zen_kokyu', 'cardBadgeZenKokyu', 'badgeTagZenKokyu');
                 atualizarUIBadge(data.badges, 'badge_prancha_alta', 'cardBadgePranchaAlta', 'badgeTagPranchaAlta');
                 atualizarUIBadge(data.badges, 'badge_saltos_zenkutsu', 'cardBadgeSaltosZenkutsu', 'badgeTagSaltosZenkutsu');
@@ -1603,7 +1586,6 @@
         let listaMotivos = [...marcados];
         if (checkOutro?.checked && textoOutro) listaMotivos.push(`Outro: ${textoOutro}`);
 
-        // Mostrar o Modal de Loading e Desativar o botão
         const btnSubmit = this.querySelector('button[type="submit"]');
         document.getElementById('modalLoading').style.display = 'flex';
         btnSubmit.disabled = true;
@@ -1626,7 +1608,6 @@
         } catch (err) { 
             alert("Erro ao enviar solicitação."); 
         } finally {
-            // Ocultar o Modal de Loading e Reativar o botão independente do resultado
             document.getElementById('modalLoading').style.display = 'none';
             btnSubmit.disabled = false;
             btnSubmit.style.opacity = '1';
@@ -1649,10 +1630,12 @@
 
             container.innerHTML = dadosFiltrados.map(item => {
                 let corBadge = item.status === 'aprovado' ? '#10b981' : (item.status === 'reprovado' ? '#ef4444' : '#f59e0b');
+                let comentarioHtml = item.comentario_professor ? `<div style="margin-top: 6px; padding: 8px; background: rgba(239, 68, 68, 0.1); border-left: 3px solid #ef4444; color: #fca5a5; border-radius: 4px; font-size: 12px;"><strong>Motivo da Reprovação:</strong> ${item.comentario_professor}</div>` : '';
                 return `<div style="background: rgba(0,0,0,0.2); padding: 10px; border-radius: 6px; margin-bottom: 8px; border-left: 4px solid ${corBadge}; text-align: left;">
                     <div><strong>Data da Falta:</strong> ${item.data_falta.split('-').reverse().join('/')}</div>
                     <div><strong>Motivo:</strong> ${item.motivo}</div>
                     <div><strong>Status:</strong> <span style="color: ${corBadge}; font-weight: bold; text-transform: uppercase;">${item.status}</span></div>
+                    ${comentarioHtml}
                     <div style="font-size: 11px; color: var(--text-muted); margin-top: 4px;">Solicitado em: ${item.data_solicitacao}</div></div>`;
             }).join('');
         } catch (err) { container.innerHTML = "<p style='color: red;'>Erro ao carregar justificativas.</p>"; }
@@ -1664,7 +1647,6 @@
 
         if (!nomeDesafio) return alert("Por favor, selecione o desafio que foi enviado.");
 
-        // Mostrar o Modal de Loading e Desativar o botão
         const btnSubmit = this.querySelector('button[type="submit"]');
         document.getElementById('modalLoading').style.display = 'flex';
         btnSubmit.disabled = true;
@@ -1685,7 +1667,6 @@
         } catch (err) { 
             alert("Erro de rede ao enviar solicitação."); 
         } finally {
-            // Ocultar o Modal de Loading e Reativar o botão independente do resultado
             document.getElementById('modalLoading').style.display = 'none';
             btnSubmit.disabled = false;
             btnSubmit.style.opacity = '1';
@@ -1839,7 +1820,6 @@
             carregarMeusDesafios(); 
             registrarPushNativo();
 
-            // Ativação do Popup de Notificação
             checarPopupLogin();
 
             setTimeout(() => verificarStatusAceite(), 300);
