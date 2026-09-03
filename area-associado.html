@@ -1155,7 +1155,7 @@
     </div>
 
     <!-- SEÇÃO 6: ATARASHII -->
-        <div id="saldo" class="tab-content">
+       <div id="saldo" class="tab-content">
         <h3>📢 Regras e Normas da Associação</h3>
         
         <div id="blocoTermoPendente">
@@ -1193,14 +1193,38 @@
             <a href="regras-associacao.pdf" target="_blank" class="btn-action" style="padding: 10px;">📖 Abrir PDF</a>
         </div>
    
-        <h3>💰 Saldo em Conta da Associação</h3>
-        <p style="font-size: 32px; font-weight: 800; color: var(--accent-green); margin: 10px 0 16px 0;" id="textoSaldo">R$ --,--</p>
-        <button onclick="buscarSaldoMercadoPago()" class="btn-action" style="margin-bottom: 20px;">🔄 Atualizar Saldo</button>
+        <h3>💰 Transparência Financeira</h3>
+        <div style="background: rgba(15, 23, 42, 0.6); border: 1px solid var(--border-color); padding: 20px; border-radius: var(--radius-md); margin-bottom: 20px;">
+            <div style="display: flex; justify-content: space-between; margin-bottom: 10px; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 5px;">
+                <span style="color: var(--text-muted);">Arrecadação de Valores:</span>
+                <strong id="valArrecadacao" style="color: var(--accent-blue);">Carregando...</strong>
+            </div>
+            <div style="display: flex; justify-content: space-between; margin-bottom: 10px; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 5px;">
+                <span style="color: var(--text-muted);">Investimentos da Associação:</span>
+                <strong id="valInvestimentos" style="color: var(--accent-red);">Carregando...</strong>
+            </div>
+            <div style="display: flex; justify-content: space-between; margin-bottom: 15px; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 5px;">
+                <span style="color: var(--text-muted); font-weight: bold;">Valor em Caixa:</span>
+                <strong id="valCaixa" style="color: var(--accent-green); font-size: 16px;">Carregando...</strong>
+            </div>
+
+            <h4 style="color: var(--text-main); margin-bottom: 10px; font-size: 14px;">📊 Valor Investido 2026</h4>
+            <div style="display: flex; justify-content: space-between; font-size: 13px; margin-bottom: 5px;">
+                <span style="color: var(--text-muted);">Cursos:</span> <strong id="valCursos">...</strong>
+            </div>
+            <div style="display: flex; justify-content: space-between; font-size: 13px; margin-bottom: 5px;">
+                <span style="color: var(--text-muted);">Campeonatos:</span> <strong id="valCampeonatos">...</strong>
+            </div>
+            <div style="display: flex; justify-content: space-between; font-size: 13px;">
+                <span style="color: var(--text-muted);">Associação:</span> <strong id="valAssoc2026">...</strong>
+            </div>
+        </div>
 
         <h3>💵 Ajude a Associação Atarashii</h3>
         <div style="display: flex; flex-direction: column; gap: 10px; margin-bottom: 20px;">
             <a href="https://link.mercadopago.com.br/atarashii" target="_blank" class="btn-action" style="background: #1877f2;">🔗 Link para ajudar Associação</a>
         </div> 
+           
         <h3>🔗 Contatos Oficiais</h3>
         <div style="display: flex; flex-direction: column; gap: 10px; margin-bottom: 20px;">
             <a href="https://wa.me/5511988412917" target="_blank" class="btn-action btn-whatsapp">💬 Falar com o Sensei</a>
@@ -1531,7 +1555,7 @@
         .catch(() => window.location.href = mailtoUrl);
     }
 
-    function mudarAba(idDaAba, botaoClicado) {
+   function mudarAba(idDaAba, botaoClicado) {
         document.querySelectorAll('.tab-content').forEach(secao => secao.classList.remove('active'));
         document.querySelectorAll('.nav-btn').forEach(btn => btn.classList.remove('active'));
         const elementoAba = document.getElementById(idDaAba);
@@ -1539,17 +1563,21 @@
         if (botaoClicado) botaoClicado.classList.add('active');
         window.scrollTo({ top: 0, behavior: 'smooth' });
         if (idDaAba === 'comunicados') verificarStatusAceite();
-        if (idDaAba === 'saldo') buscarSaldoMercadoPago();
+        if (idDaAba === 'saldo') buscarFinancas();
     }
 
-    function buscarSaldoMercadoPago() {
-        const elementoSaldo = document.getElementById('textoSaldo');
-        if (!elementoSaldo) return;
-        elementoSaldo.textContent = "Carregando...";
-        fetch(`${URL_API_SERVIDOR}/api/saldo`)
+    function buscarFinancas() {
+        fetch(`${URL_API_SERVIDOR}/api/financas`)
             .then(r => r.json())
-            .then(data => elementoSaldo.textContent = data.saldo !== undefined ? data.saldo.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' }) : "Erro ao carregar")
-            .catch(() => elementoSaldo.textContent = "Erro de conexão");
+            .then(data => {
+                document.getElementById('valArrecadacao').textContent = data.arrecadacao_total || 'R$ 0,00';
+                document.getElementById('valInvestimentos').textContent = data.investimento_total || 'R$ 0,00';
+                document.getElementById('valCaixa').textContent = data.valor_caixa || 'R$ 0,00';
+                document.getElementById('valCursos').textContent = data.cursos_2026 || 'R$ 0,00';
+                document.getElementById('valCampeonatos').textContent = data.campeonatos_2026 || 'R$ 0,00';
+                document.getElementById('valAssoc2026').textContent = data.associacao_2026 || 'R$ 0,00';
+            })
+            .catch(() => console.error("Erro ao carregar finanças"));
     }
 
     document.getElementById('logoutBtn').addEventListener('click', function() {
