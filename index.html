@@ -108,6 +108,107 @@
             display: none;
         }
 
+        .password-actions {
+            margin-top: 16px;
+            text-align: center;
+        }
+
+        .link-button {
+            appearance: none;
+            border: 0;
+            background: transparent;
+            color: #0069d9;
+            cursor: pointer;
+            font-size: 14px;
+            padding: 6px;
+            text-decoration: underline;
+            text-underline-offset: 3px;
+        }
+
+        .link-button:hover,
+        .link-button:focus-visible {
+            color: #004a99;
+        }
+
+        .recovery-dialog {
+            width: min(92vw, 440px);
+            max-height: 90vh;
+            margin: auto;
+            padding: 0;
+            border: 0;
+            border-radius: 10px;
+            box-shadow: 0 18px 55px rgba(0, 0, 0, 0.25);
+        }
+
+        .recovery-dialog::backdrop {
+            background: rgba(15, 23, 42, 0.65);
+        }
+
+        .dialog-content {
+            padding: 30px;
+        }
+
+        .dialog-header {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            gap: 20px;
+            margin-bottom: 18px;
+        }
+
+        .dialog-header h2 {
+            color: #2c3e50;
+            font-size: 22px;
+            line-height: 1.25;
+        }
+
+        .dialog-description {
+            color: #5f6b76;
+            font-size: 14px;
+            line-height: 1.5;
+            margin-bottom: 20px;
+        }
+
+        .dialog-close {
+            flex: 0 0 auto;
+            border: 0;
+            background: transparent;
+            color: #68737d;
+            cursor: pointer;
+            font-size: 24px;
+            line-height: 1;
+            padding: 2px 5px;
+        }
+
+        .form-message {
+            display: none;
+            border-radius: 6px;
+            font-size: 14px;
+            line-height: 1.45;
+            margin-top: 14px;
+            padding: 11px 12px;
+        }
+
+        .form-message.error {
+            display: block;
+            background: #fff1f2;
+            color: #b42318;
+        }
+
+        .form-message.success {
+            display: block;
+            background: #ecfdf3;
+            color: #067647;
+        }
+
+        .password-hint {
+            color: #68737d;
+            display: block;
+            font-size: 12px;
+            line-height: 1.4;
+            margin-top: 6px;
+        }
+
         /* BOTÃO GUIA DE ESTUDO FIXO (UNIVERSAL PARA PC/MOBILE) */
         .btn-guia-estudo {
             position: fixed; /* Mantém preso na tela, ignorando outros elementos */
@@ -192,7 +293,55 @@
             <button type="submit" class="btn-login">Entrar</button>
             <div id="errorMessage" class="error-message">Usuário ou senha incorretos.</div>
         </form>
-    </div>        
+        <div class="password-actions">
+            <button type="button" class="link-button" id="openRecovery">Esqueci minha senha</button>
+        </div>
+    </div>
+
+    <dialog id="recoveryDialog" class="recovery-dialog" aria-labelledby="recoveryTitle">
+        <div class="dialog-content">
+            <div class="dialog-header">
+                <h2 id="recoveryTitle">Recuperar senha</h2>
+                <button type="button" class="dialog-close" id="closeRecovery" aria-label="Fechar">&times;</button>
+            </div>
+
+            <section id="requestResetSection">
+                <p class="dialog-description">
+                    Informe o usuário e o e-mail cadastrado. Você receberá um link válido por 30 minutos.
+                </p>
+                <form id="requestResetForm">
+                    <div class="input-group">
+                        <label for="recoveryUsername">Usuário</label>
+                        <input type="text" id="recoveryUsername" required autocomplete="username" autocapitalize="none" spellcheck="false">
+                    </div>
+                    <div class="input-group">
+                        <label for="recoveryEmail">E-mail cadastrado</label>
+                        <input type="email" id="recoveryEmail" required autocomplete="email">
+                    </div>
+                    <button type="submit" class="btn-login">Enviar link</button>
+                    <div id="requestResetMessage" class="form-message" role="status" aria-live="polite"></div>
+                </form>
+            </section>
+
+            <section id="resetPasswordSection" hidden>
+                <p class="dialog-description">Crie uma nova senha para acessar sua conta.</p>
+                <form id="resetPasswordForm">
+                    <div class="input-group">
+                        <label for="newPassword">Nova senha</label>
+                        <input type="password" id="newPassword" required minlength="8" maxlength="128" autocomplete="new-password">
+                        <small class="password-hint">Use pelo menos 8 caracteres, incluindo uma letra e um número.</small>
+                    </div>
+                    <div class="input-group">
+                        <label for="confirmPassword">Confirmar nova senha</label>
+                        <input type="password" id="confirmPassword" required minlength="8" maxlength="128" autocomplete="new-password">
+                    </div>
+                    <button type="submit" class="btn-login">Alterar senha</button>
+                    <div id="resetPasswordMessage" class="form-message" role="status" aria-live="polite"></div>
+                </form>
+            </section>
+        </div>
+    </dialog>
+
     <script>
         document.getElementById('loginForm').addEventListener('submit', async function(event) {
             event.preventDefault(); 
@@ -210,7 +359,7 @@
                 const dados = await apiFetch('/api/auth/login', {
                     method: 'POST',
                     body: JSON.stringify({ usuario: usuarioInput, senha: senhaInput }),
-                    timeoutMs: 30000
+                    timeoutMs: 90000
                 });
 
                 Auth.salvarSessao(dados);
@@ -225,6 +374,92 @@
                 botao.textContent = 'Entrar';
             }
         });
+
+        const recoveryDialog = document.getElementById('recoveryDialog');
+        const requestResetSection = document.getElementById('requestResetSection');
+        const resetPasswordSection = document.getElementById('resetPasswordSection');
+        const resetToken = new URLSearchParams(window.location.search).get('reset_token');
+
+        function exibirMensagem(elemento, texto, tipo) {
+            elemento.textContent = texto;
+            elemento.className = `form-message ${tipo}`;
+        }
+
+        document.getElementById('openRecovery').addEventListener('click', () => {
+            requestResetSection.hidden = false;
+            resetPasswordSection.hidden = true;
+            recoveryDialog.showModal();
+            document.getElementById('recoveryUsername').focus();
+        });
+
+        document.getElementById('closeRecovery').addEventListener('click', () => recoveryDialog.close());
+        recoveryDialog.addEventListener('click', (event) => {
+            if (event.target === recoveryDialog) recoveryDialog.close();
+        });
+
+        document.getElementById('requestResetForm').addEventListener('submit', async function (event) {
+            event.preventDefault();
+            const botao = this.querySelector('button[type="submit"]');
+            const mensagem = document.getElementById('requestResetMessage');
+            const usuario = document.getElementById('recoveryUsername').value.trim();
+            const email = document.getElementById('recoveryEmail').value.trim();
+
+            mensagem.className = 'form-message';
+            botao.disabled = true;
+            botao.textContent = 'Enviando...';
+
+            try {
+                const dados = await Auth.solicitarRedefinicaoSenha(usuario, email);
+                exibirMensagem(mensagem, dados.mensagem, 'success');
+                this.reset();
+            } catch (error) {
+                exibirMensagem(mensagem, error.message || 'Não foi possível enviar o link.', 'error');
+            } finally {
+                botao.disabled = false;
+                botao.textContent = 'Enviar link';
+            }
+        });
+
+        document.getElementById('resetPasswordForm').addEventListener('submit', async function (event) {
+            event.preventDefault();
+            const botao = this.querySelector('button[type="submit"]');
+            const mensagem = document.getElementById('resetPasswordMessage');
+            const novaSenha = document.getElementById('newPassword').value;
+            const confirmacao = document.getElementById('confirmPassword').value;
+
+            mensagem.className = 'form-message';
+            if (novaSenha !== confirmacao) {
+                exibirMensagem(mensagem, 'As senhas informadas não são iguais.', 'error');
+                return;
+            }
+            if (novaSenha.length < 8 || !/[A-Za-zÀ-ÖØ-öø-ÿ]/.test(novaSenha) || !/\d/.test(novaSenha)) {
+                exibirMensagem(mensagem, 'Use pelo menos 8 caracteres, incluindo uma letra e um número.', 'error');
+                return;
+            }
+
+            botao.disabled = true;
+            botao.textContent = 'Alterando...';
+            try {
+                const dados = await Auth.redefinirSenha(resetToken, novaSenha);
+                exibirMensagem(mensagem, dados.mensagem, 'success');
+                this.reset();
+                window.history.replaceState({}, document.title, window.location.pathname);
+                document.getElementById('username').focus();
+                setTimeout(() => recoveryDialog.close(), 1800);
+            } catch (error) {
+                exibirMensagem(mensagem, error.message || 'Não foi possível alterar a senha.', 'error');
+            } finally {
+                botao.disabled = false;
+                botao.textContent = 'Alterar senha';
+            }
+        });
+
+        if (resetToken) {
+            requestResetSection.hidden = true;
+            resetPasswordSection.hidden = false;
+            recoveryDialog.showModal();
+            document.getElementById('newPassword').focus();
+        }
     </script>
 
     <script>
