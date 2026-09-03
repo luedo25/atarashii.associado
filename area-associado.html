@@ -703,6 +703,7 @@
                 </table>
             </div>
             </div>
+        <p></p>
              <h3>📚 Materiais de Estudo</h3>
               <div class="card-item" style="flex-direction: column; align-items: flex-start; gap: 10px;">
             <strong style="font-size: 15px;">📄 Numeral em Japonês</strong>
@@ -736,45 +737,7 @@
         </div>
     </div>
 
-    <!-- SEÇÃO 3: AVISOS -->
-    <div id="comunicados" class="tab-content">
-        <h3>📢 Regras e Normas da Associação</h3>
-        
-        <div id="blocoTermoPendente">
-            <p style="font-size: 14px; color: var(--text-muted); margin-bottom: 16px;">
-                Por favor, toque no botão abaixo para abrir, ler o documento completo de regras e depois confirmar o seu aceite obrigatório.
-            </p>
-
-            <a href="regras-associacao.pdf" target="_blank" class="btn-action" style="margin-bottom: 16px;">
-                📖 Abrir Regras e Normas da Associação (PDF)
-            </a>
-
-            <div style="background: rgba(15, 23, 42, 0.6); border: 1px solid var(--border-color); padding: 16px; border-radius: var(--radius-md); margin-bottom: 20px;">
-                <label style="display: flex; gap: 12px; cursor: pointer; font-size: 13px; color: var(--text-main); font-weight: 500; line-height: 1.4;">
-                    <input type="checkbox" id="checkAceite" onchange="alternarBotaoAceite()" style="width: 20px; height: 20px; accent-color: var(--accent-blue);">
-                    <span>Declaro que li, compreendi e concordo integralmente com todas as Regras, Normas e Termos estabelecidos pela Associação.</span>
-                </label>
-
-                <button id="btnEnviarAceite" disabled onclick="enviarEmailAceite()" class="btn-action" style="margin-top: 14px; background: #475569; opacity: 0.6; cursor: not-allowed; box-shadow: none;">
-                    🔒 Aceitar Termos e Enviar Comprovante
-                </button>
-            </div>
-        </div>
-
-        <div id="blocoTermoAceito" style="display: none; text-align: center; padding: 20px; background: rgba(16, 185, 129, 0.1); border: 1px solid rgba(16, 185, 129, 0.3); border-radius: var(--radius-md); margin-bottom: 20px;">
-            <span style="font-size: 32px;">✅</span>
-            <h4 style="color: var(--accent-green); margin: 8px 0;">Termos Aceitos com Sucesso!</h4>
-            <p style="font-size: 13px; color: var(--text-muted);" id="textoDataAceite">
-                O seu comprovante de leitura e concordância já foi registrado e enviado para a Associação.
-            </p>
-        </div>
-
-        <div class="card-item" style="flex-direction: column; align-items: flex-start; gap: 10px;">
-            <strong style="font-size: 15px;">📄 Regulamento Atarashii</strong>
-            <p style="font-size: 12px; color: var(--text-muted);">Regras oficiais da Associação Atarashii.</p>
-            <a href="regras-associacao.pdf" target="_blank" class="btn-action" style="padding: 10px;">📖 Abrir PDF</a>
-        </div>
-
+    <!-- SEÇÃO 3: AGENDA -->
         <h3>🤝 Ações da Associação</h3>
         
         <div class="card-item" style="opacity: 0.65; border-color: rgba(255, 255, 255, 0.1);">
@@ -1179,6 +1142,43 @@
     </div>
 
     <!-- SEÇÃO 6: ATARASHII -->
+       <div id="comunicados" class="tab-content">
+        <h3>📢 Regras e Normas da Associação</h3>
+        
+        <div id="blocoTermoPendente">
+            <p style="font-size: 14px; color: var(--text-muted); margin-bottom: 16px;">
+                Por favor, toque no botão abaixo para abrir, ler o documento completo de regras e depois confirmar o seu aceite obrigatório.
+            </p>
+
+            <a href="regras-associacao.pdf" target="_blank" class="btn-action" style="margin-bottom: 16px;">
+                📖 Abrir Regras e Normas da Associação (PDF)
+            </a>
+
+            <div style="background: rgba(15, 23, 42, 0.6); border: 1px solid var(--border-color); padding: 16px; border-radius: var(--radius-md); margin-bottom: 20px;">
+                <label style="display: flex; gap: 12px; cursor: pointer; font-size: 13px; color: var(--text-main); font-weight: 500; line-height: 1.4;">
+                    <input type="checkbox" id="checkAceite" onchange="alternarBotaoAceite()" style="width: 20px; height: 20px; accent-color: var(--accent-blue);">
+                    <span>Declaro que li, compreendi e concordo integralmente com todas as Regras, Normas e Termos estabelecidos pela Associação.</span>
+                </label>
+
+                <button id="btnEnviarAceite" disabled onclick="enviarEmailAceite()" class="btn-action" style="margin-top: 14px; background: #475569; opacity: 0.6; cursor: not-allowed; box-shadow: none;">
+                    🔒 Aceitar Termos e Enviar Comprovante
+                </button>
+            </div>
+        </div>
+
+        <div id="blocoTermoAceito" style="display: none; text-align: center; padding: 20px; background: rgba(16, 185, 129, 0.1); border: 1px solid rgba(16, 185, 129, 0.3); border-radius: var(--radius-md); margin-bottom: 20px;">
+            <span style="font-size: 32px;">✅</span>
+            <h4 style="color: var(--accent-green); margin: 8px 0;">Termos Aceitos com Sucesso!</h4>
+            <p style="font-size: 13px; color: var(--text-muted);" id="textoDataAceite">
+                O seu comprovante de leitura e concordância já foi registrado e enviado para a Associação.
+            </p>
+        </div>
+
+        <div class="card-item" style="flex-direction: column; align-items: flex-start; gap: 10px;">
+            <strong style="font-size: 15px;">📄 Regulamento Atarashii</strong>
+            <p style="font-size: 12px; color: var(--text-muted);">Regras oficiais da Associação Atarashii.</p>
+            <a href="regras-associacao.pdf" target="_blank" class="btn-action" style="padding: 10px;">📖 Abrir PDF</a>
+        </div>
     <div id="saldo" class="tab-content">
         <h3>💰 Saldo em Conta da Associação</h3>
         <p style="font-size: 32px; font-weight: 800; color: var(--accent-green); margin: 10px 0 16px 0;" id="textoSaldo">R$ --,--</p>
@@ -1240,7 +1240,7 @@
 <div class="bottom-nav">
     <button class="nav-btn active" onclick="mudarAba('exame', this)"><span class="icon">🥋</span>Painel</button>
     <button class="nav-btn" onclick="mudarAba('conteudo-programatico', this)"><span class="icon">📋</span>Exame</button>
-    <button class="nav-btn" onclick="mudarAba('comunicados', this)"><span class="icon">📢</span>Avisos</button>
+    <button class="nav-btn" onclick="mudarAba('comunicados', this)"><span class="icon">📢</span>Agenda</button>
     <button class="nav-btn" onclick="mudarAba('galeria', this)"><span class="icon">📸</span>Galeria</button>
     <button class="nav-btn" onclick="mudarAba('ebook', this)"><span class="icon">🏆</span>Ranking</button>
     <button class="nav-btn" onclick="mudarAba('saldo', this)">
