@@ -389,11 +389,12 @@
     </header>
 
     <!-- MENU DE ABAS COM SCROLL LATERAL EM TELAS MENORES -->
-    <nav class="tabs-nav">
+   <nav class="tabs-nav">
         <button class="nav-btn active" onclick="mudarAba('chamada', this)">📋 Chamada</button>
         <button class="nav-btn" onclick="mudarAba('justificativas', this)">📝 Justificativas</button>
         <button class="nav-btn" onclick="mudarAba('desafios', this)">🎯 Desafios</button>
         <button class="nav-btn" onclick="mudarAba('resumo', this)">📊 Resumo</button>
+        <button class="nav-btn" onclick="mudarAba('financas', this)">💰 Finanças</button>
         <button class="nav-btn" onclick="mudarAba('notificacoes', this)">🔔 Notificações</button>
     </nav>
 
@@ -501,6 +502,40 @@
             </div>
         </section>
 
+        <!-- ABA FINANÇAS -->
+        <section id="aba-financas" class="tab-content">
+            <h2 style="margin-bottom: 15px;">💰 Atualizar Finanças da Associação</h2>
+            <div class="filtro-datas-container">
+                <div class="filtro-campo">
+                    <label>Arrecadação de Valores:</label>
+                    <input type="text" id="inputArrecadacao" placeholder="Ex: R$ 4.354,90">
+                </div>
+                <div class="filtro-campo">
+                    <label>Investimentos da Associação (Total):</label>
+                    <input type="text" id="inputInvestimentos" placeholder="Ex: R$ 1.995,32">
+                </div>
+                <div class="filtro-campo">
+                    <label>Valor em Caixa:</label>
+                    <input type="text" id="inputCaixa" placeholder="Ex: R$ 2.359,58">
+                </div>
+                
+                <h4 style="color: #f8fafc; margin-top: 15px; margin-bottom: 10px;">Valor Investido 2026</h4>
+                <div class="filtro-campo">
+                    <label>Cursos:</label>
+                    <input type="text" id="inputCursos" placeholder="Ex: R$ 449,50">
+                </div>
+                <div class="filtro-campo">
+                    <label>Campeonatos:</label>
+                    <input type="text" id="inputCampeonatos" placeholder="Ex: R$ 1.160,00">
+                </div>
+                <div class="filtro-campo">
+                    <label>Associação:</label>
+                    <input type="text" id="inputAssoc2026" placeholder="Ex: R$ 637,60">
+                </div>
+                <button onclick="salvarFinancas()" class="btn-salvar">💾 Salvar Alterações Financeiras</button>
+            </div>
+        </section>
+
     </main>
 
   <script>
@@ -516,7 +551,7 @@
 
         document.getElementById('dataAula').valueAsDate = new Date();
 
-        function mudarAba(nomeAba, elementoBotao) {
+      function mudarAba(nomeAba, elementoBotao) {
             const abas = document.querySelectorAll('.tab-content');
             abas.forEach(aba => aba.classList.remove('active'));
 
@@ -536,6 +571,48 @@
             if (nomeAba === 'justificativas') carregarJustificativasProfessor();
             else if (nomeAba === 'resumo') carregarResumoFrequencia();
             else if (nomeAba === 'desafios') carregarDesafiosProfessor();
+            else if (nomeAba === 'financas') carregarFinancasProfessor();
+        }
+
+        async function carregarFinancasProfessor() {
+            try {
+                const res = await fetch(`${URL_API_SERVIDOR}/api/financas`);
+                const data = await res.json();
+                document.getElementById('inputArrecadacao').value = data.arrecadacao_total || '';
+                document.getElementById('inputInvestimentos').value = data.investimento_total || '';
+                document.getElementById('inputCaixa').value = data.valor_caixa || '';
+                document.getElementById('inputCursos').value = data.cursos_2026 || '';
+                document.getElementById('inputCampeonatos').value = data.campeonatos_2026 || '';
+                document.getElementById('inputAssoc2026').value = data.associacao_2026 || '';
+            } catch (e) {
+                console.error("Erro ao carregar dados financeiros.", e);
+            }
+        }
+
+        async function salvarFinancas() {
+            const payload = {
+                arrecadacao_total: document.getElementById('inputArrecadacao').value,
+                investimento_total: document.getElementById('inputInvestimentos').value,
+                valor_caixa: document.getElementById('inputCaixa').value,
+                cursos_2026: document.getElementById('inputCursos').value,
+                campeonatos_2026: document.getElementById('inputCampeonatos').value,
+                associacao_2026: document.getElementById('inputAssoc2026').value
+            };
+
+            try {
+                const response = await fetch(`${URL_API_SERVIDOR}/api/financas`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+                if (response.ok) {
+                    alert("Informações financeiras atualizadas com sucesso!");
+                } else {
+                    alert("Erro ao atualizar finanças.");
+                }
+            } catch (e) {
+                alert("Erro de conexão.");
+            }
         }
 
         function renderizarAlunos() {
