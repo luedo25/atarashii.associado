@@ -50,7 +50,7 @@
         }
 
         const controller = new AbortController();
-        const timeout = setTimeout(() => controller.abort(), opcoes.timeoutMs || 20000);
+        const timeout = setTimeout(() => controller.abort(), opcoes.timeoutMs || 90000);
 
         try {
             const resposta = await fetch(`${API_URL}${caminho}`, {
@@ -120,6 +120,20 @@
         salvarSessao,
         limparSessao,
         exigirSessao,
+        solicitarRedefinicaoSenha(usuario, email) {
+            return apiFetch('/api/auth/forgot-password', {
+                method: 'POST',
+                body: JSON.stringify({ usuario, email }),
+                timeoutMs: 90000
+            });
+        },
+        redefinirSenha(token, novaSenha) {
+            return apiFetch('/api/auth/reset-password', {
+                method: 'POST',
+                body: JSON.stringify({ token, novaSenha }),
+                timeoutMs: 90000
+            });
+        },
         sair() {
             limparSessao();
             location.replace('index.html');
