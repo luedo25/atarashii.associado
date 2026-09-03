@@ -9,168 +9,38 @@
     <meta name="mobile-web-app-capable" content="yes">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    
     <title>Login - Área do Associado</title>
     <style>
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        }
-
-        body {
-            background: #f4f7f6;
-            display: flex;
-            flex-direction: column; 
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            padding: 20px; 
-        }
-
-        /* CONFIGURAÇÃO DO LOGO CENTRALIZADO */
-        .logo-associacao {
-            width: 360px;         
-            height: auto;
-            margin: 0 auto 40px auto; 
-            display: block;
-        }
-
-        .login-container {
-            background-color: #ffffff;
-            padding: 40px;
-            border-radius: 8px;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-            width: 100%;
-            max-width: 400px;
-        }
-
-        .login-container h2 {
-            text-align: center;
-            margin-bottom: 24px;
-            color: #333;
-        }
-
-        .input-group {
-            margin-bottom: 20px;
-        }
-
-        .input-group label {
-            display: block;
-            margin-bottom: 8px;
-            color: #666;
-            font-size: 14px;
-        }
-
-        .input-group input {
-            width: 100%;
-            padding: 12px;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-            font-size: 16px;
-            transition: border-color 0.3s;
-        }
-
-        .input-group input:focus {
-            border-color: #007bff;
-            outline: none;
-        }
-
-        .btn-login {
-            width: 100%;
-            padding: 12px;
-            background-color: #007bff;
-            border: none;
-            border-radius: 4px;
-            color: white;
-            font-size: 16px;
-            font-weight: bold;
-            cursor: pointer;
-            transition: background 0.3s;
-        }
-
-        .btn-login:hover {
-            background-color: #0056b3;
-        }
-
-        .error-message {
-            color: #dc3545;
-            font-size: 14px;
-            margin-top: 10px;
-            text-align: center;
-            display: none;
-        }
-
-        /* BOTÃO GUIA DE ESTUDO FIXO (UNIVERSAL PARA PC/MOBILE) */
-        .btn-guia-estudo {
-            position: fixed; /* Mantém preso na tela, ignorando outros elementos */
-            top: 20px;
-            left: 20px;
-            display: inline-flex;
-            align-items: center;
-            padding: 10px 16px;
-            background-color: #2c3e50; 
-            color: #ffffff;
-            text-decoration: none;
-            font-family: sans-serif;
-            font-size: 14px;
-            font-weight: bold;
-            border-radius: 6px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-            transition: all 0.2s ease-in-out;
-            z-index: 99999; /* Valor bem alto para garantir que fique acima de tudo */
-        }
-
-        .btn-guia-estudo:hover {
-            background-color: #34495e;
-            transform: translateY(-2px); 
-            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
-        }
-
-        /* REGRAS EXCLUSIVAS PARA TELAS DE CELULAR (ATÉ 600px de largura) */
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        body { background: #f4f7f6; display: flex; flex-direction: column; justify-content: center; align-items: center; min-height: 100vh; padding: 20px; }
+        .logo-associacao { width: 360px; height: auto; margin: 0 auto 40px auto; display: block; }
+        .login-container { background-color: #ffffff; padding: 40px; border-radius: 8px; box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1); width: 100%; max-width: 400px; }
+        .login-container h2 { text-align: center; margin-bottom: 24px; color: #333; }
+        .input-group { margin-bottom: 20px; }
+        .input-group label { display: block; margin-bottom: 8px; color: #666; font-size: 14px; }
+        .input-group input { width: 100%; padding: 12px; border: 1px solid #ccc; border-radius: 4px; font-size: 16px; transition: border-color 0.3s; }
+        .input-group input:focus { border-color: #007bff; outline: none; }
+        .btn-login { width: 100%; padding: 12px; background-color: #007bff; border: none; border-radius: 4px; color: white; font-size: 16px; font-weight: bold; cursor: pointer; transition: background 0.3s; margin-bottom: 10px; }
+        .btn-login:hover { background-color: #0056b3; }
+        .btn-link { width: 100%; padding: 10px; background: none; border: none; color: #666; cursor: pointer; text-decoration: underline; font-size: 14px; }
+        .error-message { color: #dc3545; font-size: 14px; margin-top: 10px; text-align: center; display: none; }
+        .btn-guia-estudo { position: fixed; top: 20px; left: 20px; display: inline-flex; align-items: center; padding: 10px 16px; background-color: #2c3e50; color: #ffffff; text-decoration: none; font-size: 14px; font-weight: bold; border-radius: 6px; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); z-index: 99999; }
+        
+        /* Modal Alterar Senha */
+        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); align-items: center; justify-content: center; z-index: 100000; }
+        .modal-content { background: #fff; padding: 30px; border-radius: 8px; width: 90%; max-width: 400px; }
+        
         @media (max-width: 600px) {
-            body {
-                justify-content: flex-start; 
-                padding-top: 180px; /* Espaço seguro para o GIF não cobrir o formulário */
-            }
-
-            /* No mobile, recuamos ligeiramente para não colar nas bordas curvas de novos iPhones */
-            .btn-guia-estudo {
-                top: 15px;
-                left: 15px;
-                padding: 8px 12px;
-                font-size: 13px;
-            }
-
-            .logo-associacao {
-                position: absolute;
-                left: 50%;
-                transform: translateX(-50%); 
-                top: 65px; 
-                width: 160px; /* Ajuste no tamanho do GIF para o layout mobile respirar */
-            }
-
-            .login-container {
-                padding: 25px 20px; 
-            }
+            body { justify-content: flex-start; padding-top: 180px; }
+            .btn-guia-estudo { top: 15px; left: 15px; padding: 8px 12px; font-size: 13px; }
+            .logo-associacao { position: absolute; left: 50%; transform: translateX(-50%); top: 65px; width: 160px; }
+            .login-container { padding: 25px 20px; }
         }
     </style>
 </head>
 <body>
-    <!-- Botão Guia de Estudo no canto superior esquerdo -->
-    <a href="https://adrianomiguell-collab.github.io/App-Karate/prototype/" class="btn-guia-estudo">
-        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16" style="margin-right: 8px; vertical-align: middle;">
-            <path d="M1 2.828c.885-.37 2.154-.769 3.388-.893 1.33-.134 2.458.063 3.112.752v9.746c-.935-.53-2.12-.603-3.213-.493-1.18.12-2.37.461-3.287.811zm7.5-.141c.654-.689 1.782-.886 3.112-.752 1.234.124 2.503.523 3.388.893v9.923c-.918-.35-2.107-.692-3.287-.81-1.094-.111-2.278-.039-3.213.492zM8 1.783C7.015.936 5.587.81 4.287.94c-1.514.153-3.042.672-3.994 1.105A.5.5 0 0 0 0 2.5v11a.5.5 0 0 0 .707.455c.882-.4 2.303-.881 3.68-1.02 1.409-.142 2.59.087 3.223.877a.5.5 0 0 0 .78 0c.633-.79 1.814-1.019 3.222-.877 1.378.139 2.8.62 3.681 1.02A.5.5 0 0 0 16 13.5v-11a.5.5 0 0 0-.293-.455c-.952-.433-2.48-.952-3.994-1.105C10.413.809 8.985.936 8 1.783"/>
-        </svg>
-        Guia de Estudo
-    </a>
-        
+    <a href="https://adrianomiguell-collab.github.io/App-Karate/prototype/" class="btn-guia-estudo">Guia de Estudo</a>
     <img src="ASSOCIAÇÃO-ATARASHII.gif" alt="Logo Associação Atarashii" class="logo-associacao">
-        
-    <button id="btnInstalarApp" style="display: none; width: 100%; max-width: 400px; margin: 0 auto 15px auto; padding: 12px; background-color: #27ae60; color: white; border: none; border-radius: 6px; font-weight: bold; cursor: pointer;">
-        📲 Instalar Aplicativo na Tela Inicial
-    </button>
         
     <div class="login-container">
         <h2>Área do Associado</h2>
@@ -184,128 +54,100 @@
                 <input type="password" id="password" required placeholder="Digite sua senha">
             </div>
             <button type="submit" class="btn-login">Entrar</button>
-            <div id="errorMessage" class="error-message">Usuário ou senha incorretos.</div>
+            <button type="button" class="btn-link" onclick="document.getElementById('modalSenha').style.display='flex'">Alterar Minha Senha</button>
+            <div id="errorMessage" class="error-message"></div>
         </form>
     </div>        
-    <script>
-        const scriptUsuarios = document.createElement('script');
-        const timestamp = new Date().getTime();
-        scriptUsuarios.src = 'usuarios.js?v=' + timestamp;
-        document.head.appendChild(scriptUsuarios);
-    </script>
+
+    <!-- Modal Alterar Senha -->
+    <div id="modalSenha" class="modal">
+        <div class="modal-content">
+            <h3 style="text-align: center; margin-bottom: 20px;">Alterar Senha</h3>
+            <form id="formAlterarSenha">
+                <div class="input-group">
+                    <label>Usuário</label>
+                    <input type="text" id="altUsuario" required>
+                </div>
+                <div class="input-group">
+                    <label>Senha Atual</label>
+                    <input type="password" id="altSenhaAtual" required>
+                </div>
+                <div class="input-group">
+                    <label>Nova Senha</label>
+                    <input type="password" id="altSenhaNova" required>
+                </div>
+                <button type="submit" class="btn-login" style="background-color: #28a745;">Confirmar Alteração</button>
+                <button type="button" class="btn-link" onclick="document.getElementById('modalSenha').style.display='none'">Cancelar</button>
+            </form>
+        </div>
+    </div>
 
     <script>
-        document.getElementById('loginForm').addEventListener('submit', function(event) {
+        const URL_API_SERVIDOR = "https://api-associacao-mp.onrender.com";
+
+        // Login API
+        document.getElementById('loginForm').addEventListener('submit', async function(event) {
             event.preventDefault(); 
-            
             const usuarioInput = document.getElementById('username').value.trim();
             const senhaInput = document.getElementById('password').value;
             const errorMessage = document.getElementById('errorMessage');
 
-            if (typeof autenticarUsuarioDireto !== 'function') {
-                alert('Carregando sistema de segurança... Por favor, tente novamente em um segundo.');
-                return;
-            }
-
-            const alunoLogado = autenticarUsuarioDireto(usuarioInput, senhaInput);
-
-            if (alunoLogado) {
-                // Guarda dados de sessão básicos
-                localStorage.setItem('associadoAutenticado', 'true');
-                localStorage.setItem('nomeAlunoLogado', alunoLogado.nome);
-                localStorage.setItem('usuarioAtivo', alunoLogado.usuario);
+            try {
+                const response = await fetch(`${URL_API_SERVIDOR}/api/login`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ usuario: usuarioInput, senha: senhaInput })
+                });
                 
-                // Se houver tipo/perfil definido no usuarios.js, salva no localStorage
-                if (alunoLogado.tipo) {
-                    localStorage.setItem('tipoUsuario', alunoLogado.tipo);
-                }
+                const data = await response.json();
 
-                // REDIRECIONAMENTO INTELIGENTE
-                // Verifica se o usuário é 'luiz.costa' ou se a propriedade 'tipo' é 'professor'
-                const usuarioLower = alunoLogado.usuario.toLowerCase();
-                const tipoLower = alunoLogado.tipo ? alunoLogado.tipo.toLowerCase() : '';
+                if (data.sucesso) {
+                    localStorage.setItem('associadoAutenticado', 'true');
+                    localStorage.setItem('nomeAlunoLogado', data.usuario.nome);
+                    localStorage.setItem('usuarioAtivo', data.usuario.usuario);
+                    localStorage.setItem('tipoUsuario', data.usuario.tipo);
 
-                if (usuarioLower === 'luiz.costa' || tipoLower === 'professor') {
-                    window.location.href = 'professor.html';
+                    if (data.usuario.tipo === 'professor') {
+                        window.location.href = 'professor.html';
+                    } else {
+                        window.location.href = 'area-associado.html';
+                    }
                 } else {
-                    window.location.href = 'area-associado.html';
+                    errorMessage.textContent = data.erro;
+                    errorMessage.style.display = 'block';
                 }
-
-            } else {
+            } catch (err) {
+                errorMessage.textContent = 'Erro de conexão com o servidor.';
                 errorMessage.style.display = 'block';
             }
         });
-    </script>
 
-    <script>
-
-if ('serviceWorker' in navigator) {
-    navigator.serviceWorker.register('sw.js')
-        .then(() => console.log('Service Worker ativo.'))
-        .catch((err) => console.log('Erro no SW:', err));
-}
-        let disparadorInstalacao = null;
-        const botaoInstalarAndroid = document.getElementById('btnInstalarApp');
-
-        window.addEventListener('beforeinstallprompt', (e) => {
+        // Alterar Senha API
+        document.getElementById('formAlterarSenha').addEventListener('submit', async function(e) {
             e.preventDefault();
-            disparadorInstalacao = e;
-            if (botaoInstalarAndroid) {
-                botaoInstalarAndroid.style.display = 'block';
+            const usuario = document.getElementById('altUsuario').value.trim();
+            const senhaAntiga = document.getElementById('altSenhaAtual').value;
+            const novaSenha = document.getElementById('altSenhaNova').value;
+
+            try {
+                const response = await fetch(`${URL_API_SERVIDOR}/api/alterar-senha`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ usuario, senhaAntiga, novaSenha })
+                });
+                const data = await response.json();
+                
+                if (data.sucesso) {
+                    alert('Senha alterada com sucesso! Faça login com a nova senha.');
+                    document.getElementById('modalSenha').style.display = 'none';
+                    document.getElementById('formAlterarSenha').reset();
+                } else {
+                    alert('Erro: ' + data.erro);
+                }
+            } catch (err) {
+                alert('Erro ao comunicar com o servidor.');
             }
         });
-
-        if (botaoInstalarAndroid) {
-            botaoInstalarAndroid.addEventListener('click', async () => {
-                if (!disparadorInstalacao) return;
-                disparadorInstalacao.prompt();
-                const { outcome } = await disparadorInstalacao.userChoice;
-                disparadorInstalacao = null;
-                botaoInstalarAndroid.style.display = 'none';
-            });
-        }
-
-        function gerenciarPromptIOS() {
-            const ehIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
-            const jaEstaInstalado = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
-
-            if (ehIOS && !jaEstaInstalado) {
-                const promptIOS = document.getElementById('iosPrompt');
-                if (promptIOS) {
-                    setTimeout(() => {
-                        promptIOS.style.display = 'block';
-                    }, 3000);
-                }
-            }
-        }
-
-        window.addEventListener('DOMContentLoaded', gerenciarPromptIOS);
-
-        if (window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true) {
-            if (botaoInstalarAndroid) botaoInstalarAndroid.style.display = 'none';
-            const promptIOS = document.getElementById('iosPrompt');
-            if (promptIOS) promptIOS.style.display = 'none';
-        }
     </script>
-        
-    <div id="iosPrompt" style="display: none; position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); width: 90%; max-width: 360px; background-color: #ffffff; color: #333333; padding: 16px; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.15); z-index: 100000; border: 1px solid #e0e0e0; animation: slideUpIOS 0.4s ease;">
-        <div style="display: flex; align-items: flex-start; gap: 12px;">
-            <span style="font-size: 30px;">📲</span>
-            <div>
-                <h4 style="margin: 0 0 4px 0; color: #2c3e50; font-size: 15px;">Instalar no seu iPhone</h4>
-                <p style="margin: 0; font-size: 13px; color: #555; line-height: 1.4;">
-                    Toque no ícone de <strong>Compartilhar</strong> <span style="font-size: 16px;">⎋</span> (ou no menu de opções do navegador) e depois selecione <strong>"Adicionar à Tela de Início"</strong>.
-                </p>
-            </div>
-            <button onclick="document.getElementById('iosPrompt').style.display='none'" style="background: none; border: none; color: #999; font-size: 18px; cursor: pointer; padding: 0 5px;">✕</button>
-        </div>
-    </div>
-
-    <style>
-    @keyframes slideUpIOS {
-        from { opacity: 0; transform: translate(-50%, 20px); }
-        to { opacity: 1; transform: translate(-50%, 0); }
-    }
-    </style>
 </body>
 </html>
