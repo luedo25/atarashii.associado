@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-    <script src="usuarios.js"></script>
+    <script src="api.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.2.0"></script>
     <link rel="manifest" href="./manifest.json">
@@ -11,7 +11,7 @@
     <link rel="apple-touch-icon" href="icone-192.png">
     <meta name="mobile-web-app-capable" content="yes">
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Painel do Associado</title>
     <style>
         :root {
@@ -1286,17 +1286,18 @@
 </div>
 
 <script>
-    if (localStorage.getItem('associadoAutenticado') !== 'true') {
-        alert('Acesso negado. Por favor, faça login.');
-        window.location.href = 'index.html';
+    let nomeDoAluno = 'Associado';
+    let usuarioAtivo = '';
+    let PUBLIC_VAPID_KEY = '';
+
+    function escaparHtml(valor) {
+        return String(valor ?? '')
+            .replaceAll('&', '&amp;')
+            .replaceAll('<', '&lt;')
+            .replaceAll('>', '&gt;')
+            .replaceAll('"', '&quot;')
+            .replaceAll("'", '&#039;');
     }
-
-    const nomeDoAluno = localStorage.getItem('nomeAlunoLogado') || 'Associado';
-    const usuarioAtivo = localStorage.getItem('usuarioAtivo');
-    const URL_API_SERVIDOR = "https://api-associacao-mp.onrender.com";
-    const PUBLIC_VAPID_KEY = 'BLUDrtrxUNlbfm3kad60QQUJzLX_p45Jp28aMTlEH1MoHwgUOF7s1Mf8JuwYh9TnH0k8pYRYvmZzO7lUkYMq2uQ';
-
-    document.getElementById('welcomeNome').textContent = `Olá, ${nomeDoAluno}!`;
 
     function checarPopupLogin() {
         if (!usuarioAtivo) return;
@@ -1348,7 +1349,7 @@
     function ehPWAStandalone() { return (window.matchMedia('(display-mode: standalone)').matches) || (window.navigator.standalone === true); }
 
     async function registrarPushNativo() {
-        if (!('serviceWorker' in navigator) || !('PushManager' in window)) return;
+        if (!PUBLIC_VAPID_KEY || !('serviceWorker' in navigator) || !('PushManager' in window)) return;
         try {
             const registro = await navigator.serviceWorker.register('sw.js');
             await navigator.serviceWorker.ready;
@@ -1372,8 +1373,13 @@
                 assinatura = await registro.pushManager.subscribe({ userVisibleOnly: true, applicationServerKey: urlBase64ToUint8Array(PUBLIC_VAPID_KEY) });
             }
             if (!usuarioAtivo) return;
-            await fetch(`${URL_API_SERVIDOR}/api/subscribe`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ subscription: assinatura, usuario: usuarioAtivo }) });
-        } catch (err) {}
+            await apiFetch('/api/subscribe', {
+                method: 'POST',
+                body: JSON.stringify({ subscription: assinatura })
+            });
+        } catch (err) {
+            console.error('Não foi possível registrar as notificações:', err);
+        }
     }
 
     async function solicitarAtivacaoPushIOS() {
@@ -1386,22 +1392,29 @@
         } catch (e) {}
     }
 
-    function carregarNotasAluno() {
+    async function carregarNotasAluno() {
         const tabelaBody = document.getElementById('corpoTabelaNotas');
         if (!tabelaBody) return;
-        if (typeof listaAlunos === 'undefined') {
-            tabelaBody.innerHTML = `<tr><td colspan="8">Aguardando dados...</td></tr>`;
-            setTimeout(carregarNotasAluno, 500); return;
-        }
-        const dadosAluno = listaAlunos.find(u => u.usuario === usuarioAtivo);
-        if (dadosAluno && dadosAluno.historico && dadosAluno.historico.length > 0) {
-            tabelaBody.innerHTML = "";
-            dadosAluno.historico.forEach(exame => {
+        tabelaBody.innerHTML = '<tr><td colspan="8" style="text-align:center">Carregando histórico...</td></tr>';
+
+        try {
+            const historico = await apiFetch('/api/exames/me');
+            if (!Array.isArray(historico) || historico.length === 0) {
+                tabelaBody.innerHTML = '<tr><td colspan="8" style="text-align:center">Nenhum exame registrado.</td></tr>';
+                return;
+            }
+
+            tabelaBody.innerHTML = '';
+            historico.forEach(exame => {
                 const linha = document.createElement('tr');
-                linha.innerHTML = `<td style="background-color: ${exame.corFaixa}; color: ${exame.corTexto}; border-radius: 4px;">${exame.faixa}</td><td>${exame.ano}</td><td>${Number(exame.kihon).toFixed(1)}</td><td>${Number(exame.kata).toFixed(1)}</td><td>${Number(exame.kumite).toFixed(1)}</td><td>${Number(exame.perguntas).toFixed(1)}</td><td class="col-total">${Number(exame.total).toFixed(1)}</td><td class="col-media">${Number(exame.media).toFixed(1)}</td>`;
+                const corFaixa = /^#[0-9a-f]{3,8}$/i.test(exame.cor_faixa || '') ? exame.cor_faixa : '#ffffff';
+                const corTexto = /^#[0-9a-f]{3,8}$/i.test(exame.cor_texto || '') ? exame.cor_texto : '#0f172a';
+                linha.innerHTML = `<td style="background-color: ${corFaixa}; color: ${corTexto}; border-radius: 4px;">${escaparHtml(exame.faixa)}</td><td>${escaparHtml(exame.ano)}</td><td>${Number(exame.kihon).toFixed(1)}</td><td>${Number(exame.kata).toFixed(1)}</td><td>${Number(exame.kumite).toFixed(1)}</td><td>${Number(exame.perguntas).toFixed(1)}</td><td class="col-total">${Number(exame.total).toFixed(1)}</td><td class="col-media">${Number(exame.media).toFixed(1)}</td>`;
                 tabelaBody.appendChild(linha);
             });
-        } else { tabelaBody.innerHTML = `<tr><td colspan="8">Nenhum registro encontrado.</td></tr>`; }
+        } catch (error) {
+            tabelaBody.innerHTML = `<tr><td colspan="8" style="text-align:center;color:#f87171">${escaparHtml(error.message)}</td></tr>`;
+        }
     }
 
     function atualizarUIBadge(badgesArray, badgeKey, cardId, tagId, tituloConcluido = "Conquistado!") {
@@ -1421,8 +1434,7 @@
     async function carregarBadgesAluno() {
         if (!usuarioAtivo) return;
         try {
-            const res = await fetch(`${URL_API_SERVIDOR}/api/badges/${usuarioAtivo}`);
-            const data = await res.json();
+            const data = await apiFetch('/api/badges/me');
             
             if (data.sucesso) {
                 atualizarUIBadge(data.badges, 'frequencia_ferro', 'cardBadgeFerro', 'badgeTagStatus');
@@ -1448,18 +1460,8 @@
         if (!container) return;
 
         try {
-            const res = await fetch(`${URL_API_SERVIDOR}/api/ranking`);
-            const data = await res.json();
-            
-            let mapPontos = {};
-            if (data.sucesso && data.ranking) {
-                data.ranking.forEach(r => mapPontos[r.usuario] = r.pontos);
-            }
-
-            let rankingFinal = listaAlunos
-                .filter(a => a.tipo !== 'professor')
-                .map(a => ({ nome: a.nome, pontos: mapPontos[a.usuario] || 0 }))
-                .sort((a, b) => b.pontos - a.pontos);
+            const data = await apiFetch('/api/ranking');
+            const rankingFinal = Array.isArray(data?.ranking) ? data.ranking : [];
 
             if (rankingFinal.length === 0) {
                 container.innerHTML = "<p style='text-align:center; color:var(--text-muted);'>Nenhuma pontuação registrada ainda.</p>";
@@ -1480,7 +1482,7 @@
                     <div class="ranking-item ${classePos}">
                         <div class="ranking-pos">${icone}</div>
                         <div class="ranking-info">
-                            <div class="ranking-nome">${aluno.nome}</div>
+                            <div class="ranking-nome">${escaparHtml(aluno.nome)}</div>
                         </div>
                         <div class="ranking-pontos">${aluno.pontos} pts</div>
                     </div>
@@ -1502,13 +1504,8 @@
         if (jaAceitouLocal === 'true') aplicarLayoutAceito(blocoPendente, blocoAceito, badge, sininho, dataAceiteLocal, false);
         else aplicarLayoutPendente(blocoPendente, blocoAceito, badge, sininho);
 
-        const controller = new AbortController();
-        const timeoutId = setTimeout(() => controller.abort(), 90000);
-
-        fetch(`${URL_API_SERVIDOR}/api/status-termo/${usuarioAtivo}`, { signal: controller.signal })
-            .then(r => r.ok ? r.json() : Promise.reject())
+        apiFetch('/api/status-termo/me')
             .then(data => {
-                clearTimeout(timeoutId);
                 const verificadoNaAPI = (data && (data.aceitou === true || data.sucesso === true || data.status === 'assinado' || data.status === 'aceito'));
                 const dataServidor = data.data || data.dataHora || data.updatedAt || new Date().toLocaleString('pt-BR');
                 if (verificadoNaAPI) {
@@ -1519,12 +1516,15 @@
                     aplicarLayoutPendente(blocoPendente, blocoAceito, badge, sininho);
                 }
             })
-            .catch(() => clearTimeout(timeoutId));
+            .catch(error => console.error('Erro ao verificar termo:', error));
     }
 
     function aplicarLayoutAceito(blocoPendente, blocoAceito, badge, sininho, dataRegistro, ehGlobal) {
         if (blocoPendente) blocoPendente.style.display = 'none';
-        if (blocoAceito) { blocoAceito.style.display = 'block'; document.getElementById('textoDataAceite').innerHTML = `O seu comprovante de leitura e concordância foi ${ehGlobal ? "sincronizado com a nuvem em:" : "verificado via dispositivo em:"} <br><strong>${dataRegistro}</strong>`; }
+        if (blocoAceito) {
+            blocoAceito.style.display = 'block';
+            document.getElementById('textoDataAceite').textContent = `O seu comprovante de leitura e concordância foi ${ehGlobal ? 'sincronizado com a nuvem em' : 'verificado via dispositivo em'}: ${dataRegistro}`;
+        }
         if (badge) badge.style.display = 'none';
         if (sininho) { sininho.style.animation = 'none'; sininho.title = "Nenhum aviso pendente"; }
     }
@@ -1550,7 +1550,7 @@
         
         localStorage.setItem(`termo_aceito_${usuarioAtivo}`, 'true'); localStorage.setItem(`data_aceite_${usuarioAtivo}`, dataHoraAtual);
         verificarStatusAceite();
-        fetch(`${URL_API_SERVIDOR}/api/aceitar-termo`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ usuario: usuarioAtivo }) })
+        apiFetch('/api/aceitar-termo', { method: 'POST', body: JSON.stringify({}) })
         .then(() => { verificarStatusAceite(); window.location.href = mailtoUrl; })
         .catch(() => window.location.href = mailtoUrl);
     }
@@ -1567,8 +1567,7 @@
     }
 
     function buscarFinancas() {
-        fetch(`${URL_API_SERVIDOR}/api/financas`)
-            .then(r => r.json())
+        apiFetch('/api/financas')
             .then(data => {
                 document.getElementById('valArrecadacao').textContent = data.arrecadacao_total || 'R$ 0,00';
                 document.getElementById('valInvestimentos').textContent = data.investimento_total || 'R$ 0,00';
@@ -1581,8 +1580,7 @@
     }
 
     document.getElementById('logoutBtn').addEventListener('click', function() {
-        localStorage.removeItem('associadoAutenticado'); localStorage.removeItem('nomeAlunoLogado'); localStorage.removeItem('usuarioAtivo');
-        window.location.replace('index.html');
+        Auth.sair();
     });
 
     function alternarCampoTextoOutro() {
@@ -1633,19 +1631,14 @@
         btnSubmit.style.opacity = '0.6';
 
         try {
-            const response = await fetch(`${URL_API_SERVIDOR}/api/justificativa`, { 
+            await apiFetch('/api/justificativa', {
                 method: 'POST', 
-                headers: { 'Content-Type': 'application/json' }, 
-                body: JSON.stringify({ usuario: usuarioAtivo, data_falta: dataFalta, motivo: listaMotivos.join('; ') }) 
+                body: JSON.stringify({ data_falta: dataFalta, motivo: listaMotivos.join('; ') })
             });
-            if (response.ok) { 
-                alert("Justificativa enviada!"); 
-                document.getElementById('formJustificativa').reset(); 
-                alternarCampoTextoOutro(); 
-                carregarStatusJustificativas(); 
-            } else {
-                alert("Erro ao enviar.");
-            }
+            alert("Justificativa enviada!");
+            document.getElementById('formJustificativa').reset();
+            alternarCampoTextoOutro();
+            carregarStatusJustificativas();
         } catch (err) { 
             alert("Erro ao enviar solicitação."); 
         } finally {
@@ -1662,8 +1655,7 @@
         const dataFim = `${anoFim}-${String(mesFim).padStart(2, '0')}-${String(new Date(anoFim, mesFim, 0).getDate()).padStart(2, '0')}`;
 
         try {
-            const response = await fetch(`${URL_API_SERVIDOR}/api/justificativa/aluno/${usuarioAtivo}`);
-            const dados = await response.json();
+            const dados = await apiFetch('/api/justificativa/me');
             if (!dados || dados.length === 0) return container.innerHTML = "<p style='color: var(--text-muted);'>Nenhuma justificativa enviada até o momento.</p>";
             
             const dadosFiltrados = dados.filter(item => item.data_falta && item.data_falta >= dataInicio && item.data_falta <= dataFim);
@@ -1671,13 +1663,13 @@
 
             container.innerHTML = dadosFiltrados.map(item => {
                 let corBadge = item.status === 'aprovado' ? '#10b981' : (item.status === 'reprovado' ? '#ef4444' : '#f59e0b');
-                let comentarioHtml = item.comentario_professor ? `<div style="margin-top: 6px; padding: 8px; background: rgba(239, 68, 68, 0.1); border-left: 3px solid #ef4444; color: #fca5a5; border-radius: 4px; font-size: 12px;"><strong>Motivo da Reprovação:</strong> ${item.comentario_professor}</div>` : '';
+                let comentarioHtml = item.comentario_professor ? `<div style="margin-top: 6px; padding: 8px; background: rgba(239, 68, 68, 0.1); border-left: 3px solid #ef4444; color: #fca5a5; border-radius: 4px; font-size: 12px;"><strong>Motivo da Reprovação:</strong> ${escaparHtml(item.comentario_professor)}</div>` : '';
                 return `<div style="background: rgba(0,0,0,0.2); padding: 10px; border-radius: 6px; margin-bottom: 8px; border-left: 4px solid ${corBadge}; text-align: left;">
-                    <div><strong>Data da Falta:</strong> ${item.data_falta.split('-').reverse().join('/')}</div>
-                    <div><strong>Motivo:</strong> ${item.motivo}</div>
-                    <div><strong>Status:</strong> <span style="color: ${corBadge}; font-weight: bold; text-transform: uppercase;">${item.status}</span></div>
+                    <div><strong>Data da Falta:</strong> ${escaparHtml(item.data_falta.split('-').reverse().join('/'))}</div>
+                    <div><strong>Motivo:</strong> ${escaparHtml(item.motivo)}</div>
+                    <div><strong>Status:</strong> <span style="color: ${corBadge}; font-weight: bold; text-transform: uppercase;">${escaparHtml(item.status)}</span></div>
                     ${comentarioHtml}
-                    <div style="font-size: 11px; color: var(--text-muted); margin-top: 4px;">Solicitado em: ${item.data_solicitacao}</div></div>`;
+                    <div style="font-size: 11px; color: var(--text-muted); margin-top: 4px;">Solicitado em: ${escaparHtml(item.data_solicitacao)}</div></div>`;
             }).join('');
         } catch (err) { container.innerHTML = "<p style='color: red;'>Erro ao carregar justificativas.</p>"; }
     }
@@ -1694,17 +1686,13 @@
         btnSubmit.style.opacity = '0.6';
 
         try {
-            const response = await fetch(`${URL_API_SERVIDOR}/api/desafio`, {
+            const result = await apiFetch('/api/desafio', {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ usuario: usuarioAtivo, nome_desafio: nomeDesafio })
+                body: JSON.stringify({ nome_desafio: nomeDesafio })
             });
-            const result = await response.json();
-            if (response.ok) {
-                alert(result.mensagem || "Desafio notificado com sucesso!");
-                document.getElementById('formDesafio').reset();
-                carregarMeusDesafios();
-            } else { alert("Erro: " + (result.erro || "Falha ao registrar.")); }
+            alert(result.mensagem || "Desafio notificado com sucesso!");
+            document.getElementById('formDesafio').reset();
+            carregarMeusDesafios();
         } catch (err) { 
             alert("Erro de rede ao enviar solicitação."); 
         } finally {
@@ -1719,8 +1707,7 @@
         if (!container) return;
 
         try {
-            const response = await fetch(`${URL_API_SERVIDOR}/api/desafio/aluno/${usuarioAtivo}`);
-            const dados = await response.json();
+            const dados = await apiFetch('/api/desafio/me');
 
             if (!dados || dados.length === 0) {
                 return container.innerHTML = "<p style='color: var(--text-muted);'>Nenhum desafio enviado até o momento.</p>";
@@ -1730,10 +1717,10 @@
                 let corBadge = item.status === 'aprovado' ? '#10b981' : (item.status === 'reprovado' ? '#ef4444' : '#f59e0b');
                 return `
                     <div style="background: rgba(0,0,0,0.2); padding: 10px; border-radius: 6px; margin-bottom: 8px; border-left: 4px solid ${corBadge}; text-align: left;">
-                        <div><strong>Desafio:</strong> ${item.nome_desafio}</div>
+                        <div><strong>Desafio:</strong> ${escaparHtml(item.nome_desafio)}</div>
                         <div><strong>Vídeo:</strong> <span style="color: #60a5fa;">Enviado via Google Forms</span></div>
-                        <div><strong>Status:</strong> <span style="color: ${corBadge}; font-weight: bold; text-transform: uppercase;">${item.status}</span></div>
-                        <div style="font-size: 11px; color: var(--text-muted); margin-top: 4px;">Solicitado em: ${item.data_solicitacao}</div>
+                        <div><strong>Status:</strong> <span style="color: ${corBadge}; font-weight: bold; text-transform: uppercase;">${escaparHtml(item.status)}</span></div>
+                        <div style="font-size: 11px; color: var(--text-muted); margin-top: 4px;">Solicitado em: ${escaparHtml(item.data_solicitacao)}</div>
                     </div>
                 `;
             }).join('');
@@ -1765,8 +1752,7 @@
         containerLista.innerHTML = "Carregando histórico detalhado...";
 
         try {
-            const response = await fetch(`${URL_API_SERVIDOR}/api/frequencia/relatorio/${usuarioAtivo}?dataInicio=${dataInicio}&dataFim=${dataFim}`);
-            const dados = await response.json();
+            const dados = await apiFetch(`/api/frequencia/me/relatorio?dataInicio=${encodeURIComponent(dataInicio)}&dataFim=${encodeURIComponent(dataFim)}`);
 
             if (!dados || dados.length === 0) {
                 containerLista.innerHTML = "<p style='text-align:center;'>Nenhum registro de aula encontrado neste período.</p>";
@@ -1801,17 +1787,13 @@
         const dataFim = `${anoFim}-${String(mesFim).padStart(2, '0')}-${String(new Date(anoFim, mesFim, 0).getDate()).padStart(2, '0')}`;
 
         try {
-            const resFreq = await fetch(`${URL_API_SERVIDOR}/api/frequencia/${usuarioAtivo}?dataInicio=${dataInicio}&dataFim=${dataFim}`);
-            const dadosFreq = await resFreq.json();
+            const dadosFreq = await apiFetch(`/api/frequencia/me?dataInicio=${encodeURIComponent(dataInicio)}&dataFim=${encodeURIComponent(dataFim)}`);
             
             let justificativasAprovadas = Number(dadosFreq.justificativas_aprovadas) || 0;
             if (dadosFreq.justificativas_aprovadas === undefined) {
                 try {
-                    const resJust = await fetch(`${URL_API_SERVIDOR}/api/justificativa/aluno/${usuarioAtivo}`);
-                    if (resJust.ok) {
-                        const listaJust = await resJust.json();
-                        justificativasAprovadas = listaJust.filter(item => item.status === 'aprovado' && item.data_falta >= dataInicio && item.data_falta <= dataFim).length;
-                    }
+                    const listaJust = await apiFetch('/api/justificativa/me');
+                    justificativasAprovadas = listaJust.filter(item => item.status === 'aprovado' && item.data_falta >= dataInicio && item.data_falta <= dataFim).length;
                 } catch (e) {}
             }
 
@@ -1827,7 +1809,7 @@
             instanciaGrafico = new Chart(document.getElementById('graficoFrequencia').getContext('2d'), {
                 type: 'pie',
                 data: {
-                    labels: [`Presenças (${presencas})`, `Faltas (${faltasBrutas})`, `Justificativas Aprovadas (${justificativasEfetivas})`],
+                    labels: [`Presenças (${presencas})`, `Faltas não justificadas (${faltasDescontadas})`, `Justificativas aprovadas (${justificativasEfetivas})`],
                     datasets: [{ data: [presencas, faltasDescontadas, justificativasEfetivas], backgroundColor: ['#10b981', '#ef4444', '#f59e0b'], borderWidth: 1, borderColor: '#1e293b' }]
                 },
                 plugins: typeof ChartDataLabels !== 'undefined' ? [ChartDataLabels] : [],
@@ -1845,26 +1827,47 @@
                 carregarRelatorioFrequencia();
             }
 
-        } catch (err) {}
+        } catch (err) {
+            console.error('Erro ao carregar frequência:', err);
+        }
     }
 
-    document.addEventListener('DOMContentLoaded', () => {
+    document.addEventListener('DOMContentLoaded', async () => {
         try {
+            const usuario = await Auth.exigirSessao('aluno');
+            if (!usuario) return;
+
+            usuarioAtivo = usuario.usuario;
+            nomeDoAluno = usuario.nome || 'Associado';
+            document.getElementById('welcomeNome').textContent = `Olá, ${nomeDoAluno}!`;
+
+            try {
+                const configuracao = await apiFetch('/api/config');
+                PUBLIC_VAPID_KEY = configuracao?.vapidPublicKey || '';
+            } catch (error) {
+                console.error('Notificações push indisponíveis:', error);
+            }
+
             const primeiroBotao = document.querySelector('.nav-btn');
             if (primeiroBotao) mudarAba('exame', primeiroBotao);
 
-            carregarBadgesAluno();
-            carregarRanking(); 
-            carregarNotasAluno();
-            carregarGraficoFrequencia();
-            carregarStatusJustificativas();
-            carregarMeusDesafios(); 
+            await Promise.allSettled([
+                carregarBadgesAluno(),
+                carregarRanking(),
+                carregarNotasAluno(),
+                carregarGraficoFrequencia(),
+                carregarStatusJustificativas(),
+                carregarMeusDesafios()
+            ]);
+
             registrarPushNativo();
 
             checarPopupLogin();
 
             setTimeout(() => verificarStatusAceite(), 300);
-        } catch (error) {}
+        } catch (error) {
+            console.error('Falha ao iniciar o painel:', error);
+        }
     });
 </script>
 </body>
