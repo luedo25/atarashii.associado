@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-    <script src="usuarios.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.2.0"></script>
     <link rel="manifest" href="./manifest.json">
@@ -40,89 +39,62 @@
         .icon-btn { background: rgba(255, 255, 255, 0.05); border: 1px solid var(--border-color); border-radius: var(--radius-sm); width: 38px; height: 38px; display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 18px; transition: all 0.2s; position: relative; }
         .icon-btn:active { transform: scale(0.92); background: rgba(255, 255, 255, 0.1); }
         .btn-logout { background: rgba(239, 68, 68, 0.15); color: #fca5a5; border: 1px solid rgba(239, 68, 68, 0.3); padding: 8px 14px; border-radius: var(--radius-sm); cursor: pointer; font-weight: 600; font-size: 13px; transition: all 0.2s; }
-        .btn-logout:active { transform: scale(0.95); background: rgba(239, 68, 68, 0.3); }
         .badge-count { position: absolute; top: -4px; right: -4px; background: var(--accent-red); color: white; font-size: 10px; font-weight: bold; border-radius: 50%; width: 18px; height: 18px; display: flex; align-items: center; justify-content: center; border: 2px solid var(--bg-card); }
         
-        .card-conquistas { margin-top: 20px; margin-bottom: 20px; background: rgba(15, 23, 42, 0.75); border: 1px solid var(--border-color, #2e3748); padding: 16px; border-radius: 16px; backdrop-filter: blur(8px); width: 100%; }
+        .card-conquistas { margin-top: 20px; margin-bottom: 20px; background: rgba(15, 23, 42, 0.75); border: 1px solid var(--border-color); padding: 16px; border-radius: 16px; backdrop-filter: blur(8px); width: 100%; }
         .titulo-conquistas { margin-bottom: 14px; font-size: 1rem; color: #f8fafc; display: flex; align-items: center; gap: 8px; }
-
         .badges-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 10px; margin-top: 10px; }
-
-        .badge-card { display: flex; flex-direction: row; align-items: center; gap: 12px; padding: 10px; border-radius: 12px; background: rgba(30, 41, 59, 0.5); border: 1px solid rgba(255, 255, 255, 0.05); transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1); width: 100%; }
-        .badge-card.badge-concluido { background: linear-gradient(135deg, rgba(30, 41, 59, 0.9) 0%, rgba(15, 23, 42, 0.9) 100%); border: 1px solid #e2e8f0; box-shadow: 0 0 15px rgba(226, 232, 240, 0.15), inset 0 0 10px rgba(255, 255, 255, 0.05); }
+        .badge-card { display: flex; flex-direction: row; align-items: center; gap: 12px; padding: 10px; border-radius: 12px; background: rgba(30, 41, 59, 0.5); border: 1px solid rgba(255, 255, 255, 0.05); width: 100%; }
+        .badge-card.badge-concluido { background: linear-gradient(135deg, rgba(30, 41, 59, 0.9) 0%, rgba(15, 23, 42, 0.9) 100%); border: 1px solid #e2e8f0; }
         .badge-card.badge-bloqueado { opacity: 0.6; filter: grayscale(0.8); }
 
         .badge-emblem { position: relative; width: 44px; height: 44px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; }
-        .emblem-ring { width: 100%; height: 100%; border-radius: 50%; background: linear-gradient(135deg, #94a3b8 0%, #475569 50%, #1e293b 100%); display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3); border: 2px solid #cbd5e1; }
-        .badge-concluido .emblem-ring { background: linear-gradient(135deg, #f8fafc 0%, #94a3b8 50%, #334155 100%); border-color: #ffffff; box-shadow: 0 0 12px rgba(248, 250, 252, 0.4); animation: pulseGlow 3s infinite alternate; }
+        .emblem-ring { width: 100%; height: 100%; border-radius: 50%; background: linear-gradient(135deg, #94a3b8 0%, #475569 50%, #1e293b 100%); display: flex; align-items: center; justify-content: center; border: 2px solid #cbd5e1; }
+        .badge-concluido .emblem-ring { background: linear-gradient(135deg, #f8fafc 0%, #94a3b8 50%, #334155 100%); border-color: #ffffff; }
         .emblem-icon { width: 20px; height: 20px; color: #0f172a; stroke-width: 2.2; }
-        
-        .badge-ribbon { position: absolute; bottom: -5px; background: #475569; color: #fff; font-size: 8px; font-weight: 800; padding: 1px 5px; border-radius: 6px; letter-spacing: 0.5px; box-shadow: 0 2px 4px rgba(0,0,0,0.4); white-space: nowrap; }
+        .badge-ribbon { position: absolute; bottom: -5px; background: #475569; color: #fff; font-size: 8px; font-weight: 800; padding: 1px 5px; border-radius: 6px; white-space: nowrap; }
         .badge-concluido .badge-ribbon { background: linear-gradient(90deg, #10b981 0%, #059669 100%); }
 
         .badge-info { flex-grow: 1; min-width: 0; }
-        .badge-header { display: flex; align-items: center; justify-content: space-between; gap: 6px; margin-bottom: 2px; flex-wrap: nowrap; }
+        .badge-header { display: flex; align-items: center; justify-content: space-between; gap: 6px; margin-bottom: 2px; }
         .badge-title { font-size: 0.85rem; color: #f1f5f9; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-        .badge-desc { font-size: 0.75rem; color: #94a3b8; margin: 0; line-height: 1.2; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
-        .badge-tag { font-size: 0.6rem; font-weight: 700; padding: 2px 6px; border-radius: 12px; background: rgba(148, 163, 184, 0.1); color: #94a3b8; white-space: nowrap; }
+        .badge-desc { font-size: 0.75rem; color: #94a3b8; margin: 0; line-height: 1.2; }
+        .badge-tag { font-size: 0.6rem; font-weight: 700; padding: 2px 6px; border-radius: 12px; background: rgba(148, 163, 184, 0.1); color: #94a3b8; }
         .badge-concluido .badge-tag { background: rgba(16, 185, 129, 0.15); color: #10b981; border: 1px solid rgba(16, 185, 129, 0.3); }
 
-        @keyframes pulseGlow { 0% { box-shadow: 0 0 10px rgba(248, 250, 252, 0.2); } 100% { box-shadow: 0 0 22px rgba(248, 250, 252, 0.6); } }
-
-        .ranking-container { margin-top: 30px; background: rgba(15, 23, 42, 0.6); border: 1px solid var(--border-color); padding: 20px; border-radius: var(--radius-md); box-shadow: 0 4px 15px rgba(0,0,0,0.2); }
-        .ranking-title { font-size: 18px; color: #fbbf24; margin-bottom: 8px; text-align: center; display: flex; align-items: center; justify-content: center; gap: 8px; text-transform: uppercase; letter-spacing: 1px;}
-        .ranking-list { display: flex; flex-direction: column; gap: 10px; margin-top: 20px;}
-        .ranking-item { display: flex; align-items: center; background: rgba(30, 41, 59, 0.7); padding: 12px 16px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.05); gap: 15px; transition: transform 0.2s; }
-        .ranking-item:hover { transform: scale(1.02); }
-        .ranking-item.top-1 { background: linear-gradient(135deg, rgba(245, 158, 11, 0.15), rgba(30, 41, 59, 0.9)); border-color: rgba(245, 158, 11, 0.5); box-shadow: 0 0 10px rgba(245, 158, 11, 0.2); }
+        .ranking-container { margin-top: 30px; background: rgba(15, 23, 42, 0.6); border: 1px solid var(--border-color); padding: 20px; border-radius: var(--radius-md); }
+        .ranking-title { font-size: 18px; color: #fbbf24; margin-bottom: 8px; text-align: center; display: flex; align-items: center; justify-content: center; gap: 8px; text-transform: uppercase; }
+        .ranking-list { display: flex; flex-direction: column; gap: 10px; margin-top: 20px; }
+        .ranking-item { display: flex; align-items: center; background: rgba(30, 41, 59, 0.7); padding: 12px 16px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.05); gap: 15px; }
+        .ranking-item.top-1 { background: linear-gradient(135deg, rgba(245, 158, 11, 0.15), rgba(30, 41, 59, 0.9)); border-color: rgba(245, 158, 11, 0.5); }
         .ranking-item.top-2 { background: linear-gradient(135deg, rgba(148, 163, 184, 0.15), rgba(30, 41, 59, 0.9)); border-color: rgba(148, 163, 184, 0.5); }
         .ranking-item.top-3 { background: linear-gradient(135deg, rgba(180, 83, 9, 0.15), rgba(30, 41, 59, 0.9)); border-color: rgba(180, 83, 9, 0.5); }
-        
         .ranking-pos { font-size: 20px; font-weight: 800; width: 35px; text-align: center; color: var(--text-muted); }
-        .top-1 .ranking-pos { font-size: 24px; color: #fbbf24; text-shadow: 0 0 10px rgba(251, 191, 36, 0.5); }
+        .top-1 .ranking-pos { font-size: 24px; color: #fbbf24; }
         .top-2 .ranking-pos { font-size: 22px; color: #e2e8f0; }
         .top-3 .ranking-pos { font-size: 22px; color: #d97706; }
-        
         .ranking-info { flex: 1; display: flex; flex-direction: column; }
         .ranking-nome { font-size: 15px; font-weight: 700; color: #f8fafc; }
         .ranking-pontos { font-size: 16px; font-weight: 800; color: var(--accent-green); text-align: right; }
 
-        @media (max-width: 400px) {
-            .card-conquistas { padding: 12px; }
-            .badge-card { padding: 10px; gap: 10px; }
-            .badge-title { font-size: 0.8rem; }
-        }
-
         .container { max-width: 900px; margin: 20px auto 0; padding: 0 16px; }
-
-        .welcome-box { background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%); border: 1px solid var(--border-color); padding: 22px; border-radius: var(--radius-lg); margin-bottom: 20px; box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.3); position: relative; overflow: hidden; }
-        .welcome-box::before { content: ''; position: absolute; top: 0; right: 0; width: 150px; height: 150px; background: radial-gradient(circle, rgba(59,130,246,0.15) 0%, rgba(0,0,0,0) 70%); pointer-events: none; }
-        .welcome-box h2 { font-size: 22px; font-weight: 700; margin-bottom: 6px; background: linear-gradient(to right, #fff, var(--text-muted)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .welcome-box { background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%); border: 1px solid var(--border-color); padding: 22px; border-radius: var(--radius-lg); margin-bottom: 20px; }
+        .welcome-box h2 { font-size: 22px; font-weight: 700; margin-bottom: 6px; color: #fff; }
         .welcome-box p { font-size: 14px; color: var(--text-muted); }
 
-        .tab-content { display: none; background: var(--bg-card); border: 1px solid var(--border-color); padding: 24px; border-radius: var(--radius-lg); margin-bottom: 20px; animation: fadeIn 0.35s cubic-bezier(0.16, 1, 0.3, 1); box-shadow: 0 4px 20px rgba(0,0,0,0.2); }
+        .tab-content { display: none; background: var(--bg-card); border: 1px solid var(--border-color); padding: 24px; border-radius: var(--radius-lg); margin-bottom: 20px; box-shadow: 0 4px 20px rgba(0,0,0,0.2); }
         .tab-content.active { display: block; }
         .tab-content h3 { font-size: 18px; font-weight: 600; color: var(--text-main); margin-bottom: 18px; display: flex; align-items: center; gap: 10px; }
 
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-
-        .table-container { width: 100%; overflow-x: auto; -webkit-overflow-scrolling: touch; border: 1px solid var(--border-color); border-radius: var(--radius-md); background: rgba(15, 23, 42, 0.6); }
+        .table-container { width: 100%; overflow-x: auto; border: 1px solid var(--border-color); border-radius: var(--radius-md); background: rgba(15, 23, 42, 0.6); }
         table { width: 100%; border-collapse: collapse; min-width: 600px; text-align: left; font-size: 13px; }
         th, td { padding: 14px 12px; border-bottom: 1px solid var(--border-color); }
-        th { background: rgba(255, 255, 255, 0.03); color: var(--text-muted); font-weight: 600; text-transform: uppercase; font-size: 11px; letter-spacing: 0.5px; }
+        th { background: rgba(255, 255, 255, 0.03); color: var(--text-muted); font-weight: 600; text-transform: uppercase; font-size: 11px; }
         td { color: var(--text-main); }
-        tbody tr:last-child td { border-bottom: none; }
 
-        .container-tabela-carencia { width: 100%; margin-top: 25px; text-align: center; }
-        .tabela-carencia-wrapper { width: 100%; overflow-x: auto; border-radius: var(--radius-md); border: 1px solid var(--border-color); background: rgba(15, 23, 42, 0.6); margin-top: 12px; }
-        .tabela-carencia-custom { width: 100%; border-collapse: collapse; text-align: center; min-width: 320px; }
-        .tabela-carencia-custom th { background: rgba(255, 255, 255, 0.05); color: var(--text-main); font-size: 13px; font-weight: 700; padding: 12px; border-bottom: 1px solid var(--border-color); text-transform: none; letter-spacing: normal; }
-        .tabela-carencia-custom td { padding: 10px 12px; border-bottom: 1px solid var(--border-color); font-size: 14px; }
-        .tabela-carencia-custom tr:last-child td { border-bottom: none; }
-
-        .badge-faixa-item { display: inline-block; width: 110px; padding: 5px 10px; border-radius: 6px; font-weight: bold; font-size: 13px; text-shadow: 0px 1px 1px rgba(0,0,0,0.3); box-shadow: 0 2px 4px rgba(0,0,0,0.2); }
-        .badge-faixa-item.branca { background-color: #ffffff; color: #0f172a; text-shadow: none; border: 1px solid #cbd5e1; }
-        .badge-faixa-item.amarela { background-color: #facc15; color: #0f172a; text-shadow: none; }
+        .badge-faixa-item { display: inline-block; width: 110px; padding: 5px 10px; border-radius: 6px; font-weight: bold; font-size: 13px; text-align: center; }
+        .badge-faixa-item.branca { background-color: #ffffff; color: #0f172a; border: 1px solid #cbd5e1; }
+        .badge-faixa-item.amarela { background-color: #facc15; color: #0f172a; }
         .badge-faixa-item.vermelha { background-color: #ef4444; color: #ffffff; }
         .badge-faixa-item.laranja { background-color: #f97316; color: #ffffff; }
         .badge-faixa-item.verde { background-color: #10b981; color: #ffffff; }
@@ -130,11 +102,9 @@
         .badge-faixa-item.marrom { background-color: #78350f; color: #ffffff; }
         .badge-faixa-item.preta { background-color: #000000; color: #ffffff; border: 1px solid #475569; }
 
-        .modulo-faixa { background: rgba(15, 23, 42, 0.4); border: 1px solid var(--border-color); border-radius: var(--radius-md); margin-bottom: 12px; overflow: hidden; transition: all 0.2s ease; }
+        .modulo-faixa { background: rgba(15, 23, 42, 0.4); border: 1px solid var(--border-color); border-radius: var(--radius-md); margin-bottom: 12px; overflow: hidden; }
         .modulo-faixa[open] { border-color: var(--accent-blue); background: rgba(15, 23, 42, 0.8); }
-        .botao-expandir { padding: 16px; display: flex; align-items: center; font-weight: 600; font-size: 15px; color: var(--text-main); cursor: pointer; list-style: none; user-select: none; }
-        .botao-expandir::-webkit-details-marker { display: none; }
-
+        .botao-expandir { padding: 16px; display: flex; align-items: center; font-weight: 600; font-size: 15px; color: var(--text-main); cursor: pointer; list-style: none; }
         .faixa-cor { width: 14px; height: 14px; border-radius: 4px; display: inline-block; margin-right: 6px; }
         .faixa-cor.branca { background-color: #ffffff; }
         .faixa-cor.amarela { background-color: #facc15; }
@@ -143,197 +113,76 @@
         .faixa-cor.verde { background-color: #10b981; }
         .faixa-cor.roxa { background-color: #a855f7; }
         .faixa-cor.marrom { background-color: #854d0e; }
-        .faixa-cor.preta { background-color: #000000; border: 1px solid #475569; margin-right: 10px; }
-
-        .seta { margin-left: auto; font-size: 12px; color: var(--text-muted); transition: transform 0.2s; }
-        .modulo-faixa[open] .seta { transform: rotate(180deg); }
-
-        .bloco-extra { padding: 16px; border-top: 1px solid var(--border-color); font-size: 13px; color: var(--text-muted); line-height: 1.6; background: rgba(0, 0, 0, 0.2); }
-        .bloco-extra strong { color: var(--text-main); display: block; margin-top: 10px; margin-bottom: 4px; }
+        .faixa-cor.preta { background-color: #000000; border: 1px solid #475569; }
+        .seta { margin-left: auto; font-size: 12px; color: var(--text-muted); }
+        .bloco-extra { padding: 16px; border-top: 1px solid var(--border-color); font-size: 13px; color: var(--text-muted); background: rgba(0, 0, 0, 0.2); }
         .texto-vermelho { color: #f87171; font-weight: 600; }
 
-        .card-item { display: flex; align-items: center; background: rgba(15, 23, 42, 0.5); border: 1px solid var(--border-color); border-radius: var(--radius-md); padding: 14px 16px; margin-bottom: 12px; gap: 14px; text-decoration: none; color: inherit; transition: all 0.2s; }
-        .card-item:hover, .card-item:active { background: var(--bg-card-hover); border-color: var(--accent-blue); transform: translateY(-1px); }
-
+        .card-item { display: flex; align-items: center; background: rgba(15, 23, 42, 0.5); border: 1px solid var(--border-color); border-radius: var(--radius-md); padding: 14px 16px; margin-bottom: 12px; gap: 14px; text-decoration: none; color: inherit; }
         .card-date-badge { text-align: center; padding-right: 14px; border-right: 1px solid var(--border-color); min-width: 65px; }
         .card-date-badge .day { display: block; font-size: 22px; font-weight: 800; color: var(--accent-blue); line-height: 1; }
         .card-date-badge .month { display: block; font-size: 11px; font-weight: 700; color: var(--text-muted); text-transform: uppercase; margin-top: 4px; }
-
         .cal-btn-group { display: flex; gap: 8px; margin-top: 10px; flex-wrap: wrap; }
-        .btn-cal { display: inline-flex; align-items: center; gap: 6px; padding: 6px 12px; border-radius: 6px; font-size: 11px; font-weight: bold; color: white; border: none; cursor: pointer; text-decoration: none; transition: all 0.2s; }
+        .btn-cal { display: inline-flex; align-items: center; gap: 6px; padding: 6px 12px; border-radius: 6px; font-size: 11px; font-weight: bold; color: white; border: none; cursor: pointer; }
         .btn-cal-google { background-color: #4285F4; }
-        .btn-cal-apple { background-color: #333333; border: 1px solid var(--border-color); }
-        .btn-cal:active { transform: scale(0.95); opacity: 0.9; }
+        .btn-cal-apple { background-color: #333333; }
+        .btn-action { display: flex; align-items: center; justify-content: center; gap: 8px; width: 100%; padding: 14px; background: var(--accent-blue); color: white; border: none; border-radius: var(--radius-md); font-weight: 600; font-size: 14px; cursor: pointer; text-decoration: none; }
+        .btn-whatsapp { background: #22c55e; }
 
-        .btn-action { display: flex; align-items: center; justify-content: center; gap: 8px; width: 100%; padding: 14px; background: var(--accent-blue); color: white; border: none; border-radius: var(--radius-md); font-weight: 600; font-size: 14px; cursor: pointer; text-decoration: none; transition: all 0.2s; box-shadow: 0 4px 12px rgba(59, 130, 246, 0.25); }
-        .btn-action:active { transform: scale(0.98); opacity: 0.9; }
-        .btn-whatsapp { background: #22c55e; box-shadow: 0 4px 12px rgba(34, 197, 94, 0.25); }
-
-        .bottom-nav { position: fixed; bottom: 0; left: 0; width: 100%; background: rgba(15, 23, 42, 0.92); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); display: flex; justify-content: space-around; align-items: center; padding: 10px 6px calc(10px + env(safe-area-inset-bottom)); border-top: 1px solid var(--border-color); z-index: 9999; }
-        .nav-btn { background: none; border: none; color: var(--text-muted); font-size: 10px; font-weight: 600; cursor: pointer; display: flex; flex-direction: column; align-items: center; gap: 4px; flex: 1; padding: 4px 0; transition: all 0.2s; }
-        .nav-btn .icon { font-size: 20px; transition: transform 0.2s; }
-        .nav-btn .icon img.logo-icon { width: 22px; height: 22px; object-fit: contain; filter: grayscale(100%) opacity(0.6); transition: all 0.2s; }
+        .bottom-nav { position: fixed; bottom: 0; left: 0; width: 100%; background: rgba(15, 23, 42, 0.92); backdrop-filter: blur(16px); display: flex; justify-content: space-around; align-items: center; padding: 10px 6px calc(10px + env(safe-area-inset-bottom)); border-top: 1px solid var(--border-color); z-index: 9999; }
+        .nav-btn { background: none; border: none; color: var(--text-muted); font-size: 10px; font-weight: 600; cursor: pointer; display: flex; flex-direction: column; align-items: center; gap: 4px; flex: 1; padding: 4px 0; }
+        .nav-btn .icon { font-size: 20px; }
+        .nav-btn .icon img.logo-icon { width: 22px; height: 22px; object-fit: contain; filter: grayscale(100%) opacity(0.6); }
         .nav-btn.active { color: var(--accent-blue); }
-        .nav-btn.active .icon { transform: translateY(-2px); }
         .nav-btn.active .icon img.logo-icon { filter: grayscale(0%) opacity(1); }
 
-        @keyframes balancoSininho { 0% { transform: rotate(-12deg); } 100% { transform: rotate(12deg); } }
-        @media (max-width: 480px) { header h1 { font-size: 16px; } .container { padding: 0 12px; } .tab-content { padding: 18px 14px; } }
-
-        /* Estilos do Popup de Avisos */
-        .modal-overlay {
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0, 0, 0, 0.8);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            z-index: 10000;
-            backdrop-filter: blur(4px);
-        }
-        .modal-content-aviso {
-            background: var(--bg-card);
-            padding: 25px;
-            border-radius: var(--radius-lg);
-            border: 1px solid var(--accent-blue);
-            width: 90%;
-            max-width: 400px;
-            text-align: center;
-            color: var(--text-main);
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6);
-        }
-        .modal-content-aviso h2 {
-            color: var(--accent-blue);
-            margin-bottom: 15px;
-            font-size: 20px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-        }
-        .aviso-detalhes {
-            text-align: left;
-            background: rgba(15, 23, 42, 0.6);
-            padding: 15px;
-            border-radius: var(--radius-md);
-            margin-bottom: 20px;
-            font-size: 14px;
-            line-height: 1.6;
-        }
-        .aviso-detalhes p {
-            margin-bottom: 8px;
-        }
-        .aviso-detalhes p:last-child {
-            margin-bottom: 0;
-        }
-        .modal-content-aviso button {
-            width: 100%;
-            padding: 14px;
-            background: var(--accent-green);
-            color: white;
-            border: none;
-            border-radius: var(--radius-md);
-            cursor: pointer;
-            font-weight: bold;
-            font-size: 15px;
-            transition: all 0.2s;
-        }
-        .modal-content-aviso button:active {
-            transform: scale(0.96);
-        }
-
-        /* Estilos do Loading Spinner */
-        .spinner {
-            width: 50px;
-            height: 50px;
-            border: 5px solid rgba(255, 255, 255, 0.2);
-            border-top-color: var(--accent-blue);
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
-            margin: 0 auto;
-        }
-        @keyframes spin {
-            to { transform: rotate(360deg); }
-        }
-        
-        .video-responsivo {
-            position: relative;
-            width: 100%; 
-            padding-bottom: 56.25%;
-            height: 0;
-            overflow: hidden;
-            max-width: 100%;
-            border-radius: 8px; 
-        }
-
-        .video-responsivo iframe {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            border: none;
-        }
+        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.8); display: flex; justify-content: center; align-items: center; z-index: 10000; }
+        .modal-content-aviso { background: var(--bg-card); padding: 25px; border-radius: var(--radius-lg); border: 1px solid var(--accent-blue); width: 90%; max-width: 400px; text-align: center; }
+        .spinner { width: 50px; height: 50px; border: 5px solid rgba(255, 255, 255, 0.2); border-top-color: var(--accent-blue); border-radius: 50%; animation: spin 1s linear infinite; margin: 0 auto; }
+        @keyframes spin { to { transform: rotate(360deg); } }
+        .video-responsivo { position: relative; width: 100%; padding-bottom: 56.25%; height: 0; overflow: hidden; border-radius: 8px; }
+        .video-responsivo iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: none; }
     </style>
 </head>
 <body>
 
-<!-- POPUP DE AVISO (Campeonato ACAK) -->
 <div id="modalAvisoInfo" class="modal-overlay" style="display: none;">
     <div class="modal-content-aviso">
         <h2>📢 Fique Atento!</h2>
-        <div class="aviso-detalhes">
+        <div style="text-align: left; background: rgba(15, 23, 42, 0.6); padding: 15px; border-radius: 8px; margin-bottom: 20px;">
             <p><strong>🏆 7º Etapa Acak</strong> - 23/08 - Domingo</p>
-            <p><strong>⏳ Prazo para inscrição:</strong> 19/08</p>
-            <p><strong>💵 Investimento:</strong><br>Série A = R$ 130,00<br>Série B = R$ 100,00</p>
         </div>
-        <button onclick="fecharAvisoPopup()">OK, Entendi</button>
+        <button onclick="fecharAvisoPopup()" style="width:100%; padding:12px; background:var(--accent-green); color:#fff; border:none; border-radius:8px; font-weight:bold;">OK, Entendi</button>
     </div>
 </div>
 
-<!-- POPUP DE CARREGAMENTO (SPINNER) -->
 <div id="modalLoading" class="modal-overlay" style="display: none; z-index: 10005;">
-    <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 15px;">
+    <div style="display: flex; flex-direction: column; align-items: center; gap: 15px;">
         <div class="spinner"></div>
-        <p style="color: white; font-weight: bold; font-size: 16px;">Processando, aguarde...</p>
+        <p style="color: white; font-weight: bold;">Processando, aguarde...</p>
     </div>
 </div>
 
 <header>
     <div class="header-left">
-        <img src="./logo-associacao.png" alt="Logo Associação Atarashii">
+        <img src="./logo-associacao.png" alt="Logo">
         <h1>Painel do Aluno</h1>
     </div>
-    
     <div class="header-actions">
-        <div class="icon-btn" onclick="atualizarPainel()" title="Atualizar painel">🔄</div>
-        <div class="icon-btn" id="wrapperSininho" onclick="solicitarAtivacaoPushIOS()">
-            🔔<span class="badge-count" id="badgeNotificacao" style="display: none;">1</span>
-        </div>
+        <div class="icon-btn" onclick="atualizarPainel()" title="Atualizar">🔄</div>
+        <div class="icon-btn" id="wrapperSininho" onclick="solicitarAtivacaoPushIOS()">🔔<span class="badge-count" id="badgeNotificacao" style="display: none;">1</span></div>
         <button class="btn-logout" id="logoutBtn">Sair</button>
     </div>
 </header>
 
 <div class="container">
-    <div id="bannerIosInstalar" style="display: none; background: rgba(59, 130, 246, 0.15); border: 1px solid var(--accent-blue); padding: 12px 16px; border-radius: var(--radius-md); margin-bottom: 15px; font-size: 13px;">
-        📲 <strong>Ativar Notificações no iPhone:</strong> Para receber notificações no iOS, toque no botão de <strong>Compartilhar (🔗/⬆️)</strong> do Safari e escolha <strong>"Adicionar à Tela de Início"</strong>.
-    </div>
-
-    <div id="boxAtivarPush" style="display: none; background: rgba(16, 185, 129, 0.15); border: 1px solid var(--accent-green); padding: 12px 16px; border-radius: var(--radius-md); margin-bottom: 15px; text-align: center;">
-        <span style="font-size: 13px; display: block; margin-bottom: 8px;">Deseja receber avisos e notificações no seu celular?</span>
-        <button onclick="solicitarAtivacaoPushIOS()" style="background: var(--accent-green); color: white; border: none; padding: 8px 16px; border-radius: var(--radius-sm); font-weight: bold; cursor: pointer; font-size: 13px;">
-            🔔 Ativar Notificações Push
-        </button>
-    </div>
-
     <div class="welcome-box">
         <h2 id="welcomeNome">Olá, Associado!</h2>
         <p>Acompanhe suas notas, conteúdos e avisos no menu inferior.</p>
     </div>
 
-    <!-- SEÇÃO 1: PAINEL / NOTAS DO ALUNO -->
+    <!-- PAINEL -->
     <div id="exame" class="tab-content active">
-
         <h3>🥋 Exames de Faixa</h3>
         <div class="table-container">
             <table>
@@ -341,935 +190,80 @@
                     <tr><th>FAIXA</th><th>Ano</th><th>KIHON</th><th>KATA</th><th>KUMITE</th><th>Perguntas</th><th>TOTAL</th><th>MÉDIA</th></tr>
                 </thead>
                 <tbody id="corpoTabelaNotas">
-                    <tr><td colspan="8" style="text-align: center; color: var(--text-muted); padding: 20px;">Carregando histórico de exames...</td></tr>
+                    <tr><td colspan="8" style="text-align: center; color: var(--text-muted); padding: 20px;">Carregando histórico...</td></tr>
                 </tbody>
             </table>
         </div>
 
-        <div class="grafico-container" style="position: relative; width: 100%; max-width: 420px; margin: 25px auto 0 auto;">
+        <div style="position: relative; width: 100%; max-width: 420px; margin: 25px auto 0 auto;">
             <h3 style="justify-content: center; margin-bottom: 15px;">📊 Frequência de Aulas</h3>
-
-            <div id="filtroFrequencia" style="display: flex; gap: 8px; align-items: center; justify-content: center; margin-bottom: 15px; background: rgba(15, 23, 42, 0.6); padding: 12px; border-radius: var(--radius-md); border: 1px solid var(--border-color); flex-wrap: wrap;">
-                <div style="display: flex; flex-direction: column; gap: 4px; flex: 1; min-width: 120px;">
-                    <label for="mesInicioFrequencia" style="font-size: 11px; color: var(--text-muted); font-weight: bold;">Mês Inicial:</label>
-                    <input type="month" id="mesInicioFrequencia" value="2026-07" style="padding: 6px 8px; border-radius: 6px; border: 1px solid var(--border-color); background: var(--bg-primary); color: var(--text-main); font-size: 12px; width: 100%;">
-                </div>
-
-                <div style="display: flex; flex-direction: column; gap: 4px; flex: 1; min-width: 120px;">
-                    <label for="mesFimFrequencia" style="font-size: 11px; color: var(--text-muted); font-weight: bold;">Mês Final:</label>
-                    <input type="month" id="mesFimFrequencia" value="2026-12" style="padding: 6px 8px; border-radius: 6px; border: 1px solid var(--border-color); background: var(--bg-primary); color: var(--text-main); font-size: 12px; width: 100%;">
-                </div>
-
-                <button onclick="carregarGraficoFrequencia()" style="padding: 8px 12px; background: var(--accent-blue); color: white; border: none; border-radius: 6px; font-weight: bold; font-size: 12px; cursor: margin-top: 15px; align-self: flex-end;">
-                    🔍 Filtrar
-                </button>
-            </div>
-
             <canvas id="graficoFrequencia"></canvas>
-            
-            <div id="resumoFrequencia" style="display: flex; justify-content: space-around; gap: 6px; margin-top: 15px; font-family: sans-serif;">
-                <div style="background-color: #10b98122; border: 1px solid var(--accent-green); color: var(--accent-green); padding: 8px 10px; border-radius: 12px; font-weight: bold; text-align: center; flex: 1;">
+            <div id="resumoFrequencia" style="display: flex; justify-content: space-around; gap: 6px; margin-top: 15px;">
+                <div style="background-color: #10b98122; border: 1px solid var(--accent-green); color: var(--accent-green); padding: 8px; border-radius: 12px; font-weight: bold; text-align: center; flex: 1;">
                     <span style="font-size: 11px; display: block; color: var(--text-muted);">Presenças</span>
-                    <span id="qtdPresencas" style="font-size: 16px;">0</span>
+                    <span id="qtdPresencas">0</span>
                 </div>
-                <div style="background-color: #ef444422; border: 1px solid var(--accent-red); color: #f87171; padding: 8px 10px; border-radius: 12px; font-weight: bold; text-align: center; flex: 1;">
+                <div style="background-color: #ef444422; border: 1px solid var(--accent-red); color: #f87171; padding: 8px; border-radius: 12px; font-weight: bold; text-align: center; flex: 1;">
                     <span style="font-size: 11px; display: block; color: var(--text-muted);">Faltas</span>
-                    <span id="qtdFaltas" style="font-size: 16px;">0</span>
+                    <span id="qtdFaltas">0</span>
                 </div>
-                <div style="background-color: #f59e0b22; border: 1px solid var(--accent-gold); color: #fbbf24; padding: 8px 10px; border-radius: 12px; font-weight: bold; text-align: center; flex: 1;">
-                    <span style="font-size: 11px; display: block; color: var(--text-muted);">Justificativas Aprovadas</span>
-                    <span id="qtdJustificativas" style="font-size: 16px;">0</span>
-                </div>
-            </div>
-
-            <button onclick="toggleRelatorioFrequencia()" class="btn-action" style="margin-top: 15px; background-color: #475569; padding: 10px;">
-                📄 Ver Relatório Detalhado
-            </button>
-
-            <div id="containerRelatorioFrequencia" style="display: none; margin-top: 15px; text-align: left; background: rgba(15, 23, 42, 0.6); padding: 15px; border-radius: var(--radius-md); border: 1px solid var(--border-color); max-height: 250px; overflow-y: auto;">
-                <h4 style="margin-bottom: 10px; color: var(--text-main); font-size: 14px; text-align: center;">Datas de Frequência</h4>
-                <div id="listaRelatorioFrequencia" style="font-size: 13px; color: var(--text-muted);">
-                    Carregando histórico...
+                <div style="background-color: #f59e0b22; border: 1px solid var(--accent-gold); color: #fbbf24; padding: 8px; border-radius: 12px; font-weight: bold; text-align: center; flex: 1;">
+                    <span style="font-size: 11px; display: block; color: var(--text-muted);">Justificativas</span>
+                    <span id="qtdJustificativas">0</span>
                 </div>
             </div>
-        </div>
-
-        <div style="margin-top: 30px; background: rgba(15, 23, 42, 0.6); border: 1px solid var(--border-color); padding: 20px; border-radius: var(--radius-md);">
-            <h3 style="margin-bottom: 12px; font-size: 16px;">📝 Justificar Falta em Aula</h3>
-            <form id="formJustificativa">
-                <label style="display: block; font-size: 13px; color: var(--text-muted); margin-bottom: 6px;">Selecione a data da falta (Terças, Quintas ou Sábados):</label>
-                <input type="date" id="dataFaltaAluno" required style="width: 100%; padding: 10px; border-radius: 6px; border: 1px solid var(--border-color); background: var(--bg-primary); color: var(--text-main); margin-bottom: 15px;">
-
-                <label style="display: block; font-size: 13px; color: var(--text-muted); margin-bottom: 8px;">Selecione o motivo da falta:</label>
-                
-                <div style="display: flex; flex-direction: column; gap: 8px; font-size: 13px; color: var(--text-main); text-align: left; margin-bottom: 15px;">
-                    <label><input type="checkbox" name="motivoFalta" value="Doença do aluno"> a) Doença do aluno.</label>
-                    <label><input type="checkbox" name="motivoFalta" value="Falecimento de familiar"> b) Falecimento de familiar.</label>
-                    <label><input type="checkbox" name="motivoFalta" value="Nascimento de irmão ou filho"> c) Nascimento de irmão ou filho.</label>
-                    <label><input type="checkbox" name="motivoFalta" value="Realização de tratamento ambulatório, em virtude de doença ou deficiência"> d) Realização de tratamento ambulatório, em virtude de doença ou deficiência.</label>
-                    <label><input type="checkbox" name="motivoFalta" value="Assistência na doença a membro do agregado familiar"> e) Assistência na doença a membro do agregado familiar.</label>
-                    <label><input type="checkbox" name="motivoFalta" value="Ato decorrente da religião professada pelo aluno"> f) Ato decorrente da religião professada pelo aluno.</label>
-                    <label><input type="checkbox" name="motivoFalta" value="Participação em atividades culturais e lazer"> g) Participação em atividades culturais e lazer.</label>
-                    <label><input type="checkbox" name="motivoFalta" value="Preparação e participação em atividades desportivas, trabalho ou escolares"> h) Preparação e participação em atividades desportivas, trabalho ou escolares.</label>
-                    <label><input type="checkbox" name="motivoFalta" value="Participação de estudo previstas no plano de atividades da escola"> i) Participação de estudo previstas no plano de atividades da escola.</label>
-                    
-                    <label style="font-weight: bold; color: var(--accent-blue);">
-                        <input type="checkbox" id="checkOutro" onchange="alternarCampoTextoOutro()"> j) Outro(s)
-                    </label>
-                </div>
-
-                <div id="containerTextoOutro" style="display: none; margin-bottom: 15px;">
-                    <label style="display: block; font-size: 13px; color: var(--text-muted); margin-bottom: 6px;">Especifique o motivo da falta:</label>
-                    <textarea id="textoJustificativaOutro" rows="3" placeholder="Escreva aqui o motivo detalhado da falta..." style="width: 100%; padding: 10px; border-radius: 6px; border: 1px solid var(--border-color); background: var(--bg-primary); color: var(--text-main); resize: vertical; font-size: 13px;"></textarea>
-                </div>
-
-                <button type="submit" class="btn-action">📤 Enviar Justificativa</button>
-            </form>
-
-            <h4 style="margin-top: 25px; margin-bottom: 10px; font-size: 14px; color: var(--text-muted);">Status dos Pedidos de Justificativa</h4>
-            
-            <div id="filtroJustificativa" style="display: flex; gap: 8px; align-items: center; justify-content: center; margin-bottom: 15px; background: rgba(15, 23, 42, 0.4); padding: 10px; border-radius: var(--radius-md); border: 1px solid var(--border-color); flex-wrap: wrap;">
-                <div style="display: flex; flex-direction: column; gap: 4px; flex: 1; min-width: 120px;">
-                    <label for="mesInicioJustificativa" style="font-size: 11px; color: var(--text-muted); font-weight: bold;">Mês Inicial:</label>
-                    <input type="month" id="mesInicioJustificativa" value="2026-07" style="padding: 6px 8px; border-radius: 6px; border: 1px solid var(--border-color); background: var(--bg-primary); color: var(--text-main); font-size: 12px; width: 100%;">
-                </div>
-
-                <div style="display: flex; flex-direction: column; gap: 4px; flex: 1; min-width: 120px;">
-                    <label for="mesFimJustificativa" style="font-size: 11px; color: var(--text-muted); font-weight: bold;">Mês Final:</label>
-                    <input type="month" id="mesFimJustificativa" value="2026-12" style="padding: 6px 8px; border-radius: 6px; border: 1px solid var(--border-color); background: var(--bg-primary); color: var(--text-main); font-size: 12px; width: 100%;">
-                </div>
-
-                <button onclick="carregarStatusJustificativas()" style="padding: 8px 12px; background: var(--accent-blue); color: white; border: none; border-radius: 6px; font-weight: bold; font-size: 12px; cursor: pointer; margin-top: 15px; align-self: flex-end;">
-                    🔍 Filtrar
-                </button>
-            </div>
-
-            <div id="listaJustificativasAluno" style="font-size: 13px;">Carregando histórico...</div>
-        </div>
-        <p> </p>
-        <div class="card-item" style="flex-direction: column; align-items: flex-start; gap: 10px; margin-top: 15px;">
-            <strong style="font-size: 15px;">📄 Regulamento Oficial de Justificativa de Faltas</strong>
-            <p style="font-size: 12px; color: var(--text-muted);">Conteúdo detalhado sobre a justificativa de faltas.</p>
-            <a href="Regulamento de Justificativa de Faltas.pdf" target="_blank" class="btn-action" style="padding: 10px;">📖 Abrir Regulamento</a>
         </div>
     </div>
 
-    <!-- SEÇÃO 2: CONTEÚDO PROGRAMÁTICO (EXAME) -->
+    <!-- CONTEÚDO PROGRAMÁTICO -->
     <div id="conteudo-programatico" class="tab-content">
         <h3>📖 Conteúdo Programático</h3>
-        
         <details class="modulo-faixa">
-            <summary class="botao-expandir">
-                <span class="faixa-cor branca"></span>
-                <span class="faixa-cor amarela"></span>
-                Branca para Amarela
-                <span class="seta">▼</span>
-            </summary>
-            <div class="table-container" style="border:none; border-radius:0;">
+            <summary class="botao-expandir"><span class="faixa-cor branca"></span><span class="faixa-cor amarela"></span>Branca para Amarela<span class="seta">▼</span></summary>
+            <div class="table-container" style="border:none;">
                 <table>
                     <thead><tr><th>Kihon</th><th>Base</th><th>Sentido</th></tr></thead>
                     <tbody>
                         <tr><td>Oi-Zuki</td><td>Zenkutsu-Dachi</td><td>Avançando 5x</td></tr>
                         <tr><td>Ague-Uke / final (Guiako-zuki)</td><td>Zenkutsu-Dachi</td><td>Recuando 5x</td></tr>
-                        <tr><td>Mae-Gueri</td><td>Zenkutsu-Dachi</td><td>Avançando 5x</td></tr>
-                        <tr><td>Soto-Uke / final (Guiako-zuki)</td><td>Zenkutsu-Dachi</td><td>Recuando 5x</td></tr>
-                        <tr><td>Guedan-Barai / final (Guiako-zuki)</td><td>Zenkutsu-Dachi</td><td>Avançando 5x</td></tr>
-                        <tr><td>Uchi-Uke / final (Guiako-zuki)</td><td>Zenkutsu-Dachi</td><td>Recuando 5x</td></tr>
-                        <tr><td>Yoko-Gueri-Keague</td><td>Kiba-Dachi</td><td>Ida 3x</td></tr>
-                        <tr><td>Yoko-Gueri-Kekome</td><td>Kiba-Dachi</td><td>Volta 3x</td></tr>
                     </tbody>
                 </table>
-                <div class="bloco-extra">
-                    <strong>Kihon-Gohon-Kumite:</strong>
-                    <p><span class="texto-vermelho">Ataques</span> - Jodan-zuki, Tchudan-zuki, Guedan-zuki. <span class="texto-vermelho">Defesa</span> - Jodan-Ague-uke, Tchudan-Soto-uke, Guedan-barai, final Guiako-zuki.</p>
-                    <strong>Kata:</strong> Heian-Shodan (com contagem)
-                    <strong>Exame Oral:</strong> Contagem em japonês, Dojo-Kun e Pergunta livre.
-                    <strong>Kumite:</strong> (1:30 min) Sombra luta semi-contato.
-                </div>
             </div>
         </details>
-
-        <details class="modulo-faixa">
-            <summary class="botao-expandir">
-                <span class="faixa-cor amarela"></span>
-                <span class="faixa-cor vermelha"></span>
-                Amarela para Vermelha
-                <span class="seta">▼</span>
-            </summary>
-            <div class="table-container" style="border:none; border-radius:0;">
-                <table>
-                    <thead><tr><th>Kihon</th><th>Base</th><th>Sentido</th></tr></thead>
-                    <tbody>
-                        <tr><td>Oi-Zuki</td><td>Zenkutsu-Dachi</td><td>Avançando 5x</td></tr>
-                        <tr><td>Ague-Uke / final (Guiako-zuki)</td><td>Zenkutsu-Dachi</td><td>Recuando 5x</td></tr>
-                        <tr><td>Mae-Gueri</td><td>Zenkutsu-Dachi</td><td>Avançando 5x</td></tr>
-                        <tr><td>Soto-Uke / final (Guiako-zuki)</td><td>Zenkutsu-Dachi</td><td>Recuando 5x</td></tr>
-                        <tr><td>Mawachi-Gueri</td><td>Zenkutsu-Dachi</td><td>Avançando 5x</td></tr>
-                        <tr><td>Uchi-Uke / final (Guiako-zuki)</td><td>Zenkutsu-Dachi</td><td>Recuando 5x</td></tr>
-                        <tr><td>Shoto-Uke</td><td>Kokutsu-dachi</td><td>Avançando 5x</td></tr>
-                        <tr><td>Shoto-Uke / final Guiako-Yon-Nukite</td><td>Kokutsu-dachi</td><td>Recuando 5x</td></tr>
-                        <tr><td>Yoko-Gueri-Keague</td><td>Kiba-Dachi</td><td>Ida 3x</td></tr>
-                        <tr><td>Yoko-Gueri-Kekome</td><td>Kiba-Dachi</td><td>Volta 3x</td></tr>
-                    </tbody>
-                </table>
-                <div class="bloco-extra">
-                    <strong>Kihon-Gohon-Kumite:</strong>
-                    <p><span class="texto-vermelho">Ataques</span> - Jodan-zuki, Tchudan-zuki, Guedan-zuki. <span class="texto-vermelho">Defesa</span> - Jodan-Ague-uke, Tchudan-Soto-uke, Guedan-barai, final Guiako-zuki.</p>
-                    <strong>Kata:</strong> Heian-Shodan e Heian-Nidan (sem contagem)
-                    <strong>Exame Oral:</strong> Contagem em japonês, Dojo-Kun e Pergunta livre.
-                    <strong>Kumite:</strong> (2 min) Sombra luta com contato.
-                </div>
-            </div>
-        </details>
-
-        <details class="modulo-faixa">
-            <summary class="botao-expandir">
-                <span class="faixa-cor vermelha"></span>
-                <span class="faixa-cor laranja"></span>
-                Vermelha para Laranja
-                <span class="seta">▼</span>
-            </summary>
-            <div class="table-container" style="border:none; border-radius:0;">
-                <table>
-                    <thead><tr><th>Kihon</th><th>Base</th><th>Sentido</th></tr></thead>
-                    <tbody>
-                        <tr><td>Sambom-Zuki</td><td>Zenkutsu-Dachi</td><td>Avançando 5x</td></tr>
-                        <tr><td>Ague-Uke / Guiako-zuki</td><td>Zenkutsu-Dachi</td><td>Recuando 5x</td></tr>
-                        <tr><td>Mae-Gueri / Guiako-zuki</td><td>Zenkutsu-Dachi</td><td>Avançando 5x</td></tr>
-                        <tr><td>Soto-Uke / Guiako-zuki</td><td>Zenkutsu-Dachi</td><td>Recuando 5x</td></tr>
-                        <tr><td>Mawachi-Gueri</td><td>Zenkutsu-Dachi</td><td>Avançando 5x</td></tr>
-                        <tr><td>Uchi-Uke / Guiako-zuki</td><td>Zenkutsu-Dachi</td><td>Recuando 5x</td></tr>
-                        <tr><td>Shoto-uke / Guiako-yon-Nukite</td><td>Kokutsu-dachi</td><td>Avançando 5x</td></tr>
-                        <tr><td>Shoto-uke / Guiako-yon-Nukite</td><td>Kokutsu-dachi</td><td>Recuando 5x</td></tr>
-                        <tr><td>Yoko-Gueri-Keague</td><td>Kiba-Dachi</td><td>Ida 3x</td></tr>
-                        <tr><td>Yoko-Gueri-Kekome</td><td>Kiba-Dachi</td><td>Volta 3x</td></tr>
-                    </tbody>
-                </table>
-                <div class="bloco-extra">
-                    <strong>Kihon-Ipom-Kumite:</strong>
-                    <p><span class="texto-vermelho">Ataques</span> - Jodan-zuki, Tchudan-zuki, Mae-Gueri, Yoko-Gueri, Mawachi-Gueri.</p>
-                    <strong>Kata:</strong> Heian-Nidan, Heian-Sandan, Heian Yondan
-                    <strong>Exame Oral:</strong> Contagem, Dojo-Kun e Pergunta livre.
-                    <strong>Kumite:</strong> (2 min) Luta com contato.
-                </div>
-            </div>
-        </details>
-
-        <details class="modulo-faixa">
-            <summary class="botao-expandir">
-                <span class="faixa-cor laranja"></span>
-                <span class="faixa-cor verde"></span>
-                Laranja para Verde
-                <span class="seta">▼</span>
-            </summary>
-            <div class="table-container" style="border:none; border-radius:0;">
-                <table>
-                    <thead><tr><th>Kihon</th><th>Base</th><th>Sentido</th></tr></thead>
-                    <tbody>
-                        <tr><td>Sambom-Zuki</td><td>Zenkutsu-Dachi</td><td>Avançando 5x</td></tr>
-                        <tr><td>Ague-uke / Guiako-zuki</td><td>Zenkutsu-Dachi</td><td>Recuando 5x</td></tr>
-                        <tr><td>Mae-gueri / Guiako-zuki</td><td>Zenkutsu-Dachi</td><td>Avançando 5x</td></tr>
-                        <tr><td>Soto-uke / Guiako-zuki</td><td>Zenkutsu-Dachi</td><td>Recuando 5x</td></tr>
-                        <tr><td>Kizame-gueri / Mawachi-Gueri</td><td>Zenkutsu-Dachi</td><td>Avançando 5x</td></tr>
-                        <tr><td>Uchi-uke / Kizame-zuki / Guiako-zuki</td><td>Zenkutsu-Dachi</td><td>Recuando 5x</td></tr>
-                        <tr><td>Shoto-uke / Guiako-yon-Nukite</td><td>Kokutsu-Dachi</td><td>Avançando 5x</td></tr>
-                        <tr><td>Shoto-uke / Kizame-gueri / Guiako-yon-Nukite</td><td>Kokutsu-Dachi</td><td>Recuando 5x</td></tr>
-                        <tr><td>Yoko-Gueri-Keague</td><td>Kiba-Dachi</td><td>Ida 3x</td></tr>
-                        <tr><td>Yoko-Gueri-Kekome</td><td>Kiba-Dachi</td><td>Volta 3x</td></tr>
-                    </tbody>
-                </table>
-                <div class="bloco-extra">
-                    <strong>Kihon-Ipom-Kumite:</strong> Ataques e contra-ataques combinados.
-                    <strong>Kata:</strong> Heian-Sandan, Heian-Yondan e Heian-Godan.
-                    <strong>Kumite:</strong> (2 min) Sombra e luta com contato.
-                </div>
-            </div>
-        </details>
-
-        <details class="modulo-faixa">
-            <summary class="botao-expandir">
-                <span class="faixa-cor verde"></span>
-                <span class="faixa-cor roxa"></span>
-                Verde para Roxa
-                <span class="seta">▼</span>
-            </summary>
-            <div class="table-container" style="border:none; border-radius:0;">
-                <table>
-                    <thead><tr><th>Kihon</th><th>Base</th><th>Sentido</th></tr></thead>
-                    <tbody>
-                        <tr><td>Sonoba-zuki</td><td>Kiba-Dachi</td><td>10 repetições</td></tr>
-                        <tr><td>Sambom-Zuki</td><td>Zenkutsu-Dachi</td><td>Avançando 5x</td></tr>
-                        <tr><td>Ague-uke / Uraken / Guiako-zuki</td><td>Zenkutsu-Dachi</td><td>Recuando 5x</td></tr>
-                        <tr><td>Mae-gueri / Guiako-zuki</td><td>Zenkutsu-Dachi</td><td>Avançando 5x</td></tr>
-                        <tr><td>Soto-uke, empi / Uraken / Guiako-zuki</td><td>Zenkutsu-Dachi</td><td>Recuando 5x</td></tr>
-                        <tr><td>Kizame-gueri / Mawachi-Gueri</td><td>Zenkutsu-Dachi</td><td>Avançando 5x</td></tr>
-                        <tr><td>Uchi-Uke / Kizame-zuki / Guiako-zuki</td><td>Zenkutsu-Dachi</td><td>Recuando 5x</td></tr>
-                        <tr><td>Shoto-uke / Guiako-yon-Nukite</td><td>Kokutsu-Dachi</td><td>Avançando 5x</td></tr>
-                        <tr><td>Shoto-uke / Kizame-gueri / Guiako-yon-Nukite</td><td>Kokutsu-Dachi</td><td>Recuando 5x</td></tr>
-                        <tr><td>Yoko-Gueri-Keague / Kekome</td><td>Kiba-Dachi</td><td>Ida/Volta 3x</td></tr>
-                        <tr><td>Mae / Mawachi / Yoko / Ushiro-gueri</td><td>Zenkutsu-Dachi</td><td>Ida/Volta 1x</td></tr>
-                    </tbody>
-                </table>
-                <div class="bloco-extra">
-                    <strong>Jiu-Ipom-Kumite:</strong> Defesas e contra-ataques livres.
-                    <strong>Kata/Bunkai:</strong> Heian-Godan, Bassai-Dai. Apresentar aplicações.
-                    <strong>Kumite:</strong> Shiai-kumite 2 min / Jiu-kumite 1 min.
-                </div>
-            </div>
-        </details>
-
-        <details class="modulo-faixa">
-            <summary class="botao-expandir">
-                <span class="faixa-cor roxa"></span>
-                <span class="faixa-cor marrom"></span>
-                Roxa para Marrom
-                <span class="seta">▼</span>
-            </summary>
-            <div class="table-container" style="border:none; border-radius:0;">
-                <table>
-                    <thead><tr><th>Kihon</th><th>Base</th><th>Sentido</th></tr></thead>
-                    <tbody>
-                        <tr><td>Sonoba-zuki</td><td>Kiba-Dachi</td><td>10 repetições</td></tr>
-                        <tr><td>Oi-zuki</td><td>Zenkutsu-Dachi</td><td>Avançando 5x</td></tr>
-                        <tr><td>Mae-gueri / Tchudan-Oi-zuki</td><td>Zenkutsu-Dachi</td><td>Avançando 5x</td></tr>
-                        <tr><td>Guiako-zuki</td><td>Zenkutsu-Dachi</td><td>Avançando 5x</td></tr>
-                        <tr><td>Mae-gueri / Guiako-zuki</td><td>Zenkutsu-Dachi</td><td>Avançando 5x</td></tr>
-                        <tr><td>Sambom-Zuki</td><td>Zenkutsu-Dachi</td><td>Avançando 5x</td></tr>
-                        <tr><td>Ague-uke / Guiako-zuki</td><td>Zenkutsu-Dachi</td><td>Recuando 5x</td></tr>
-                        <tr><td>Yoko-Gueri-Kekome / Mawachi-Guiako empi</td><td>Zenkutsu-Dachi</td><td>Avançando 5x</td></tr>
-                        <tr><td>Soto-uke / Empi / Uraken / Guiako-zuki</td><td>Zenkutsu / Kiba</td><td>Recuando 5x</td></tr>
-                        <tr><td>Kizame-Gueri / Mawachi-Gueri</td><td>Zenkutsu-Dachi</td><td>Avançando 5x</td></tr>
-                        <tr><td>Uchi-uke / kizame-zuki / Guiako-zuki</td><td>Zenkutsu-Dachi</td><td>Recuando 5x</td></tr>
-                        <tr><td>Shoto-uke / Guiako-yon-Nukite</td><td>Kokutsu-Dachi</td><td>Avançando 5x</td></tr>
-                        <tr><td>Shoto-uke / kizame-Gueri / Guiako-yon-Nukite</td><td>Kokutsu-Dachi</td><td>Recuando 5x</td></tr>
-                        <tr><td>Yoko-Gueri-Keague</td><td>Kiba-Dachi</td><td>Ida/Volta 3x</td></tr>
-                        <tr><td>Mae / Mawachi / Yoko / Ushiro-gueri</td><td>Zenkutsu-Dachi</td><td>Ida/Volta 1x</td></tr>
-                    </tbody>
-                </table>
-                <div class="bloco-extra">
-                    <strong>Jiu-Ipom-Kumite:</strong> Defesas e contra-ataques livres.
-                    <strong>Kata/Bunkai:</strong> Tekki-shodan, Bassai-Dai, Kanku-dai e Jion.
-                    <strong>Kumite:</strong> Shiai-kumite 2 min.
-                </div>
-            </div>
-        </details>
-
-        <details class="modulo-faixa">
-            <summary class="botao-expandir">
-                <span class="faixa-cor preta"></span>
-                FPK - Graduação (1º Dan)
-                <span class="seta">▼</span>
-            </summary>
-            <div class="table-container" style="border:none; border-radius:0;">
-                <table>
-                    <thead><tr><th>Nº / Kihon</th><th>Base</th><th>Repetições</th></tr></thead>
-                    <tbody>
-                        <tr><td>1. Sonoba-Zuki</td><td>Kiba-Dachi</td><td>10 repetições</td></tr>
-                        <tr><td>2. Mae-Gueri / Oi-Zuki</td><td>Zenkutsu-Dachi</td><td>5x ida</td></tr>
-                        <tr><td>3. Mae-Gueri / Guiako-Zuki</td><td>Zenkutsu-Dachi</td><td>5x volta</td></tr>
-                        <tr><td>4. Sambom-Zuki</td><td>Zenkutsu-Dachi</td><td>5x ida</td></tr>
-                        <tr><td>5. Uchi-Uke / Kizami / Guiako</td><td>Zenkutsu-Dachi</td><td>5x recuar</td></tr>
-                        <tr><td>6. Ague-Uke / Guedan / Guiako</td><td>Zenkutsu-Dachi</td><td>5x ida</td></tr>
-                        <tr><td>7. Shuto-Uke / Nukite / Shuto</td><td>Kokutsu / Zenkutsu</td><td>5x recuar</td></tr>
-                        <tr><td>8. Oi-Zuki / Guedan / Oi-Zuki</td><td>Zenkutsu / Kiba</td><td>5x ida</td></tr>
-                        <tr><td>9. Kamae / Kizami / Uraken</td><td>Neko-ashi / Zenkutsu</td><td>5x volta</td></tr>
-                        <tr><td>10. Combinado de Chutes</td><td>Zenkutsu-Dachi</td><td>1x ida/volta</td></tr>
-                        <tr><td>11. Chutes Mesma Perna</td><td>Zenkutsu-Dachi</td><td>3x ida/volta</td></tr>
-                        <tr><td>12. Yoko-Gueri-keague</td><td>Kiba-Dachi</td><td>3x ida/volta</td></tr>
-                    </tbody>
-                </table>
-                <div class="bloco-extra">
-                    <strong>Kata Obrigatório:</strong> Heian 1º ao 5º, Tekki-Shodan.
-                    <strong>Kata Optativo:</strong> Bassai-dai, Kanku-dai, Jion.
-                </div>
-            </div>
-        </details>
-
-        <div class="container-tabela-carencia">
-            <h3 style="margin-top: 20px;">⏳ Carência Mínima (Kyu)</h3>
-            <div class="tabela-carencia-wrapper">
-                <table class="tabela-carencia-custom">
-                    <thead><tr><th>Faixa</th><th>Kyu</th><th>Carência Mínima de Treinamento</th></tr></thead>
-                    <tbody>
-                        <tr><td><span class="badge-faixa-item branca">Branca</span></td><td>7º</td><td>3 meses</td></tr>
-                        <tr><td><span class="badge-faixa-item amarela">Amarela</span></td><td>6º</td><td>6 meses</td></tr>
-                        <tr><td><span class="badge-faixa-item vermelha">Vermelha</span></td><td>5º</td><td>6 meses</td></tr>
-                        <tr><td><span class="badge-faixa-item laranja">Laranja</span></td><td>4º</td><td>6 meses</td></tr>
-                        <tr><td><span class="badge-faixa-item verde">Verde</span></td><td>3º</td><td>1 ano</td></tr>
-                        <tr><td><span class="badge-faixa-item roxa">Roxa</span></td><td>2º</td><td>1 ano e 6 meses</td></tr>
-                        <tr><td><span class="badge-faixa-item marrom">Marrom</span></td><td>1º</td><td>2 anos</td></tr>
-                        <tr><td><span class="badge-faixa-item preta">Preta</span></td><td>-</td><td>-</td></tr>
-                    </tbody>
-                </table>
-            </div>
-            </div>
-        <p></p>
-             <h3>📚 Materiais de Estudo</h3>
-              <div class="card-item" style="flex-direction: column; align-items: flex-start; gap: 10px;">
-            <strong style="font-size: 15px;">📄 Numeral em Japonês</strong>
-            <p style="font-size: 12px; color: var(--text-muted);">Guia de contagem em japonês.</p>
-            <a href="Numeral em japones.pdf" target="_blank" class="btn-action" style="padding: 10px;">📖 Abrir Guia</a>
-            
-            <div class="video-responsivo">
-                <iframe 
-                    src="https://www.youtube.com/embed/dZARRSQ7VjA?start=390" 
-                    title="Números em Japonês: Guia completo de 1 a 1.000.000" 
-                    frameborder="0" 
-                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
-                    allowfullscreen>
-                </iframe>
-            </div>
-        </div>
-
-        <div class="card-item" style="flex-direction: column; align-items: flex-start; gap: 10px;">
-            <strong style="font-size: 15px;">5 HEIAN KATA - SHOTOKAN</strong>
-            <div class="video-responsivo">
-                <iframe 
-                    src="https://www.youtube.com/embed/N3KSQQ--LB0" 
-                    title="5 HEIAN KATA OF SHOTOKAN KARATE (Slow Version)" 
-                    frameborder="0" 
-                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
-                    allowfullscreen>
-                </iframe>
-            </div>
-        </div>
-        <div class="card-item" style="flex-direction: column; align-items: flex-start; gap: 10px;">
-            <strong style="font-size: 15px;">📄 Dojo Kun</strong>
-            <p style="font-size: 12px; color: var(--text-muted);">O dojo kun é o conjunto de cinco regras ou lemas morais do karatê.</p>
-            <a href="Dojo kun.pdf" target="_blank" class="btn-action" style="padding: 10px;">📖 Abrir PDF</a>
-            <div class="video-responsivo">
-                <iframe 
-                    src="https://www.youtube.com/embed/6zRWz06DNa4" 
-                    title="DOJO KUN SHOTOKAN EM JAPONÊS" 
-                    frameborder="0" 
-                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
-                    allowfullscreen>
-                </iframe>
-            </div>
-        </div>
     </div>
 
-    <!-- SEÇÃO 3: AGENDA -->
+    <!-- AGENDA -->
     <div id="comunicados" class="tab-content">
         <h3>🤝 Ações da Associação</h3>
-        
-        <div class="card-item" style="opacity: 0.65; border-color: rgba(255, 255, 255, 0.1);">
-            <div class="card-date-badge" style="background: #334155;">
-                <span class="day" style="color: #94a3b8; text-decoration: line-through;">08</span>
-                <span class="month" style="color: #64748b;">MAI</span>
-            </div>
-            <div style="flex: 1;">
-                <div style="display: flex; justify-content: space-between; align-items: center;">
-                    <strong style="font-size: 15px; text-decoration: line-through; color: var(--text-muted);">Churrasco da Associação</strong>
-                    <span style="font-size: 10px; background: rgba(148, 163, 184, 0.2); color: #94a3b8; padding: 2px 6px; border-radius: 4px; font-weight: bold;">CONCLUÍDO</span>
-                </div>
-                <span style="font-size: 12px; color: var(--text-muted); text-decoration: line-through;">📍 Academia Bee Strong - SP</span>
-            </div>
-        </div>
-
-        <div class="card-item" style="opacity: 0.65; border-color: rgba(255, 255, 255, 0.1);">
-            <div class="card-date-badge" style="background: #334155;">
-                <span class="day" style="color: #94a3b8; text-decoration: line-through;">18</span>
-                <span class="month" style="color: #64748b;">ABR</span>
-            </div>
-            <div style="flex: 1;">
-                <div style="display: flex; justify-content: space-between; align-items: center;">
-                    <strong style="font-size: 15px; text-decoration: line-through; color: var(--text-muted);">Palestra sobre Nutrição</strong>
-                    <span style="font-size: 10px; background: rgba(148, 163, 184, 0.2); color: #94a3b8; padding: 2px 6px; border-radius: 4px; font-weight: bold;">CONCLUÍDO</span>
-                </div>
-                <span style="font-size: 12px; color: var(--text-muted); text-decoration: line-through;">📍 Academia Bee Strong - SP</span>
-            </div>
-        </div>
-          <div class="card-item" style="flex-wrap: wrap;">
-            <div class="card-date-badge">
-                <span class="day" style="color: var(--accent-red);">08</span>
-                <span class="month">DEZ</span>
-            </div>
-            <div style="flex: 1; min-width: 200px;">
-                <strong style="display: block; font-size: 15px;">Doação de Roupas</strong>
-                <span style="font-size: 12px; color: var(--text-muted);">📍 Academia Bee Strong - SP</span>
-                <p></p>
-                <span style="font-size: 12px; color: var(--text-muted);">Prazo de Doação: 08/12/2026</span>
-                <p></p>
-                <span style="font-size: 12px; color: var(--text-muted);">Doação: Roupas, Calçados e cobertores</span>
-            </div>
-        </div>
-        
-        <h3 style="margin-top: 25px;">⚔️ Próximos Treinamentos</h3>
-        
-        <div class="card-item" style="opacity: 0.65; border-color: rgba(255, 255, 255, 0.1);">
-            <div class="card-date-badge" style="background: #334155;">
-                <span class="day" style="color: #94a3b8; text-decoration: line-through;">26</span>
-                <span class="month" style="color: #64748b;">JUL</span>
-            </div>
-            <div style="flex: 1;">
-                <div style="display: flex; justify-content: space-between; align-items: center;">
-                    <strong style="font-size: 15px; text-decoration: line-through; color: var(--text-muted);">Workshop com Brenda Padilha</strong>
-                    <span style="font-size: 10px; background: rgba(148, 163, 184, 0.2); color: #94a3b8; padding: 2px 6px; border-radius: 4px; font-weight: bold;">CONCLUÍDO</span>
-                </div>
-                <span style="font-size: 12px; color: var(--text-muted); text-decoration: line-through;">📍 Cidade: Hortolândia - SP</span>
-                <p></p>
-                <span style="font-size: 12px; color: var(--text-muted); text-decoration: line-through;">🥋 Participantes: Sensei Luiz, Adriano Miguel, Klara Pereira, Luiz Guilherme e Edson Fernandes</span>
-            </div>
-        </div>
-
-        <h3>🏆 Próximos Campeonatos</h3>
-        <div class="card-item" style="flex-wrap: wrap;">
-            <div class="card-date-badge">
-                <span class="day" style="color: var(--accent-red);">23</span>
-                <span class="month">AGO</span>
-            </div>
-           <div style="flex: 1;">
-                <div style="display: flex; justify-content: space-between; align-items: center;">
-                    <strong style="font-size: 15px; text-decoration: line-through; color: var(--text-muted);">7ª Etapa ACAK</strong>
-                     <span style="font-size: 10px; background: rgba(148, 163, 184, 0.2); color: #94a3b8; padding: 2px 6px; border-radius: 4px; font-weight: bold;">CONCLUÍDO</span>
-                    </div>
-                 <span style="font-size: 12px; color: var(--text-muted); text-decoration: line-through;">📍 Cidade: Valinhos - SP</span>
-                <p></p>
-                  <span style="font-size: 12px; color: var(--text-muted); text-decoration: line-through;">Watson Moura: 🥇 Campeão - Kumite, Luiz Guilherme: 🥇 Campeão - Kumite e Klara Pereira: 🥉 Terceiro lugar - Kumite</span>
-                  <p></p>
-                 <span style="font-size: 12px; color: var(--text-muted); text-decoration: line-through;">🥋 Participantes: Klara Pereira, Luiz Guilherme, Davi Pereira, Ederson Freitas, Arthur Penna e Watson Moura</span>
-            </div>
-        </div>
-        
-        <h3>🥋 Próximo Exame de Faixa</h3>
-        <div class="card-item" style="flex-wrap: wrap;">
-            <div class="card-date-badge">
-                <span class="day">06</span>
-                <span class="month">DEZ</span>
-            </div>
-            <div style="flex: 1; min-width: 200px;">
-                <strong style="display: block; font-size: 15px;">Exame de Faixa Atarashii</strong>
-                <span style="font-size: 12px; color: var(--text-muted);">📍 Academia Bee Strong - SP</span>
-                <div class="cal-btn-group">
-                    <button class="btn-cal btn-cal-google" onclick="adicionarGoogleCalendar('Exame de Faixa Atarashii', 'Academia Bee Strong - SP', 'Exame de Graduação de Faixa Atarashii', '2026-12-06T08:00:00', '2026-12-06T12:00:00')">
-                        📅 Google Agenda
-                    </button>
-                    <button class="btn-cal btn-cal-apple" onclick="baixarArquivoICS('Exame de Faixa Atarashii', 'Academia Bee Strong - SP', 'Exame de Graduação de Faixa Atarashii', '2026-12-06T08:00:00', '2026-12-06T12:00:00')">
-                        🍎 iPhone / Outlook (.ics)
-                    </button>
-                </div>
-            </div>
-        </div>
-        
-        <h3>🎉 Confraternização</h3>
-        <div class="card-item" style="flex-wrap: wrap;">
-            <div class="card-date-badge">
-                <span class="day" style="color: var(--accent-gold);">12</span>
-                <span class="month">DEZ</span>
-            </div>
-            <div style="flex: 1; min-width: 200px;">
-                <strong style="display: block; font-size: 15px;">Confraternização Atarashii</strong>
-                <span style="font-size: 12px; color: var(--text-muted);">📍 Aguardando definição - SP</span>
-                <div class="cal-btn-group">
-                    <button class="btn-cal btn-cal-google" onclick="adicionarGoogleCalendar('Confraternização Atarashii', 'Aguardando definição - SP', 'Confraternização de Fim de Ano da Associação Atarashii', '2026-12-12T18:00:00', '2026-12-12T23:00:00')">
-                        📅 Google Agenda
-                    </button>
-                    <button class="btn-cal btn-cal-apple" onclick="baixarArquivoICS('Confraternização Atarashii', 'Aguardando definição - SP', 'Confraternização de Fim de Ano da Associação Atarashii', '2026-12-12T18:00:00', '2026-12-12T23:00:00')">
-                        🍎 iPhone / Outlook (.ics)
-                    </button>
-                </div>
-            </div>
+        <div class="card-item">
+            <div class="card-date-badge"><span class="day">06</span><span class="month">DEZ</span></div>
+            <div style="flex: 1;"><strong>Exame de Faixa Atarashii</strong><br><span style="font-size: 12px; color: var(--text-muted);">📍 Academia Bee Strong - SP</span></div>
         </div>
     </div>
 
-    <!-- SEÇÃO 4: GALERIA -->
+    <!-- GALERIA -->
     <div id="galeria" class="tab-content">
-        <h3>📸 Troca de Faixas (Google Drive)</h3>
-        <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 16px;">
-            Toque nos eventos abaixo para acessar as fotos do Google Drive.
-        </p>
-
-        <a href="https://drive.google.com/drive/folders/1rtRaurMIERPIMTR70KxEu5TyhQa9PsHU?usp=drive_link" target="_blank" class="card-item"><span style="font-size: 20px;">📂</span><span style="font-weight: 600; font-size: 14px;">Junho 2022</span><span style="margin-left: auto; color: var(--text-muted);">➔</span></a>
-        <a href="https://drive.google.com/drive/folders/1HfoZP89pVxOu3PqvmENSAwpo1nGZPg8K?usp=drive_link" target="_blank" class="card-item"><span style="font-size: 20px;">📂</span><span style="font-weight: 600; font-size: 14px;">Dezembro 2022</span><span style="margin-left: auto; color: var(--text-muted);">➔</span></a>
-        <a href="https://drive.google.com/drive/folders/1oZsy4NswTt6MIfvlF7lDb6aHcENDPphL?usp=drive_link" target="_blank" class="card-item"><span style="font-size: 20px;">📂</span><span style="font-weight: 600; font-size: 14px;">Julho 2023</span><span style="margin-left: auto; color: var(--text-muted);">➔</span></a>
-        <a href="https://drive.google.com/drive/folders/1-4vrTGEcgKnKMgVMFR9rZMI11psFiyn8?usp=drive_link" target="_blank" class="card-item"><span style="font-size: 20px;">📂</span><span style="font-weight: 600; font-size: 14px;">Dezembro 2023</span><span style="margin-left: auto; color: var(--text-muted);">➔</span></a>
-        <a href="https://drive.google.com/drive/folders/1f-iaokIRnn5b6lOU239L3qh6-NvOiXoH?usp=drive_link" target="_blank" class="card-item"><span style="font-size: 20px;">📂</span><span style="font-weight: 600; font-size: 14px;">Dezembro 2024</span><span style="margin-left: auto; color: var(--text-muted);">➔</span></a>
-        <a href="https://drive.google.com/drive/folders/1NgjvDrVK4YnHowuvrwRb8EcFIPGMfuWj?usp=drive_link" target="_blank" class="card-item"><span style="font-size: 20px;">📂</span><span style="font-weight: 600; font-size: 14px;">Junho 2025</span><span style="margin-left: auto; color: var(--text-muted);">➔</span></a>
-        <a href="https://drive.google.com/drive/folders/1QkRd6NYoWFvarpcxWSR2wMiLWuFppTmF?usp=drive_link" target="_blank" class="card-item"><span style="font-size: 20px;">📂</span><span style="font-weight: 600; font-size: 14px;">Dezembro 2025</span><span style="margin-left: auto; color: var(--text-muted);">➔</span></a>
-        <a href="https://drive.google.com/drive/folders/1TrXjV6R5Pqk_2FconkSwJicEqpmpI86g?usp=drive_link" target="_blank" class="card-item"><span style="font-size: 20px;">📂</span><span style="font-weight: 600; font-size: 14px;">Junho 2026</span><span style="margin-left: auto; color: var(--text-muted);">➔</span></a>
+        <h3>📸 Galeria de Fotos</h3>
+        <a href="https://drive.google.com" target="_blank" class="card-item"><span>📂</span><span style="font-weight: 600;">Pastas do Google Drive</span><span style="margin-left: auto;">➔</span></a>
     </div>
 
-    <!-- SEÇÃO 5: ESTUDO E DESAFIOS (MEDALHAS) -->
+    <!-- RANKING / EBOOK -->
     <div id="ebook" class="tab-content">
-
-        <div class="card-conquistas">
-            <h3 class="titulo-conquistas">🏆 Minhas Conquistas</h3>
-            
-            <div class="badges-grid">
-                <!-- FREQUÊNCIA DE FERRO -->
-                <div id="cardBadgeFerro" class="badge-card badge-bloqueado">
-                    <div class="badge-emblem">
-                        <div class="emblem-ring">
-                            <svg class="emblem-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
-                        </div>
-                        <span class="badge-ribbon">85%</span>
-                    </div>
-                    <div class="badge-info">
-                        <div class="badge-header">
-                            <strong class="badge-title">Lenda do Dojo</strong>
-                            <span id="badgeTagStatus" class="badge-tag">Em andamento</span>
-                        </div>
-                        <p class="badge-desc">Objetivo: Presença acima de 85% por 3 meses seguidos.</p>
-                    </div>
-                </div>
-
-                <!-- GUARDIÃO -->
-                <div id="cardBadgeGuardiao" class="badge-card badge-bloqueado">
-                    <div class="badge-emblem">
-                        <div class="emblem-ring">
-                            <svg class="emblem-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
-                        </div>
-                        <span class="badge-ribbon">🛡️ 100%</span>
-                    </div>
-                    <div class="badge-info">
-                        <div class="badge-header">
-                            <strong class="badge-title">Guardião</strong>
-                            <span id="badgeTagGuardiao" class="badge-tag">Em andamento</span>
-                        </div>
-                        <p class="badge-desc">Objetivo: 100% de presença nas aulas do mês.</p>
-                    </div>
-                </div>
-
-                <!-- KATA ACIMA DA FAIXA -->
-                <div id="cardBadgeKata" class="badge-card badge-bloqueado">
-                    <div class="badge-emblem">
-                        <div class="emblem-ring">
-                            <svg class="emblem-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
-                        </div>
-                        <span class="badge-ribbon" style="background: linear-gradient(90deg, #6366f1 0%, #4338ca 100%);">🥋 Visão</span>
-                    </div>
-                    <div class="badge-info">
-                        <div class="badge-header">
-                            <strong class="badge-title">Espírito Samurai</strong>
-                            <span id="badgeTagKata" class="badge-tag">Em andamento</span>
-                        </div>
-                        <p class="badge-desc">Objetivo: Aprovação do Sensei em um Kata acima da sua faixa atual.</p>
-                    </div>
-                </div>
-
-                <!-- MAE GERI -->
-                <div id="cardBadgeMaeGeri" class="badge-card badge-bloqueado">
-                    <div class="badge-emblem">
-                        <div class="emblem-ring">
-                            <svg class="emblem-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon></svg>
-                        </div>
-                        <span class="badge-ribbon" style="background: linear-gradient(90deg, #f59e0b 0%, #d97706 100%);">⚡ Aço</span>
-                    </div>
-                    <div class="badge-info">
-                        <div class="badge-header">
-                            <strong class="badge-title">Ninja</strong>
-                            <span id="badgeTagMaeGeri" class="badge-tag">Em andamento</span>
-                        </div>
-                        <p class="badge-desc">Objetivo: Desafio Prático - 100x Mae Geri (Chute Frontal).</p>
-                    </div>
-                </div>
-
-                <!-- ABDOMINAL -->
-                <div id="cardBadgeAbs" class="badge-card badge-bloqueado">
-                    <div class="badge-emblem">
-                        <div class="emblem-ring">
-                            <svg class="emblem-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
-                        </div>
-                        <span class="badge-ribbon" style="background: linear-gradient(90deg, #3b82f6 0%, #1d4ed8 100%);">🛡️ Cavaleiro</span>
-                    </div>
-                    <div class="badge-info">
-                        <div class="badge-header">
-                            <strong class="badge-title">Cavaleiro de Ferro</strong>
-                            <span id="badgeTagAbs" class="badge-tag">Em andamento</span>
-                        </div>
-                        <p class="badge-desc">Objetivo: Desafio Físico - 150x Abdominais (Sem pausa).</p>
-                    </div>
-                </div>
-
-                <!-- TSUKI -->
-                <div id="cardBadgeTsuki" class="badge-card badge-bloqueado">
-                    <div class="badge-emblem">
-                        <div class="emblem-ring">
-                            <svg class="emblem-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8.5 14.5A2.5 2.5 0 0011 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 11-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 002.5 2.5z"></path></svg>
-                        </div>
-                        <span class="badge-ribbon" style="background: linear-gradient(90deg, #ef4444 0%, #b91c1c 100%);">🔥 Fogo</span>
-                    </div>
-                    <div class="badge-info">
-                        <div class="badge-header">
-                            <strong class="badge-title">Punhos de Fogo</strong>
-                            <span id="badgeTagTsuki" class="badge-tag">Em andamento</span>
-                        </div>
-                        <p class="badge-desc">Objetivo: Desafio Prático - 200x Tsuki (Soco Frontal) na base Kiba-Dachi.</p>
-                    </div>
-                </div>
-
-                <!-- PRANCHA BAIXA 2 MIN -->
-                <div id="cardBadgePrancha" class="badge-card badge-bloqueado">
-                    <div class="badge-emblem">
-                        <div class="emblem-ring">
-                            <svg class="emblem-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"></path><line x1="4" y1="22" x2="4" y2="15"></line></svg>
-                        </div>
-                        <span class="badge-ribbon" style="background: linear-gradient(90deg, #06b6d4 0%, #0e7490 100%);">⏱️ Foco</span>
-                    </div>
-                    <div class="badge-info">
-                        <div class="badge-header">
-                            <strong class="badge-title">Rocha Inabalável</strong>
-                            <span id="badgeTagPrancha" class="badge-tag">Em andamento</span>
-                        </div>
-                        <p class="badge-desc">Objetivo: Prancha baixa por 2 minutos (Sem levantar o quadril).</p>
-                    </div>
-                </div>
-
-                <!-- 150X POLICHINELO -->
-                <div id="cardBadgePolichinelo" class="badge-card badge-bloqueado">
-                    <div class="badge-emblem">
-                        <div class="emblem-ring">
-                            <svg class="emblem-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="5" r="1"></circle><path d="m9 20 3-6 3 6"></path><path d="m6 8 6 2 6-2"></path><path d="M12 10v4"></path></svg>
-                        </div>
-                        <span class="badge-ribbon" style="background: linear-gradient(90deg, #8b5cf6 0%, #6d28d9 100%);">⚡ Cardio</span>
-                    </div>
-                    <div class="badge-info">
-                        <div class="badge-header">
-                            <strong class="badge-title">Energia Pura</strong>
-                            <span id="badgeTagPolichinelo" class="badge-tag">Em andamento</span>
-                        </div>
-                        <p class="badge-desc">Objetivo: 150x Polichinelo (Sem pausa).</p>
-                    </div>
-                </div>
-
-                <!-- KIBADACHI PAREDE 3 MIN -->
-                <div id="cardBadgeKibadachiParede" class="badge-card badge-bloqueado">
-                    <div class="badge-emblem">
-                        <div class="emblem-ring">
-                            <svg class="emblem-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2z"></path><path d="M9 9h6v6H9z"></path></svg>
-                        </div>
-                        <span class="badge-ribbon" style="background: linear-gradient(90deg, #14b8a6 0%, #0f766e 100%);">🧱 Base</span>
-                    </div>
-                    <div class="badge-info">
-                        <div class="badge-header">
-                            <strong class="badge-title">Raízes de Aço</strong>
-                            <span id="badgeTagKibadachiParede" class="badge-tag">Em andamento</span>
-                        </div>
-                        <p class="badge-desc">Objetivo: 3 minutos na base Kibadachi com as costas na parede.</p>
-                    </div>
-                </div>
-
-                <!-- NOVO BADGE: ZEN-KOKYU -->
-                <div id="cardBadgeZenKokyu" class="badge-card badge-bloqueado">
-                    <div class="badge-emblem">
-                        <div class="emblem-ring">
-                            <svg class="emblem-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9.59 4.59A2 2 0 1 1 11 8H2m10.59 11.41A2 2 0 1 0 14 16H2m15.73-8.27A2.5 2.5 0 1 1 19.5 12H2"/></svg>
-                        </div>
-                        <span class="badge-ribbon" style="background: linear-gradient(90deg, #64748b 0%, #475569 100%);">💨 Abdômen</span>
-                    </div>
-                    <div class="badge-info">
-                        <div class="badge-header">
-                            <strong class="badge-title">Respiração Zen</strong>
-                            <span id="badgeTagZenKokyu" class="badge-tag">Em andamento</span>
-                        </div>
-                        <p class="badge-desc">Objetivo: 2 minutos na posição Zen-Kokyu (prancha isométrica abdominal).</p>
-                    </div>
-                </div>
-
-                <!-- NOVO BADGE: PRANCHA ALTA -->
-                <div id="cardBadgePranchaAlta" class="badge-card badge-bloqueado">
-                    <div class="badge-emblem">
-                        <div class="emblem-ring">
-                            <svg class="emblem-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 22h14"></path><path d="M5 2h14"></path><path d="M17 22v-4.172a2 2 0 0 0-.586-1.414L12 12l-4.414 4.414A2 2 0 0 0 7 17.828V22"></path><path d="M7 2v4.172a2 2 0 0 0 .586 1.414L12 12l4.414-4.414A2 2 0 0 0 17 6.172V2"></path></svg>
-                        </div>
-                        <span class="badge-ribbon" style="background: linear-gradient(90deg, #b45309 0%, #78350f 100%);">💪 Braço</span>
-                    </div>
-                    <div class="badge-info">
-                        <div class="badge-header">
-                            <strong class="badge-title">Muralha Estática</strong>
-                            <span id="badgeTagPranchaAlta" class="badge-tag">Em andamento</span>
-                        </div>
-                        <p class="badge-desc">Objetivo: 3 minutos na prancha isométrica alta com o tronco ereto.</p>
-                    </div>
-                </div>
-
-                <!-- NOVO BADGE: SALTOS ZENKUTSU -->
-                <div id="cardBadgeSaltosZenkutsu" class="badge-card badge-bloqueado">
-                    <div class="badge-emblem">
-                        <div class="emblem-ring">
-                            <svg class="emblem-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5M5 12l7-7 7 7"></path><path d="M19 12l-7-7"></path></svg>
-                        </div>
-                        <span class="badge-ribbon" style="background: linear-gradient(90deg, #ea580c 0%, #c2410c 100%);">⚡ Potência</span>
-                    </div>
-                    <div class="badge-info">
-                        <div class="badge-header">
-                            <strong class="badge-title">Pernas de Mola</strong>
-                            <span id="badgeTagSaltosZenkutsu" class="badge-tag">Em andamento</span>
-                        </div>
-                        <p class="badge-desc">Objetivo: Saltos alternando base Zenkutsu-Dachi por 2 min.</p>
-                    </div>
-                </div>
-
-            </div>
-        </div>
-
-        <h3 style="margin-top: 35px;">🎯 Desafios Práticos em Vídeo</h3>
-        <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 16px;">
-            Grave o vídeo do seu desafio e envie através do nosso formulário oficial. Após o envio, selecione o desafio abaixo e clique em notificar.
-        </p>
-        <div style="background: rgba(15, 23, 42, 0.6); border: 1px solid var(--border-color); padding: 20px; border-radius: var(--radius-md);">
-            
-            <div style="margin-bottom: 20px; padding: 15px; background: rgba(59, 130, 246, 0.1); border: 1px solid var(--accent-blue); border-radius: 8px; text-align: center;">
-                <strong style="display: block; font-size: 14px; color: var(--text-main); margin-bottom: 10px;">Passo 1: Enviar Vídeo</strong>
-                <a href="https://forms.gle/uozSLmYvnwACC9t7A" target="_blank" class="btn-action" style="background: #3b82f6; display: inline-flex; width: auto; padding: 10px 20px;">
-                    📹 Abrir Google Forms para Upload
-                </a>
-            </div>
-
-            <form id="formDesafio">
-                <strong style="display: block; font-size: 14px; color: var(--text-main); margin-bottom: 10px;">Passo 2: Notificar o Sensei</strong>
-                <label style="display: block; font-size: 13px; color: var(--text-muted); margin-bottom: 6px;">Selecione o desafio que você enviou no formulário:</label>
-                <select id="nomeDesafio" required style="width: 100%; padding: 10px; border-radius: 6px; border: 1px solid var(--border-color); background: var(--bg-primary); color: var(--text-main); margin-bottom: 15px;">
-                    <option value="">Escolha...</option>
-                    <option value="Kata - Acima da Faixa">Kata - Acima da Faixa</option>
-                    <option value="100x Mae Geri">100x Mae Geri (Chute Frontal)</option>
-                    <option value="150x Abdominal">Desafio Físico (150x abdominal)</option>
-                    <option value="200x Tsuki">200x Tsuki (Soco frontal)</option>
-                    <option value="Prancha Baixa 2 Min">Prancha Baixa por 2 Minutos</option>
-                    <option value="150x Polichinelo">150x Polichinelo (Sem pausa)</option>
-                    <option value="Kibadachi Parede 3 Min">Base Kibadachi com as Costas na Parede (3 min)</option>
-                    <!-- NOVOS DESAFIOS ADICIONADOS -->
-                    <option value="Zen-Kokyu 2 Min">Zen-Kokyu (Resistência de Abdômen)</option>
-                    <option value="Prancha Alta 3 Min">Prancha Isométrica Alta (3 min)</option>
-                    <option value="Saltos Zenkutsu 2 Min">Saltos na Base Zenkutsu-Dachi (2 min)</option>
-                </select>
-
-                <button type="submit" class="btn-action" style="background: #10b981;">📤 Notificar Envio do Desafio</button>
-            </form>
-
-            <h4 style="margin-top: 25px; margin-bottom: 10px; font-size: 14px; color: var(--text-muted);">Status dos Meus Desafios</h4>
-            <div id="listaDesafiosAluno" style="font-size: 13px;">Nenhum desafio enviado ainda...</div>
-        </div>
-
         <div class="ranking-container">
             <h3 class="ranking-title">🏆 Ranking Geral do Dojo</h3>
-            <p style="font-size: 13px; color: var(--text-muted); text-align: center; margin-bottom: 20px;">
-                Ganhe 25 pontos por cada conquista adquirida e 2 pontos por cada aula presente!
-            </p>
             <div id="listaRanking" class="ranking-list">
                 <p style="text-align: center; color: var(--text-muted);">Carregando ranking oficial...</p>
             </div>
         </div>
-
     </div>
 
-    <!-- SEÇÃO 6: ATARASHII -->
-       <div id="saldo" class="tab-content">
-        <h3>📢 Regras e Normas da Associação</h3>
-        
-        <div id="blocoTermoPendente">
-            <p style="font-size: 14px; color: var(--text-muted); margin-bottom: 16px;">
-                Por favor, toque no botão abaixo para abrir, ler o documento completo de regras e depois confirmar o seu aceite obrigatório.
-            </p>
-
-            <a href="regras-associacao.pdf" target="_blank" class="btn-action" style="margin-bottom: 16px;">
-                📖 Abrir Regras e Normas da Associação (PDF)
-            </a>
-
-            <div style="background: rgba(15, 23, 42, 0.6); border: 1px solid var(--border-color); padding: 16px; border-radius: var(--radius-md); margin-bottom: 20px;">
-                <label style="display: flex; gap: 12px; cursor: pointer; font-size: 13px; color: var(--text-main); font-weight: 500; line-height: 1.4;">
-                    <input type="checkbox" id="checkAceite" onchange="alternarBotaoAceite()" style="width: 20px; height: 20px; accent-color: var(--accent-blue);">
-                    <span>Declaro que li, compreendi e concordo integralmente com todas as Regras, Normas e Termos estabelecidos pela Associação.</span>
-                </label>
-
-                <button id="btnEnviarAceite" disabled onclick="enviarEmailAceite()" class="btn-action" style="margin-top: 14px; background: #475569; opacity: 0.6; cursor: not-allowed; box-shadow: none;">
-                    🔒 Aceitar Termos e Enviar Comprovante
-                </button>
-            </div>
-        </div>
-
-        <div id="blocoTermoAceito" style="display: none; text-align: center; padding: 20px; background: rgba(16, 185, 129, 0.1); border: 1px solid rgba(16, 185, 129, 0.3); border-radius: var(--radius-md); margin-bottom: 20px;">
-            <span style="font-size: 32px;">✅</span>
-            <h4 style="color: var(--accent-green); margin: 8px 0;">Termos Aceitos com Sucesso!</h4>
-            <p style="font-size: 13px; color: var(--text-muted);" id="textoDataAceite">
-                O seu comprovante de leitura e concordância já foi registrado e enviado para a Associação.
-            </p>
-        </div>
-   
+    <!-- ATARASHII -->
+    <div id="saldo" class="tab-content">
         <h3>💰 Transparência Financeira</h3>
-        <div style="background: rgba(15, 23, 42, 0.6); border: 1px solid var(--border-color); padding: 20px; border-radius: var(--radius-md); margin-bottom: 20px;">
-            <div style="display: flex; justify-content: space-between; margin-bottom: 10px; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 5px;">
-                <span style="color: var(--text-muted);">Arrecadação de Valores:</span>
-                <strong id="valArrecadacao" style="color: var(--accent-blue);">Carregando...</strong>
-            </div>
-            <div style="display: flex; justify-content: space-between; margin-bottom: 10px; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 5px;">
-                <span style="color: var(--text-muted);">Investimentos da Associação:</span>
-                <strong id="valInvestimentos" style="color: var(--accent-red);">Carregando...</strong>
-            </div>
-            <div style="display: flex; justify-content: space-between; margin-bottom: 15px; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 5px;">
-                <span style="color: var(--text-muted); font-weight: bold;">Valor em Caixa:</span>
-                <strong id="valCaixa" style="color: var(--accent-green); font-size: 16px;">Carregando...</strong>
-            </div>
-
-            <h4 style="color: var(--text-main); margin-bottom: 10px; font-size: 14px;">📊 Valor Investido 2026</h4>
-            <div style="display: flex; justify-content: space-between; font-size: 13px; margin-bottom: 5px;">
-                <span style="color: var(--text-muted);">Cursos:</span> <strong id="valCursos">...</strong>
-            </div>
-            <div style="display: flex; justify-content: space-between; font-size: 13px; margin-bottom: 5px;">
-                <span style="color: var(--text-muted);">Campeonatos:</span> <strong id="valCampeonatos">...</strong>
-            </div>
-            <div style="display: flex; justify-content: space-between; font-size: 13px;">
-                <span style="color: var(--text-muted);">Associação:</span> <strong id="valAssoc2026">...</strong>
-            </div>
-        </div>
-
-        <h3>💵 Ajude a Associação Atarashii</h3>
-        <div style="display: flex; flex-direction: column; gap: 10px; margin-bottom: 20px;">
-            <a href="https://link.mercadopago.com.br/atarashii" target="_blank" class="btn-action" style="background: #1877f2;">🔗 Link para ajudar Associação</a>
-        </div> 
-           
-        <h3>🔗 Contatos Oficiais</h3>
-        <div style="display: flex; flex-direction: column; gap: 10px; margin-bottom: 20px;">
-            <a href="https://wa.me/5511988412917" target="_blank" class="btn-action btn-whatsapp">💬 Falar com o Sensei</a>
-            <a href="https://wa.me/5511965512234" target="_blank" class="btn-action btn-whatsapp" style="background: #059669;">💬 Falar com a Academia</a>
-        </div>
-
-        <div style="display: flex; gap: 10px; margin-bottom: 25px;">
-            <a href="https://www.facebook.com/atarashiishotokan/" target="_blank" class="btn-action" style="background: #1877f2;" title="Facebook">Facebook</a>
-            <a href="https://www.instagram.com/associacao_atarashii_karate/" target="_blank" class="btn-action" style="background: linear-gradient(45deg, #f09433, #dc2743, #bc1888);" title="Instagram">Instagram</a>
-        </div>
-        
-    <h3>📚 Material Oficial</h3>
-
-         <div class="card-item" style="flex-direction: column; align-items: flex-start; gap: 10px;">
-            <strong style="font-size: 15px;">📄 Regulamento Atarashii</strong>
-            <p style="font-size: 12px; color: var(--text-muted);">Regras oficiais da Associação Atarashii.</p>
-            <a href="regras-associacao.pdf" target="_blank" class="btn-action" style="padding: 10px;">📖 Abrir PDF</a>
-        </div>
-        
-        <div class="card-item" style="flex-direction: column; align-items: flex-start; gap: 10px;">
-            <strong style="font-size: 15px;">📄 Apostila Oficial da Associação</strong>
-            <p style="font-size: 12px; color: var(--text-muted);">Conteúdo teórico completo sobre o Karatê.</p>
-            <a href="documento.pdf" target="_blank" class="btn-action" style="padding: 10px;">📖 Abrir Apostila</a>
-        </div>
-
-        <div class="card-item" style="flex-direction: column; align-items: flex-start; gap: 10px;">
-            <strong style="font-size: 15px;">📄 Regulamento Kata (WKF)</strong>
-            <p style="font-size: 12px; color: var(--text-muted);">Regras oficiais de Kata.</p>
-            <a href="Regulamento de Arbitragem WKF - Kata.pdf" target="_blank" class="btn-action" style="padding: 10px;">📖 Abrir PDF</a>
-        </div>
-
-        <div class="card-item" style="flex-direction: column; align-items: flex-start; gap: 10px;">
-            <strong style="font-size: 15px;">📄 Regulamento Kumite (WKF)</strong>
-            <p style="font-size: 12px; color: var(--text-muted);">Regras oficiais de Kumite.</p>
-            <a href="Regulamento de Arbitragem WKF - Kumite.pdf" target="_blank" class="btn-action" style="padding: 10px;">📖 Abrir PDF</a>
-        </div>
-        <h3>📜 Diplomas Oficiais (Sensei Luiz)</h3>
-        <div style="display: flex; flex-direction: column; gap: 12px;">
-            <div class="card-item" style="flex-direction: column;">
-                <a href="DIPLOMA.jpeg" target="_blank" style="text-decoration: none; width: 100%; text-align: center;">
-                    <img src="DIPLOMA.jpeg" alt="Diploma FPK" style="width: 100%; max-height: 200px; object-fit: contain; border-radius: var(--radius-sm);">
-                    <span style="display: block; margin-top: 8px; font-size: 13px; color: var(--text-main); font-weight: 600;">🥇 Diploma FPK - Faixa Preta 1º Dan</span>
-                </a>
-            </div>
-
-            <div class="card-item" style="flex-direction: column;">
-                <a href="DIPLOMA CBK.jpg" target="_blank" style="text-decoration: none; width: 100%; text-align: center;">
-                    <img src="DIPLOMA CBK.jpg" alt="Diploma CBK" style="width: 100%; max-height: 200px; object-fit: contain; border-radius: var(--radius-sm);">
-                    <span style="display: block; margin-top: 8px; font-size: 13px; color: var(--text-main); font-weight: 600;">🥇 Diploma CBK - Faixa Preta 1º Dan</span>
-                </a>
-            </div>
+        <div style="background: rgba(15, 23, 42, 0.6); padding: 20px; border-radius: 8px;">
+            <div style="display: flex; justify-content: margin-bottom: 10px;"><span>Arrecadação:</span> <strong id="valArrecadacao" style="color: var(--accent-blue);">Carregando...</strong></div>
+            <div style="display: flex; justify-content: margin-bottom: 10px;"><span>Investimento:</span> <strong id="valInvestimentos" style="color: var(--accent-red);">Carregando...</strong></div>
+            <div style="display: flex; justify-content: margin-bottom: 15px;"><span>Valor em Caixa:</span> <strong id="valCaixa" style="color: var(--accent-green);">Carregando...</strong></div>
         </div>
     </div>
 </div>
@@ -1280,9 +274,7 @@
     <button class="nav-btn" onclick="mudarAba('comunicados', this)"><span class="icon">🗓️</span>Agenda</button>
     <button class="nav-btn" onclick="mudarAba('galeria', this)"><span class="icon">📸</span>Galeria</button>
     <button class="nav-btn" onclick="mudarAba('ebook', this)"><span class="icon">🏆</span>Ranking</button>
-    <button class="nav-btn" onclick="mudarAba('saldo', this)">
-        <span class="icon"><img src="atarashii-192.png" alt="Logo Associação" class="logo-icon"></span>Atarashii
-    </button>
+    <button class="nav-btn" onclick="mudarAba('saldo', this)"><span class="icon"><img src="atarashii-192.png" class="logo-icon"></span>Atarashii</button>
 </div>
 
 <script>
@@ -1294,172 +286,52 @@
     const nomeDoAluno = localStorage.getItem('nomeAlunoLogado') || 'Associado';
     const usuarioAtivo = localStorage.getItem('usuarioAtivo');
     const URL_API_SERVIDOR = "https://api-associacao-mp.onrender.com";
-    const PUBLIC_VAPID_KEY = 'BLUDrtrxUNlbfm3kad60QQUJzLX_p45Jp28aMTlEH1MoHwgUOF7s1Mf8JuwYh9TnH0k8pYRYvmZzO7lUkYMq2uQ';
 
     document.getElementById('welcomeNome').textContent = `Olá, ${nomeDoAluno}!`;
+    let listaAlunos = [];
 
-    function checarPopupLogin() {
-        if (!usuarioAtivo) return;
-
-        const jaViu = localStorage.getItem(`popup_acak_agosto_2026_${usuarioAtivo}`);
-        
-        if (!jaViu) {
-            document.getElementById('modalAvisoInfo').style.display = 'flex';
-        }
-    }
-
-    function fecharAvisoPopup() {
-        if (usuarioAtivo) {
-            localStorage.setItem(`popup_acak_agosto_2026_${usuarioAtivo}`, 'true');
-        }
-        document.getElementById('modalAvisoInfo').style.display = 'none';
-    }
-
-    function formatarDataISO(dataISO) { return dataISO.replace(/-|:|\.\d+/g, ''); }
-
-    function adicionarGoogleCalendar(titulo, local, descricao, dataInicioISO, dataFimISO) {
-        const start = formatarDataISO(new Date(dataInicioISO).toISOString());
-        const end = formatarDataISO(new Date(dataFimISO).toISOString());
-        const url = `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${encodeURIComponent(titulo)}&dates=${start}/${end}&details=${encodeURIComponent(descricao)}&location=${encodeURIComponent(local)}`;
-        window.open(url, '_blank');
-    }
-
-    function baixarArquivoICS(titulo, local, descricao, dataInicioISO, dataFimISO) {
-        const start = formatarDataISO(new Date(dataInicioISO).toISOString());
-        const end = formatarDataISO(new Date(dataFimISO).toISOString());
-        const conteudoICS = `BEGIN:VCALENDAR\nVERSION:2.0\nPRODID:-//Associação Atarashii//PWA//PT\nBEGIN:VEVENT\nSUMMARY:${titulo}\nDESCRIPTION:${descricao}\nLOCATION:${local}\nDTSTART:${start}\nDTEND:${end}\nSTATUS:CONFIRMED\nEND:VEVENT\nEND:VCALENDAR`;
-        const blob = new Blob([conteudoICS], { type: 'text/calendar;charset=utf-8' });
-        const link = document.createElement('a');
-        link.href = window.URL.createObjectURL(blob);
-        link.setAttribute('download', `${titulo.replace(/[^a-zA-Z0-9]/g, '_')}.ics`);
-        document.body.appendChild(link); link.click(); document.body.removeChild(link);
-    }
-
-    function urlBase64ToUint8Array(base64String) {
-        const padding = '='.repeat((4 - base64String.length % 4) % 4);
-        const base64 = (base64String + padding).replace(/-/g, '+').replace(/_/g, '/');
-        const rawData = window.atob(base64);
-        const outputArray = new Uint8Array(rawData.length);
-        for (let i = 0; i < rawData.length; ++i) { outputArray[i] = rawData.charCodeAt(i); }
-        return outputArray;
-    }
-
-    function ehIOS() { return /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream; }
-    function ehPWAStandalone() { return (window.matchMedia('(display-mode: standalone)').matches) || (window.navigator.standalone === true); }
-
-    async function registrarPushNativo() {
-        if (!('serviceWorker' in navigator) || !('PushManager' in window)) return;
+    async function carregarAlunosGlobais() {
         try {
-            const registro = await navigator.serviceWorker.register('sw.js');
-            await navigator.serviceWorker.ready;
-            let permissao = Notification.permission;
-            if (permissao === 'default') {
-                if (ehIOS() && !ehPWAStandalone()) {
-                    const banner = document.getElementById('bannerIosInstalar');
-                    if (banner) banner.style.display = 'block';
-                    return;
-                }
-                const boxPush = document.getElementById('boxAtivarPush');
-                if (boxPush) boxPush.style.display = 'block';
-                return;
-            }
-            if (permissao !== 'granted') return;
-            const boxPush = document.getElementById('boxAtivarPush');
-            if (boxPush) boxPush.style.display = 'none';
-
-            let assinatura = await registro.pushManager.getSubscription();
-            if (!assinatura) {
-                assinatura = await registro.pushManager.subscribe({ userVisibleOnly: true, applicationServerKey: urlBase64ToUint8Array(PUBLIC_VAPID_KEY) });
-            }
-            if (!usuarioAtivo) return;
-            await fetch(`${URL_API_SERVIDOR}/api/subscribe`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ subscription: assinatura, usuario: usuarioAtivo }) });
-        } catch (err) {}
-    }
-
-    async function solicitarAtivacaoPushIOS() {
-        if (ehIOS() && !ehPWAStandalone()) { alert('No iPhone/iPad, você deve primeiro adicionar este site à Tela de Início.'); return; }
-        if (!('Notification' in window)) return alert('Notificações não suportadas.');
-        try {
-            const permissao = await Notification.requestPermission();
-            if (permissao === 'granted') { alert('Notificações ativadas!'); await registrarPushNativo(); }
-            else if (permissao === 'denied') alert('As notificações foram bloqueadas.');
-        } catch (e) {}
-    }
-
-let listaAlunos = []; // Declarar globalmente
-
-async function carregarNotasAluno() {
-    const tabelaBody = document.getElementById('corpoTabelaNotas');
-    if (!tabelaBody) return;
-    
-    try {
-        const res = await fetch(`${URL_API_SERVIDOR}/api/exames/${usuarioAtivo}`);
-        const historico = await res.json();
-        
-        if (historico && historico.length > 0) {
-            tabelaBody.innerHTML = "";
-            historico.forEach(exame => {
-                const linha = document.createElement('tr');
-                linha.innerHTML = `<td style="background-color: ${exame.cor_faixa}; color: ${exame.cor_texto}; border-radius: 4px;">${exame.faixa}</td><td>${exame.ano}</td><td>${Number(exame.kihon).toFixed(1)}</td><td>${Number(exame.kata).toFixed(1)}</td><td>${Number(exame.kumite).toFixed(1)}</td><td>${Number(exame.perguntas).toFixed(1)}</td><td class="col-total">${Number(exame.total).toFixed(1)}</td><td class="col-media">${Number(exame.media).toFixed(1)}</td>`;
-                tabelaBody.appendChild(linha);
-            });
-        } else { 
-            tabelaBody.innerHTML = `<tr><td colspan="8">Nenhum registro encontrado.</td></tr>`; 
-        }
-    } catch (err) {
-        tabelaBody.innerHTML = `<tr><td colspan="8">Erro ao carregar exames.</td></tr>`;
-    }
-}
-    function atualizarUIBadge(badgesArray, badgeKey, cardId, tagId, tituloConcluido = "Conquistado!") {
-        const card = document.getElementById(cardId);
-        const tag = document.getElementById(tagId);
-        const ehConquistado = badgesArray.some(b => b.badge_key === badgeKey && b.concluido);
-        
-        if (ehConquistado) {
-            if (card) card.classList.replace('badge-bloqueado', 'badge-concluido');
-            if (tag) tag.textContent = tituloConcluido;
-        } else {
-            if (card) card.classList.replace('badge-concluido', 'badge-bloqueado');
-            if (tag) tag.textContent = "Em andamento";
+            const res = await fetch(`${URL_API_SERVIDOR}/api/alunos`);
+            listaAlunos = await res.json();
+        } catch (e) {
+            console.error("Erro ao buscar alunos globais", e);
         }
     }
 
-    async function carregarBadgesAluno() {
-        if (!usuarioAtivo) return;
+    async function carregarNotasAluno() {
+        const tabelaBody = document.getElementById('corpoTabelaNotas');
+        if (!tabelaBody) return;
         try {
-            const res = await fetch(`${URL_API_SERVIDOR}/api/badges/${usuarioAtivo}`);
-            const data = await res.json();
-            
-            if (data.sucesso) {
-                atualizarUIBadge(data.badges, 'frequencia_ferro', 'cardBadgeFerro', 'badgeTagStatus');
-                atualizarUIBadge(data.badges, 'guardiao', 'cardBadgeGuardiao', 'badgeTagGuardiao');
-                atualizarUIBadge(data.badges, 'badge_kata_avancado', 'cardBadgeKata', 'badgeTagKata');
-                atualizarUIBadge(data.badges, 'badge_mae_geri', 'cardBadgeMaeGeri', 'badgeTagMaeGeri');
-                atualizarUIBadge(data.badges, 'badge_fisico_abs', 'cardBadgeAbs', 'badgeTagAbs');
-                atualizarUIBadge(data.badges, 'badge_tsuki', 'cardBadgeTsuki', 'badgeTagTsuki');
-                atualizarUIBadge(data.badges, 'badge_prancha_baixa', 'cardBadgePrancha', 'badgeTagPrancha');
-                atualizarUIBadge(data.badges, 'badge_polichinelo', 'cardBadgePolichinelo', 'badgeTagPolichinelo');
-                atualizarUIBadge(data.badges, 'badge_kibadachi_parede', 'cardBadgeKibadachiParede', 'badgeTagKibadachiParede');
-                atualizarUIBadge(data.badges, 'badge_zen_kokyu', 'cardBadgeZenKokyu', 'badgeTagZenKokyu');
-                atualizarUIBadge(data.badges, 'badge_prancha_alta', 'cardBadgePranchaAlta', 'badgeTagPranchaAlta');
-                atualizarUIBadge(data.badges, 'badge_saltos_zenkutsu', 'cardBadgeSaltosZenkutsu', 'badgeTagSaltosZenkutsu');
+            const res = await fetch(`${URL_API_SERVIDOR}/api/exames/${usuarioAtivo}`);
+            const historico = await res.json();
+            if (historico && historico.length > 0) {
+                tabelaBody.innerHTML = "";
+                historico.forEach(exame => {
+                    const linha = document.createElement('tr');
+                    linha.innerHTML = `<td style="background-color: ${exame.cor_faixa}; color: ${exame.cor_texto}; border-radius: 4px;">${exame.faixa}</td><td>${exame.ano}</td><td>${Number(exame.kihon).toFixed(1)}</td><td>${Number(exame.kata).toFixed(1)}</td><td>${Number(exame.kumite).toFixed(1)}</td><td>${Number(exame.perguntas).toFixed(1)}</td><td class="col-total">${Number(exame.total).toFixed(1)}</td><td class="col-media">${Number(exame.media).toFixed(1)}</td>`;
+                    tabelaBody.appendChild(linha);
+                });
+            } else { 
+                tabelaBody.innerHTML = `<tr><td colspan="8">Nenhum registro encontrado.</td></tr>`; 
             }
         } catch (err) {
-            console.error(err);
+            tabelaBody.innerHTML = `<tr><td colspan="8">Erro ao carregar exames.</td></tr>`;
         }
     }
 
     async function carregarRanking() {
         const container = document.getElementById('listaRanking');
         if (!container) return;
-
         try {
-            const res = await fetch(`${URL_API_SERVIDOR}/api/ranking`);
-            const data = await res.json();
+            const resRanking = await fetch(`${URL_API_SERVIDOR}/api/ranking`);
+            const dataRanking = await resRanking.json();
             
+            if (listaAlunos.length === 0) await carregarAlunosGlobais();
+
             let mapPontos = {};
-            if (data.sucesso && data.ranking) {
-                data.ranking.forEach(r => mapPontos[r.usuario] = r.pontos);
+            if (dataRanking.sucesso && dataRanking.ranking) {
+                dataRanking.ranking.forEach(r => mapPontos[r.usuario] = r.pontos);
             }
 
             let rankingFinal = listaAlunos
@@ -1477,7 +349,6 @@ async function carregarNotasAluno() {
                 const pos = index + 1;
                 let classePos = '';
                 let icone = `${pos}º`;
-                
                 if (pos === 1) { classePos = 'top-1'; icone = '🥇'; }
                 else if (pos === 2) { classePos = 'top-2'; icone = '🥈'; }
                 else if (pos === 3) { classePos = 'top-3'; icone = '🥉'; }
@@ -1485,392 +356,38 @@ async function carregarNotasAluno() {
                 rankingHTML += `
                     <div class="ranking-item ${classePos}">
                         <div class="ranking-pos">${icone}</div>
-                        <div class="ranking-info">
-                            <div class="ranking-nome">${aluno.nome}</div>
-                        </div>
+                        <div class="ranking-info"><div class="ranking-nome">${aluno.nome}</div></div>
                         <div class="ranking-pontos">${aluno.pontos} pts</div>
                     </div>
                 `;
             });
-            
             container.innerHTML = rankingHTML;
-
         } catch (err) {
-            console.error("Erro ao carregar o ranking:", err);
             container.innerHTML = "<p style='text-align:center; color:red;'>Erro ao carregar ranking.</p>";
         }
     }
 
-    function verificarStatusAceite() {
-        if (!usuarioAtivo) return;
-        const blocoPendente = document.getElementById('blocoTermoPendente'), blocoAceito = document.getElementById('blocoTermoAceito'), badge = document.getElementById('badgeNotificacao'), sininho = document.getElementById('wrapperSininho');
-        const jaAceitouLocal = localStorage.getItem(`termo_aceito_${usuarioAtivo}`), dataAceiteLocal = localStorage.getItem(`data_aceite_${usuarioAtivo}`) || '';
-        if (jaAceitouLocal === 'true') aplicarLayoutAceito(blocoPendente, blocoAceito, badge, sininho, dataAceiteLocal, false);
-        else aplicarLayoutPendente(blocoPendente, blocoAceito, badge, sininho);
-
-        const controller = new AbortController();
-        const timeoutId = setTimeout(() => controller.abort(), 90000);
-
-        fetch(`${URL_API_SERVIDOR}/api/status-termo/${usuarioAtivo}`, { signal: controller.signal })
-            .then(r => r.ok ? r.json() : Promise.reject())
-            .then(data => {
-                clearTimeout(timeoutId);
-                const verificadoNaAPI = (data && (data.aceitou === true || data.sucesso === true || data.status === 'assinado' || data.status === 'aceito'));
-                const dataServidor = data.data || data.dataHora || data.updatedAt || new Date().toLocaleString('pt-BR');
-                if (verificadoNaAPI) {
-                    localStorage.setItem(`termo_aceito_${usuarioAtivo}`, 'true'); localStorage.setItem(`data_aceite_${usuarioAtivo}`, dataServidor);
-                    aplicarLayoutAceito(blocoPendente, blocoAceito, badge, sininho, dataServidor, true);
-                } else {
-                    localStorage.removeItem(`termo_aceito_${usuarioAtivo}`); localStorage.removeItem(`data_aceite_${usuarioAtivo}`);
-                    aplicarLayoutPendente(blocoPendente, blocoAceito, badge, sininho);
-                }
-            })
-            .catch(() => clearTimeout(timeoutId));
-    }
-
-    function aplicarLayoutAceito(blocoPendente, blocoAceito, badge, sininho, dataRegistro, ehGlobal) {
-        if (blocoPendente) blocoPendente.style.display = 'none';
-        if (blocoAceito) { blocoAceito.style.display = 'block'; document.getElementById('textoDataAceite').innerHTML = `O seu comprovante de leitura e concordância foi ${ehGlobal ? "sincronizado com a nuvem em:" : "verificado via dispositivo em:"} <br><strong>${dataRegistro}</strong>`; }
-        if (badge) badge.style.display = 'none';
-        if (sininho) { sininho.style.animation = 'none'; sininho.title = "Nenhum aviso pendente"; }
-    }
-
-    function aplicarLayoutPendente(blocoPendente, blocoAceito, badge, sininho) {
-        if (blocoPendente) blocoPendente.style.display = 'block';
-        if (blocoAceito) blocoAceito.style.display = 'none';
-        if (badge) badge.style.display = 'flex';
-        if (sininho) sininho.style.animation = 'balancoSininho 0.5s ease-in-out infinite alternate';
-    }
-
-    function atualizarPainel() { window.location.reload(); }
-    function alternarBotaoAceite() {
-        const checkbox = document.getElementById('checkAceite'), botao = document.getElementById('btnEnviarAceite');
-        if (checkbox && checkbox.checked) { botao.disabled = false; botao.style.backgroundColor = '#27ae60'; botao.style.cursor = 'pointer'; }
-        else if (botao) { botao.disabled = true; botao.style.backgroundColor = '#95a5a6'; botao.style.cursor = 'not-allowed'; }
-    }
-
-    function enviarEmailAceite() {
-        const dataHoraAtual = new Date().toLocaleString('pt-BR');
-        const corpoEmail = encodeURIComponent(`Prezada Diretoria,\n\nPor meio deste e-mail, confirmo que li e aceito voluntariamente todos os termos, regras e normas da Associação.\n\nDADOS DO ASSOCIADO:\nNome completo: ${nomeDoAluno}\nUsuário do sistema: ${usuarioAtivo}\nData/Hora do Aceite: ${dataHoraAtual}\n\nEste e-mail serve como registro e comprovante digital do meu aceite obrigatório.`);
-        const mailtoUrl = `mailto:luedo25@msn.com?subject=${encodeURIComponent(`CONFIRMAÇÃO DE ACEITE: Regras da Associação - ${nomeDoAluno}`)}&body=${corpoEmail}`;
-        
-        localStorage.setItem(`termo_aceito_${usuarioAtivo}`, 'true'); localStorage.setItem(`data_aceite_${usuarioAtivo}`, dataHoraAtual);
-        verificarStatusAceite();
-        fetch(`${URL_API_SERVIDOR}/api/aceitar-termo`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ usuario: usuarioAtivo }) })
-        .then(() => { verificarStatusAceite(); window.location.href = mailtoUrl; })
-        .catch(() => window.location.href = mailtoUrl);
-    }
-
-   function mudarAba(idDaAba, botaoClicado) {
+    function mudarAba(idDaAba, botaoClicado) {
         document.querySelectorAll('.tab-content').forEach(secao => secao.classList.remove('active'));
         document.querySelectorAll('.nav-btn').forEach(btn => btn.classList.remove('active'));
         const elementoAba = document.getElementById(idDaAba);
         if (elementoAba) elementoAba.classList.add('active');
         if (botaoClicado) botaoClicado.classList.add('active');
         window.scrollTo({ top: 0, behavior: 'smooth' });
-        if (idDaAba === 'comunicados') verificarStatusAceite();
-        if (idDaAba === 'saldo') buscarFinancas();
-    }
-
-    function buscarFinancas() {
-        fetch(`${URL_API_SERVIDOR}/api/financas`)
-            .then(r => r.json())
-            .then(data => {
-                document.getElementById('valArrecadacao').textContent = data.arrecadacao_total || 'R$ 0,00';
-                document.getElementById('valInvestimentos').textContent = data.investimento_total || 'R$ 0,00';
-                document.getElementById('valCaixa').textContent = data.valor_caixa || 'R$ 0,00';
-                document.getElementById('valCursos').textContent = data.cursos_2026 || 'R$ 0,00';
-                document.getElementById('valCampeonatos').textContent = data.campeonatos_2026 || 'R$ 0,00';
-                document.getElementById('valAssoc2026').textContent = data.associacao_2026 || 'R$ 0,00';
-            })
-            .catch(() => console.error("Erro ao carregar finanças"));
     }
 
     document.getElementById('logoutBtn').addEventListener('click', function() {
-        localStorage.removeItem('associadoAutenticado'); localStorage.removeItem('nomeAlunoLogado'); localStorage.removeItem('usuarioAtivo');
+        localStorage.clear();
         window.location.replace('index.html');
     });
 
-    function alternarCampoTextoOutro() {
-        const checkOutro = document.getElementById('checkOutro'), containerTexto = document.getElementById('containerTextoOutro'), campoTexto = document.getElementById('textoJustificativaOutro');
-        if (checkOutro && checkOutro.checked) { if (containerTexto) containerTexto.style.display = 'block'; if (campoTexto) campoTexto.focus(); }
-        else { if (containerTexto) containerTexto.style.display = 'none'; if (campoTexto) campoTexto.value = ''; }
-    }
+    document.addEventListener('DOMContentLoaded', async () => {
+        const primeiroBotao = document.querySelector('.nav-btn');
+        if (primeiroBotao) mudarAba('exame', primeiroBotao);
 
-    document.getElementById('dataFaltaAluno').addEventListener('blur', function() {
-        if (!this.value) return;
-        const partes = this.value.split('-'); if (partes.length !== 3) return;
-        const dataSelecionada = new Date(parseInt(partes[0], 10), parseInt(partes[1], 10) - 1, parseInt(partes[2], 10));
-        const diaSemana = dataSelecionada.getDay();
-        if (diaSemana !== 2 && diaSemana !== 4 && diaSemana !== 6) { alert("Aulas ocorrem apenas Terças, Quintas e Sábados."); this.value = ''; }
-    });
-
-    document.getElementById('formJustificativa').addEventListener('submit', async function(e) {
-        e.preventDefault();
-        
-        const dataFalta = document.getElementById('dataFaltaAluno').value;
-        const marcados = Array.from(document.querySelectorAll('input[name="motivoFalta"]:checked')).map(cb => cb.value);
-        const checkOutro = document.getElementById('checkOutro'), textoOutro = document.getElementById('textoJustificativaOutro')?.value.trim();
-        
-        if (!dataFalta) return alert("Selecione a data.");
-        const partes = dataFalta.split('-');
-        
-        const dataAtual = new Date();
-        dataAtual.setHours(0, 0, 0, 0);
-        
-        const dataSelecionada = new Date(parseInt(partes[0], 10), parseInt(partes[1], 10) - 1, parseInt(partes[2], 10));
-        dataSelecionada.setHours(0, 0, 0, 0);
-
-        const diffEmHoras = Math.abs(dataAtual - dataSelecionada) / (1000 * 60 * 60);
-
-        if (diffEmHoras > 48) {
-            return alert("O prazo para justificar é de até 48 horas (2 dias) antes ou após a data da aula.");
-        }
-
-        if (checkOutro?.checked && !textoOutro) return alert("Descreva o motivo no campo texto.");
-        if (marcados.length === 0 && !checkOutro?.checked) return alert("Selecione ao menos um motivo.");
-
-        let listaMotivos = [...marcados];
-        if (checkOutro?.checked && textoOutro) listaMotivos.push(`Outro: ${textoOutro}`);
-
-        const btnSubmit = this.querySelector('button[type="submit"]');
-        document.getElementById('modalLoading').style.display = 'flex';
-        btnSubmit.disabled = true;
-        btnSubmit.style.opacity = '0.6';
-
-        try {
-            const response = await fetch(`${URL_API_SERVIDOR}/api/justificativa`, { 
-                method: 'POST', 
-                headers: { 'Content-Type': 'application/json' }, 
-                body: JSON.stringify({ usuario: usuarioAtivo, data_falta: dataFalta, motivo: listaMotivos.join('; ') }) 
-            });
-            if (response.ok) { 
-                alert("Justificativa enviada!"); 
-                document.getElementById('formJustificativa').reset(); 
-                alternarCampoTextoOutro(); 
-                carregarStatusJustificativas(); 
-            } else {
-                alert("Erro ao enviar.");
-            }
-        } catch (err) { 
-            alert("Erro ao enviar solicitação."); 
-        } finally {
-            document.getElementById('modalLoading').style.display = 'none';
-            btnSubmit.disabled = false;
-            btnSubmit.style.opacity = '1';
-        }
-    });
-    
-    async function carregarStatusJustificativas() {
-        const container = document.getElementById('listaJustificativasAluno'); if (!container) return;
-        const dataInicio = `${document.getElementById('mesInicioJustificativa')?.value || '2026-07'}-01`;
-        const [anoFim, mesFim] = (document.getElementById('mesFimJustificativa')?.value || '2026-12').split('-').map(Number);
-        const dataFim = `${anoFim}-${String(mesFim).padStart(2, '0')}-${String(new Date(anoFim, mesFim, 0).getDate()).padStart(2, '0')}`;
-
-        try {
-            const response = await fetch(`${URL_API_SERVIDOR}/api/justificativa/aluno/${usuarioAtivo}`);
-            const dados = await response.json();
-            if (!dados || dados.length === 0) return container.innerHTML = "<p style='color: var(--text-muted);'>Nenhuma justificativa enviada até o momento.</p>";
-            
-            const dadosFiltrados = dados.filter(item => item.data_falta && item.data_falta >= dataInicio && item.data_falta <= dataFim);
-            if (dadosFiltrados.length === 0) return container.innerHTML = "<p style='color: var(--text-muted);'>Nenhuma justificativa no período.</p>";
-
-            container.innerHTML = dadosFiltrados.map(item => {
-                let corBadge = item.status === 'aprovado' ? '#10b981' : (item.status === 'reprovado' ? '#ef4444' : '#f59e0b');
-                let comentarioHtml = item.comentario_professor ? `<div style="margin-top: 6px; padding: 8px; background: rgba(239, 68, 68, 0.1); border-left: 3px solid #ef4444; color: #fca5a5; border-radius: 4px; font-size: 12px;"><strong>Motivo da Reprovação:</strong> ${item.comentario_professor}</div>` : '';
-                return `<div style="background: rgba(0,0,0,0.2); padding: 10px; border-radius: 6px; margin-bottom: 8px; border-left: 4px solid ${corBadge}; text-align: left;">
-                    <div><strong>Data da Falta:</strong> ${item.data_falta.split('-').reverse().join('/')}</div>
-                    <div><strong>Motivo:</strong> ${item.motivo}</div>
-                    <div><strong>Status:</strong> <span style="color: ${corBadge}; font-weight: bold; text-transform: uppercase;">${item.status}</span></div>
-                    ${comentarioHtml}
-                    <div style="font-size: 11px; color: var(--text-muted); margin-top: 4px;">Solicitado em: ${item.data_solicitacao}</div></div>`;
-            }).join('');
-        } catch (err) { container.innerHTML = "<p style='color: red;'>Erro ao carregar justificativas.</p>"; }
-    }
-
-    document.getElementById('formDesafio').addEventListener('submit', async function(e) {
-        e.preventDefault();
-        const nomeDesafio = document.getElementById('nomeDesafio').value;
-
-        if (!nomeDesafio) return alert("Por favor, selecione o desafio que foi enviado.");
-
-        const btnSubmit = this.querySelector('button[type="submit"]');
-        document.getElementById('modalLoading').style.display = 'flex';
-        btnSubmit.disabled = true;
-        btnSubmit.style.opacity = '0.6';
-
-        try {
-            const response = await fetch(`${URL_API_SERVIDOR}/api/desafio`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ usuario: usuarioAtivo, nome_desafio: nomeDesafio })
-            });
-            const result = await response.json();
-            if (response.ok) {
-                alert(result.mensagem || "Desafio notificado com sucesso!");
-                document.getElementById('formDesafio').reset();
-                carregarMeusDesafios();
-            } else { alert("Erro: " + (result.erro || "Falha ao registrar.")); }
-        } catch (err) { 
-            alert("Erro de rede ao enviar solicitação."); 
-        } finally {
-            document.getElementById('modalLoading').style.display = 'none';
-            btnSubmit.disabled = false;
-            btnSubmit.style.opacity = '1';
-        }
-    });
-
-    async function carregarMeusDesafios() {
-        const container = document.getElementById('listaDesafiosAluno');
-        if (!container) return;
-
-        try {
-            const response = await fetch(`${URL_API_SERVIDOR}/api/desafio/aluno/${usuarioAtivo}`);
-            const dados = await response.json();
-
-            if (!dados || dados.length === 0) {
-                return container.innerHTML = "<p style='color: var(--text-muted);'>Nenhum desafio enviado até o momento.</p>";
-            }
-
-            container.innerHTML = dados.map(item => {
-                let corBadge = item.status === 'aprovado' ? '#10b981' : (item.status === 'reprovado' ? '#ef4444' : '#f59e0b');
-                return `
-                    <div style="background: rgba(0,0,0,0.2); padding: 10px; border-radius: 6px; margin-bottom: 8px; border-left: 4px solid ${corBadge}; text-align: left;">
-                        <div><strong>Desafio:</strong> ${item.nome_desafio}</div>
-                        <div><strong>Vídeo:</strong> <span style="color: #60a5fa;">Enviado via Google Forms</span></div>
-                        <div><strong>Status:</strong> <span style="color: ${corBadge}; font-weight: bold; text-transform: uppercase;">${item.status}</span></div>
-                        <div style="font-size: 11px; color: var(--text-muted); margin-top: 4px;">Solicitado em: ${item.data_solicitacao}</div>
-                    </div>
-                `;
-            }).join('');
-        } catch (err) { container.innerHTML = "<p style='color: red;'>Erro ao carregar desafios.</p>"; }
-    }
-
-    let relatorioFrequenciaAberto = false;
-
-    async function toggleRelatorioFrequencia() {
-        const container = document.getElementById('containerRelatorioFrequencia');
-        relatorioFrequenciaAberto = !relatorioFrequenciaAberto;
-        
-        if (relatorioFrequenciaAberto) {
-            container.style.display = 'block';
-            await carregarRelatorioFrequencia();
-        } else {
-            container.style.display = 'none';
-        }
-    }
-
-    async function carregarRelatorioFrequencia() {
-        const containerLista = document.getElementById('listaRelatorioFrequencia');
-        if (!usuarioAtivo || !containerLista) return;
-
-        const dataInicio = `${document.getElementById('mesInicioFrequencia')?.value || '2026-07'}-01`;
-        const [anoFim, mesFim] = (document.getElementById('mesFimFrequencia')?.value || '2026-12').split('-').map(Number);
-        const dataFim = `${anoFim}-${String(mesFim).padStart(2, '0')}-${String(new Date(anoFim, mesFim, 0).getDate()).padStart(2, '0')}`;
-
-        containerLista.innerHTML = "Carregando histórico detalhado...";
-
-        try {
-            const response = await fetch(`${URL_API_SERVIDOR}/api/frequencia/relatorio/${usuarioAtivo}?dataInicio=${dataInicio}&dataFim=${dataFim}`);
-            const dados = await response.json();
-
-            if (!dados || dados.length === 0) {
-                containerLista.innerHTML = "<p style='text-align:center;'>Nenhum registro de aula encontrado neste período.</p>";
-                return;
-            }
-
-            let html = dados.map(item => {
-                const dataFormatada = item.data_aula.split('-').reverse().join('/');
-                const statusHtml = item.presente 
-                    ? '<span style="color: #10b981; font-weight: bold;">PRESENTE</span>' 
-                    : '<span style="color: #ef4444; font-weight: bold;">FALTA</span>';
-                
-                return `
-                    <div style="display: flex; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid rgba(255,255,255,0.05);">
-                        <span>📅 ${dataFormatada}</span>
-                        <span>${statusHtml}</span>
-                    </div>
-                `;
-            }).join('');
-
-            containerLista.innerHTML = html;
-        } catch (err) {
-            containerLista.innerHTML = "<p style='color: red; text-align:center;'>Erro ao carregar relatório detalhado.</p>";
-        }
-    }
-
-    let instanciaGrafico = null;
-    async function carregarGraficoFrequencia() {
-        if (!usuarioAtivo || !document.getElementById('graficoFrequencia')) return;
-        const dataInicio = `${document.getElementById('mesInicioFrequencia')?.value || '2026-07'}-01`;
-        const [anoFim, mesFim] = (document.getElementById('mesFimFrequencia')?.value || '2026-12').split('-').map(Number);
-        const dataFim = `${anoFim}-${String(mesFim).padStart(2, '0')}-${String(new Date(anoFim, mesFim, 0).getDate()).padStart(2, '0')}`;
-
-        try {
-            const resFreq = await fetch(`${URL_API_SERVIDOR}/api/frequencia/${usuarioAtivo}?dataInicio=${dataInicio}&dataFim=${dataFim}`);
-            const dadosFreq = await resFreq.json();
-            
-            let justificativasAprovadas = Number(dadosFreq.justificativas_aprovadas) || 0;
-            if (dadosFreq.justificativas_aprovadas === undefined) {
-                try {
-                    const resJust = await fetch(`${URL_API_SERVIDOR}/api/justificativa/aluno/${usuarioAtivo}`);
-                    if (resJust.ok) {
-                        const listaJust = await resJust.json();
-                        justificativasAprovadas = listaJust.filter(item => item.status === 'aprovado' && item.data_falta >= dataInicio && item.data_falta <= dataFim).length;
-                    }
-                } catch (e) {}
-            }
-
-            const presencas = Number(dadosFreq.presencas) || 0, faltasBrutas = Number(dadosFreq.faltas) || 0;
-            const justificativasEfetivas = Math.min(justificativasAprovadas, faltasBrutas);
-            const faltasDescontadas = faltasBrutas - justificativasEfetivas, totalAulas = presencas + faltasDescontadas + justificativasEfetivas;
-
-            if (document.getElementById('qtdPresencas')) document.getElementById('qtdPresencas').textContent = presencas;
-            if (document.getElementById('qtdFaltas')) document.getElementById('qtdFaltas').textContent = faltasBrutas;
-            if (document.getElementById('qtdJustificativas')) document.getElementById('qtdJustificativas').textContent = justificativasEfetivas;
-
-            if (instanciaGrafico) instanciaGrafico.destroy();
-            instanciaGrafico = new Chart(document.getElementById('graficoFrequencia').getContext('2d'), {
-                type: 'pie',
-                data: {
-                    labels: [`Presenças (${presencas})`, `Faltas (${faltasBrutas})`, `Justificativas Aprovadas (${justificativasEfetivas})`],
-                    datasets: [{ data: [presencas, faltasDescontadas, justificativasEfetivas], backgroundColor: ['#10b981', '#ef4444', '#f59e0b'], borderWidth: 1, borderColor: '#1e293b' }]
-                },
-                plugins: typeof ChartDataLabels !== 'undefined' ? [ChartDataLabels] : [],
-                options: {
-                    responsive: true,
-                    plugins: {
-                        legend: { position: 'bottom', labels: { color: '#f8fafc', font: { size: 12, weight: 'bold' } } },
-                        datalabels: { color: '#ffffff', font: { weight: 'bold', size: 13 }, formatter: v => totalAulas === 0 || v === 0 ? '' : `${Math.round((v / totalAulas) * 100)}%` },
-                        tooltip: { callbacks: { label: c => `${c.label || ''}: ${c.raw || 0} (${totalAulas > 0 ? Math.round((c.raw / totalAulas) * 100) : 0}%)` } }
-                    }
-                }
-            });
-
-            if (relatorioFrequenciaAberto) {
-                carregarRelatorioFrequencia();
-            }
-
-        } catch (err) {}
-    }
-
-    document.addEventListener('DOMContentLoaded', () => {
-        try {
-            const primeiroBotao = document.querySelector('.nav-btn');
-            if (primeiroBotao) mudarAba('exame', primeiroBotao);
-
-            carregarBadgesAluno();
-            carregarRanking(); 
-            carregarNotasAluno();
-            carregarGraficoFrequencia();
-            carregarStatusJustificativas();
-            carregarMeusDesafios(); 
-            registrarPushNativo();
-
-            checarPopupLogin();
-
-            setTimeout(() => verificarStatusAceite(), 300);
-        } catch (error) {}
+        await carregarAlunosGlobais();
+        carregarNotasAluno();
+        carregarRanking();
     });
 </script>
 </body>
