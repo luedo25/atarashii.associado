@@ -8,7 +8,8 @@
     <link rel="apple-touch-icon" href="./atarashii-192.png">
     <meta name="mobile-web-app-capable" content="yes">
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="api.js"></script>
     
     <title>Login - Área do Associado</title>
     <style>
@@ -94,6 +95,11 @@
             background-color: #0056b3;
         }
 
+        .btn-login:disabled {
+            cursor: wait;
+            opacity: 0.65;
+        }
+
         .error-message {
             color: #dc3545;
             font-size: 14px;
@@ -177,62 +183,46 @@
         <form id="loginForm">
             <div class="input-group">
                 <label for="username">Usuário</label>
-                <input type="text" id="username" required placeholder="Digite seu usuário">
+                <input type="text" id="username" name="username" required autocomplete="username" autocapitalize="none" spellcheck="false" placeholder="Digite seu usuário">
             </div>
             <div class="input-group">
                 <label for="password">Senha</label>
-                <input type="password" id="password" required placeholder="Digite sua senha">
+                <input type="password" id="password" name="password" required autocomplete="current-password" placeholder="Digite sua senha">
             </div>
             <button type="submit" class="btn-login">Entrar</button>
             <div id="errorMessage" class="error-message">Usuário ou senha incorretos.</div>
         </form>
     </div>        
     <script>
-        const scriptUsuarios = document.createElement('script');
-        const timestamp = new Date().getTime();
-        scriptUsuarios.src = 'usuarios.js?v=' + timestamp;
-        document.head.appendChild(scriptUsuarios);
-    </script>
-
-    <script>
-        document.getElementById('loginForm').addEventListener('submit', function(event) {
+        document.getElementById('loginForm').addEventListener('submit', async function(event) {
             event.preventDefault(); 
             
             const usuarioInput = document.getElementById('username').value.trim();
             const senhaInput = document.getElementById('password').value;
             const errorMessage = document.getElementById('errorMessage');
+            const botao = this.querySelector('button[type="submit"]');
 
-            if (typeof autenticarUsuarioDireto !== 'function') {
-                alert('Carregando sistema de segurança... Por favor, tente novamente em um segundo.');
-                return;
-            }
+            errorMessage.style.display = 'none';
+            botao.disabled = true;
+            botao.textContent = 'Entrando...';
 
-            const alunoLogado = autenticarUsuarioDireto(usuarioInput, senhaInput);
+            try {
+                const dados = await apiFetch('/api/auth/login', {
+                    method: 'POST',
+                    body: JSON.stringify({ usuario: usuarioInput, senha: senhaInput }),
+                    timeoutMs: 30000
+                });
 
-            if (alunoLogado) {
-                // Guarda dados de sessão básicos
-                localStorage.setItem('associadoAutenticado', 'true');
-                localStorage.setItem('nomeAlunoLogado', alunoLogado.nome);
-                localStorage.setItem('usuarioAtivo', alunoLogado.usuario);
-                
-                // Se houver tipo/perfil definido no usuarios.js, salva no localStorage
-                if (alunoLogado.tipo) {
-                    localStorage.setItem('tipoUsuario', alunoLogado.tipo);
-                }
-
-                // REDIRECIONAMENTO INTELIGENTE
-                // Verifica se o usuário é 'luiz.costa' ou se a propriedade 'tipo' é 'professor'
-                const usuarioLower = alunoLogado.usuario.toLowerCase();
-                const tipoLower = alunoLogado.tipo ? alunoLogado.tipo.toLowerCase() : '';
-
-                if (usuarioLower === 'luiz.costa' || tipoLower === 'professor') {
-                    window.location.href = 'professor.html';
-                } else {
-                    window.location.href = 'area-associado.html';
-                }
-
-            } else {
+                Auth.salvarSessao(dados);
+                window.location.replace(dados.usuario.tipo === 'professor' ? 'professor.html' : 'area-associado.html');
+            } catch (error) {
+                errorMessage.textContent = error.message || 'Usuário ou senha incorretos.';
                 errorMessage.style.display = 'block';
+                document.getElementById('password').value = '';
+                document.getElementById('password').focus();
+            } finally {
+                botao.disabled = false;
+                botao.textContent = 'Entrar';
             }
         });
     </script>
