@@ -149,7 +149,7 @@
             accent-color: #10b981;
         }
 
-        input[type="date"], input[type="time"], input[type="text"], input[type="email"], input[type="password"], textarea, select { 
+        input[type="date"], input[type="time"], input[type="text"], input[type="email"], input[type="url"], input[type="password"], textarea, select { 
             padding: 12px; 
             font-size: 15px; 
             margin-top: 6px;
@@ -392,6 +392,7 @@
 
         .agenda-card.concluido { border-left-color: #64748b; opacity: 0.72; }
         .agenda-card.pendente { border-left-color: #f59e0b; }
+        .agenda-card.cancelado { border-left-color: #ef4444; opacity: 0.72; }
 
         .agenda-card-topo, .agenda-card-acoes {
             display: flex;
@@ -416,6 +417,7 @@
         .agenda-status.agendado { background: #1e3a8a; color: #bfdbfe; }
         .agenda-status.pendente { background: #78350f; color: #fde68a; }
         .agenda-status.concluido { background: #334155; color: #cbd5e1; }
+        .agenda-status.cancelado { background: #7f1d1d; color: #fecaca; }
 
         .agenda-card-acoes { margin-top: 14px; justify-content: flex-end; }
 
@@ -655,6 +657,7 @@
    <nav class="tabs-nav">
         <button class="nav-btn active" onclick="mudarAba('chamada', this)">📋 Chamada</button>
         <button class="nav-btn" onclick="mudarAba('agenda', this)">🗓️ Agenda</button>
+        <button class="nav-btn" onclick="mudarAba('banners', this)">📢 Banners</button>
         <button class="nav-btn" onclick="mudarAba('justificativas', this)">📝 Justificativas</button>
         <button class="nav-btn" onclick="mudarAba('desafios', this)">🎯 Desafios</button>
         <button class="nav-btn" onclick="mudarAba('resumo', this)">📊 Resumo</button>
@@ -711,6 +714,26 @@
             <div id="listaAgendaProfessor" class="agenda-lista">
                 <div class="card-mensagem">Abra esta aba para carregar os eventos.</div>
             </div>
+        </section>
+
+        <section id="aba-banners" class="tab-content">
+            <div class="chamada-header">
+                <div><h2>📢 Banners e comunicados</h2><p style="color:#94a3b8; margin-top:6px; line-height:1.45;">O banner ativo pode aparecer automaticamente no login do aluno.</p></div>
+            </div>
+            <form id="formBannerProfessor" class="filtro-datas-container">
+                <input type="hidden" id="bannerId">
+                <div class="cadastro-grid">
+                    <div class="cadastro-campo cadastro-campo-full"><label for="bannerTitulo">Título</label><input type="text" id="bannerTitulo" maxlength="150" required></div>
+                    <div class="cadastro-campo cadastro-campo-full"><label for="bannerMensagem">Mensagem</label><textarea id="bannerMensagem" maxlength="2000" required></textarea></div>
+                    <div class="cadastro-campo"><label for="bannerImagemUrl">Imagem HTTPS (opcional)</label><input type="url" id="bannerImagemUrl" maxlength="1000"></div>
+                    <div class="cadastro-campo"><label for="bannerLinkUrl">Link HTTPS (opcional)</label><input type="url" id="bannerLinkUrl" maxlength="1000"></div>
+                    <div class="cadastro-campo"><label><input type="checkbox" id="bannerAtivo" checked> Ativo para os alunos</label></div>
+                </div>
+                <button type="submit" class="btn-salvar" id="btnSalvarBanner">Criar banner</button>
+                <button type="button" class="btn-agenda-acao" id="btnCancelarEdicaoBanner" style="display:none; margin-top:10px;">Cancelar edição</button>
+                <div id="bannerFeedbackProfessor" class="cadastro-feedback" role="status" aria-live="polite"></div>
+            </form>
+            <div id="listaBannersProfessor" class="agenda-lista"><div class="card-mensagem">Abra esta aba para carregar os banners.</div></div>
         </section>
 
         <!-- ABA 2: JUSTIFICATIVA DE FALTAS -->
@@ -774,6 +797,10 @@
                     </div>
                 </div>
                 <button onclick="carregarResumoFrequencia()" class="btn-filtrar">🔍 Consultar Frequência</button>
+                <div style="display:flex; gap:8px; flex-wrap:wrap; margin-top:10px;">
+                    <button type="button" class="btn-agenda-acao" id="btnExportarFrequencia">📊 Exportar CSV (Excel)</button>
+                    <button type="button" class="btn-agenda-acao" onclick="window.print()">🖨️ Imprimir / PDF</button>
+                </div>
             </div>
             <div id="resumoFrequenciaContainer">Carregando relatório de frequência...</div>
         </section>
@@ -869,6 +896,10 @@
                         <input type="email" id="cadastroEmail" maxlength="254" required autocomplete="off">
                     </div>
                     <div class="cadastro-campo cadastro-campo-full">
+                        <label for="cadastroGrupo">Grupo / turma (opcional)</label>
+                        <input type="text" id="cadastroGrupo" maxlength="80" placeholder="Ex.: Infantil, Adulto ou Faixa branca">
+                    </div>
+                    <div class="cadastro-campo cadastro-campo-full">
                         <label for="cadastroSenha">Senha inicial</label>
                         <input type="password" id="cadastroSenha" minlength="8" maxlength="128" required autocomplete="new-password">
                         <small class="cadastro-ajuda">Mínimo de 8 caracteres, incluindo uma letra e um número.</small>
@@ -958,7 +989,25 @@
                             <option value="agendado">Agendado</option>
                             <option value="pendente">Pendente</option>
                             <option value="concluido">Concluído</option>
+                            <option value="cancelado">Cancelado</option>
                         </select>
+                    </div>
+                    <div class="cadastro-campo">
+                        <label for="agendaPublico">Público</label>
+                        <select id="agendaPublico" required>
+                            <option value="todos">Todos os alunos</option>
+                            <option value="grupo">Grupo</option>
+                            <option value="selecionados">Alunos selecionados</option>
+                        </select>
+                    </div>
+                    <div class="cadastro-campo" id="agendaGrupoCampo" style="display:none;">
+                        <label for="agendaGrupo">Nome do grupo</label>
+                        <input type="text" id="agendaGrupo" maxlength="80" placeholder="Ex.: Infantil">
+                    </div>
+                    <div class="cadastro-campo cadastro-campo-full" id="agendaParticipantesCampo" style="display:none;">
+                        <label for="agendaParticipantesUsuarios">Participantes cadastrados</label>
+                        <select id="agendaParticipantesUsuarios" multiple size="5" aria-label="Selecione os alunos participantes"></select>
+                        <small class="cadastro-ajuda">Use Ctrl (Windows) ou Command (Mac) para selecionar mais de um aluno.</small>
                     </div>
                     <div class="cadastro-campo">
                         <label for="agendaData">Data</label>
@@ -983,6 +1032,14 @@
                     <div class="cadastro-campo cadastro-campo-full">
                         <label for="agendaDescricao">Descrição (opcional)</label>
                         <textarea id="agendaDescricao" maxlength="2000" placeholder="Informações adicionais do evento"></textarea>
+                    </div>
+                    <div class="cadastro-campo">
+                        <label for="agendaAnexoNome">Nome do anexo (opcional)</label>
+                        <input type="text" id="agendaAnexoNome" maxlength="120" placeholder="Regulamento ou mapa">
+                    </div>
+                    <div class="cadastro-campo">
+                        <label for="agendaAnexoUrl">Link HTTPS do anexo</label>
+                        <input type="url" id="agendaAnexoUrl" maxlength="1000" placeholder="https://...">
                     </div>
                 </div>
                 <button type="submit" class="btn-salvar" id="btnSalvarAgenda">Salvar evento</button>
@@ -1113,7 +1170,7 @@
             confraternizacao: 'Confraternização',
             outro: 'Outro evento'
         };
-        const rotulosStatusAgenda = { agendado: 'Agendado', pendente: 'Pendente', concluido: 'Concluído' };
+        const rotulosStatusAgenda = { agendado: 'Agendado', pendente: 'Pendente', concluido: 'Concluído', cancelado: 'Cancelado' };
 
         function dadosEventoParaApi(evento) {
             return {
@@ -1125,7 +1182,12 @@
                 local: evento.local,
                 participantes: evento.participantes || '',
                 descricao: evento.descricao || '',
-                status: evento.status
+                status: evento.status,
+                publico: evento.publico || 'todos',
+                grupo: evento.grupo || '',
+                participantesUsuarios: Array.isArray(evento.participantes_usuarios) ? evento.participantes_usuarios : [],
+                anexoUrl: evento.anexo_url || '',
+                anexoNome: evento.anexo_nome || ''
             };
         }
 
@@ -1168,6 +1230,9 @@
                             <div>📍 ${escaparHtml(evento.local)}</div>
                             <div>🏷️ ${escaparHtml(rotulosAgenda[evento.categoria] || 'Outro evento')}</div>
                             ${evento.participantes ? `<div>🥋 ${escaparHtml(evento.participantes)}</div>` : ''}
+                            <div>👥 Confirmados: ${Number(evento.confirmados_count) || 0}</div>
+                            <div>🎯 Público: ${escaparHtml(evento.publico === 'grupo' ? `Grupo ${evento.grupo}` : evento.publico === 'selecionados' ? 'Alunos selecionados' : 'Todos os alunos')}</div>
+                            ${evento.anexo_url ? `<div>📎 <a href="${escaparHtml(evento.anexo_url)}" target="_blank" rel="noopener">${escaparHtml(evento.anexo_nome || 'Abrir anexo')}</a></div>` : ''}
                         </div>
                         ${evento.descricao ? `<p class="agenda-card-descricao">${escaparHtml(evento.descricao)}</p>` : ''}
                         <div class="agenda-card-acoes">
@@ -1175,6 +1240,7 @@
                                 <option value="agendado" ${evento.status === 'agendado' ? 'selected' : ''}>Agendado</option>
                                 <option value="pendente" ${evento.status === 'pendente' ? 'selected' : ''}>Pendente</option>
                                 <option value="concluido" ${evento.status === 'concluido' ? 'selected' : ''}>Concluído</option>
+                                <option value="cancelado" ${evento.status === 'cancelado' ? 'selected' : ''}>Cancelado</option>
                             </select>
                             <button type="button" class="btn-agenda-acao" data-agenda-editar="${evento.id}">Editar</button>
                             <button type="button" class="btn-agenda-acao btn-agenda-excluir" data-agenda-excluir="${evento.id}">Excluir</button>
@@ -1204,12 +1270,18 @@
             document.getElementById('agendaNome').value = evento?.nome_evento || '';
             document.getElementById('agendaCategoria').value = evento?.categoria || 'acao';
             document.getElementById('agendaStatus').value = evento?.status || 'agendado';
+            popularParticipantesAgenda(evento?.participantes_usuarios || []);
+            document.getElementById('agendaPublico').value = evento?.publico || 'todos';
+            document.getElementById('agendaGrupo').value = evento?.grupo || '';
             document.getElementById('agendaData').value = evento?.data_evento || '';
             document.getElementById('agendaLocal').value = evento?.local || '';
             document.getElementById('agendaHoraInicio').value = evento?.hora_inicio || '';
             document.getElementById('agendaHoraFim').value = evento?.hora_fim || '';
             document.getElementById('agendaParticipantes').value = evento?.participantes || '';
             document.getElementById('agendaDescricao').value = evento?.descricao || '';
+            document.getElementById('agendaAnexoNome').value = evento?.anexo_nome || '';
+            document.getElementById('agendaAnexoUrl').value = evento?.anexo_url || '';
+            atualizarCamposPublicoAgenda();
             modalAgenda.showModal();
             document.getElementById('agendaNome').focus();
         }
@@ -1220,6 +1292,7 @@
         }
 
         function obterDadosFormularioAgenda() {
+            const participantesUsuarios = Array.from(document.getElementById('agendaParticipantesUsuarios').selectedOptions).map(option => option.value);
             return {
                 nomeEvento: document.getElementById('agendaNome').value.trim(),
                 categoria: document.getElementById('agendaCategoria').value,
@@ -1229,14 +1302,32 @@
                 local: document.getElementById('agendaLocal').value.trim(),
                 participantes: document.getElementById('agendaParticipantes').value.trim(),
                 descricao: document.getElementById('agendaDescricao').value.trim(),
-                status: document.getElementById('agendaStatus').value
+                status: document.getElementById('agendaStatus').value,
+                publico: document.getElementById('agendaPublico').value,
+                grupo: document.getElementById('agendaGrupo').value.trim(),
+                participantesUsuarios,
+                anexoNome: document.getElementById('agendaAnexoNome').value.trim(),
+                anexoUrl: document.getElementById('agendaAnexoUrl').value.trim()
             };
+        }
+
+        function popularParticipantesAgenda(selecionados = []) {
+            const select = document.getElementById('agendaParticipantesUsuarios');
+            const alunos = listaAlunos.filter(aluno => String(aluno.tipo).toLowerCase() !== 'professor');
+            select.innerHTML = alunos.map(aluno => `<option value="${escaparHtml(aluno.usuario)}" ${selecionados.includes(aluno.usuario) ? 'selected' : ''}>${escaparHtml(aluno.nome)} (${escaparHtml(aluno.usuario)})</option>`).join('');
+        }
+
+        function atualizarCamposPublicoAgenda() {
+            const publico = document.getElementById('agendaPublico').value;
+            document.getElementById('agendaGrupoCampo').style.display = publico === 'grupo' ? 'block' : 'none';
+            document.getElementById('agendaParticipantesCampo').style.display = publico === 'selecionados' ? 'block' : 'none';
         }
 
         document.getElementById('btnNovoEvento').addEventListener('click', () => abrirModalAgenda());
         document.getElementById('btnFecharAgenda').addEventListener('click', fecharModalAgenda);
         document.getElementById('filtroAgendaStatus').addEventListener('change', renderizarAgendaProfessor);
         document.getElementById('filtroAgendaCategoria').addEventListener('change', renderizarAgendaProfessor);
+        document.getElementById('agendaPublico').addEventListener('change', atualizarCamposPublicoAgenda);
         modalAgenda.addEventListener('click', event => {
             if (event.target === modalAgenda) fecharModalAgenda();
         });
@@ -1298,6 +1389,48 @@
             }
         });
 
+        let listaBannersProfessor = [];
+        const formBannerProfessor = document.getElementById('formBannerProfessor');
+        const bannerFeedbackProfessor = document.getElementById('bannerFeedbackProfessor');
+        function feedbackBanner(texto, tipo = '') {
+            bannerFeedbackProfessor.textContent = texto;
+            bannerFeedbackProfessor.className = tipo ? `cadastro-feedback ${tipo}` : 'cadastro-feedback';
+        }
+        function limparFormularioBanner() {
+            formBannerProfessor.reset();
+            document.getElementById('bannerId').value = '';
+            document.getElementById('bannerAtivo').checked = true;
+            document.getElementById('btnSalvarBanner').textContent = 'Criar banner';
+            document.getElementById('btnCancelarEdicaoBanner').style.display = 'none';
+            feedbackBanner('');
+        }
+        function renderizarBannersProfessor() {
+            const container = document.getElementById('listaBannersProfessor');
+            if (!listaBannersProfessor.length) { container.innerHTML = '<div class="card-mensagem">Nenhum banner cadastrado.</div>'; return; }
+            container.innerHTML = listaBannersProfessor.map(banner => `<article class="agenda-card ${banner.ativo ? '' : 'concluido'}"><div class="agenda-card-topo"><h3>${escaparHtml(banner.titulo)}</h3><span class="agenda-status ${banner.ativo ? 'agendado' : 'concluido'}">${banner.ativo ? 'Ativo' : 'Inativo'}</span></div><p class="agenda-card-descricao">${escaparHtml(banner.mensagem)}</p>${banner.link_url ? `<a href="${escaparHtml(banner.link_url)}" target="_blank" rel="noopener" class="agenda-card-info">🔗 Link do comunicado</a>` : ''}<div class="agenda-card-acoes"><button type="button" class="btn-agenda-acao" data-banner-editar="${banner.id}">Editar</button><button type="button" class="btn-agenda-acao btn-agenda-excluir" data-banner-excluir="${banner.id}">Excluir</button></div></article>`).join('');
+        }
+        async function carregarBannersProfessor() {
+            const container = document.getElementById('listaBannersProfessor');
+            container.innerHTML = '<div class="card-mensagem">Carregando banners...</div>';
+            try { const resposta = await Banners.listarAdmin(); listaBannersProfessor = resposta?.banners || []; renderizarBannersProfessor(); }
+            catch (error) { container.innerHTML = `<div class="card-mensagem" style="color:#fecaca;">${escaparHtml(error.message)}</div>`; }
+        }
+        document.getElementById('btnCancelarEdicaoBanner').addEventListener('click', limparFormularioBanner);
+        document.getElementById('listaBannersProfessor').addEventListener('click', async event => {
+            const editar = event.target.closest('[data-banner-editar]');
+            const excluir = event.target.closest('[data-banner-excluir]');
+            if (editar) {
+                const banner = listaBannersProfessor.find(item => String(item.id) === editar.dataset.bannerEditar);
+                if (banner) { document.getElementById('bannerId').value = banner.id; document.getElementById('bannerTitulo').value = banner.titulo; document.getElementById('bannerMensagem').value = banner.mensagem; document.getElementById('bannerImagemUrl').value = banner.imagem_url || ''; document.getElementById('bannerLinkUrl').value = banner.link_url || ''; document.getElementById('bannerAtivo').checked = banner.ativo; document.getElementById('btnSalvarBanner').textContent = 'Salvar alterações'; document.getElementById('btnCancelarEdicaoBanner').style.display = 'inline-flex'; document.getElementById('bannerTitulo').focus(); }
+            }
+            if (excluir) { const id = excluir.dataset.bannerExcluir; if (!confirm('Excluir este banner?')) return; try { await Banners.excluir(id); await carregarBannersProfessor(); } catch (error) { alert(error.message); } }
+        });
+        formBannerProfessor.addEventListener('submit', async event => {
+            event.preventDefault(); const id = document.getElementById('bannerId').value;
+            const dados = { titulo: document.getElementById('bannerTitulo').value.trim(), mensagem: document.getElementById('bannerMensagem').value.trim(), imagemUrl: document.getElementById('bannerImagemUrl').value.trim(), linkUrl: document.getElementById('bannerLinkUrl').value.trim(), ativo: document.getElementById('bannerAtivo').checked };
+            try { if (id) await Banners.atualizar(id, dados); else await Banners.criar(dados); feedbackBanner('Banner salvo com sucesso.', 'sucesso'); await carregarBannersProfessor(); setTimeout(limparFormularioBanner, 700); } catch (error) { feedbackBanner(error.message || 'Não foi possível salvar o banner.', 'erro'); }
+        });
+
         document.getElementById('cadastroUsuario').addEventListener('input', (event) => {
             event.target.value = event.target.value.toLowerCase().replace(/[^a-z0-9._-]/g, '');
         });
@@ -1322,6 +1455,7 @@
                     sobrenome: document.getElementById('cadastroSobrenome').value.trim(),
                     usuario: document.getElementById('cadastroUsuario').value.trim(),
                     email: document.getElementById('cadastroEmail').value.trim(),
+                    grupo: document.getElementById('cadastroGrupo').value.trim(),
                     senha
                 });
 
@@ -1358,6 +1492,7 @@
             }
 
             if (nomeAba === 'agenda') carregarAgendaProfessor();
+            else if (nomeAba === 'banners') carregarBannersProfessor();
             else if (nomeAba === 'justificativas') carregarJustificativasProfessor();
             else if (nomeAba === 'resumo') carregarResumoFrequencia();
             else if (nomeAba === 'desafios') carregarDesafiosProfessor();
@@ -1453,6 +1588,45 @@
             });
         }
 
+        async function carregarChamadaRegistrada() {
+            const data = document.getElementById('dataAula').value;
+            if (!data) return;
+            try {
+                const registros = await apiFetch(`/api/chamada/${encodeURIComponent(data)}`);
+                const mapa = new Map((registros || []).map(item => [item.usuario, Boolean(item.presente)]));
+                document.querySelectorAll('.chk-presente').forEach(checkbox => {
+                    const usuario = checkbox.getAttribute('data-usuario');
+                    checkbox.checked = mapa.has(usuario) ? mapa.get(usuario) : true;
+                });
+            } catch (error) {
+                console.error('Erro ao carregar chamada registrada:', error);
+            }
+        }
+
+        async function exportarFrequenciaCsv() {
+            const botao = document.getElementById('btnExportarFrequencia');
+            const dataInicio = document.getElementById('dataInicio').value;
+            const dataFim = document.getElementById('dataFim').value;
+            botao.disabled = true;
+            try {
+                const linhas = [['Usuário', 'Aluno', 'Presenças', 'Faltas', 'Total', 'Percentual']];
+                const alunos = listaAlunos.filter(aluno => String(aluno.tipo).toLowerCase() !== 'professor');
+                const dados = await Promise.all(alunos.map(async aluno => {
+                    const freq = await apiFetch(`/api/frequencia/${encodeURIComponent(aluno.usuario)}?dataInicio=${encodeURIComponent(dataInicio)}&dataFim=${encodeURIComponent(dataFim)}`);
+                    const presencas = Number(freq?.presencas || 0), faltas = Number(freq?.faltas || 0), total = presencas + faltas;
+                    return [aluno.usuario, aluno.nome, presencas, faltas, total, `${total ? Math.round((presencas / total) * 100) : 0}%`];
+                }));
+                linhas.push(...dados);
+                const csv = linhas.map(linha => linha.map(valor => `"${String(valor).replaceAll('"', '""')}"`).join(';')).join('\n');
+                const blob = new Blob([`\uFEFF${csv}`], { type: 'text/csv;charset=utf-8' });
+                const link = document.createElement('a'); link.href = URL.createObjectURL(blob); link.download = `frequencia_${dataInicio}_${dataFim}.csv`; link.click(); URL.revokeObjectURL(link.href);
+            } catch (error) { alert(error.message || 'Não foi possível exportar a frequência.'); }
+            finally { botao.disabled = false; }
+        }
+
+        document.getElementById('dataAula').addEventListener('change', carregarChamadaRegistrada);
+        document.getElementById('btnExportarFrequencia').addEventListener('click', exportarFrequenciaCsv);
+
         async function salvarChamada() {
             const data = document.getElementById('dataAula').value;
             if (!data) return alert("Selecione uma data.");
@@ -1486,6 +1660,7 @@
             try {
                 listaAlunos = await apiFetch('/api/usuarios');
                 renderizarAlunos();
+                await carregarChamadaRegistrada();
             } catch (error) {
                 document.getElementById('listaAlunosContainer').innerHTML = `<p style="color:#f87171">${escaparHtml(error.message)}</p>`;
             }
@@ -1680,6 +1855,7 @@
             if (usuarioSelecionado !== 'todos') alunos = alunos.filter(u => u.usuario === usuarioSelecionado);
 
             let linhasHTML = '';
+            let alunosBaixaFrequencia = [];
             try {
                 let mapaJustificativas = {};
                 try {
@@ -1711,6 +1887,7 @@
                     const presencasEfetivas = presencas + justificativasAprovadas;
                     const totalAulas = presencasEfetivas + faltasAjustadas;
                     const pctPresenca = totalAulas > 0 ? ((presencasEfetivas / totalAulas) * 100).toFixed(0) : 0;
+                    if (totalAulas > 0 && pctPresenca < 75) alunosBaixaFrequencia.push(`${aluno.nome} (${pctPresenca}%)`);
 
                     let corBadge = '#10b981';
                     if (pctPresenca < 75) corBadge = '#ef4444';
@@ -1732,7 +1909,8 @@
                     return;
                 }
 
-                container.innerHTML = `<div class="table-responsive"><table class="tabela-resumo"><thead><tr><th>Aluno</th><th>Presenças</th><th>Faltas</th><th>Justificativas</th><th>Frequência</th></tr></thead><tbody>${linhasHTML}</tbody></table></div>`;
+                const alertaBaixa = alunosBaixaFrequencia.length ? `<div class="card-mensagem" style="margin-top:14px; border-color:#92400e; color:#fcd34d; text-align:left;"><strong>⚠️ Frequência abaixo de 75%</strong><br>${escaparHtml(alunosBaixaFrequencia.join(', '))}</div>` : '';
+                container.innerHTML = `<div class="table-responsive"><table class="tabela-resumo"><thead><tr><th>Aluno</th><th>Presenças</th><th>Faltas</th><th>Justificativas</th><th>Frequência</th></tr></thead><tbody>${linhasHTML}</tbody></table></div>${alertaBaixa}`;
             } catch (err) {
                 container.innerHTML = "<p style='color: #ef4444; text-align:center;'>Não foi possível carregar as informações.</p>";
             }
