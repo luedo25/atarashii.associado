@@ -128,6 +128,9 @@
                 body: JSON.stringify(dados),
                 timeoutMs: 90000
             });
+        },
+        obterPerfil(usuario) {
+            return apiFetch(`/api/usuarios/${encodeURIComponent(usuario)}/perfil`);
         }
     };
     window.Perfil = {
