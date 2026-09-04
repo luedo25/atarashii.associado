@@ -99,9 +99,9 @@
         .welcome-box::before { content: ''; position: absolute; top: 0; right: 0; width: 150px; height: 150px; background: radial-gradient(circle, rgba(59,130,246,0.15) 0%, rgba(0,0,0,0) 70%); pointer-events: none; }
         .welcome-box h2 { font-size: 22px; font-weight: 700; margin-bottom: 6px; background: linear-gradient(to right, #fff, var(--text-muted)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
         .welcome-box p { font-size: 14px; color: var(--text-muted); }
-        .welcome-heading-row { display: flex; align-items: center; justify-content: space-between; gap: 14px; position: relative; z-index: 1; }
-        .welcome-heading-row h2 { margin-bottom: 6px; }
-        .btn-editar-perfil { flex: 0 0 auto; display: inline-flex; align-items: center; justify-content: center; gap: 7px; padding: 9px 13px; border: 1px solid rgba(96, 165, 250, 0.55); border-radius: var(--radius-sm); background: rgba(59, 130, 246, 0.15); color: #bfdbfe; cursor: pointer; font-size: 13px; font-weight: 700; transition: all 0.2s; }
+        .welcome-heading-row { display: flex; align-items: center; justify-content: space-between; gap: 8px; flex-wrap: nowrap; position: relative; z-index: 1; }
+        .welcome-heading-row h2 { flex: 1 1 auto; min-width: 0; margin-bottom: 6px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+        .btn-editar-perfil { flex: 0 0 auto; display: inline-flex; align-items: center; justify-content: center; gap: 5px; min-height: 34px; padding: 7px 9px; border: 1px solid rgba(96, 165, 250, 0.55); border-radius: var(--radius-sm); background: rgba(59, 130, 246, 0.15); color: #bfdbfe; cursor: pointer; font-size: 12px; font-weight: 700; white-space: nowrap; transition: all 0.2s; }
         .btn-editar-perfil:hover { background: rgba(59, 130, 246, 0.28); border-color: var(--accent-blue); color: #fff; }
         .btn-editar-perfil:active { transform: scale(0.96); }
 
@@ -228,7 +228,7 @@
         .nav-btn.active .icon img.logo-icon { filter: grayscale(0%) opacity(1); }
 
         @keyframes balancoSininho { 0% { transform: rotate(-12deg); } 100% { transform: rotate(12deg); } }
-        @media (max-width: 480px) { header h1 { font-size: 16px; } .container { padding: 0 12px; } .tab-content { padding: 18px 14px; } .welcome-heading-row { align-items: stretch; flex-direction: column; } .btn-editar-perfil { width: 100%; } .perfil-dialog-content { padding: 20px 16px; } }
+        @media (max-width: 480px) { header h1 { font-size: 16px; } .container { padding: 0 12px; } .tab-content { padding: 18px 14px; } .welcome-heading-row { gap: 6px; } .btn-editar-perfil { min-height: 32px; padding: 6px 8px; font-size: 11px; } .perfil-dialog-content { padding: 20px 16px; } }
 
         /* Estilos do Popup de Avisos */
         .modal-overlay {
@@ -428,7 +428,7 @@
             <div class="painel-resumo-card"><small>Frequência atual</small><strong id="resumoFrequencia">Carregando...</strong></div>
             <div class="painel-resumo-card"><small>Faixa atual</small><strong id="resumoFaixaAtual">Carregando...</strong></div>
             <div class="painel-resumo-card"><small>Próximo objetivo</small><strong id="resumoProximoObjetivo">Carregando...</strong></div>
-            <div class="painel-resumo-card"><small>Comunicados não lidos</small><strong id="resumoComunicados">Carregando...</strong></div>
+            <div class="painel-resumo-card"><small>Badges</small><strong id="resumoBadgesRestantes">Carregando...</strong></div>
         </div>
 
         <h3>🥋 Exames de Faixa</h3>
@@ -1735,24 +1735,49 @@
 
     async function carregarResumoPersonalizado() {
         try {
-            const [agenda, frequencia, exames, banners] = await Promise.all([
+            const [agenda, frequencia, exames, dadosBadges] = await Promise.all([
                 Agenda.listar(),
                 apiFetch('/api/frequencia/me'),
                 apiFetch('/api/exames/me'),
-                Banners.listar()
+                apiFetch('/api/badges/me')
             ]);
             const proximo = (agenda?.eventos || []).find(evento => !['concluido', 'cancelado'].includes(evento.status));
             document.getElementById('resumoProximoEvento').textContent = proximo ? `${proximo.nome_evento} (${String(proximo.data_evento).split('-').reverse().join('/')})` : 'Nenhum agendado';
             const presencas = Number(frequencia?.presencas || 0), faltas = Number(frequencia?.faltas || 0), total = presencas + faltas;
             const percentual = total ? Math.round((presencas / total) * 100) : 0;
             const freqEl = document.getElementById('resumoFrequencia'); freqEl.textContent = `${percentual}%`; freqEl.classList.toggle('alerta', total > 0 && percentual < 75);
-            const ultimo = Array.isArray(exames) && exames.length ? exames[exames.length - 1] : null;
-            document.getElementById('resumoFaixaAtual').textContent = ultimo?.faixa || 'Não informada';
-            const ordem = ['Branca', 'Amarela', 'Vermelha', 'Laranja', 'Verde', 'Roxa', 'Marrom', 'Preta'];
-            const indice = ultimo ? ordem.findIndex(faixa => String(ultimo.faixa).toLowerCase().includes(faixa.toLowerCase())) : -1;
-            document.getElementById('resumoProximoObjetivo').textContent = indice >= 0 && indice < ordem.length - 1 ? `Próxima: ${ordem[indice + 1]}` : indice === ordem.length - 1 ? 'Manter evolução' : 'Primeiro exame';
-            const naoLidos = (banners?.banners || []).filter(banner => !banner.lido).length;
-            const bannerEl = document.getElementById('resumoComunicados'); bannerEl.textContent = String(naoLidos); bannerEl.classList.toggle('alerta', naoLidos > 0);
+        const ultimo = Array.isArray(exames) && exames.length ? exames[exames.length - 1] : null;
+        const ordem = ['Branca', 'Amarela', 'Vermelha', 'Laranja', 'Verde', 'Roxa', 'Marrom', 'Preta'];
+        // Em graduações com barra (ex.: Verde/Roxa), a faixa válida é a última cor.
+        const valorFaixa = String(ultimo?.faixa || '').trim();
+        const parteFinalFaixa = valorFaixa ? valorFaixa.split('/').pop().trim() : 'Branca';
+        const faixaNormalizada = parteFinalFaixa
+            .normalize('NFD')
+            .replace(/[\u0300-\u036f]/g, '')
+            .toLowerCase();
+        const faixaAtual = ordem.find(faixa => faixaNormalizada.includes(faixa.toLowerCase())) || parteFinalFaixa;
+        const indice = ordem.indexOf(faixaAtual);
+
+        document.getElementById('resumoFaixaAtual').textContent = faixaAtual;
+        document.getElementById('resumoProximoObjetivo').textContent = indice >= 0 && indice < ordem.length - 1
+            ? `Próxima: ${ordem[indice + 1]}`
+            : indice === ordem.length - 1
+                ? 'Manter evolução'
+                : 'Próximo exame';
+            const badgesDisponiveis = [
+                'frequencia_ferro', 'guardiao', 'badge_kata_avancado', 'badge_mae_geri',
+                'badge_fisico_abs', 'badge_tsuki', 'badge_prancha_baixa', 'badge_polichinelo',
+                'badge_kibadachi_parede', 'badge_zen_kokyu', 'badge_prancha_alta', 'badge_saltos_zenkutsu'
+            ];
+            const badgesConquistados = new Set(
+                (dadosBadges?.badges || [])
+                    .filter(badge => badge.concluido && badgesDisponiveis.includes(badge.badge_key))
+                    .map(badge => badge.badge_key)
+            );
+            const badgesRestantes = badgesDisponiveis.length - badgesConquistados.size;
+            const badgesEl = document.getElementById('resumoBadgesRestantes');
+            badgesEl.textContent = `${badgesConquistados.size} conquistados · ${badgesRestantes} faltam`;
+            badgesEl.classList.toggle('alerta', badgesRestantes > 0);
         } catch (error) {
             console.error('Erro ao carregar resumo personalizado:', error);
         }
