@@ -131,6 +131,12 @@
         },
         obterPerfil(usuario) {
             return apiFetch(`/api/usuarios/${encodeURIComponent(usuario)}/perfil`);
+        },
+        alterarStatus(usuario, ativo) {
+            return apiFetch(`/api/usuarios/${encodeURIComponent(usuario)}/status`, {
+                method: 'PATCH',
+                body: JSON.stringify({ ativo })
+            });
         }
     };
     window.Perfil = {
