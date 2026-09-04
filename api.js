@@ -114,6 +114,15 @@
 
     window.API_URL = API_URL;
     window.apiFetch = apiFetch;
+    window.Usuarios = {
+        criar(dados) {
+            return apiFetch('/api/usuarios', {
+                method: 'POST',
+                body: JSON.stringify(dados),
+                timeoutMs: 90000
+            });
+        }
+    };
     window.Auth = {
         obterToken,
         obterUsuario,
