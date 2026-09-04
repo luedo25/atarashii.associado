@@ -99,6 +99,28 @@
         .welcome-box::before { content: ''; position: absolute; top: 0; right: 0; width: 150px; height: 150px; background: radial-gradient(circle, rgba(59,130,246,0.15) 0%, rgba(0,0,0,0) 70%); pointer-events: none; }
         .welcome-box h2 { font-size: 22px; font-weight: 700; margin-bottom: 6px; background: linear-gradient(to right, #fff, var(--text-muted)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
         .welcome-box p { font-size: 14px; color: var(--text-muted); }
+        .welcome-heading-row { display: flex; align-items: center; justify-content: space-between; gap: 14px; position: relative; z-index: 1; }
+        .welcome-heading-row h2 { margin-bottom: 6px; }
+        .btn-editar-perfil { flex: 0 0 auto; display: inline-flex; align-items: center; justify-content: center; gap: 7px; padding: 9px 13px; border: 1px solid rgba(96, 165, 250, 0.55); border-radius: var(--radius-sm); background: rgba(59, 130, 246, 0.15); color: #bfdbfe; cursor: pointer; font-size: 13px; font-weight: 700; transition: all 0.2s; }
+        .btn-editar-perfil:hover { background: rgba(59, 130, 246, 0.28); border-color: var(--accent-blue); color: #fff; }
+        .btn-editar-perfil:active { transform: scale(0.96); }
+
+        .perfil-dialog { width: min(92vw, 560px); max-height: 90vh; margin: auto; padding: 0; overflow-y: auto; border: 1px solid #475569; border-radius: var(--radius-lg); background: var(--bg-card); color: var(--text-main); box-shadow: 0 24px 70px rgba(0, 0, 0, 0.6); }
+        .perfil-dialog::backdrop { background: rgba(2, 6, 23, 0.82); backdrop-filter: blur(4px); }
+        .perfil-dialog-content { padding: 24px; }
+        .perfil-dialog-header { display: flex; align-items: flex-start; justify-content: space-between; gap: 18px; margin-bottom: 8px; }
+        .perfil-dialog-header h2 { font-size: 21px; color: var(--text-main); }
+        .btn-fechar-perfil { border: 0; background: transparent; color: var(--text-muted); cursor: pointer; font-size: 28px; line-height: 1; padding: 0 4px; }
+        .perfil-descricao { margin-bottom: 20px; color: var(--text-muted); font-size: 13px; line-height: 1.5; }
+        .perfil-campo { margin-bottom: 15px; }
+        .perfil-campo label { display: block; margin-bottom: 6px; color: #cbd5e1; font-size: 13px; font-weight: 700; }
+        .perfil-campo input, .perfil-campo textarea { width: 100%; padding: 12px; border: 1px solid var(--border-color); border-radius: var(--radius-sm); background: var(--bg-primary); color: var(--text-main); font-size: 16px; outline: none; }
+        .perfil-campo textarea { min-height: 88px; resize: vertical; line-height: 1.45; }
+        .perfil-campo input:focus, .perfil-campo textarea:focus { border-color: var(--accent-blue); box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.16); }
+        .perfil-campo small { display: block; margin-top: 5px; color: var(--text-muted); font-size: 12px; line-height: 1.4; }
+        .perfil-feedback { display: none; margin-top: 14px; padding: 11px 12px; border-radius: var(--radius-sm); font-size: 13px; line-height: 1.45; }
+        .perfil-feedback.erro { display: block; border: 1px solid rgba(239, 68, 68, 0.45); background: rgba(127, 29, 29, 0.45); color: #fecaca; }
+        .perfil-feedback.sucesso { display: block; border: 1px solid rgba(16, 185, 129, 0.45); background: rgba(6, 78, 59, 0.45); color: #bbf7d0; }
 
         .tab-content { display: none; background: var(--bg-card); border: 1px solid var(--border-color); padding: 24px; border-radius: var(--radius-lg); margin-bottom: 20px; animation: fadeIn 0.35s cubic-bezier(0.16, 1, 0.3, 1); box-shadow: 0 4px 20px rgba(0,0,0,0.2); }
         .tab-content.active { display: block; }
@@ -178,7 +200,7 @@
         .nav-btn.active .icon img.logo-icon { filter: grayscale(0%) opacity(1); }
 
         @keyframes balancoSininho { 0% { transform: rotate(-12deg); } 100% { transform: rotate(12deg); } }
-        @media (max-width: 480px) { header h1 { font-size: 16px; } .container { padding: 0 12px; } .tab-content { padding: 18px 14px; } }
+        @media (max-width: 480px) { header h1 { font-size: 16px; } .container { padding: 0 12px; } .tab-content { padding: 18px 14px; } .welcome-heading-row { align-items: stretch; flex-direction: column; } .btn-editar-perfil { width: 100%; } .perfil-dialog-content { padding: 20px 16px; } }
 
         /* Estilos do Popup de Avisos */
         .modal-overlay {
@@ -299,6 +321,43 @@
     </div>
 </div>
 
+<dialog id="modalPerfil" class="perfil-dialog" aria-labelledby="tituloModalPerfil">
+    <div class="perfil-dialog-content">
+        <div class="perfil-dialog-header">
+            <h2 id="tituloModalPerfil">Editar meu perfil</h2>
+            <button type="button" class="btn-fechar-perfil" id="btnFecharPerfil" aria-label="Fechar">&times;</button>
+        </div>
+        <p class="perfil-descricao">Mantenha seus dados atualizados. Informe somente restrições médicas relevantes para a prática esportiva.</p>
+
+        <form id="formPerfil">
+            <div class="perfil-campo">
+                <label for="perfilNome">Nome e sobrenome</label>
+                <input type="text" id="perfilNome" minlength="4" maxlength="150" required autocomplete="name">
+            </div>
+            <div class="perfil-campo">
+                <label for="perfilEmail">E-mail</label>
+                <input type="email" id="perfilEmail" maxlength="254" required autocomplete="email">
+            </div>
+            <div class="perfil-campo">
+                <label for="perfilWhatsapp">WhatsApp</label>
+                <input type="tel" id="perfilWhatsapp" maxlength="30" inputmode="tel" autocomplete="tel" placeholder="(11) 99999-9999">
+                <small>Inclua o DDD.</small>
+            </div>
+            <div class="perfil-campo">
+                <label for="perfilContatoEmergencia">Contato de emergência</label>
+                <input type="text" id="perfilContatoEmergencia" maxlength="250" placeholder="Nome, parentesco e telefone">
+            </div>
+            <div class="perfil-campo">
+                <label for="perfilRestricoesMedicas">Restrições médicas relevantes</label>
+                <textarea id="perfilRestricoesMedicas" maxlength="2000" placeholder="Ex.: alergias, limitações, medicação ou nenhuma restrição"></textarea>
+                <small>Esses dados são pessoais. Informe apenas o necessário para sua segurança nos treinos.</small>
+            </div>
+            <button type="submit" class="btn-action" id="btnSalvarPerfil">Salvar alterações</button>
+            <div id="perfilFeedback" class="perfil-feedback" role="status" aria-live="polite"></div>
+        </form>
+    </div>
+</dialog>
+
 <header>
     <div class="header-left">
         <img src="./logo-associacao.png" alt="Logo Associação Atarashii">
@@ -327,7 +386,10 @@
     </div>
 
     <div class="welcome-box">
-        <h2 id="welcomeNome">Olá, Associado!</h2>
+        <div class="welcome-heading-row">
+            <h2 id="welcomeNome">Olá, Associado!</h2>
+            <button type="button" class="btn-editar-perfil" id="btnAbrirPerfil">✏️ Editar perfil</button>
+        </div>
         <p>Acompanhe suas notas, conteúdos e avisos no menu inferior.</p>
     </div>
 
@@ -1298,6 +1360,92 @@
             .replaceAll('"', '&quot;')
             .replaceAll("'", '&#039;');
     }
+
+    const modalPerfil = document.getElementById('modalPerfil');
+    const formPerfil = document.getElementById('formPerfil');
+    const perfilFeedback = document.getElementById('perfilFeedback');
+
+    function definirFeedbackPerfil(texto, tipo = '') {
+        perfilFeedback.textContent = texto;
+        perfilFeedback.className = tipo ? `perfil-feedback ${tipo}` : 'perfil-feedback';
+    }
+
+    function preencherFormularioPerfil(perfil) {
+        document.getElementById('perfilNome').value = perfil?.nome || '';
+        document.getElementById('perfilEmail').value = perfil?.email || '';
+        document.getElementById('perfilWhatsapp').value = perfil?.whatsapp || '';
+        document.getElementById('perfilContatoEmergencia').value = perfil?.contato_emergencia || '';
+        document.getElementById('perfilRestricoesMedicas').value = perfil?.restricoes_medicas || '';
+    }
+
+    async function abrirPerfil() {
+        const botaoSalvar = document.getElementById('btnSalvarPerfil');
+        definirFeedbackPerfil('');
+        preencherFormularioPerfil({ nome: nomeDoAluno });
+        modalPerfil.showModal();
+        botaoSalvar.disabled = true;
+        botaoSalvar.textContent = 'Carregando...';
+
+        try {
+            const dados = await Perfil.obter();
+            preencherFormularioPerfil(dados?.perfil);
+            document.getElementById('perfilNome').focus();
+        } catch (error) {
+            definirFeedbackPerfil(error.message || 'Não foi possível carregar o perfil.', 'erro');
+        } finally {
+            botaoSalvar.disabled = false;
+            botaoSalvar.textContent = 'Salvar alterações';
+        }
+    }
+
+    function fecharPerfil() {
+        if (!modalPerfil.open) return;
+        modalPerfil.close();
+        definirFeedbackPerfil('');
+    }
+
+    document.getElementById('btnAbrirPerfil').addEventListener('click', abrirPerfil);
+    document.getElementById('btnFecharPerfil').addEventListener('click', fecharPerfil);
+    modalPerfil.addEventListener('click', (event) => {
+        if (event.target === modalPerfil) fecharPerfil();
+    });
+
+    formPerfil.addEventListener('submit', async (event) => {
+        event.preventDefault();
+        const botaoSalvar = document.getElementById('btnSalvarPerfil');
+        const nome = document.getElementById('perfilNome').value.trim().replace(/\s+/g, ' ');
+
+        definirFeedbackPerfil('');
+        if (!nome.includes(' ')) {
+            definirFeedbackPerfil('Informe seu nome e sobrenome.', 'erro');
+            return;
+        }
+
+        botaoSalvar.disabled = true;
+        botaoSalvar.textContent = 'Salvando...';
+
+        try {
+            const dados = await Perfil.salvar({
+                nome,
+                email: document.getElementById('perfilEmail').value.trim(),
+                whatsapp: document.getElementById('perfilWhatsapp').value.trim(),
+                contatoEmergencia: document.getElementById('perfilContatoEmergencia').value.trim(),
+                restricoesMedicas: document.getElementById('perfilRestricoesMedicas').value.trim()
+            });
+
+            nomeDoAluno = dados.perfil.nome;
+            Auth.atualizarUsuario({ nome: nomeDoAluno });
+            document.getElementById('welcomeNome').textContent = `Olá, ${nomeDoAluno}!`;
+            preencherFormularioPerfil(dados.perfil);
+            definirFeedbackPerfil(dados.mensagem || 'Perfil atualizado com sucesso.', 'sucesso');
+            setTimeout(fecharPerfil, 1200);
+        } catch (error) {
+            definirFeedbackPerfil(error.message || 'Não foi possível salvar o perfil.', 'erro');
+        } finally {
+            botaoSalvar.disabled = false;
+            botaoSalvar.textContent = 'Salvar alterações';
+        }
+    });
 
     function checarPopupLogin() {
         if (!usuarioAtivo) return;
