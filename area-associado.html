@@ -187,6 +187,21 @@
         .btn-cal-apple { background-color: #333333; border: 1px solid var(--border-color); }
         .btn-cal:active { transform: scale(0.95); opacity: 0.9; }
 
+        .agenda-grupo { margin-bottom: 26px; }
+        .agenda-grupo h3 { margin-bottom: 12px; }
+        .agenda-evento { flex-wrap: wrap; align-items: flex-start; }
+        .agenda-evento-concluido { opacity: 0.65; border-color: rgba(255, 255, 255, 0.1); }
+        .agenda-evento-concluido .agenda-texto { text-decoration: line-through; }
+        .agenda-conteudo { flex: 1; min-width: 200px; }
+        .agenda-titulo-linha { display: flex; justify-content: space-between; align-items: flex-start; gap: 8px; flex-wrap: wrap; }
+        .agenda-titulo { display: block; font-size: 15px; }
+        .agenda-detalhe { display: block; margin-top: 5px; font-size: 12px; color: var(--text-muted); line-height: 1.45; }
+        .agenda-descricao { margin-top: 8px; font-size: 12px; color: var(--text-main); line-height: 1.5; white-space: pre-wrap; }
+        .agenda-status { padding: 3px 7px; border-radius: 5px; font-size: 10px; font-weight: bold; }
+        .agenda-status-agendado { background: rgba(59, 130, 246, 0.2); color: #93c5fd; }
+        .agenda-status-pendente { background: rgba(245, 158, 11, 0.2); color: #fcd34d; }
+        .agenda-status-concluido { background: rgba(148, 163, 184, 0.2); color: #94a3b8; }
+
         .btn-action { display: flex; align-items: center; justify-content: center; gap: 8px; width: 100%; padding: 14px; background: var(--accent-blue); color: white; border: none; border-radius: var(--radius-md); font-weight: 600; font-size: 14px; cursor: pointer; text-decoration: none; transition: all 0.2s; box-shadow: 0 4px 12px rgba(59, 130, 246, 0.25); }
         .btn-action:active { transform: scale(0.98); opacity: 0.9; }
         .btn-whatsapp { background: #22c55e; box-shadow: 0 4px 12px rgba(34, 197, 94, 0.25); }
@@ -817,6 +832,15 @@
 
     <!-- SEÇÃO 3: AGENDA -->
     <div id="comunicados" class="tab-content">
+        <h3>🗓️ Agenda da Associação</h3>
+        <p style="font-size:13px; color:var(--text-muted); margin-bottom:16px;">Eventos e atividades cadastrados pelo professor.</p>
+        <div id="agendaAlunoContainer">
+            <div class="card-item">Carregando agenda...</div>
+        </div>
+    </div>
+
+    <!-- Agenda antiga mantida apenas como referência durante a migração -->
+    <div id="agendaLegada" hidden>
         <h3>🤝 Ações da Associação</h3>
         
         <div class="card-item" style="opacity: 0.65; border-color: rgba(255, 255, 255, 0.1);">
@@ -1355,6 +1379,7 @@
     let nomeDoAluno = 'Associado';
     let usuarioAtivo = '';
     let PUBLIC_VAPID_KEY = '';
+    let listaAgendaAluno = [];
 
     function escaparHtml(valor) {
         return String(valor ?? '')
@@ -1490,6 +1515,105 @@
         link.setAttribute('download', `${titulo.replace(/[^a-zA-Z0-9]/g, '_')}.ics`);
         document.body.appendChild(link); link.click(); document.body.removeChild(link);
     }
+
+    const categoriasAgenda = {
+        acao: { titulo: '🤝 Ações da Associação' },
+        treinamento: { titulo: '⚔️ Treinamentos' },
+        campeonato: { titulo: '🏆 Campeonatos' },
+        exame: { titulo: '🥋 Exames de Faixa' },
+        confraternizacao: { titulo: '🎉 Confraternizações' },
+        outro: { titulo: '📌 Outros Eventos' }
+    };
+    const statusAgenda = { agendado: 'AGENDADO', pendente: 'PENDENTE', concluido: 'CONCLUÍDO' };
+
+    function partesDataAgenda(data) {
+        const meses = ['JAN', 'FEV', 'MAR', 'ABR', 'MAI', 'JUN', 'JUL', 'AGO', 'SET', 'OUT', 'NOV', 'DEZ'];
+        const [ano, mes, dia] = String(data || '').split('-');
+        return { dia: dia || '--', mes: meses[Number(mes) - 1] || '---', ano: ano || '' };
+    }
+
+    function datasParaCalendario(evento) {
+        const horaInicio = evento.hora_inicio || '09:00';
+        const inicio = `${evento.data_evento}T${horaInicio}:00`;
+        let fim = evento.hora_fim ? `${evento.data_evento}T${evento.hora_fim}:00` : '';
+        if (!fim) {
+            const dataFim = new Date(inicio);
+            dataFim.setHours(dataFim.getHours() + 1);
+            const dois = numero => String(numero).padStart(2, '0');
+            fim = `${dataFim.getFullYear()}-${dois(dataFim.getMonth() + 1)}-${dois(dataFim.getDate())}T${dois(dataFim.getHours())}:${dois(dataFim.getMinutes())}:00`;
+        }
+        return { inicio, fim };
+    }
+
+    function renderizarAgendaAluno() {
+        const container = document.getElementById('agendaAlunoContainer');
+        if (!container) return;
+        if (listaAgendaAluno.length === 0) {
+            container.innerHTML = '<div class="card-item"><span style="color:var(--text-muted);">Nenhum evento cadastrado no momento.</span></div>';
+            return;
+        }
+
+        container.innerHTML = Object.keys(categoriasAgenda).map(categoria => {
+            const eventos = listaAgendaAluno.filter(evento => evento.categoria === categoria);
+            if (eventos.length === 0) return '';
+            const cards = eventos.map(evento => {
+                const data = partesDataAgenda(evento.data_evento);
+                const concluido = evento.status === 'concluido';
+                const horario = evento.hora_inicio
+                    ? `${evento.hora_inicio}${evento.hora_fim ? ` às ${evento.hora_fim}` : ''}`
+                    : '';
+                return `
+                    <article class="card-item agenda-evento ${concluido ? 'agenda-evento-concluido' : ''}">
+                        <div class="card-date-badge" ${concluido ? 'style="background:#334155;"' : ''}>
+                            <span class="day agenda-texto">${escaparHtml(data.dia)}</span>
+                            <span class="month">${escaparHtml(data.mes)}</span>
+                        </div>
+                        <div class="agenda-conteudo">
+                            <div class="agenda-titulo-linha">
+                                <strong class="agenda-titulo agenda-texto">${escaparHtml(evento.nome_evento)}</strong>
+                                <span class="agenda-status agenda-status-${escaparHtml(evento.status)}">${escaparHtml(statusAgenda[evento.status] || evento.status.toUpperCase())}</span>
+                            </div>
+                            <span class="agenda-detalhe agenda-texto">📅 ${escaparHtml(data.dia)}/${String(evento.data_evento).slice(5, 7)}/${escaparHtml(data.ano)}${horario ? ` • ${escaparHtml(horario)}` : ''}</span>
+                            <span class="agenda-detalhe agenda-texto">📍 ${escaparHtml(evento.local)}</span>
+                            ${evento.participantes ? `<span class="agenda-detalhe agenda-texto">🥋 Participantes: ${escaparHtml(evento.participantes)}</span>` : ''}
+                            ${evento.descricao ? `<p class="agenda-descricao agenda-texto">${escaparHtml(evento.descricao)}</p>` : ''}
+                            ${!concluido ? `
+                                <div class="cal-btn-group">
+                                    <button type="button" class="btn-cal btn-cal-google" data-agenda-google="${evento.id}">📅 Google Agenda</button>
+                                    <button type="button" class="btn-cal btn-cal-apple" data-agenda-ics="${evento.id}">🍎 iPhone / Outlook (.ics)</button>
+                                </div>` : ''}
+                        </div>
+                    </article>`;
+            }).join('');
+            return `<section class="agenda-grupo"><h3>${categoriasAgenda[categoria].titulo}</h3>${cards}</section>`;
+        }).join('');
+    }
+
+    async function carregarAgendaAluno() {
+        const container = document.getElementById('agendaAlunoContainer');
+        if (!container) return;
+        container.innerHTML = '<div class="card-item">Carregando agenda...</div>';
+        try {
+            const dados = await Agenda.listar();
+            listaAgendaAluno = Array.isArray(dados?.eventos) ? dados.eventos : [];
+            renderizarAgendaAluno();
+        } catch (error) {
+            container.innerHTML = `<div class="card-item" style="color:#fca5a5;">${escaparHtml(error.message || 'Não foi possível carregar a agenda.')}</div>`;
+        }
+    }
+
+    document.getElementById('agendaAlunoContainer').addEventListener('click', event => {
+        const botaoGoogle = event.target.closest('[data-agenda-google]');
+        const botaoIcs = event.target.closest('[data-agenda-ics]');
+        const id = botaoGoogle?.dataset.agendaGoogle || botaoIcs?.dataset.agendaIcs;
+        if (!id) return;
+        const evento = listaAgendaAluno.find(item => String(item.id) === id);
+        if (!evento) return;
+        const datas = datasParaCalendario(evento);
+        const descricao = evento.descricao || (evento.participantes ? `Participantes: ${evento.participantes}` : 'Evento da Associação Atarashii');
+        if (botaoGoogle) adicionarGoogleCalendar(evento.nome_evento, evento.local, descricao, datas.inicio, datas.fim);
+        else baixarArquivoICS(evento.nome_evento, evento.local, descricao, datas.inicio, datas.fim);
+    });
 
     function urlBase64ToUint8Array(base64String) {
         const padding = '='.repeat((4 - base64String.length % 4) % 4);
@@ -1717,7 +1841,10 @@
         if (elementoAba) elementoAba.classList.add('active');
         if (botaoClicado) botaoClicado.classList.add('active');
         window.scrollTo({ top: 0, behavior: 'smooth' });
-        if (idDaAba === 'comunicados') verificarStatusAceite();
+        if (idDaAba === 'comunicados') {
+            verificarStatusAceite();
+            carregarAgendaAluno();
+        }
         if (idDaAba === 'saldo') buscarFinancas();
     }
 
