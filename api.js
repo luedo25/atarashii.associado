@@ -165,7 +165,21 @@
             return apiFetch(`/api/agenda/${encodeURIComponent(id)}`, {
                 method: 'DELETE'
             });
+        },
+        confirmar(id, status) {
+            return apiFetch(`/api/agenda/${encodeURIComponent(id)}/confirmacao`, {
+                method: 'POST',
+                body: JSON.stringify({ status })
+            });
         }
+    };
+    window.Banners = {
+        listar() { return apiFetch('/api/banners'); },
+        listarAdmin() { return apiFetch('/api/banners/admin'); },
+        criar(dados) { return apiFetch('/api/banners', { method: 'POST', body: JSON.stringify(dados) }); },
+        atualizar(id, dados) { return apiFetch(`/api/banners/${encodeURIComponent(id)}`, { method: 'PATCH', body: JSON.stringify(dados) }); },
+        excluir(id) { return apiFetch(`/api/banners/${encodeURIComponent(id)}`, { method: 'DELETE' }); },
+        marcarLido(id) { return apiFetch(`/api/banners/${encodeURIComponent(id)}/lido`, { method: 'POST' }); }
     };
     window.Auth = {
         obterToken,
