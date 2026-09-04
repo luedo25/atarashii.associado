@@ -191,6 +191,8 @@
         .agenda-grupo h3 { margin-bottom: 12px; }
         .agenda-evento { flex-wrap: wrap; align-items: flex-start; }
         .agenda-evento-concluido { opacity: 0.65; border-color: rgba(255, 255, 255, 0.1); }
+        .agenda-evento-cancelado { opacity: 0.75; border-color: #7f1d1d; }
+        .agenda-evento-cancelado .agenda-titulo { color: #fca5a5; }
         .agenda-evento-concluido .agenda-texto { text-decoration: line-through; }
         .agenda-conteudo { flex: 1; min-width: 200px; }
         .agenda-titulo-linha { display: flex; justify-content: space-between; align-items: flex-start; gap: 8px; flex-wrap: wrap; }
@@ -201,6 +203,17 @@
         .agenda-status-agendado { background: rgba(59, 130, 246, 0.2); color: #93c5fd; }
         .agenda-status-pendente { background: rgba(245, 158, 11, 0.2); color: #fcd34d; }
         .agenda-status-concluido { background: rgba(148, 163, 184, 0.2); color: #94a3b8; }
+        .agenda-status-cancelado { background: rgba(239, 68, 68, 0.2); color: #fca5a5; }
+        .agenda-confirmacoes { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 10px; }
+        .btn-confirmacao { padding: 6px 9px; border: 1px solid var(--border-color); border-radius: 6px; background: transparent; color: var(--text-main); cursor: pointer; font-size: 11px; font-weight: bold; }
+        .btn-confirmacao.ativo { background: var(--accent-green); border-color: var(--accent-green); color: white; }
+
+        .painel-resumo { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 8px; margin-bottom: 22px; }
+        .painel-resumo-card { background: rgba(15,23,42,.65); border: 1px solid var(--border-color); border-radius: var(--radius-md); padding: 12px; min-height: 82px; }
+        .painel-resumo-card small { display:block; color:var(--text-muted); font-size:10px; font-weight:bold; text-transform:uppercase; margin-bottom:7px; }
+        .painel-resumo-card strong { display:block; color:var(--text-main); font-size:14px; line-height:1.35; overflow-wrap:anywhere; }
+        .painel-resumo-card strong.alerta { color:#fbbf24; }
+        @media (max-width: 700px) { .painel-resumo { grid-template-columns: repeat(2, 1fr); } .painel-resumo-card:last-child { grid-column: 1 / -1; } }
 
         .btn-action { display: flex; align-items: center; justify-content: center; gap: 8px; width: 100%; padding: 14px; background: var(--accent-blue); color: white; border: none; border-radius: var(--radius-md); font-weight: 600; font-size: 14px; cursor: pointer; text-decoration: none; transition: all 0.2s; box-shadow: 0 4px 12px rgba(59, 130, 246, 0.25); }
         .btn-action:active { transform: scale(0.98); opacity: 0.9; }
@@ -315,16 +328,11 @@
 </head>
 <body>
 
-<!-- POPUP DE AVISO (Campeonato ACAK) -->
+<!-- POPUP DE AVISO ADMINISTRÁVEL -->
 <div id="modalAvisoInfo" class="modal-overlay" style="display: none;">
     <div class="modal-content-aviso">
-        <h2>📢 Fique Atento!</h2>
-        <div class="aviso-detalhes">
-            <p><strong>🏆 7º Etapa Acak</strong> - 23/08 - Domingo</p>
-            <p><strong>⏳ Prazo para inscrição:</strong> 19/08</p>
-            <p><strong>💵 Investimento:</strong><br>Série A = R$ 130,00<br>Série B = R$ 100,00</p>
-        </div>
-        <button onclick="fecharAvisoPopup()">OK, Entendi</button>
+        <div id="bannerAlunoConteudo"></div>
+        <button id="btnFecharBannerAluno" onclick="fecharAvisoPopup()">OK, Entendi</button>
     </div>
 </div>
 
@@ -414,6 +422,14 @@
 
     <!-- SEÇÃO 1: PAINEL / NOTAS DO ALUNO -->
     <div id="exame" class="tab-content active">
+
+        <div class="painel-resumo" aria-label="Resumo personalizado">
+            <div class="painel-resumo-card"><small>Próximo evento</small><strong id="resumoProximoEvento">Carregando...</strong></div>
+            <div class="painel-resumo-card"><small>Frequência atual</small><strong id="resumoFrequencia">Carregando...</strong></div>
+            <div class="painel-resumo-card"><small>Faixa atual</small><strong id="resumoFaixaAtual">Carregando...</strong></div>
+            <div class="painel-resumo-card"><small>Próximo objetivo</small><strong id="resumoProximoObjetivo">Carregando...</strong></div>
+            <div class="painel-resumo-card"><small>Comunicados não lidos</small><strong id="resumoComunicados">Carregando...</strong></div>
+        </div>
 
         <h3>🥋 Exames de Faixa</h3>
         <div class="table-container">
@@ -836,6 +852,130 @@
         <p style="font-size:13px; color:var(--text-muted); margin-bottom:16px;">Eventos e atividades cadastrados pelo professor.</p>
         <div id="agendaAlunoContainer">
             <div class="card-item">Carregando agenda...</div>
+        </div>
+    </div>
+
+    <!-- Agenda antiga mantida apenas como referência durante a migração -->
+    <div id="agendaLegada" hidden>
+        <h3>🤝 Ações da Associação</h3>
+        
+        <div class="card-item" style="opacity: 0.65; border-color: rgba(255, 255, 255, 0.1);">
+            <div class="card-date-badge" style="background: #334155;">
+                <span class="day" style="color: #94a3b8; text-decoration: line-through;">08</span>
+                <span class="month" style="color: #64748b;">MAI</span>
+            </div>
+            <div style="flex: 1;">
+                <div style="display: flex; justify-content: space-between; align-items: center;">
+                    <strong style="font-size: 15px; text-decoration: line-through; color: var(--text-muted);">Churrasco da Associação</strong>
+                    <span style="font-size: 10px; background: rgba(148, 163, 184, 0.2); color: #94a3b8; padding: 2px 6px; border-radius: 4px; font-weight: bold;">CONCLUÍDO</span>
+                </div>
+                <span style="font-size: 12px; color: var(--text-muted); text-decoration: line-through;">📍 Academia Bee Strong - SP</span>
+            </div>
+        </div>
+
+        <div class="card-item" style="opacity: 0.65; border-color: rgba(255, 255, 255, 0.1);">
+            <div class="card-date-badge" style="background: #334155;">
+                <span class="day" style="color: #94a3b8; text-decoration: line-through;">18</span>
+                <span class="month" style="color: #64748b;">ABR</span>
+            </div>
+            <div style="flex: 1;">
+                <div style="display: flex; justify-content: space-between; align-items: center;">
+                    <strong style="font-size: 15px; text-decoration: line-through; color: var(--text-muted);">Palestra sobre Nutrição</strong>
+                    <span style="font-size: 10px; background: rgba(148, 163, 184, 0.2); color: #94a3b8; padding: 2px 6px; border-radius: 4px; font-weight: bold;">CONCLUÍDO</span>
+                </div>
+                <span style="font-size: 12px; color: var(--text-muted); text-decoration: line-through;">📍 Academia Bee Strong - SP</span>
+            </div>
+        </div>
+          <div class="card-item" style="flex-wrap: wrap;">
+            <div class="card-date-badge">
+                <span class="day" style="color: var(--accent-red);">08</span>
+                <span class="month">DEZ</span>
+            </div>
+            <div style="flex: 1; min-width: 200px;">
+                <strong style="display: block; font-size: 15px;">Doação de Roupas</strong>
+                <span style="font-size: 12px; color: var(--text-muted);">📍 Academia Bee Strong - SP</span>
+                <p></p>
+                <span style="font-size: 12px; color: var(--text-muted);">Prazo de Doação: 08/12/2026</span>
+                <p></p>
+                <span style="font-size: 12px; color: var(--text-muted);">Doação: Roupas, Calçados e cobertores</span>
+            </div>
+        </div>
+        
+        <h3 style="margin-top: 25px;">⚔️ Próximos Treinamentos</h3>
+        
+        <div class="card-item" style="opacity: 0.65; border-color: rgba(255, 255, 255, 0.1);">
+            <div class="card-date-badge" style="background: #334155;">
+                <span class="day" style="color: #94a3b8; text-decoration: line-through;">26</span>
+                <span class="month" style="color: #64748b;">JUL</span>
+            </div>
+            <div style="flex: 1;">
+                <div style="display: flex; justify-content: space-between; align-items: center;">
+                    <strong style="font-size: 15px; text-decoration: line-through; color: var(--text-muted);">Workshop com Brenda Padilha</strong>
+                    <span style="font-size: 10px; background: rgba(148, 163, 184, 0.2); color: #94a3b8; padding: 2px 6px; border-radius: 4px; font-weight: bold;">CONCLUÍDO</span>
+                </div>
+                <span style="font-size: 12px; color: var(--text-muted); text-decoration: line-through;">📍 Cidade: Hortolândia - SP</span>
+                <p></p>
+                <span style="font-size: 12px; color: var(--text-muted); text-decoration: line-through;">🥋 Participantes: Sensei Luiz, Adriano Miguel, Klara Pereira, Luiz Guilherme e Edson Fernandes</span>
+            </div>
+        </div>
+
+        <h3>🏆 Próximos Campeonatos</h3>
+        <div class="card-item" style="flex-wrap: wrap;">
+            <div class="card-date-badge">
+                <span class="day" style="color: var(--accent-red);">23</span>
+                <span class="month">AGO</span>
+            </div>
+           <div style="flex: 1;">
+                <div style="display: flex; justify-content: space-between; align-items: center;">
+                    <strong style="font-size: 15px; text-decoration: line-through; color: var(--text-muted);">7ª Etapa ACAK</strong>
+                     <span style="font-size: 10px; background: rgba(148, 163, 184, 0.2); color: #94a3b8; padding: 2px 6px; border-radius: 4px; font-weight: bold;">CONCLUÍDO</span>
+                    </div>
+                 <span style="font-size: 12px; color: var(--text-muted); text-decoration: line-through;">📍 Cidade: Valinhos - SP</span>
+                <p></p>
+                  <span style="font-size: 12px; color: var(--text-muted); text-decoration: line-through;">Watson Moura: 🥇 Campeão - Kumite, Luiz Guilherme: 🥇 Campeão - Kumite e Klara Pereira: 🥉 Terceiro lugar - Kumite</span>
+                  <p></p>
+                 <span style="font-size: 12px; color: var(--text-muted); text-decoration: line-through;">🥋 Participantes: Klara Pereira, Luiz Guilherme, Davi Pereira, Ederson Freitas, Arthur Penna e Watson Moura</span>
+            </div>
+        </div>
+        
+        <h3>🥋 Próximo Exame de Faixa</h3>
+        <div class="card-item" style="flex-wrap: wrap;">
+            <div class="card-date-badge">
+                <span class="day">06</span>
+                <span class="month">DEZ</span>
+            </div>
+            <div style="flex: 1; min-width: 200px;">
+                <strong style="display: block; font-size: 15px;">Exame de Faixa Atarashii</strong>
+                <span style="font-size: 12px; color: var(--text-muted);">📍 Academia Bee Strong - SP</span>
+                <div class="cal-btn-group">
+                    <button class="btn-cal btn-cal-google" onclick="adicionarGoogleCalendar('Exame de Faixa Atarashii', 'Academia Bee Strong - SP', 'Exame de Graduação de Faixa Atarashii', '2026-12-06T08:00:00', '2026-12-06T12:00:00')">
+                        📅 Google Agenda
+                    </button>
+                    <button class="btn-cal btn-cal-apple" onclick="baixarArquivoICS('Exame de Faixa Atarashii', 'Academia Bee Strong - SP', 'Exame de Graduação de Faixa Atarashii', '2026-12-06T08:00:00', '2026-12-06T12:00:00')">
+                        🍎 iPhone / Outlook (.ics)
+                    </button>
+                </div>
+            </div>
+        </div>
+        
+        <h3>🎉 Confraternização</h3>
+        <div class="card-item" style="flex-wrap: wrap;">
+            <div class="card-date-badge">
+                <span class="day" style="color: var(--accent-gold);">12</span>
+                <span class="month">DEZ</span>
+            </div>
+            <div style="flex: 1; min-width: 200px;">
+                <strong style="display: block; font-size: 15px;">Confraternização Atarashii</strong>
+                <span style="font-size: 12px; color: var(--text-muted);">📍 Aguardando definição - SP</span>
+                <div class="cal-btn-group">
+                    <button class="btn-cal btn-cal-google" onclick="adicionarGoogleCalendar('Confraternização Atarashii', 'Aguardando definição - SP', 'Confraternização de Fim de Ano da Associação Atarashii', '2026-12-12T18:00:00', '2026-12-12T23:00:00')">
+                        📅 Google Agenda
+                    </button>
+                    <button class="btn-cal btn-cal-apple" onclick="baixarArquivoICS('Confraternização Atarashii', 'Aguardando definição - SP', 'Confraternização de Fim de Ano da Associação Atarashii', '2026-12-12T18:00:00', '2026-12-12T23:00:00')">
+                        🍎 iPhone / Outlook (.ics)
+                    </button>
+                </div>
+            </div>
         </div>
     </div>
 
@@ -1355,21 +1495,28 @@
         }
     });
 
-    function checarPopupLogin() {
+    let bannerAberto = null;
+    async function checarPopupLogin() {
         if (!usuarioAtivo) return;
-
-        const jaViu = localStorage.getItem(`popup_acak_agosto_2026_${usuarioAtivo}`);
-        
-        if (!jaViu) {
+        try {
+            const resposta = await Banners.listar();
+            const banners = Array.isArray(resposta?.banners) ? resposta.banners : [];
+            const naoLido = banners.filter(banner => !banner.lido);
+            const badge = document.getElementById('badgeNotificacao');
+            if (badge && naoLido.length) { badge.textContent = naoLido.length; badge.style.display = 'inline-flex'; }
+            const banner = naoLido[0];
+            if (!banner) return;
+            bannerAberto = banner;
+            const conteudo = document.getElementById('bannerAlunoConteudo');
+            conteudo.innerHTML = `<h2>📢 ${escaparHtml(banner.titulo)}</h2><div class="aviso-detalhes"><p>${escaparHtml(banner.mensagem)}</p>${banner.imagem_url ? `<img src="${escaparHtml(banner.imagem_url)}" alt="${escaparHtml(banner.titulo)}" style="max-width:100%; max-height:220px; object-fit:contain; border-radius:8px; margin-top:10px;">` : ''}${banner.link_url ? `<p style="margin-top:10px;"><a href="${escaparHtml(banner.link_url)}" target="_blank" rel="noopener" style="color:#93c5fd;">🔗 Abrir material</a></p>` : ''}</div>`;
             document.getElementById('modalAvisoInfo').style.display = 'flex';
-        }
+        } catch (error) { console.error('Não foi possível carregar comunicados:', error); }
     }
 
     function fecharAvisoPopup() {
-        if (usuarioAtivo) {
-            localStorage.setItem(`popup_acak_agosto_2026_${usuarioAtivo}`, 'true');
-        }
         document.getElementById('modalAvisoInfo').style.display = 'none';
+        if (bannerAberto) Banners.marcarLido(bannerAberto.id).catch(() => {});
+        bannerAberto = null;
     }
 
     function formatarDataISO(dataISO) { return dataISO.replace(/-|:|\.\d+/g, ''); }
@@ -1400,7 +1547,7 @@
         confraternizacao: { titulo: '🎉 Confraternizações' },
         outro: { titulo: '📌 Outros Eventos' }
     };
-    const statusAgenda = { agendado: 'AGENDADO', pendente: 'PENDENTE', concluido: 'CONCLUÍDO' };
+    const statusAgenda = { agendado: 'AGENDADO', pendente: 'PENDENTE', concluido: 'CONCLUÍDO', cancelado: 'CANCELADO' };
 
     function partesDataAgenda(data) {
         const meses = ['JAN', 'FEV', 'MAR', 'ABR', 'MAI', 'JUN', 'JUL', 'AGO', 'SET', 'OUT', 'NOV', 'DEZ'];
@@ -1435,11 +1582,12 @@
             const cards = eventos.map(evento => {
                 const data = partesDataAgenda(evento.data_evento);
                 const concluido = evento.status === 'concluido';
+                const cancelado = evento.status === 'cancelado';
                 const horario = evento.hora_inicio
                     ? `${evento.hora_inicio}${evento.hora_fim ? ` às ${evento.hora_fim}` : ''}`
                     : '';
                 return `
-                    <article class="card-item agenda-evento ${concluido ? 'agenda-evento-concluido' : ''}">
+                    <article class="card-item agenda-evento ${concluido ? 'agenda-evento-concluido' : ''} ${cancelado ? 'agenda-evento-cancelado' : ''}">
                         <div class="card-date-badge" ${concluido ? 'style="background:#334155;"' : ''}>
                             <span class="day agenda-texto">${escaparHtml(data.dia)}</span>
                             <span class="month">${escaparHtml(data.mes)}</span>
@@ -1452,8 +1600,15 @@
                             <span class="agenda-detalhe agenda-texto">📅 ${escaparHtml(data.dia)}/${String(evento.data_evento).slice(5, 7)}/${escaparHtml(data.ano)}${horario ? ` • ${escaparHtml(horario)}` : ''}</span>
                             <span class="agenda-detalhe agenda-texto">📍 ${escaparHtml(evento.local)}</span>
                             ${evento.participantes ? `<span class="agenda-detalhe agenda-texto">🥋 Participantes: ${escaparHtml(evento.participantes)}</span>` : ''}
+                            <span class="agenda-detalhe agenda-texto">👥 Confirmados: ${Number(evento.confirmados_count) || 0}</span>
                             ${evento.descricao ? `<p class="agenda-descricao agenda-texto">${escaparHtml(evento.descricao)}</p>` : ''}
-                            ${!concluido ? `
+                            ${evento.anexo_url ? `<a class="agenda-detalhe" href="${escaparHtml(evento.anexo_url)}" target="_blank" rel="noopener">📎 ${escaparHtml(evento.anexo_nome || 'Abrir anexo')}</a>` : ''}
+                            ${!cancelado && !concluido ? `
+                                <div class="agenda-confirmacoes">
+                                    <button type="button" class="btn-confirmacao ${evento.minha_confirmacao === 'confirmado' ? 'ativo' : ''}" data-agenda-confirmar="${evento.id}" data-status="confirmado">✅ Confirmar presença</button>
+                                    <button type="button" class="btn-confirmacao ${evento.minha_confirmacao === 'recusado' ? 'ativo' : ''}" data-agenda-confirmar="${evento.id}" data-status="recusado">❌ Não participarei</button>
+                                </div>` : ''}
+                            ${!concluido && !cancelado ? `
                                 <div class="cal-btn-group">
                                     <button type="button" class="btn-cal btn-cal-google" data-agenda-google="${evento.id}">📅 Google Agenda</button>
                                     <button type="button" class="btn-cal btn-cal-apple" data-agenda-ics="${evento.id}">🍎 iPhone / Outlook (.ics)</button>
@@ -1479,6 +1634,12 @@
     }
 
     document.getElementById('agendaAlunoContainer').addEventListener('click', event => {
+        const botaoConfirmar = event.target.closest('[data-agenda-confirmar]');
+        if (botaoConfirmar) {
+            const id = botaoConfirmar.dataset.agendaConfirmar;
+            Agenda.confirmar(id, botaoConfirmar.dataset.status).then(() => carregarAgendaAluno()).catch(error => alert(error.message || 'Não foi possível registrar sua resposta.'));
+            return;
+        }
         const botaoGoogle = event.target.closest('[data-agenda-google]');
         const botaoIcs = event.target.closest('[data-agenda-ics]');
         const id = botaoGoogle?.dataset.agendaGoogle || botaoIcs?.dataset.agendaIcs;
@@ -1569,6 +1730,31 @@
             });
         } catch (error) {
             tabelaBody.innerHTML = `<tr><td colspan="8" style="text-align:center;color:#f87171">${escaparHtml(error.message)}</td></tr>`;
+        }
+    }
+
+    async function carregarResumoPersonalizado() {
+        try {
+            const [agenda, frequencia, exames, banners] = await Promise.all([
+                Agenda.listar(),
+                apiFetch('/api/frequencia/me'),
+                apiFetch('/api/exames/me'),
+                Banners.listar()
+            ]);
+            const proximo = (agenda?.eventos || []).find(evento => !['concluido', 'cancelado'].includes(evento.status));
+            document.getElementById('resumoProximoEvento').textContent = proximo ? `${proximo.nome_evento} (${String(proximo.data_evento).split('-').reverse().join('/')})` : 'Nenhum agendado';
+            const presencas = Number(frequencia?.presencas || 0), faltas = Number(frequencia?.faltas || 0), total = presencas + faltas;
+            const percentual = total ? Math.round((presencas / total) * 100) : 0;
+            const freqEl = document.getElementById('resumoFrequencia'); freqEl.textContent = `${percentual}%`; freqEl.classList.toggle('alerta', total > 0 && percentual < 75);
+            const ultimo = Array.isArray(exames) && exames.length ? exames[exames.length - 1] : null;
+            document.getElementById('resumoFaixaAtual').textContent = ultimo?.faixa || 'Não informada';
+            const ordem = ['Branca', 'Amarela', 'Vermelha', 'Laranja', 'Verde', 'Roxa', 'Marrom', 'Preta'];
+            const indice = ultimo ? ordem.findIndex(faixa => String(ultimo.faixa).toLowerCase().includes(faixa.toLowerCase())) : -1;
+            document.getElementById('resumoProximoObjetivo').textContent = indice >= 0 && indice < ordem.length - 1 ? `Próxima: ${ordem[indice + 1]}` : indice === ordem.length - 1 ? 'Manter evolução' : 'Primeiro exame';
+            const naoLidos = (banners?.banners || []).filter(banner => !banner.lido).length;
+            const bannerEl = document.getElementById('resumoComunicados'); bannerEl.textContent = String(naoLidos); bannerEl.classList.toggle('alerta', naoLidos > 0);
+        } catch (error) {
+            console.error('Erro ao carregar resumo personalizado:', error);
         }
     }
 
@@ -2013,6 +2199,7 @@
                 carregarBadgesAluno(),
                 carregarRanking(),
                 carregarNotasAluno(),
+                carregarResumoPersonalizado(),
                 carregarGraficoFrequencia(),
                 carregarStatusJustificativas(),
                 carregarMeusDesafios()
