@@ -210,6 +210,24 @@
 
         .btn-novo-aluno:hover { background: #2563eb; }
 
+        .btn-nome-aluno {
+            border: 0;
+            border-radius: 6px;
+            background: transparent;
+            color: #93c5fd;
+            cursor: pointer;
+            font: inherit;
+            font-weight: 700;
+            padding: 7px 8px;
+            text-align: left;
+            text-decoration: underline;
+            text-decoration-color: #3b82f6;
+            text-underline-offset: 3px;
+        }
+
+        .btn-nome-aluno:hover { background: #334155; color: #dbeafe; }
+        .btn-nome-aluno:focus-visible { outline: 3px solid #60a5fa; outline-offset: 2px; }
+
         .cadastro-dialog {
             width: min(92vw, 560px);
             max-height: 90vh;
@@ -299,6 +317,64 @@
             background: #052e16;
             color: #bbf7d0;
         }
+
+        .perfil-status {
+            padding: 26px 0;
+            color: #94a3b8;
+            text-align: center;
+        }
+
+        .perfil-status.erro {
+            margin: 14px 0;
+            padding: 14px;
+            border: 1px solid #7f1d1d;
+            border-radius: 8px;
+            background: #450a0a;
+            color: #fecaca;
+        }
+
+        .perfil-dados { display: none; }
+
+        .perfil-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin-top: 18px;
+        }
+
+        .perfil-campo {
+            min-width: 0;
+            padding: 13px;
+            border: 1px solid #334155;
+            border-radius: 9px;
+            background: #0f172a;
+        }
+
+        .perfil-campo-full { grid-column: 1 / -1; }
+
+        .perfil-rotulo {
+            display: block;
+            margin-bottom: 5px;
+            color: #94a3b8;
+            font-size: 0.78rem;
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+
+        .perfil-valor {
+            display: block;
+            color: #f8fafc;
+            line-height: 1.45;
+            overflow-wrap: anywhere;
+            white-space: pre-wrap;
+        }
+
+        .perfil-restricoes {
+            border-color: #a16207;
+            background: #422006;
+        }
+
+        .perfil-restricoes .perfil-rotulo { color: #fde68a; }
 
         /* CARD VAZIO / MENSAGENS */
         .card-mensagem {
@@ -484,6 +560,10 @@
             .cadastro-grid { grid-template-columns: 1fr; }
             .cadastro-campo-full { grid-column: auto; }
             .cadastro-dialog-content { padding: 20px 16px; }
+            .perfil-grid { grid-template-columns: 1fr; }
+            .perfil-campo-full { grid-column: auto; }
+            .aluno-item { gap: 10px; }
+            .btn-nome-aluno { flex: 1; }
             h2 { font-size: 1.3rem; }
         }
     </style>
@@ -699,6 +779,52 @@
         </div>
     </dialog>
 
+    <dialog id="modalPerfilAluno" class="cadastro-dialog" aria-labelledby="tituloPerfilAluno">
+        <div class="cadastro-dialog-content">
+            <div class="cadastro-dialog-header">
+                <div>
+                    <h2 id="tituloPerfilAluno">Dados do aluno</h2>
+                    <p class="cadastro-descricao" id="subtituloPerfilAluno">Consulte as informações cadastradas pelo aluno.</p>
+                </div>
+                <button type="button" class="btn-fechar-modal" id="btnFecharPerfilAluno" aria-label="Fechar dados do aluno">&times;</button>
+            </div>
+
+            <div id="perfilAlunoStatus" class="perfil-status" role="status" aria-live="polite">Carregando dados...</div>
+            <div id="perfilAlunoDados" class="perfil-dados">
+                <div class="perfil-grid">
+                    <div class="perfil-campo perfil-campo-full">
+                        <span class="perfil-rotulo">Nome e sobrenome</span>
+                        <span class="perfil-valor" id="perfilAlunoNome"></span>
+                    </div>
+                    <div class="perfil-campo">
+                        <span class="perfil-rotulo">Usuário</span>
+                        <span class="perfil-valor" id="perfilAlunoUsuario"></span>
+                    </div>
+                    <div class="perfil-campo">
+                        <span class="perfil-rotulo">Data de nascimento</span>
+                        <span class="perfil-valor" id="perfilAlunoNascimento"></span>
+                    </div>
+                    <div class="perfil-campo perfil-campo-full">
+                        <span class="perfil-rotulo">E-mail</span>
+                        <span class="perfil-valor" id="perfilAlunoEmail"></span>
+                    </div>
+                    <div class="perfil-campo perfil-campo-full">
+                        <span class="perfil-rotulo">WhatsApp</span>
+                        <span class="perfil-valor" id="perfilAlunoWhatsapp"></span>
+                    </div>
+                    <div class="perfil-campo perfil-campo-full">
+                        <span class="perfil-rotulo">Contato de emergência</span>
+                        <span class="perfil-valor" id="perfilAlunoEmergencia"></span>
+                    </div>
+                    <div class="perfil-campo perfil-campo-full perfil-restricoes">
+                        <span class="perfil-rotulo">Restrições médicas relevantes</span>
+                        <span class="perfil-valor" id="perfilAlunoRestricoes"></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </dialog>
+
   <script>
         let usuarioAtivo = '';
         let listaAlunos = [];
@@ -722,6 +848,9 @@
         const modalCadastroUsuario = document.getElementById('modalCadastroUsuario');
         const formCadastroUsuario = document.getElementById('formCadastroUsuario');
         const cadastroUsuarioFeedback = document.getElementById('cadastroUsuarioFeedback');
+        const modalPerfilAluno = document.getElementById('modalPerfilAluno');
+        const perfilAlunoStatus = document.getElementById('perfilAlunoStatus');
+        const perfilAlunoDados = document.getElementById('perfilAlunoDados');
 
         function definirFeedbackCadastro(texto, tipo = '') {
             cadastroUsuarioFeedback.textContent = texto;
@@ -745,6 +874,65 @@
         document.getElementById('btnFecharCadastro').addEventListener('click', fecharCadastroUsuario);
         modalCadastroUsuario.addEventListener('click', (event) => {
             if (event.target === modalCadastroUsuario) fecharCadastroUsuario();
+        });
+
+        function valorPerfil(valor) {
+            const texto = String(valor ?? '').trim();
+            return texto || 'Não informado';
+        }
+
+        function formatarDataNascimento(valor) {
+            const data = String(valor ?? '').slice(0, 10);
+            const partes = data.split('-');
+            if (partes.length !== 3) return 'Não informado';
+            return `${partes[2]}/${partes[1]}/${partes[0]}`;
+        }
+
+        function preencherPerfilAluno(perfil) {
+            document.getElementById('perfilAlunoNome').textContent = valorPerfil(perfil.nome);
+            document.getElementById('perfilAlunoUsuario').textContent = valorPerfil(perfil.usuario);
+            document.getElementById('perfilAlunoNascimento').textContent = formatarDataNascimento(perfil.data_nascimento);
+            document.getElementById('perfilAlunoEmail').textContent = valorPerfil(perfil.email);
+            document.getElementById('perfilAlunoWhatsapp').textContent = valorPerfil(perfil.whatsapp);
+            document.getElementById('perfilAlunoEmergencia').textContent = valorPerfil(perfil.contato_emergencia);
+            document.getElementById('perfilAlunoRestricoes').textContent = valorPerfil(perfil.restricoes_medicas);
+        }
+
+        function fecharPerfilAluno() {
+            if (modalPerfilAluno.open) modalPerfilAluno.close();
+        }
+
+        async function abrirPerfilAluno(usuario) {
+            perfilAlunoDados.style.display = 'none';
+            perfilAlunoStatus.style.display = 'block';
+            perfilAlunoStatus.className = 'perfil-status';
+            perfilAlunoStatus.textContent = 'Carregando dados...';
+            document.getElementById('tituloPerfilAluno').textContent = 'Dados do aluno';
+            document.getElementById('subtituloPerfilAluno').textContent = `Usuário: ${usuario}`;
+            modalPerfilAluno.showModal();
+
+            try {
+                const dados = await Usuarios.obterPerfil(usuario);
+                if (!dados?.perfil) throw new Error('O servidor não retornou os dados do aluno.');
+                preencherPerfilAluno(dados.perfil);
+                document.getElementById('tituloPerfilAluno').textContent = valorPerfil(dados.perfil.nome);
+                perfilAlunoStatus.textContent = '';
+                perfilAlunoStatus.style.display = 'none';
+                perfilAlunoDados.style.display = 'block';
+            } catch (error) {
+                perfilAlunoStatus.style.display = 'block';
+                perfilAlunoStatus.className = 'perfil-status erro';
+                perfilAlunoStatus.textContent = error.message || 'Não foi possível carregar os dados do aluno.';
+            }
+        }
+
+        document.getElementById('btnFecharPerfilAluno').addEventListener('click', fecharPerfilAluno);
+        modalPerfilAluno.addEventListener('click', (event) => {
+            if (event.target === modalPerfilAluno) fecharPerfilAluno();
+        });
+        document.getElementById('listaAlunosContainer').addEventListener('click', (event) => {
+            const botao = event.target.closest('[data-perfil-usuario]');
+            if (botao) abrirPerfilAluno(botao.dataset.perfilUsuario);
         });
 
         document.getElementById('cadastroUsuario').addEventListener('input', (event) => {
@@ -873,7 +1061,9 @@
                     const div = document.createElement('div');
                     div.className = 'aluno-item';
                     div.innerHTML = `
-                        <strong>${escaparHtml(aluno.nome)}</strong>
+                        <button type="button" class="btn-nome-aluno" data-perfil-usuario="${escaparHtml(aluno.usuario)}" aria-label="Ver dados de ${escaparHtml(aluno.nome)}">
+                            ${escaparHtml(aluno.nome)}
+                        </button>
                         <label class="chk-label">
                             <input type="checkbox" data-usuario="${escaparHtml(aluno.usuario)}" class="chk-presente" checked> Presente
                         </label>
