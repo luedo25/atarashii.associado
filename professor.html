@@ -333,6 +333,9 @@
             color: #fecaca;
         }
 
+        .perfil-acoes { display: flex; justify-content: flex-end; gap: 10px; margin-top: 18px; }
+        .btn-status-aluno.inativo { border-color: #166534; color: #bbf7d0; }
+
         .perfil-dados { display: none; }
 
         .perfil-grid {
@@ -803,6 +806,7 @@
                 </div>
             </div>
             <div id="resumoFrequenciaContainer">Carregando relatório de frequência...</div>
+            <div id="detalhesFrequenciaContainer" style="margin-top:16px;"></div>
         </section>
 
         <!-- ABA 4: ENVIAR NOTIFICAÇÕES PUSH -->
@@ -953,6 +957,9 @@
                         <span class="perfil-valor" id="perfilAlunoRestricoes"></span>
                     </div>
                 </div>
+                <div class="perfil-acoes">
+                    <button type="button" class="btn-agenda-acao btn-agenda-excluir btn-status-aluno" id="btnAlternarStatusAluno">Inativar aluno</button>
+                </div>
             </div>
         </div>
     </dialog>
@@ -1052,6 +1059,7 @@
         let usuarioAtivo = '';
         let listaAlunos = [];
         let listaAgenda = [];
+        let perfilAlunoAtual = null;
         const URL_API_SERVIDOR = API_URL;
 
         async function fetchAutenticado(url, opcoes = {}) {
@@ -1120,6 +1128,13 @@
             document.getElementById('perfilAlunoWhatsapp').textContent = valorPerfil(perfil.whatsapp);
             document.getElementById('perfilAlunoEmergencia').textContent = valorPerfil(perfil.contato_emergencia);
             document.getElementById('perfilAlunoRestricoes').textContent = valorPerfil(perfil.restricoes_medicas);
+            const botaoStatus = document.getElementById('btnAlternarStatusAluno');
+            const estaAtivo = perfil.ativo !== false;
+            botaoStatus.dataset.usuario = perfil.usuario;
+            botaoStatus.dataset.ativo = String(estaAtivo);
+            botaoStatus.textContent = estaAtivo ? 'Inativar aluno' : 'Reativar aluno';
+            botaoStatus.classList.toggle('btn-agenda-excluir', estaAtivo);
+            botaoStatus.classList.toggle('inativo', !estaAtivo);
         }
 
         function fecharPerfilAluno() {
@@ -1127,6 +1142,7 @@
         }
 
         async function abrirPerfilAluno(usuario) {
+            perfilAlunoAtual = null;
             perfilAlunoDados.style.display = 'none';
             perfilAlunoStatus.style.display = 'block';
             perfilAlunoStatus.className = 'perfil-status';
@@ -1138,6 +1154,7 @@
             try {
                 const dados = await Usuarios.obterPerfil(usuario);
                 if (!dados?.perfil) throw new Error('O servidor não retornou os dados do aluno.');
+                perfilAlunoAtual = dados.perfil;
                 preencherPerfilAluno(dados.perfil);
                 document.getElementById('tituloPerfilAluno').textContent = valorPerfil(dados.perfil.nome);
                 perfilAlunoStatus.textContent = '';
@@ -1151,6 +1168,29 @@
         }
 
         document.getElementById('btnFecharPerfilAluno').addEventListener('click', fecharPerfilAluno);
+        document.getElementById('btnAlternarStatusAluno').addEventListener('click', async (event) => {
+            const botao = event.currentTarget;
+            const usuario = botao.dataset.usuario;
+            const estaAtivo = botao.dataset.ativo === 'true';
+            if (!usuario) return;
+            const acao = estaAtivo ? 'inativar' : 'reativar';
+            if (!confirm(`Deseja ${acao} este aluno? O histórico de frequência, exames, badges e justificativas será mantido.`)) return;
+            botao.disabled = true;
+            try {
+                const resposta = await Usuarios.alterarStatus(usuario, !estaAtivo);
+                const alterado = resposta.usuario;
+                const indice = listaAlunos.findIndex(aluno => aluno.usuario === alterado.usuario);
+                if (indice >= 0) listaAlunos[indice] = { ...listaAlunos[indice], ativo: alterado.ativo };
+                perfilAlunoAtual = { ...perfilAlunoAtual, ativo: alterado.ativo };
+                preencherPerfilAluno(perfilAlunoAtual);
+                renderizarAlunos();
+                alert(estaAtivo ? 'Aluno inativado. O histórico foi preservado.' : 'Aluno reativado com sucesso.');
+            } catch (error) {
+                alert(error.message || 'Não foi possível alterar o status do aluno.');
+            } finally {
+                botao.disabled = false;
+            }
+        });
         modalPerfilAluno.addEventListener('click', (event) => {
             if (event.target === modalPerfilAluno) fecharPerfilAluno();
         });
@@ -1563,9 +1603,9 @@
                         <button type="button" class="btn-nome-aluno" data-perfil-usuario="${escaparHtml(aluno.usuario)}" aria-label="Ver dados de ${escaparHtml(aluno.nome)}">
                             ${escaparHtml(aluno.nome)}
                         </button>
-                        <label class="chk-label">
-                            <input type="checkbox" data-usuario="${escaparHtml(aluno.usuario)}" class="chk-presente" checked> Presente
-                        </label>
+                        ${aluno.ativo === false
+                            ? '<span class="agenda-status concluido">Inativo</span>'
+                            : `<label class="chk-label"><input type="checkbox" data-usuario="${escaparHtml(aluno.usuario)}" class="chk-presente" checked> Presente</label>`}
                     `;
                     container.appendChild(div);
                 }
@@ -1580,7 +1620,7 @@
                 if (selectAlunoJustificativa) selectAlunoJustificativa.appendChild(makeOption());
                 if (selectAlunoDesafio) selectAlunoDesafio.appendChild(makeOption());
                 
-                if (selectDestinatarioPush) {
+                if (selectDestinatarioPush && aluno.ativo !== false) {
                     const optPush = makeOption();
                     optPush.textContent = `👤 ${aluno.nome}`;
                     selectDestinatarioPush.appendChild(optPush);
@@ -1607,16 +1647,28 @@
             const botao = document.getElementById('btnExportarFrequencia');
             const dataInicio = document.getElementById('dataInicio').value;
             const dataFim = document.getElementById('dataFim').value;
+            const usuarioSelecionado = document.getElementById('filtroAluno').value;
             botao.disabled = true;
             try {
-                const linhas = [['Usuário', 'Aluno', 'Presenças', 'Faltas', 'Total', 'Percentual']];
-                const alunos = listaAlunos.filter(aluno => String(aluno.tipo).toLowerCase() !== 'professor');
-                const dados = await Promise.all(alunos.map(async aluno => {
-                    const freq = await apiFetch(`/api/frequencia/${encodeURIComponent(aluno.usuario)}?dataInicio=${encodeURIComponent(dataInicio)}&dataFim=${encodeURIComponent(dataFim)}`);
-                    const presencas = Number(freq?.presencas || 0), faltas = Number(freq?.faltas || 0), total = presencas + faltas;
-                    return [aluno.usuario, aluno.nome, presencas, faltas, total, `${total ? Math.round((presencas / total) * 100) : 0}%`];
-                }));
-                linhas.push(...dados);
+                const alunos = listaAlunos
+                    .filter(aluno => String(aluno.tipo).toLowerCase() !== 'professor')
+                    .filter(aluno => usuarioSelecionado === 'todos' || aluno.usuario === usuarioSelecionado);
+                const justificativas = await obterJustificativasNoPeriodo(dataInicio, dataFim);
+                const linhas = [['Usuário', 'Aluno', 'Data da aula', 'Chamada', 'Justificativa', 'Motivo', 'Frequência acumulada']];
+                for (const aluno of alunos) {
+                    const registros = await obterRegistrosFrequencia(aluno.usuario, dataInicio, dataFim);
+                    let presencasEfetivas = 0;
+                    registros.slice().reverse().forEach((registro, indice) => {
+                        const itensJustificativa = justificativas.get(`${aluno.usuario}|${registro.data_aula}`) || [];
+                        const aprovada = itensJustificativa.some(item => item.status === 'aprovado');
+                        if (registro.presente || aprovada) presencasEfetivas++;
+                        const percentual = registros.length ? Math.round((presencasEfetivas / (indice + 1)) * 100) : 0;
+                        linhas.push([
+                            aluno.usuario, aluno.nome, formatarDataBr(registro.data_aula), registro.presente ? 'Presente' : 'Falta',
+                            resumirJustificativas(itensJustificativa), itensJustificativa.map(item => item.motivo).filter(Boolean).join(' | '), `${percentual}%`
+                        ]);
+                    });
+                }
                 const csv = linhas.map(linha => linha.map(valor => `"${String(valor).replaceAll('"', '""')}"`).join(';')).join('\n');
                 const blob = new Blob([`\uFEFF${csv}`], { type: 'text/csv;charset=utf-8' });
                 const link = document.createElement('a'); link.href = URL.createObjectURL(blob); link.download = `frequencia_${dataInicio}_${dataFim}.csv`; link.click(); URL.revokeObjectURL(link.href);
@@ -1837,82 +1889,94 @@
             } catch (err) { alert("Erro na conexão."); }
         }
 
-        // CARREGAMENTO DE RESUMO DE FREQUÊNCIA
+        function formatarDataBr(data) {
+            const partes = String(data || '').slice(0, 10).split('-');
+            return partes.length === 3 ? `${partes[2]}/${partes[1]}/${partes[0]}` : 'Não informada';
+        }
+
+        function resumirJustificativas(itens) {
+            if (!itens.length) return '—';
+            const status = [...new Set(itens.map(item => item.status || 'pendente'))];
+            return status.join(', ');
+        }
+
+        async function obterJustificativasNoPeriodo(dataInicio, dataFim) {
+            const resposta = await apiFetch('/api/justificativas');
+            const mapa = new Map();
+            (resposta || []).forEach(item => {
+                const data = String(item.data_falta || '').slice(0, 10);
+                if (data < dataInicio || data > dataFim) return;
+                const chave = `${item.usuario}|${data}`;
+                mapa.set(chave, [...(mapa.get(chave) || []), item]);
+            });
+            return mapa;
+        }
+
+        async function obterRegistrosFrequencia(usuario, dataInicio, dataFim) {
+            const registros = await apiFetch(`/api/frequencia/relatorio/${encodeURIComponent(usuario)}?dataInicio=${encodeURIComponent(dataInicio)}&dataFim=${encodeURIComponent(dataFim)}`);
+            return Array.isArray(registros) ? registros : [];
+        }
+
+        // CARREGAMENTO DE RESUMO E DETALHAMENTO DE FREQUÊNCIA
         async function carregarResumoFrequencia() {
             const container = document.getElementById('resumoFrequenciaContainer');
+            const detalhesContainer = document.getElementById('detalhesFrequenciaContainer');
             container.innerHTML = "<p style='color: #94a3b8; text-align:center;'>Buscando dados no servidor...</p>";
+            detalhesContainer.innerHTML = '';
 
             const dataInicio = document.getElementById('dataInicio').value;
             const dataFim = document.getElementById('dataFim').value;
             const usuarioSelecionado = document.getElementById('filtroAluno').value;
 
-            if (!dataInicio || !dataFim) {
-                alert("Por favor, selecione as datas Inicial e Final para consulta.");
+            if (!dataInicio || !dataFim || dataInicio > dataFim) {
+                alert('Selecione um período válido para a consulta.');
                 return;
             }
 
             let alunos = listaAlunos.filter(u => String(u.tipo).toLowerCase() !== 'professor');
             if (usuarioSelecionado !== 'todos') alunos = alunos.filter(u => u.usuario === usuarioSelecionado);
 
-            let linhasHTML = '';
-            let alunosBaixaFrequencia = [];
             try {
-                let mapaJustificativas = {};
-                try {
-                    const respJust = await fetchAutenticado(`${URL_API_SERVIDOR}/api/justificativas`);
-                    if (respJust.ok) {
-                        const listaJustificativas = await respJust.json();
-                        listaJustificativas.forEach(item => {
-                            const dataFalta = item.data_falta ? item.data_falta.substring(0, 10) : '';
-                            if (item.status === 'aprovado' && dataFalta >= dataInicio && dataFalta <= dataFim) {
-                                mapaJustificativas[item.usuario] = (mapaJustificativas[item.usuario] || 0) + 1;
-                            }
-                        });
-                    }
-                } catch (eJust) {}
+                const justificativas = await obterJustificativasNoPeriodo(dataInicio, dataFim);
+                const dadosPorAluno = await Promise.all(alunos.map(async aluno => ({
+                    aluno,
+                    registros: await obterRegistrosFrequencia(aluno.usuario, dataInicio, dataFim)
+                })));
 
-                for (const aluno of alunos) {
-                    let presencas = 0, faltas = 0;
-                    try {
-                        const response = await fetchAutenticado(`${URL_API_SERVIDOR}/api/frequencia/${encodeURIComponent(aluno.usuario)}?dataInicio=${encodeURIComponent(dataInicio)}&dataFim=${encodeURIComponent(dataFim)}`);
-                        if (response.ok) {
-                            const dados = await response.json();
-                            presencas = dados.presencas || 0;
-                            faltas = dados.faltas || 0;
-                        }
-                    } catch (e) {}
+                const linhasResumo = [];
+                const detalhes = [];
+                const alunosBaixaFrequencia = [];
 
-                    const justificativasAprovadas = mapaJustificativas[aluno.usuario] || 0;
-                    const faltasAjustadas = Math.max(0, faltas - justificativasAprovadas);
-                    const presencasEfetivas = presencas + justificativasAprovadas;
-                    const totalAulas = presencasEfetivas + faltasAjustadas;
-                    const pctPresenca = totalAulas > 0 ? ((presencasEfetivas / totalAulas) * 100).toFixed(0) : 0;
-                    if (totalAulas > 0 && pctPresenca < 75) alunosBaixaFrequencia.push(`${aluno.nome} (${pctPresenca}%)`);
+                dadosPorAluno.forEach(({ aluno, registros }) => {
+                    const ordenados = registros.slice().sort((a, b) => String(a.data_aula).localeCompare(String(b.data_aula)));
+                    const presencas = ordenados.filter(registro => registro.presente).length;
+                    const faltas = ordenados.length - presencas;
+                    const justificativasAprovadas = ordenados.filter(registro =>
+                        (justificativas.get(`${aluno.usuario}|${registro.data_aula}`) || []).some(item => item.status === 'aprovado')
+                    ).length;
+                    const percentual = ordenados.length ? Math.round(((presencas + justificativasAprovadas) / ordenados.length) * 100) : 0;
+                    const corBadge = percentual < 75 ? '#ef4444' : percentual < 85 ? '#f59e0b' : '#10b981';
+                    if (ordenados.length && percentual < 75) alunosBaixaFrequencia.push(`${aluno.nome} (${percentual}%)`);
 
-                    let corBadge = '#10b981';
-                    if (pctPresenca < 75) corBadge = '#ef4444';
-                    else if (pctPresenca < 85) corBadge = '#f59e0b';
+                    linhasResumo.push(`<tr><td style="font-weight:bold;color:#f8fafc;">${escaparHtml(aluno.nome)}${aluno.ativo === false ? ' <span style="color:#94a3b8;font-size:11px;">(inativo)</span>' : ''}</td><td style="color:#10b981;font-weight:bold;">${presencas}</td><td style="color:#ef4444;font-weight:bold;">${faltas}</td><td style="color:#3b82f6;font-weight:bold;">${justificativasAprovadas}</td><td><span class="badge-porcentagem" style="background:${corBadge}22;color:${corBadge};border:1px solid ${corBadge};">${percentual}%</span></td></tr>`);
 
-                    linhasHTML += `
-                        <tr>
-                            <td style="font-weight: bold; color: #f8fafc;">${escaparHtml(aluno.nome)}</td>
-                            <td style="color: #10b981; font-weight: bold;">${presencas}</td>
-                            <td style="color: #ef4444; font-weight: bold;">${faltasAjustadas} <span style="font-size: 11px; color: #94a3b8;">(${faltas} Total)</span></td>
-                            <td style="color: #3b82f6; font-weight: bold;">${justificativasAprovadas}</td>
-                            <td><span class="badge-porcentagem" style="background: ${corBadge}22; color: ${corBadge}; border: 1px solid ${corBadge};">${pctPresenca}%</span></td>
-                        </tr>
-                    `;
-                }
+                    let presencasAcumuladas = 0;
+                    const linhasDatas = ordenados.map((registro, indice) => {
+                        const itens = justificativas.get(`${aluno.usuario}|${registro.data_aula}`) || [];
+                        const aprovada = itens.some(item => item.status === 'aprovado');
+                        if (registro.presente || aprovada) presencasAcumuladas++;
+                        const percentualAcumulado = Math.round((presencasAcumuladas / (indice + 1)) * 100);
+                        const motivo = itens.map(item => item.motivo).filter(Boolean).join(' | ') || '—';
+                        return `<tr><td>${formatarDataBr(registro.data_aula)}</td><td style="color:${registro.presente ? '#10b981' : '#ef4444'};font-weight:bold;">${registro.presente ? 'Presente' : 'Falta'}</td><td>${escaparHtml(resumirJustificativas(itens))}</td><td>${escaparHtml(motivo)}</td><td>${percentualAcumulado}%</td></tr>`;
+                    }).join('');
+                    detalhes.push(`<details class="card-mensagem" style="margin-top:10px;"><summary style="cursor:pointer;font-weight:bold;">${escaparHtml(aluno.nome)} — ${ordenados.length} aula(s)</summary>${ordenados.length ? `<div class="table-responsive" style="margin-top:12px;"><table class="tabela-resumo"><thead><tr><th>Data</th><th>Chamada</th><th>Justificativa</th><th>Motivo</th><th>Frequência</th></tr></thead><tbody>${linhasDatas}</tbody></table></div>` : '<p style="margin-top:10px;color:#94a3b8;">Nenhuma aula registrada no período.</p>'}</details>`);
+                });
 
-                if (linhasHTML === '') {
-                    container.innerHTML = "<p style='color: #94a3b8; text-align:center;'>Nenhum registro encontrado para o filtro selecionado.</p>";
-                    return;
-                }
-
-                const alertaBaixa = alunosBaixaFrequencia.length ? `<div class="card-mensagem" style="margin-top:14px; border-color:#92400e; color:#fcd34d; text-align:left;"><strong>⚠️ Frequência abaixo de 75%</strong><br>${escaparHtml(alunosBaixaFrequencia.join(', '))}</div>` : '';
-                container.innerHTML = `<div class="table-responsive"><table class="tabela-resumo"><thead><tr><th>Aluno</th><th>Presenças</th><th>Faltas</th><th>Justificativas</th><th>Frequência</th></tr></thead><tbody>${linhasHTML}</tbody></table></div>${alertaBaixa}`;
-            } catch (err) {
-                container.innerHTML = "<p style='color: #ef4444; text-align:center;'>Não foi possível carregar as informações.</p>";
+                container.innerHTML = `<div class="table-responsive"><table class="tabela-resumo"><thead><tr><th>Aluno</th><th>Presenças</th><th>Faltas</th><th>Justificativas aprovadas</th><th>Frequência</th></tr></thead><tbody>${linhasResumo.join('')}</tbody></table></div>${alunosBaixaFrequencia.length ? `<div class="card-mensagem" style="margin-top:14px;border-color:#92400e;color:#fcd34d;text-align:left;"><strong>⚠️ Frequência abaixo de 75%</strong><br>${escaparHtml(alunosBaixaFrequencia.join(', '))}</div>` : ''}`;
+                detalhesContainer.innerHTML = `<h3 style="margin:20px 0 10px;">📄 Detalhamento por data</h3>${detalhes.join('')}`;
+            } catch (error) {
+                console.error('Erro ao carregar relatórios de frequência:', error);
+                container.innerHTML = "<p style='color:#ef4444;text-align:center;'>Não foi possível carregar as informações.</p>";
             }
         }
 
