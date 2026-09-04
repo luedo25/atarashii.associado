@@ -149,7 +149,7 @@
             accent-color: #10b981;
         }
 
-        input[type="date"], input[type="text"], input[type="email"], input[type="password"], textarea, select { 
+        input[type="date"], input[type="time"], input[type="text"], input[type="email"], input[type="password"], textarea, select { 
             padding: 12px; 
             font-size: 15px; 
             margin-top: 6px;
@@ -376,6 +376,69 @@
 
         .perfil-restricoes .perfil-rotulo { color: #fde68a; }
 
+        .agenda-lista {
+            display: grid;
+            gap: 12px;
+            margin-top: 16px;
+        }
+
+        .agenda-card {
+            padding: 16px;
+            border: 1px solid #334155;
+            border-left: 4px solid #3b82f6;
+            border-radius: 10px;
+            background: #0f172a;
+        }
+
+        .agenda-card.concluido { border-left-color: #64748b; opacity: 0.72; }
+        .agenda-card.pendente { border-left-color: #f59e0b; }
+
+        .agenda-card-topo, .agenda-card-acoes {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .agenda-card h3 { margin: 0; font-size: 1rem; }
+        .agenda-card-info { margin-top: 8px; color: #94a3b8; font-size: 0.88rem; line-height: 1.5; }
+        .agenda-card-descricao { margin-top: 8px; color: #cbd5e1; white-space: pre-wrap; }
+
+        .agenda-status {
+            padding: 5px 9px;
+            border-radius: 999px;
+            font-size: 0.75rem;
+            font-weight: 800;
+            text-transform: uppercase;
+        }
+
+        .agenda-status.agendado { background: #1e3a8a; color: #bfdbfe; }
+        .agenda-status.pendente { background: #78350f; color: #fde68a; }
+        .agenda-status.concluido { background: #334155; color: #cbd5e1; }
+
+        .agenda-card-acoes { margin-top: 14px; justify-content: flex-end; }
+
+        .btn-agenda-acao {
+            padding: 8px 11px;
+            border: 1px solid #475569;
+            border-radius: 7px;
+            background: #1e293b;
+            color: #f8fafc;
+            cursor: pointer;
+            font-weight: 700;
+        }
+
+        .btn-agenda-acao:hover { background: #334155; }
+        .btn-agenda-excluir { border-color: #7f1d1d; color: #fecaca; }
+
+        .agenda-filtro {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin-top: 14px;
+        }
+
         /* CARD VAZIO / MENSAGENS */
         .card-mensagem {
             background: #0f172a;
@@ -564,6 +627,7 @@
             .perfil-campo-full { grid-column: auto; }
             .aluno-item { gap: 10px; }
             .btn-nome-aluno { flex: 1; }
+            .agenda-filtro { grid-template-columns: 1fr; }
             h2 { font-size: 1.3rem; }
         }
     </style>
@@ -590,6 +654,7 @@
     <!-- MENU DE ABAS COM SCROLL LATERAL EM TELAS MENORES -->
    <nav class="tabs-nav">
         <button class="nav-btn active" onclick="mudarAba('chamada', this)">📋 Chamada</button>
+        <button class="nav-btn" onclick="mudarAba('agenda', this)">🗓️ Agenda</button>
         <button class="nav-btn" onclick="mudarAba('justificativas', this)">📝 Justificativas</button>
         <button class="nav-btn" onclick="mudarAba('desafios', this)">🎯 Desafios</button>
         <button class="nav-btn" onclick="mudarAba('resumo', this)">📊 Resumo</button>
@@ -610,6 +675,42 @@
             <input type="date" id="dataAula">
             <div id="listaAlunosContainer"></div>
             <button onclick="salvarChamada()" class="btn-salvar">💾 Salvar Chamada</button>
+        </section>
+
+        <section id="aba-agenda" class="tab-content">
+            <div class="chamada-header">
+                <div>
+                    <h2>🗓️ Agenda dos Alunos</h2>
+                    <p style="color:#94a3b8; margin-top:6px; line-height:1.45;">Crie eventos e atualize o status exibido na área dos alunos.</p>
+                </div>
+                <button type="button" class="btn-novo-aluno" id="btnNovoEvento">＋ Novo evento</button>
+            </div>
+            <div class="agenda-filtro">
+                <div class="filtro-campo">
+                    <label for="filtroAgendaStatus">Status</label>
+                    <select id="filtroAgendaStatus">
+                        <option value="todos">Todos</option>
+                        <option value="agendado">Agendado</option>
+                        <option value="pendente">Pendente</option>
+                        <option value="concluido">Concluído</option>
+                    </select>
+                </div>
+                <div class="filtro-campo">
+                    <label for="filtroAgendaCategoria">Categoria</label>
+                    <select id="filtroAgendaCategoria">
+                        <option value="todos">Todas</option>
+                        <option value="acao">Ação da Associação</option>
+                        <option value="treinamento">Treinamento</option>
+                        <option value="campeonato">Campeonato</option>
+                        <option value="exame">Exame de faixa</option>
+                        <option value="confraternizacao">Confraternização</option>
+                        <option value="outro">Outro evento</option>
+                    </select>
+                </div>
+            </div>
+            <div id="listaAgendaProfessor" class="agenda-lista">
+                <div class="card-mensagem">Abra esta aba para carregar os eventos.</div>
+            </div>
         </section>
 
         <!-- ABA 2: JUSTIFICATIVA DE FALTAS -->
@@ -825,9 +926,75 @@
         </div>
     </dialog>
 
+    <dialog id="modalAgenda" class="cadastro-dialog" aria-labelledby="tituloModalAgenda">
+        <div class="cadastro-dialog-content">
+            <div class="cadastro-dialog-header">
+                <h2 id="tituloModalAgenda">Novo evento</h2>
+                <button type="button" class="btn-fechar-modal" id="btnFecharAgenda" aria-label="Fechar formulário de evento">&times;</button>
+            </div>
+            <p class="cadastro-descricao">As informações salvas serão exibidas automaticamente na agenda dos alunos.</p>
+
+            <form id="formAgenda">
+                <input type="hidden" id="agendaId">
+                <div class="cadastro-grid">
+                    <div class="cadastro-campo cadastro-campo-full">
+                        <label for="agendaNome">Nome do evento</label>
+                        <input type="text" id="agendaNome" minlength="3" maxlength="150" required>
+                    </div>
+                    <div class="cadastro-campo">
+                        <label for="agendaCategoria">Categoria</label>
+                        <select id="agendaCategoria" required>
+                            <option value="acao">Ação da Associação</option>
+                            <option value="treinamento">Treinamento</option>
+                            <option value="campeonato">Campeonato</option>
+                            <option value="exame">Exame de faixa</option>
+                            <option value="confraternizacao">Confraternização</option>
+                            <option value="outro">Outro evento</option>
+                        </select>
+                    </div>
+                    <div class="cadastro-campo">
+                        <label for="agendaStatus">Status</label>
+                        <select id="agendaStatus" required>
+                            <option value="agendado">Agendado</option>
+                            <option value="pendente">Pendente</option>
+                            <option value="concluido">Concluído</option>
+                        </select>
+                    </div>
+                    <div class="cadastro-campo">
+                        <label for="agendaData">Data</label>
+                        <input type="date" id="agendaData" required>
+                    </div>
+                    <div class="cadastro-campo">
+                        <label for="agendaLocal">Local</label>
+                        <input type="text" id="agendaLocal" minlength="2" maxlength="200" required>
+                    </div>
+                    <div class="cadastro-campo">
+                        <label for="agendaHoraInicio">Hora inicial (opcional)</label>
+                        <input type="time" id="agendaHoraInicio">
+                    </div>
+                    <div class="cadastro-campo">
+                        <label for="agendaHoraFim">Hora final (opcional)</label>
+                        <input type="time" id="agendaHoraFim">
+                    </div>
+                    <div class="cadastro-campo cadastro-campo-full">
+                        <label for="agendaParticipantes">Participantes</label>
+                        <textarea id="agendaParticipantes" maxlength="1000" placeholder="Ex.: Todos os alunos ou nomes separados por vírgula"></textarea>
+                    </div>
+                    <div class="cadastro-campo cadastro-campo-full">
+                        <label for="agendaDescricao">Descrição (opcional)</label>
+                        <textarea id="agendaDescricao" maxlength="2000" placeholder="Informações adicionais do evento"></textarea>
+                    </div>
+                </div>
+                <button type="submit" class="btn-salvar" id="btnSalvarAgenda">Salvar evento</button>
+                <div id="agendaFeedback" class="cadastro-feedback" role="status" aria-live="polite"></div>
+            </form>
+        </div>
+    </dialog>
+
   <script>
         let usuarioAtivo = '';
         let listaAlunos = [];
+        let listaAgenda = [];
         const URL_API_SERVIDOR = API_URL;
 
         async function fetchAutenticado(url, opcoes = {}) {
@@ -935,6 +1102,202 @@
             if (botao) abrirPerfilAluno(botao.dataset.perfilUsuario);
         });
 
+        const modalAgenda = document.getElementById('modalAgenda');
+        const formAgenda = document.getElementById('formAgenda');
+        const agendaFeedback = document.getElementById('agendaFeedback');
+        const rotulosAgenda = {
+            acao: 'Ação da Associação',
+            treinamento: 'Treinamento',
+            campeonato: 'Campeonato',
+            exame: 'Exame de faixa',
+            confraternizacao: 'Confraternização',
+            outro: 'Outro evento'
+        };
+        const rotulosStatusAgenda = { agendado: 'Agendado', pendente: 'Pendente', concluido: 'Concluído' };
+
+        function dadosEventoParaApi(evento) {
+            return {
+                nomeEvento: evento.nome_evento,
+                categoria: evento.categoria,
+                dataEvento: evento.data_evento,
+                horaInicio: evento.hora_inicio || '',
+                horaFim: evento.hora_fim || '',
+                local: evento.local,
+                participantes: evento.participantes || '',
+                descricao: evento.descricao || '',
+                status: evento.status
+            };
+        }
+
+        function definirFeedbackAgenda(texto, tipo = '') {
+            agendaFeedback.textContent = texto;
+            agendaFeedback.className = tipo ? `cadastro-feedback ${tipo}` : 'cadastro-feedback';
+        }
+
+        function formatarDataAgenda(data) {
+            const [ano, mes, dia] = String(data || '').split('-');
+            return ano && mes && dia ? `${dia}/${mes}/${ano}` : 'Data não informada';
+        }
+
+        function renderizarAgendaProfessor() {
+            const container = document.getElementById('listaAgendaProfessor');
+            const status = document.getElementById('filtroAgendaStatus').value;
+            const categoria = document.getElementById('filtroAgendaCategoria').value;
+            const eventos = listaAgenda.filter(evento =>
+                (status === 'todos' || evento.status === status)
+                && (categoria === 'todos' || evento.categoria === categoria)
+            );
+
+            if (eventos.length === 0) {
+                container.innerHTML = '<div class="card-mensagem">Nenhum evento encontrado.</div>';
+                return;
+            }
+
+            container.innerHTML = eventos.map(evento => {
+                const horario = evento.hora_inicio
+                    ? ` • ${escaparHtml(evento.hora_inicio)}${evento.hora_fim ? ` às ${escaparHtml(evento.hora_fim)}` : ''}`
+                    : '';
+                return `
+                    <article class="agenda-card ${escaparHtml(evento.status)}" data-agenda-id="${evento.id}">
+                        <div class="agenda-card-topo">
+                            <h3>${escaparHtml(evento.nome_evento)}</h3>
+                            <span class="agenda-status ${escaparHtml(evento.status)}">${escaparHtml(rotulosStatusAgenda[evento.status] || evento.status)}</span>
+                        </div>
+                        <div class="agenda-card-info">
+                            <div>📅 ${formatarDataAgenda(evento.data_evento)}${horario}</div>
+                            <div>📍 ${escaparHtml(evento.local)}</div>
+                            <div>🏷️ ${escaparHtml(rotulosAgenda[evento.categoria] || 'Outro evento')}</div>
+                            ${evento.participantes ? `<div>🥋 ${escaparHtml(evento.participantes)}</div>` : ''}
+                        </div>
+                        ${evento.descricao ? `<p class="agenda-card-descricao">${escaparHtml(evento.descricao)}</p>` : ''}
+                        <div class="agenda-card-acoes">
+                            <select data-agenda-status="${evento.id}" aria-label="Alterar status de ${escaparHtml(evento.nome_evento)}" style="width:auto; margin:0; padding:8px;">
+                                <option value="agendado" ${evento.status === 'agendado' ? 'selected' : ''}>Agendado</option>
+                                <option value="pendente" ${evento.status === 'pendente' ? 'selected' : ''}>Pendente</option>
+                                <option value="concluido" ${evento.status === 'concluido' ? 'selected' : ''}>Concluído</option>
+                            </select>
+                            <button type="button" class="btn-agenda-acao" data-agenda-editar="${evento.id}">Editar</button>
+                            <button type="button" class="btn-agenda-acao btn-agenda-excluir" data-agenda-excluir="${evento.id}">Excluir</button>
+                        </div>
+                    </article>`;
+            }).join('');
+        }
+
+        async function carregarAgendaProfessor() {
+            const container = document.getElementById('listaAgendaProfessor');
+            container.innerHTML = '<div class="card-mensagem">Carregando eventos...</div>';
+            try {
+                const dados = await Agenda.listar();
+                listaAgenda = Array.isArray(dados?.eventos) ? dados.eventos : [];
+                renderizarAgendaProfessor();
+            } catch (error) {
+                container.innerHTML = `<div class="card-mensagem" style="color:#fecaca;">${escaparHtml(error.message)}</div>`;
+            }
+        }
+
+        function abrirModalAgenda(evento = null) {
+            formAgenda.reset();
+            definirFeedbackAgenda('');
+            document.getElementById('agendaId').value = evento?.id || '';
+            document.getElementById('tituloModalAgenda').textContent = evento ? 'Editar evento' : 'Novo evento';
+            document.getElementById('btnSalvarAgenda').textContent = evento ? 'Salvar alterações' : 'Criar evento';
+            document.getElementById('agendaNome').value = evento?.nome_evento || '';
+            document.getElementById('agendaCategoria').value = evento?.categoria || 'acao';
+            document.getElementById('agendaStatus').value = evento?.status || 'agendado';
+            document.getElementById('agendaData').value = evento?.data_evento || '';
+            document.getElementById('agendaLocal').value = evento?.local || '';
+            document.getElementById('agendaHoraInicio').value = evento?.hora_inicio || '';
+            document.getElementById('agendaHoraFim').value = evento?.hora_fim || '';
+            document.getElementById('agendaParticipantes').value = evento?.participantes || '';
+            document.getElementById('agendaDescricao').value = evento?.descricao || '';
+            modalAgenda.showModal();
+            document.getElementById('agendaNome').focus();
+        }
+
+        function fecharModalAgenda() {
+            if (modalAgenda.open) modalAgenda.close();
+            definirFeedbackAgenda('');
+        }
+
+        function obterDadosFormularioAgenda() {
+            return {
+                nomeEvento: document.getElementById('agendaNome').value.trim(),
+                categoria: document.getElementById('agendaCategoria').value,
+                dataEvento: document.getElementById('agendaData').value,
+                horaInicio: document.getElementById('agendaHoraInicio').value,
+                horaFim: document.getElementById('agendaHoraFim').value,
+                local: document.getElementById('agendaLocal').value.trim(),
+                participantes: document.getElementById('agendaParticipantes').value.trim(),
+                descricao: document.getElementById('agendaDescricao').value.trim(),
+                status: document.getElementById('agendaStatus').value
+            };
+        }
+
+        document.getElementById('btnNovoEvento').addEventListener('click', () => abrirModalAgenda());
+        document.getElementById('btnFecharAgenda').addEventListener('click', fecharModalAgenda);
+        document.getElementById('filtroAgendaStatus').addEventListener('change', renderizarAgendaProfessor);
+        document.getElementById('filtroAgendaCategoria').addEventListener('change', renderizarAgendaProfessor);
+        modalAgenda.addEventListener('click', event => {
+            if (event.target === modalAgenda) fecharModalAgenda();
+        });
+
+        document.getElementById('listaAgendaProfessor').addEventListener('click', async event => {
+            const editar = event.target.closest('[data-agenda-editar]');
+            const excluir = event.target.closest('[data-agenda-excluir]');
+            if (editar) {
+                const item = listaAgenda.find(e => String(e.id) === editar.dataset.agendaEditar);
+                if (item) abrirModalAgenda(item);
+            }
+            if (excluir) {
+                const item = listaAgenda.find(e => String(e.id) === excluir.dataset.agendaExcluir);
+                if (!item || !confirm(`Excluir o evento "${item.nome_evento}"?`)) return;
+                try {
+                    await Agenda.excluir(item.id);
+                    await carregarAgendaProfessor();
+                } catch (error) {
+                    alert(error.message || 'Não foi possível excluir o evento.');
+                }
+            }
+        });
+
+        document.getElementById('listaAgendaProfessor').addEventListener('change', async event => {
+            const seletor = event.target.closest('[data-agenda-status]');
+            if (!seletor) return;
+            const item = listaAgenda.find(e => String(e.id) === seletor.dataset.agendaStatus);
+            if (!item) return;
+            seletor.disabled = true;
+            try {
+                await Agenda.atualizar(item.id, { ...dadosEventoParaApi(item), status: seletor.value });
+                await carregarAgendaProfessor();
+            } catch (error) {
+                seletor.value = item.status;
+                seletor.disabled = false;
+                alert(error.message || 'Não foi possível alterar o status.');
+            }
+        });
+
+        formAgenda.addEventListener('submit', async event => {
+            event.preventDefault();
+            const id = document.getElementById('agendaId').value;
+            const botao = document.getElementById('btnSalvarAgenda');
+            botao.disabled = true;
+            botao.textContent = 'Salvando...';
+            definirFeedbackAgenda('');
+            try {
+                const resposta = id
+                    ? await Agenda.atualizar(id, obterDadosFormularioAgenda())
+                    : await Agenda.criar(obterDadosFormularioAgenda());
+                definirFeedbackAgenda(resposta.mensagem || 'Evento salvo com sucesso.', 'sucesso');
+                await carregarAgendaProfessor();
+                setTimeout(fecharModalAgenda, 900);
+            } catch (error) {
+                definirFeedbackAgenda(error.message || 'Não foi possível salvar o evento.', 'erro');
+            } finally {
+                botao.disabled = false;
+                botao.textContent = id ? 'Salvar alterações' : 'Criar evento';
+            }
+        });
+
         document.getElementById('cadastroUsuario').addEventListener('input', (event) => {
             event.target.value = event.target.value.toLowerCase().replace(/[^a-z0-9._-]/g, '');
         });
@@ -994,7 +1357,8 @@
                 elementoBotao.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
             }
 
-            if (nomeAba === 'justificativas') carregarJustificativasProfessor();
+            if (nomeAba === 'agenda') carregarAgendaProfessor();
+            else if (nomeAba === 'justificativas') carregarJustificativasProfessor();
             else if (nomeAba === 'resumo') carregarResumoFrequencia();
             else if (nomeAba === 'desafios') carregarDesafiosProfessor();
             else if (nomeAba === 'financas') carregarFinancasProfessor();
