@@ -145,6 +145,28 @@
             });
         }
     };
+    window.Agenda = {
+        listar() {
+            return apiFetch('/api/agenda');
+        },
+        criar(dados) {
+            return apiFetch('/api/agenda', {
+                method: 'POST',
+                body: JSON.stringify(dados)
+            });
+        },
+        atualizar(id, dados) {
+            return apiFetch(`/api/agenda/${encodeURIComponent(id)}`, {
+                method: 'PATCH',
+                body: JSON.stringify(dados)
+            });
+        },
+        excluir(id) {
+            return apiFetch(`/api/agenda/${encodeURIComponent(id)}`, {
+                method: 'DELETE'
+            });
+        }
+    };
     window.Auth = {
         obterToken,
         obterUsuario,
