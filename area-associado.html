@@ -1746,11 +1746,24 @@
             const presencas = Number(frequencia?.presencas || 0), faltas = Number(frequencia?.faltas || 0), total = presencas + faltas;
             const percentual = total ? Math.round((presencas / total) * 100) : 0;
             const freqEl = document.getElementById('resumoFrequencia'); freqEl.textContent = `${percentual}%`; freqEl.classList.toggle('alerta', total > 0 && percentual < 75);
-            const ultimo = Array.isArray(exames) && exames.length ? exames[exames.length - 1] : null;
-            document.getElementById('resumoFaixaAtual').textContent = ultimo?.faixa || 'Não informada';
-            const ordem = ['Branca', 'Amarela', 'Vermelha', 'Laranja', 'Verde', 'Roxa', 'Marrom', 'Preta'];
-            const indice = ultimo ? ordem.findIndex(faixa => String(ultimo.faixa).toLowerCase().includes(faixa.toLowerCase())) : -1;
-            document.getElementById('resumoProximoObjetivo').textContent = indice >= 0 && indice < ordem.length - 1 ? `Próxima: ${ordem[indice + 1]}` : indice === ordem.length - 1 ? 'Manter evolução' : 'Primeiro exame';
+        const ultimo = Array.isArray(exames) && exames.length ? exames[exames.length - 1] : null;
+        const ordem = ['Branca', 'Amarela', 'Vermelha', 'Laranja', 'Verde', 'Roxa', 'Marrom', 'Preta'];
+        // Em graduações com barra (ex.: Verde/Roxa), a faixa válida é a última cor.
+        const valorFaixa = String(ultimo?.faixa || '').trim();
+        const parteFinalFaixa = valorFaixa ? valorFaixa.split('/').pop().trim() : 'Branca';
+        const faixaNormalizada = parteFinalFaixa
+            .normalize('NFD')
+            .replace(/[\u0300-\u036f]/g, '')
+            .toLowerCase();
+        const faixaAtual = ordem.find(faixa => faixaNormalizada.includes(faixa.toLowerCase())) || parteFinalFaixa;
+        const indice = ordem.indexOf(faixaAtual);
+
+        document.getElementById('resumoFaixaAtual').textContent = faixaAtual;
+        document.getElementById('resumoProximoObjetivo').textContent = indice >= 0 && indice < ordem.length - 1
+            ? `Próxima: ${ordem[indice + 1]}`
+            : indice === ordem.length - 1
+                ? 'Manter evolução'
+                : 'Próximo exame';
             const naoLidos = (banners?.banners || []).filter(banner => !banner.lido).length;
             const bannerEl = document.getElementById('resumoComunicados'); bannerEl.textContent = String(naoLidos); bannerEl.classList.toggle('alerta', naoLidos > 0);
         } catch (error) {
