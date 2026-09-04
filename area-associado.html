@@ -339,6 +339,10 @@
                 <input type="email" id="perfilEmail" maxlength="254" required autocomplete="email">
             </div>
             <div class="perfil-campo">
+                <label for="perfilDataNascimento">Data de nascimento</label>
+                <input type="date" id="perfilDataNascimento" min="1900-01-01" required autocomplete="bday">
+            </div>
+            <div class="perfil-campo">
                 <label for="perfilWhatsapp">WhatsApp</label>
                 <input type="tel" id="perfilWhatsapp" maxlength="30" inputmode="tel" autocomplete="tel" placeholder="(11) 99999-9999">
                 <small>Inclua o DDD.</small>
@@ -1373,6 +1377,7 @@
     function preencherFormularioPerfil(perfil) {
         document.getElementById('perfilNome').value = perfil?.nome || '';
         document.getElementById('perfilEmail').value = perfil?.email || '';
+        document.getElementById('perfilDataNascimento').value = perfil?.data_nascimento || '';
         document.getElementById('perfilWhatsapp').value = perfil?.whatsapp || '';
         document.getElementById('perfilContatoEmergencia').value = perfil?.contato_emergencia || '';
         document.getElementById('perfilRestricoesMedicas').value = perfil?.restricoes_medicas || '';
@@ -1406,6 +1411,7 @@
 
     document.getElementById('btnAbrirPerfil').addEventListener('click', abrirPerfil);
     document.getElementById('btnFecharPerfil').addEventListener('click', fecharPerfil);
+    document.getElementById('perfilDataNascimento').max = new Date().toISOString().slice(0, 10);
     modalPerfil.addEventListener('click', (event) => {
         if (event.target === modalPerfil) fecharPerfil();
     });
@@ -1428,6 +1434,7 @@
             const dados = await Perfil.salvar({
                 nome,
                 email: document.getElementById('perfilEmail').value.trim(),
+                dataNascimento: document.getElementById('perfilDataNascimento').value,
                 whatsapp: document.getElementById('perfilWhatsapp').value.trim(),
                 contatoEmergencia: document.getElementById('perfilContatoEmergencia').value.trim(),
                 restricoesMedicas: document.getElementById('perfilRestricoesMedicas').value.trim()
