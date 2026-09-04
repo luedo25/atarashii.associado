@@ -32,6 +32,13 @@
         localStorage.removeItem('tipoUsuario');
     }
 
+    function atualizarUsuario(dados) {
+        const atual = obterUsuario() || {};
+        const atualizado = { ...atual, ...dados };
+        sessionStorage.setItem(CHAVE_USUARIO, JSON.stringify(atualizado));
+        return atualizado;
+    }
+
     function voltarAoLogin() {
         limparSessao();
         if (!location.pathname.endsWith('/index.html') && !location.pathname.endsWith('/')) {
@@ -123,11 +130,24 @@
             });
         }
     };
+    window.Perfil = {
+        obter() {
+            return apiFetch('/api/perfil/me');
+        },
+        salvar(dados) {
+            return apiFetch('/api/perfil/me', {
+                method: 'PATCH',
+                body: JSON.stringify(dados),
+                timeoutMs: 90000
+            });
+        }
+    };
     window.Auth = {
         obterToken,
         obterUsuario,
         salvarSessao,
         limparSessao,
+        atualizarUsuario,
         exigirSessao,
         solicitarRedefinicaoSenha(usuario, email) {
             return apiFetch('/api/auth/forgot-password', {
