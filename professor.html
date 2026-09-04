@@ -149,7 +149,7 @@
             accent-color: #10b981;
         }
 
-        input[type="date"], input[type="text"], textarea, select { 
+        input[type="date"], input[type="text"], input[type="email"], input[type="password"], textarea, select { 
             padding: 12px; 
             font-size: 15px; 
             margin-top: 6px;
@@ -185,6 +185,120 @@
         }
 
         .btn-salvar:hover, .btn-enviar-push:hover { background: #2563eb; }
+
+        .chamada-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            margin-bottom: 15px;
+        }
+
+        .chamada-header h2 { margin: 0; }
+
+        .btn-novo-aluno {
+            flex: 0 0 auto;
+            padding: 10px 14px;
+            border: 1px solid #60a5fa;
+            border-radius: 8px;
+            background: #1d4ed8;
+            color: #fff;
+            cursor: pointer;
+            font-size: 0.9rem;
+            font-weight: 700;
+        }
+
+        .btn-novo-aluno:hover { background: #2563eb; }
+
+        .cadastro-dialog {
+            width: min(92vw, 560px);
+            max-height: 90vh;
+            margin: auto;
+            padding: 0;
+            overflow-y: auto;
+            border: 1px solid #475569;
+            border-radius: 12px;
+            background: #1e293b;
+            color: #f8fafc;
+            box-shadow: 0 24px 70px rgba(0, 0, 0, 0.55);
+        }
+
+        .cadastro-dialog::backdrop { background: rgba(2, 6, 23, 0.78); }
+
+        .cadastro-dialog-content { padding: 24px; }
+
+        .cadastro-dialog-header {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            gap: 16px;
+            margin-bottom: 8px;
+        }
+
+        .cadastro-dialog-header h2 { margin: 0; }
+
+        .btn-fechar-modal {
+            border: 0;
+            background: transparent;
+            color: #94a3b8;
+            cursor: pointer;
+            font-size: 1.7rem;
+            line-height: 1;
+            padding: 0 4px;
+        }
+
+        .cadastro-descricao {
+            margin-bottom: 18px;
+            color: #94a3b8;
+            font-size: 0.9rem;
+            line-height: 1.5;
+        }
+
+        .cadastro-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0 14px;
+        }
+
+        .cadastro-campo label {
+            display: block;
+            color: #cbd5e1;
+            font-size: 0.85rem;
+            font-weight: 700;
+        }
+
+        .cadastro-campo-full { grid-column: 1 / -1; }
+
+        .cadastro-ajuda {
+            display: block;
+            margin: -8px 0 14px;
+            color: #94a3b8;
+            font-size: 0.75rem;
+            line-height: 1.4;
+        }
+
+        .cadastro-feedback {
+            display: none;
+            margin-top: 14px;
+            padding: 11px 12px;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            line-height: 1.4;
+        }
+
+        .cadastro-feedback.erro {
+            display: block;
+            border: 1px solid #7f1d1d;
+            background: #450a0a;
+            color: #fecaca;
+        }
+
+        .cadastro-feedback.sucesso {
+            display: block;
+            border: 1px solid #166534;
+            background: #052e16;
+            color: #bbf7d0;
+        }
 
         /* CARD VAZIO / MENSAGENS */
         .card-mensagem {
@@ -365,6 +479,11 @@
             .tab-content { padding: 16px; }
             .filtro-grid { grid-template-columns: 1fr; }
             .btn-acao { width: 100%; }
+            .chamada-header { align-items: stretch; flex-direction: column; }
+            .btn-novo-aluno { width: 100%; }
+            .cadastro-grid { grid-template-columns: 1fr; }
+            .cadastro-campo-full { grid-column: auto; }
+            .cadastro-dialog-content { padding: 20px 16px; }
             h2 { font-size: 1.3rem; }
         }
     </style>
@@ -403,7 +522,10 @@
 
         <!-- ABA 1: CHAMADA -->
         <section id="aba-chamada" class="tab-content active">
-            <h2 style="margin-bottom: 15px;">🥋 Chamada dos Alunos</h2>
+            <div class="chamada-header">
+                <h2>🥋 Chamada dos Alunos</h2>
+                <button type="button" class="btn-novo-aluno" id="btnAbrirCadastro">＋ Novo aluno</button>
+            </div>
             <label for="dataAula" style="font-size: 0.85rem; color: #94a3b8; font-weight: bold;">Selecione a Data da Aula (Ter, Qui ou Sáb):</label>
             <input type="date" id="dataAula">
             <div id="listaAlunosContainer"></div>
@@ -538,6 +660,45 @@
 
     </main>
 
+    <dialog id="modalCadastroUsuario" class="cadastro-dialog" aria-labelledby="tituloCadastroUsuario">
+        <div class="cadastro-dialog-content">
+            <div class="cadastro-dialog-header">
+                <h2 id="tituloCadastroUsuario">Cadastrar novo aluno</h2>
+                <button type="button" class="btn-fechar-modal" id="btnFecharCadastro" aria-label="Fechar">&times;</button>
+            </div>
+            <p class="cadastro-descricao">O aluno poderá entrar imediatamente e usar o e-mail para recuperar a senha.</p>
+
+            <form id="formCadastroUsuario" autocomplete="off">
+                <div class="cadastro-grid">
+                    <div class="cadastro-campo">
+                        <label for="cadastroNome">Nome</label>
+                        <input type="text" id="cadastroNome" minlength="2" maxlength="60" required autocomplete="off">
+                    </div>
+                    <div class="cadastro-campo">
+                        <label for="cadastroSobrenome">Sobrenome</label>
+                        <input type="text" id="cadastroSobrenome" minlength="2" maxlength="90" required autocomplete="off">
+                    </div>
+                    <div class="cadastro-campo cadastro-campo-full">
+                        <label for="cadastroUsuario">Usuário</label>
+                        <input type="text" id="cadastroUsuario" minlength="3" maxlength="50" pattern="[a-z0-9._-]+" required autocomplete="off" autocapitalize="none" spellcheck="false">
+                        <small class="cadastro-ajuda">Use letras minúsculas, números, ponto, hífen ou sublinhado.</small>
+                    </div>
+                    <div class="cadastro-campo cadastro-campo-full">
+                        <label for="cadastroEmail">E-mail</label>
+                        <input type="email" id="cadastroEmail" maxlength="254" required autocomplete="off">
+                    </div>
+                    <div class="cadastro-campo cadastro-campo-full">
+                        <label for="cadastroSenha">Senha inicial</label>
+                        <input type="password" id="cadastroSenha" minlength="8" maxlength="128" required autocomplete="new-password">
+                        <small class="cadastro-ajuda">Mínimo de 8 caracteres, incluindo uma letra e um número.</small>
+                    </div>
+                </div>
+                <button type="submit" class="btn-salvar" id="btnSalvarUsuario">Cadastrar aluno</button>
+                <div id="cadastroUsuarioFeedback" class="cadastro-feedback" role="status" aria-live="polite"></div>
+            </form>
+        </div>
+    </dialog>
+
   <script>
         let usuarioAtivo = '';
         let listaAlunos = [];
@@ -557,6 +718,74 @@
                 .replaceAll('"', '&quot;')
                 .replaceAll("'", '&#039;');
         }
+
+        const modalCadastroUsuario = document.getElementById('modalCadastroUsuario');
+        const formCadastroUsuario = document.getElementById('formCadastroUsuario');
+        const cadastroUsuarioFeedback = document.getElementById('cadastroUsuarioFeedback');
+
+        function definirFeedbackCadastro(texto, tipo = '') {
+            cadastroUsuarioFeedback.textContent = texto;
+            cadastroUsuarioFeedback.className = tipo ? `cadastro-feedback ${tipo}` : 'cadastro-feedback';
+        }
+
+        function fecharCadastroUsuario() {
+            if (!modalCadastroUsuario.open) return;
+            modalCadastroUsuario.close();
+            formCadastroUsuario.reset();
+            definirFeedbackCadastro('');
+        }
+
+        document.getElementById('btnAbrirCadastro').addEventListener('click', () => {
+            formCadastroUsuario.reset();
+            definirFeedbackCadastro('');
+            modalCadastroUsuario.showModal();
+            document.getElementById('cadastroNome').focus();
+        });
+
+        document.getElementById('btnFecharCadastro').addEventListener('click', fecharCadastroUsuario);
+        modalCadastroUsuario.addEventListener('click', (event) => {
+            if (event.target === modalCadastroUsuario) fecharCadastroUsuario();
+        });
+
+        document.getElementById('cadastroUsuario').addEventListener('input', (event) => {
+            event.target.value = event.target.value.toLowerCase().replace(/[^a-z0-9._-]/g, '');
+        });
+
+        formCadastroUsuario.addEventListener('submit', async (event) => {
+            event.preventDefault();
+            const botao = document.getElementById('btnSalvarUsuario');
+            const senha = document.getElementById('cadastroSenha').value;
+
+            definirFeedbackCadastro('');
+            if (!/[A-Za-zÀ-ÖØ-öø-ÿ]/.test(senha) || !/\d/.test(senha)) {
+                definirFeedbackCadastro('A senha precisa conter pelo menos uma letra e um número.', 'erro');
+                return;
+            }
+
+            botao.disabled = true;
+            botao.textContent = 'Cadastrando...';
+
+            try {
+                const dados = await Usuarios.criar({
+                    nome: document.getElementById('cadastroNome').value.trim(),
+                    sobrenome: document.getElementById('cadastroSobrenome').value.trim(),
+                    usuario: document.getElementById('cadastroUsuario').value.trim(),
+                    email: document.getElementById('cadastroEmail').value.trim(),
+                    senha
+                });
+
+                listaAlunos = await apiFetch('/api/usuarios');
+                renderizarAlunos();
+                definirFeedbackCadastro(dados.mensagem || 'Aluno cadastrado com sucesso.', 'sucesso');
+                formCadastroUsuario.reset();
+                setTimeout(fecharCadastroUsuario, 1200);
+            } catch (error) {
+                definirFeedbackCadastro(error.message || 'Não foi possível cadastrar o aluno.', 'erro');
+            } finally {
+                botao.disabled = false;
+                botao.textContent = 'Cadastrar aluno';
+            }
+        });
 
         document.getElementById('dataAula').valueAsDate = new Date();
 
