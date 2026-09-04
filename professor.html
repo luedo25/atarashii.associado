@@ -660,6 +660,7 @@
    <nav class="tabs-nav">
         <button class="nav-btn active" onclick="mudarAba('chamada', this)">📋 Chamada</button>
         <button class="nav-btn" onclick="mudarAba('agenda', this)">🗓️ Agenda</button>
+        <button class="nav-btn" onclick="mudarAba('exames', this)">🥋 Exames</button>
         <button class="nav-btn" onclick="mudarAba('banners', this)">📢 Banners</button>
         <button class="nav-btn" onclick="mudarAba('justificativas', this)">📝 Justificativas</button>
         <button class="nav-btn" onclick="mudarAba('desafios', this)">🎯 Desafios</button>
@@ -717,6 +718,44 @@
             <div id="listaAgendaProfessor" class="agenda-lista">
                 <div class="card-mensagem">Abra esta aba para carregar os eventos.</div>
             </div>
+        </section>
+
+        <section id="aba-exames" class="tab-content">
+            <h2>🥋 Registrar exame de faixa</h2>
+            <p style="color:#94a3b8; margin:6px 0 16px; line-height:1.45;">Somente alunos ativos podem receber um novo registro. O total e a média são calculados automaticamente.</p>
+            <form id="formExameProfessor" class="filtro-datas-container">
+                <div class="cadastro-grid">
+                    <div class="cadastro-campo cadastro-campo-full">
+                        <label for="exameAluno">Aluno ativo</label>
+                        <select id="exameAluno" required><option value="">Carregando alunos...</option></select>
+                    </div>
+                    <div class="cadastro-campo">
+                        <label for="exameFaixa">Nova graduação</label>
+                        <select id="exameFaixa" required>
+                            <option value="Branca/Amarela">Branca / Amarela</option>
+                            <option value="Amarela/Vermelha">Amarela / Vermelha</option>
+                            <option value="Vermelha/Laranja">Vermelha / Laranja</option>
+                            <option value="Laranja/Verde">Laranja / Verde</option>
+                            <option value="Verde/Roxa">Verde / Roxa</option>
+                            <option value="Roxa/Marrom">Roxa / Marrom</option>
+                            <option value="Marrom/Preta">Marrom / Preta</option>
+                        </select>
+                    </div>
+                    <div class="cadastro-campo">
+                        <label for="exameAno">Ano</label>
+                        <input type="number" id="exameAno" min="1900" max="2100" required>
+                    </div>
+                    <div class="cadastro-campo"><label for="exameKihon">Kihon</label><input type="number" id="exameKihon" min="0" max="100" step="0.01" value="0" required></div>
+                    <div class="cadastro-campo"><label for="exameKata">Kata</label><input type="number" id="exameKata" min="0" max="100" step="0.01" value="0" required></div>
+                    <div class="cadastro-campo"><label for="exameKumite">Kumite</label><input type="number" id="exameKumite" min="0" max="100" step="0.01" value="0" required></div>
+                    <div class="cadastro-campo"><label for="examePerguntas">Perguntas</label><input type="number" id="examePerguntas" min="0" max="100" step="0.01" value="0" required></div>
+                    <div class="cadastro-campo"><label>Total</label><input type="text" id="exameTotal" readonly value="0,00"></div>
+                    <div class="cadastro-campo"><label>Média</label><input type="text" id="exameMedia" readonly value="0,00"></div>
+                </div>
+                <button type="submit" class="btn-salvar" id="btnSalvarExame">Salvar exame</button>
+                <div id="exameFeedbackProfessor" class="cadastro-feedback" role="status" aria-live="polite"></div>
+            </form>
+            <div id="historicoExamesProfessor" class="agenda-lista" style="margin-top:16px;"><div class="card-mensagem">Selecione um aluno para visualizar o histórico.</div></div>
         </section>
 
         <section id="aba-banners" class="tab-content">
@@ -1514,6 +1553,73 @@
 
         document.getElementById('dataAula').valueAsDate = new Date();
 
+        const camposNotasExame = ['exameKihon', 'exameKata', 'exameKumite', 'examePerguntas'];
+
+        function definirFeedbackExame(texto, tipo = '') {
+            const feedback = document.getElementById('exameFeedbackProfessor');
+            feedback.textContent = texto;
+            feedback.className = tipo ? `cadastro-feedback ${tipo}` : 'cadastro-feedback';
+        }
+
+        function atualizarCalculoExame() {
+            const notas = camposNotasExame.map(id => Number(document.getElementById(id).value) || 0);
+            const total = notas.reduce((soma, nota) => soma + nota, 0);
+            document.getElementById('exameTotal').value = total.toFixed(2).replace('.', ',');
+            document.getElementById('exameMedia').value = (total / notas.length).toFixed(2).replace('.', ',');
+        }
+
+        async function carregarHistoricoExamesProfessor() {
+            const usuario = document.getElementById('exameAluno').value;
+            const container = document.getElementById('historicoExamesProfessor');
+            if (!usuario) {
+                container.innerHTML = '<div class="card-mensagem">Selecione um aluno para visualizar o histórico.</div>';
+                return;
+            }
+            container.innerHTML = '<div class="card-mensagem">Carregando histórico de exames...</div>';
+            try {
+                const exames = await apiFetch(`/api/exames/${encodeURIComponent(usuario)}`);
+                if (!exames.length) {
+                    container.innerHTML = '<div class="card-mensagem">Este aluno ainda não possui exames registrados.</div>';
+                    return;
+                }
+                const linhas = exames.map(exame => `<tr><td><span style="display:inline-block;padding:4px 8px;border-radius:5px;background:${escaparHtml(exame.cor_faixa)};color:${escaparHtml(exame.cor_texto)};font-weight:bold;">${escaparHtml(exame.faixa)}</span></td><td>${escaparHtml(exame.ano)}</td><td>${Number(exame.kihon).toFixed(2)}</td><td>${Number(exame.kata).toFixed(2)}</td><td>${Number(exame.kumite).toFixed(2)}</td><td>${Number(exame.perguntas).toFixed(2)}</td><td>${Number(exame.total).toFixed(2)}</td><td>${Number(exame.media).toFixed(2)}</td></tr>`).join('');
+                container.innerHTML = `<div class="table-responsive"><table class="tabela-resumo"><thead><tr><th>Faixa</th><th>Ano</th><th>Kihon</th><th>Kata</th><th>Kumite</th><th>Perguntas</th><th>Total</th><th>Média</th></tr></thead><tbody>${linhas}</tbody></table></div>`;
+            } catch (error) {
+                container.innerHTML = `<div class="card-mensagem" style="color:#fecaca;">${escaparHtml(error.message || 'Não foi possível carregar o histórico.')}</div>`;
+            }
+        }
+
+        camposNotasExame.forEach(id => document.getElementById(id).addEventListener('input', atualizarCalculoExame));
+        document.getElementById('exameAluno').addEventListener('change', carregarHistoricoExamesProfessor);
+        document.getElementById('formExameProfessor').addEventListener('submit', async event => {
+            event.preventDefault();
+            const botao = document.getElementById('btnSalvarExame');
+            const dados = {
+                usuario: document.getElementById('exameAluno').value,
+                faixa: document.getElementById('exameFaixa').value,
+                ano: document.getElementById('exameAno').value,
+                kihon: document.getElementById('exameKihon').value,
+                kata: document.getElementById('exameKata').value,
+                kumite: document.getElementById('exameKumite').value,
+                perguntas: document.getElementById('examePerguntas').value
+            };
+            if (!dados.usuario) return definirFeedbackExame('Selecione um aluno ativo.', 'erro');
+
+            botao.disabled = true;
+            botao.textContent = 'Salvando...';
+            definirFeedbackExame('');
+            try {
+                const resultado = await apiFetch('/api/exames', { method: 'POST', body: JSON.stringify(dados) });
+                definirFeedbackExame(`Exame ${resultado.exame.faixa} registrado com sucesso.`, 'sucesso');
+                await carregarHistoricoExamesProfessor();
+            } catch (error) {
+                definirFeedbackExame(error.message || 'Não foi possível salvar o exame.', 'erro');
+            } finally {
+                botao.disabled = false;
+                botao.textContent = 'Salvar exame';
+            }
+        });
+
       function mudarAba(nomeAba, elementoBotao) {
             const abas = document.querySelectorAll('.tab-content');
             abas.forEach(aba => aba.classList.remove('active'));
@@ -1532,6 +1638,7 @@
             }
 
             if (nomeAba === 'agenda') carregarAgendaProfessor();
+            else if (nomeAba === 'exames') carregarHistoricoExamesProfessor();
             else if (nomeAba === 'banners') carregarBannersProfessor();
             else if (nomeAba === 'justificativas') carregarJustificativasProfessor();
             else if (nomeAba === 'resumo') carregarResumoFrequencia();
@@ -1586,12 +1693,15 @@
             const selectAlunoJustificativa = document.getElementById('filtroAlunoJustificativa');
             const selectAlunoDesafio = document.getElementById('filtroAlunoDesafio');
             const selectDestinatarioPush = document.getElementById('destinatarioPush');
+            const selectExameAluno = document.getElementById('exameAluno');
+            const exameSelecionadoAntes = selectExameAluno?.value || '';
             
             if (container) container.innerHTML = '';
             if (selectAlunoResumo) selectAlunoResumo.innerHTML = '<option value="todos">Todos os Alunos</option>';
             if (selectAlunoJustificativa) selectAlunoJustificativa.innerHTML = '<option value="todos">Todos os Alunos</option>';
             if (selectAlunoDesafio) selectAlunoDesafio.innerHTML = '<option value="todos">Todos os Alunos</option>';
             if (selectDestinatarioPush) selectDestinatarioPush.innerHTML = '<option value="">🌐 Enviar para Todos os Alunos</option>';
+            if (selectExameAluno) selectExameAluno.innerHTML = '<option value="">Selecione o aluno</option>';
 
             const alunos = listaAlunos.filter(u => String(u.tipo).toLowerCase() !== 'professor');
 
@@ -1619,6 +1729,10 @@
                 if (selectAlunoResumo) selectAlunoResumo.appendChild(makeOption());
                 if (selectAlunoJustificativa) selectAlunoJustificativa.appendChild(makeOption());
                 if (selectAlunoDesafio) selectAlunoDesafio.appendChild(makeOption());
+
+                if (selectExameAluno && aluno.ativo !== false) {
+                    selectExameAluno.appendChild(makeOption());
+                }
                 
                 if (selectDestinatarioPush && aluno.ativo !== false) {
                     const optPush = makeOption();
@@ -1626,6 +1740,10 @@
                     selectDestinatarioPush.appendChild(optPush);
                 }
             });
+
+            if (selectExameAluno && exameSelecionadoAntes && Array.from(selectExameAluno.options).some(opcao => opcao.value === exameSelecionadoAntes)) {
+                selectExameAluno.value = exameSelecionadoAntes;
+            }
         }
 
         async function carregarChamadaRegistrada() {
@@ -1709,6 +1827,8 @@
             if (!usuario) return;
 
             usuarioAtivo = usuario.usuario;
+            document.getElementById('exameAno').value = String(new Date().getFullYear());
+            atualizarCalculoExame();
             try {
                 listaAlunos = await apiFetch('/api/usuarios');
                 renderizarAlunos();
