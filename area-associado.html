@@ -428,7 +428,7 @@
             <div class="painel-resumo-card"><small>Frequência atual</small><strong id="resumoFrequencia">Carregando...</strong></div>
             <div class="painel-resumo-card"><small>Faixa atual</small><strong id="resumoFaixaAtual">Carregando...</strong></div>
             <div class="painel-resumo-card"><small>Próximo objetivo</small><strong id="resumoProximoObjetivo">Carregando...</strong></div>
-            <div class="painel-resumo-card"><small>Comunicados não lidos</small><strong id="resumoComunicados">Carregando...</strong></div>
+            <div class="painel-resumo-card"><small>Badges</small><strong id="resumoBadgesRestantes">Carregando...</strong></div>
         </div>
 
         <h3>🥋 Exames de Faixa</h3>
@@ -1735,11 +1735,11 @@
 
     async function carregarResumoPersonalizado() {
         try {
-            const [agenda, frequencia, exames, banners] = await Promise.all([
+            const [agenda, frequencia, exames, dadosBadges] = await Promise.all([
                 Agenda.listar(),
                 apiFetch('/api/frequencia/me'),
                 apiFetch('/api/exames/me'),
-                Banners.listar()
+                apiFetch('/api/badges/me')
             ]);
             const proximo = (agenda?.eventos || []).find(evento => !['concluido', 'cancelado'].includes(evento.status));
             document.getElementById('resumoProximoEvento').textContent = proximo ? `${proximo.nome_evento} (${String(proximo.data_evento).split('-').reverse().join('/')})` : 'Nenhum agendado';
@@ -1764,8 +1764,20 @@
             : indice === ordem.length - 1
                 ? 'Manter evolução'
                 : 'Próximo exame';
-            const naoLidos = (banners?.banners || []).filter(banner => !banner.lido).length;
-            const bannerEl = document.getElementById('resumoComunicados'); bannerEl.textContent = String(naoLidos); bannerEl.classList.toggle('alerta', naoLidos > 0);
+            const badgesDisponiveis = [
+                'frequencia_ferro', 'guardiao', 'badge_kata_avancado', 'badge_mae_geri',
+                'badge_fisico_abs', 'badge_tsuki', 'badge_prancha_baixa', 'badge_polichinelo',
+                'badge_kibadachi_parede', 'badge_zen_kokyu', 'badge_prancha_alta', 'badge_saltos_zenkutsu'
+            ];
+            const badgesConquistados = new Set(
+                (dadosBadges?.badges || [])
+                    .filter(badge => badge.concluido && badgesDisponiveis.includes(badge.badge_key))
+                    .map(badge => badge.badge_key)
+            );
+            const badgesRestantes = badgesDisponiveis.length - badgesConquistados.size;
+            const badgesEl = document.getElementById('resumoBadgesRestantes');
+            badgesEl.textContent = `${badgesConquistados.size} conquistados · ${badgesRestantes} faltam`;
+            badgesEl.classList.toggle('alerta', badgesRestantes > 0);
         } catch (error) {
             console.error('Erro ao carregar resumo personalizado:', error);
         }
