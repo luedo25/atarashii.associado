@@ -101,8 +101,11 @@
         .welcome-box p { font-size: 14px; color: var(--text-muted); }
         .welcome-heading-row { display: flex; align-items: center; justify-content: space-between; gap: 8px; flex-wrap: nowrap; position: relative; z-index: 1; }
         .welcome-heading-row h2 { flex: 1 1 auto; min-width: 0; margin-bottom: 6px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-        .btn-editar-perfil { flex: 0 0 auto; display: inline-flex; align-items: center; justify-content: center; gap: 5px; min-height: 34px; padding: 7px 9px; border: 1px solid rgba(96, 165, 250, 0.55); border-radius: var(--radius-sm); background: rgba(59, 130, 246, 0.15); color: #bfdbfe; cursor: pointer; font-size: 12px; font-weight: 700; white-space: nowrap; transition: all 0.2s; }
+        .welcome-actions { flex: 0 0 auto; display: flex; flex-direction: column; gap: 5px; width: 112px; }
+        .btn-editar-perfil, .btn-ver-comunicados { width: 100%; display: inline-flex; align-items: center; justify-content: center; gap: 5px; min-height: 31px; padding: 6px 7px; border: 1px solid rgba(96, 165, 250, 0.55); border-radius: var(--radius-sm); background: rgba(59, 130, 246, 0.15); color: #bfdbfe; cursor: pointer; font-size: 11px; font-weight: 700; white-space: nowrap; transition: all 0.2s; }
         .btn-editar-perfil:hover { background: rgba(59, 130, 246, 0.28); border-color: var(--accent-blue); color: #fff; }
+        .btn-ver-comunicados { border-color: rgba(16, 185, 129, 0.55); background: rgba(16, 185, 129, 0.14); color: #bbf7d0; }
+        .btn-ver-comunicados:hover { background: rgba(16, 185, 129, 0.26); border-color: var(--accent-green); color: #fff; }
         .btn-editar-perfil:active { transform: scale(0.96); }
 
         .perfil-dialog { width: min(92vw, 560px); max-height: 90vh; margin: auto; padding: 0; overflow-y: auto; border: 1px solid #475569; border-radius: var(--radius-lg); background: var(--bg-card); color: var(--text-main); box-shadow: 0 24px 70px rgba(0, 0, 0, 0.6); }
@@ -236,7 +239,7 @@
         .nav-btn.active .icon img.logo-icon { filter: grayscale(0%) opacity(1); }
 
         @keyframes balancoSininho { 0% { transform: rotate(-12deg); } 100% { transform: rotate(12deg); } }
-        @media (max-width: 480px) { header h1 { font-size: 16px; } .container { padding: 0 12px; } .tab-content { padding: 18px 14px; } .welcome-heading-row { gap: 6px; } .btn-editar-perfil { min-height: 32px; padding: 6px 8px; font-size: 11px; } .perfil-dialog-content { padding: 20px 16px; } }
+        @media (max-width: 480px) { header h1 { font-size: 16px; } .container { padding: 0 12px; } .tab-content { padding: 18px 14px; } .welcome-heading-row { gap: 6px; } .welcome-actions { width: 104px; gap: 4px; } .btn-editar-perfil, .btn-ver-comunicados { min-height: 29px; padding: 5px 6px; font-size: 10px; } .perfil-dialog-content { padding: 20px 16px; } }
 
         /* Estilos do Popup de Avisos */
         .modal-overlay {
@@ -256,6 +259,8 @@
             border: 1px solid var(--accent-blue);
             width: 90%;
             max-width: 400px;
+            max-height: 90vh;
+            overflow-y: auto;
             text-align: center;
             color: var(--text-main);
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6);
@@ -423,7 +428,10 @@
     <div class="welcome-box">
         <div class="welcome-heading-row">
             <h2 id="welcomeNome">Olá, Associado!</h2>
-            <button type="button" class="btn-editar-perfil" id="btnAbrirPerfil">✏️ Editar perfil</button>
+            <div class="welcome-actions">
+                <button type="button" class="btn-editar-perfil" id="btnAbrirPerfil">✏️ Editar perfil</button>
+                <button type="button" class="btn-ver-comunicados" id="btnAbrirBanners">📢 Comunicados</button>
+            </div>
         </div>
         <p>Acompanhe suas notas, conteúdos e avisos no menu inferior.</p>
     </div>
@@ -1513,6 +1521,27 @@
     });
 
     let bannerAberto = null;
+    function renderizarBannerAluno(banner) {
+        return `<article class="aviso-detalhes"><h3 style="color:var(--text-main);margin-bottom:8px;font-size:15px;">📢 ${escaparHtml(banner.titulo)}</h3><p>${escaparHtml(banner.mensagem)}</p>${banner.imagem_url ? `<img src="${escaparHtml(banner.imagem_url)}" alt="${escaparHtml(banner.titulo)}" style="max-width:100%; max-height:220px; object-fit:contain; border-radius:8px; margin-top:10px;">` : ''}${banner.link_url ? `<p style="margin-top:10px;"><a href="${escaparHtml(banner.link_url)}" target="_blank" rel="noopener" style="color:#93c5fd;">🔗 Abrir material</a></p>` : ''}</article>`;
+    }
+
+    async function abrirBannersAtivos() {
+        const conteudo = document.getElementById('bannerAlunoConteudo');
+        const botaoFechar = document.getElementById('btnFecharBannerAluno');
+        conteudo.innerHTML = '<h2>📢 Comunicados</h2><div class="aviso-detalhes"><p>Carregando comunicados...</p></div>';
+        botaoFechar.textContent = 'Fechar';
+        document.getElementById('modalAvisoInfo').style.display = 'flex';
+        try {
+            const resposta = await Banners.listar();
+            const banners = Array.isArray(resposta?.banners) ? resposta.banners : [];
+            conteudo.innerHTML = banners.length
+                ? `<h2>📢 Comunicados ativos</h2>${banners.map(renderizarBannerAluno).join('')}`
+                : '<h2>📢 Comunicados</h2><div class="aviso-detalhes"><p>Nenhum comunicado ativo no momento.</p></div>';
+        } catch (error) {
+            conteudo.innerHTML = '<h2>📢 Comunicados</h2><div class="aviso-detalhes"><p>Não foi possível carregar os comunicados agora.</p></div>';
+        }
+    }
+
     async function checarPopupLogin() {
         if (!usuarioAtivo) return;
         try {
@@ -1525,7 +1554,8 @@
             if (!banner) return;
             bannerAberto = banner;
             const conteudo = document.getElementById('bannerAlunoConteudo');
-            conteudo.innerHTML = `<h2>📢 ${escaparHtml(banner.titulo)}</h2><div class="aviso-detalhes"><p>${escaparHtml(banner.mensagem)}</p>${banner.imagem_url ? `<img src="${escaparHtml(banner.imagem_url)}" alt="${escaparHtml(banner.titulo)}" style="max-width:100%; max-height:220px; object-fit:contain; border-radius:8px; margin-top:10px;">` : ''}${banner.link_url ? `<p style="margin-top:10px;"><a href="${escaparHtml(banner.link_url)}" target="_blank" rel="noopener" style="color:#93c5fd;">🔗 Abrir material</a></p>` : ''}</div>`;
+            conteudo.innerHTML = `<h2>📢 ${escaparHtml(banner.titulo)}</h2>${renderizarBannerAluno(banner)}`;
+            document.getElementById('btnFecharBannerAluno').textContent = 'OK, Entendi';
             document.getElementById('modalAvisoInfo').style.display = 'flex';
         } catch (error) { console.error('Não foi possível carregar comunicados:', error); }
     }
@@ -1535,6 +1565,8 @@
         if (bannerAberto) Banners.marcarLido(bannerAberto.id).catch(() => {});
         bannerAberto = null;
     }
+
+    document.getElementById('btnAbrirBanners').addEventListener('click', abrirBannersAtivos);
 
     function formatarDataISO(dataISO) { return dataISO.replace(/-|:|\.\d+/g, ''); }
 
