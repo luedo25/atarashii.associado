@@ -213,6 +213,14 @@
         .painel-resumo-card small { display:block; color:var(--text-muted); font-size:10px; font-weight:bold; text-transform:uppercase; margin-bottom:7px; }
         .painel-resumo-card strong { display:block; color:var(--text-main); font-size:14px; line-height:1.35; overflow-wrap:anywhere; }
         .painel-resumo-card strong.alerta { color:#fbbf24; }
+        .mensagem-frequencia { display:block; margin-top:6px; font-size:10px; line-height:1.3; font-weight:700; }
+        .mensagem-frequencia.alerta-piscante { color:#fca5a5; animation: piscarAlertaFrequencia 1.15s ease-in-out infinite; }
+        .mensagem-frequencia.parabens { color:#86efac; }
+        .badges-miniaturas { display:flex; flex-wrap:wrap; gap:4px; margin-top:7px; min-height:0; }
+        .badge-miniatura { width:23px; height:23px; border-radius:50%; display:flex; align-items:center; justify-content:center; background:linear-gradient(135deg,#f8fafc 0%,#94a3b8 50%,#334155 100%); border:1px solid #fff; box-shadow:0 0 7px rgba(248,250,252,.35); color:#0f172a; }
+        .badge-miniatura svg { width:12px; height:12px; stroke-width:2.4; }
+        @keyframes piscarAlertaFrequencia { 0%, 100% { opacity:1; } 50% { opacity:.35; } }
+        @media (prefers-reduced-motion: reduce) { .mensagem-frequencia.alerta-piscante { animation:none; } }
         @media (max-width: 700px) { .painel-resumo { grid-template-columns: repeat(2, 1fr); } .painel-resumo-card:last-child { grid-column: 1 / -1; } }
 
         .btn-action { display: flex; align-items: center; justify-content: center; gap: 8px; width: 100%; padding: 14px; background: var(--accent-blue); color: white; border: none; border-radius: var(--radius-md); font-weight: 600; font-size: 14px; cursor: pointer; text-decoration: none; transition: all 0.2s; box-shadow: 0 4px 12px rgba(59, 130, 246, 0.25); }
@@ -425,10 +433,10 @@
 
         <div class="painel-resumo" aria-label="Resumo personalizado">
             <div class="painel-resumo-card"><small>Próximo evento</small><strong id="resumoProximoEvento">Carregando...</strong></div>
-            <div class="painel-resumo-card"><small>Frequência atual</small><strong id="resumoFrequencia">Carregando...</strong></div>
+            <div class="painel-resumo-card"><small>Frequência atual</small><strong id="resumoFrequencia">Carregando...</strong><span id="mensagemFrequencia" class="mensagem-frequencia"></span></div>
             <div class="painel-resumo-card"><small>Faixa atual</small><strong id="resumoFaixaAtual">Carregando...</strong></div>
             <div class="painel-resumo-card"><small>Próximo objetivo</small><strong id="resumoProximoObjetivo">Carregando...</strong></div>
-            <div class="painel-resumo-card"><small>Badges</small><strong id="resumoBadgesRestantes">Carregando...</strong></div>
+            <div class="painel-resumo-card"><small>Badges</small><strong id="resumoBadgesRestantes">Carregando...</strong><div id="resumoBadgesMiniaturas" class="badges-miniaturas" aria-label="Badges conquistados"></div></div>
         </div>
 
         <h3>🥋 Exames de Faixa</h3>
@@ -1745,7 +1753,20 @@
             document.getElementById('resumoProximoEvento').textContent = proximo ? `${proximo.nome_evento} (${String(proximo.data_evento).split('-').reverse().join('/')})` : 'Nenhum agendado';
             const presencas = Number(frequencia?.presencas || 0), faltas = Number(frequencia?.faltas || 0), total = presencas + faltas;
             const percentual = total ? Math.round((presencas / total) * 100) : 0;
-            const freqEl = document.getElementById('resumoFrequencia'); freqEl.textContent = `${percentual}%`; freqEl.classList.toggle('alerta', total > 0 && percentual < 75);
+            const freqEl = document.getElementById('resumoFrequencia');
+            const mensagemFrequencia = document.getElementById('mensagemFrequencia');
+            freqEl.textContent = `${percentual}%`;
+            freqEl.classList.toggle('alerta', total > 0 && percentual < 75);
+            if (total === 0) {
+                mensagemFrequencia.textContent = 'A frequência aparecerá após a primeira chamada.';
+                mensagemFrequencia.className = 'mensagem-frequencia';
+            } else if (percentual < 75) {
+                mensagemFrequencia.textContent = '⚠️ Atenção: sua frequência está abaixo do mínimo de 75%.';
+                mensagemFrequencia.className = 'mensagem-frequencia alerta-piscante';
+            } else {
+                mensagemFrequencia.textContent = '🎉 Parabéns! Sua presença está acima do mínimo de 75%.';
+                mensagemFrequencia.className = 'mensagem-frequencia parabens';
+            }
         const ultimo = Array.isArray(exames) && exames.length ? exames[exames.length - 1] : null;
         const ordem = ['Branca', 'Amarela', 'Vermelha', 'Laranja', 'Verde', 'Roxa', 'Marrom', 'Preta'];
         // Em graduações com barra (ex.: Verde/Roxa), a faixa válida é a última cor.
@@ -1778,6 +1799,23 @@
             const badgesEl = document.getElementById('resumoBadgesRestantes');
             badgesEl.textContent = `${badgesConquistados.size} conquistados · ${badgesRestantes} faltam`;
             badgesEl.classList.toggle('alerta', badgesRestantes > 0);
+            const mapaBadges = [
+                ['frequencia_ferro', 'cardBadgeFerro'], ['guardiao', 'cardBadgeGuardiao'],
+                ['badge_kata_avancado', 'cardBadgeKata'], ['badge_mae_geri', 'cardBadgeMaeGeri'],
+                ['badge_fisico_abs', 'cardBadgeAbs'], ['badge_tsuki', 'cardBadgeTsuki'],
+                ['badge_prancha_baixa', 'cardBadgePrancha'], ['badge_polichinelo', 'cardBadgePolichinelo'],
+                ['badge_kibadachi_parede', 'cardBadgeKibadachiParede'], ['badge_zen_kokyu', 'cardBadgeZenKokyu'],
+                ['badge_prancha_alta', 'cardBadgePranchaAlta'], ['badge_saltos_zenkutsu', 'cardBadgeSaltosZenkutsu']
+            ];
+            const miniaturasEl = document.getElementById('resumoBadgesMiniaturas');
+            miniaturasEl.innerHTML = mapaBadges
+                .filter(([chave]) => badgesConquistados.has(chave))
+                .map(([, cardId]) => {
+                    const card = document.getElementById(cardId);
+                    const icone = card?.querySelector('.emblem-ring')?.innerHTML || '';
+                    const titulo = card?.querySelector('.badge-title')?.textContent?.trim() || 'Badge conquistado';
+                    return `<span class="badge-miniatura" title="${escaparHtml(titulo)}" aria-label="${escaparHtml(titulo)}">${icone}</span>`;
+                }).join('');
         } catch (error) {
             console.error('Erro ao carregar resumo personalizado:', error);
         }
