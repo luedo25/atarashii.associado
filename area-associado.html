@@ -101,7 +101,7 @@
         .welcome-box p { font-size: 14px; color: var(--text-muted); }
         .welcome-heading-row { display: flex; align-items: center; justify-content: space-between; gap: 8px; flex-wrap: nowrap; position: relative; z-index: 1; }
         .welcome-text { flex: 1 1 auto; min-width: 0; }
-        .welcome-heading-row h2 { margin-bottom: 5px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+        .welcome-heading-row h2 { margin-bottom: 5px; line-height: 1.18; overflow-wrap: anywhere; }
         .welcome-heading-row .welcome-text p { font-size: 13px; line-height: 1.35; }
         .welcome-actions { flex: 0 0 auto; display: flex; flex-direction: column; gap: 6px; width: 128px; }
         .btn-editar-perfil, .btn-ver-comunicados { width: 100%; display: inline-flex; align-items: center; justify-content: center; gap: 5px; min-height: 35px; padding: 7px 9px; border: 1px solid rgba(96, 165, 250, 0.55); border-radius: var(--radius-sm); background: rgba(59, 130, 246, 0.15); color: #bfdbfe; cursor: pointer; font-size: 11px; font-weight: 700; white-space: nowrap; transition: all 0.2s; }
@@ -1444,6 +1444,29 @@
         return Number.isNaN(data.getTime()) ? '' : data.toISOString().slice(0, 10);
     }
 
+    function atualizarNomeBoasVindas(nome) {
+        const titulo = document.getElementById('welcomeNome');
+        titulo.textContent = `Olá, ${nome}!`;
+
+        requestAnimationFrame(() => {
+            const larguraDisponivel = titulo.parentElement.clientWidth;
+            let tamanho = 22;
+            titulo.style.whiteSpace = 'nowrap';
+            titulo.style.fontSize = `${tamanho}px`;
+
+            while (titulo.scrollWidth > larguraDisponivel && tamanho > 14) {
+                tamanho -= 1;
+                titulo.style.fontSize = `${tamanho}px`;
+            }
+
+            // Para nomes excepcionalmente longos, mantém todo o nome visível em até duas linhas.
+            if (titulo.scrollWidth > larguraDisponivel) {
+                titulo.style.whiteSpace = 'normal';
+                titulo.style.fontSize = '14px';
+            }
+        });
+    }
+
     function preencherFormularioPerfil(perfil) {
         document.getElementById('perfilNome').value = perfil?.nome || '';
         document.getElementById('perfilEmail').value = perfil?.email || '';
@@ -1512,7 +1535,7 @@
 
             nomeDoAluno = dados.perfil.nome;
             Auth.atualizarUsuario({ nome: nomeDoAluno });
-            document.getElementById('welcomeNome').textContent = `Olá, ${nomeDoAluno}!`;
+            atualizarNomeBoasVindas(nomeDoAluno);
             preencherFormularioPerfil(dados.perfil);
             definirFeedbackPerfil(dados.mensagem || 'Perfil atualizado com sucesso.', 'sucesso');
             setTimeout(fecharPerfil, 1200);
@@ -2291,7 +2314,8 @@
 
             usuarioAtivo = usuario.usuario;
             nomeDoAluno = usuario.nome || 'Associado';
-            document.getElementById('welcomeNome').textContent = `Olá, ${nomeDoAluno}!`;
+            atualizarNomeBoasVindas(nomeDoAluno);
+            window.addEventListener('resize', () => atualizarNomeBoasVindas(nomeDoAluno));
 
             try {
                 const configuracao = await apiFetch('/api/config');
