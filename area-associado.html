@@ -100,9 +100,11 @@
         .welcome-box h2 { font-size: 22px; font-weight: 700; margin-bottom: 6px; background: linear-gradient(to right, #fff, var(--text-muted)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
         .welcome-box p { font-size: 14px; color: var(--text-muted); }
         .welcome-heading-row { display: flex; align-items: center; justify-content: space-between; gap: 8px; flex-wrap: nowrap; position: relative; z-index: 1; }
-        .welcome-heading-row h2 { flex: 1 1 auto; min-width: 0; margin-bottom: 6px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-        .welcome-actions { flex: 0 0 auto; display: flex; flex-direction: column; gap: 5px; width: 112px; }
-        .btn-editar-perfil, .btn-ver-comunicados { width: 100%; display: inline-flex; align-items: center; justify-content: center; gap: 5px; min-height: 31px; padding: 6px 7px; border: 1px solid rgba(96, 165, 250, 0.55); border-radius: var(--radius-sm); background: rgba(59, 130, 246, 0.15); color: #bfdbfe; cursor: pointer; font-size: 11px; font-weight: 700; white-space: nowrap; transition: all 0.2s; }
+        .welcome-text { flex: 1 1 auto; min-width: 0; }
+        .welcome-heading-row h2 { margin-bottom: 5px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+        .welcome-heading-row .welcome-text p { font-size: 13px; line-height: 1.35; }
+        .welcome-actions { flex: 0 0 auto; display: flex; flex-direction: column; gap: 6px; width: 128px; }
+        .btn-editar-perfil, .btn-ver-comunicados { width: 100%; display: inline-flex; align-items: center; justify-content: center; gap: 5px; min-height: 35px; padding: 7px 9px; border: 1px solid rgba(96, 165, 250, 0.55); border-radius: var(--radius-sm); background: rgba(59, 130, 246, 0.15); color: #bfdbfe; cursor: pointer; font-size: 11px; font-weight: 700; white-space: nowrap; transition: all 0.2s; }
         .btn-editar-perfil:hover { background: rgba(59, 130, 246, 0.28); border-color: var(--accent-blue); color: #fff; }
         .btn-ver-comunicados { border-color: rgba(16, 185, 129, 0.55); background: rgba(16, 185, 129, 0.14); color: #bbf7d0; }
         .btn-ver-comunicados:hover { background: rgba(16, 185, 129, 0.26); border-color: var(--accent-green); color: #fff; }
@@ -239,7 +241,7 @@
         .nav-btn.active .icon img.logo-icon { filter: grayscale(0%) opacity(1); }
 
         @keyframes balancoSininho { 0% { transform: rotate(-12deg); } 100% { transform: rotate(12deg); } }
-        @media (max-width: 480px) { header h1 { font-size: 16px; } .container { padding: 0 12px; } .tab-content { padding: 18px 14px; } .welcome-heading-row { gap: 6px; } .welcome-actions { width: 104px; gap: 4px; } .btn-editar-perfil, .btn-ver-comunicados { min-height: 29px; padding: 5px 6px; font-size: 10px; } .perfil-dialog-content { padding: 20px 16px; } }
+        @media (max-width: 480px) { header h1 { font-size: 16px; } .container { padding: 0 12px; } .tab-content { padding: 18px 14px; } .welcome-heading-row { gap: 8px; } .welcome-heading-row .welcome-text p { font-size: 12px; } .welcome-actions { width: 118px; gap: 5px; } .btn-editar-perfil, .btn-ver-comunicados { min-height: 33px; padding: 6px 7px; font-size: 10px; } .perfil-dialog-content { padding: 20px 16px; } }
 
         /* Estilos do Popup de Avisos */
         .modal-overlay {
@@ -427,13 +429,15 @@
 
     <div class="welcome-box">
         <div class="welcome-heading-row">
-            <h2 id="welcomeNome">Olá, Associado!</h2>
+            <div class="welcome-text">
+                <h2 id="welcomeNome">Olá, Associado!</h2>
+                <p>Acompanhe suas notas, conteúdos e avisos no menu inferior.</p>
+            </div>
             <div class="welcome-actions">
                 <button type="button" class="btn-editar-perfil" id="btnAbrirPerfil">✏️ Editar perfil</button>
                 <button type="button" class="btn-ver-comunicados" id="btnAbrirBanners">📢 Comunicados</button>
             </div>
         </div>
-        <p>Acompanhe suas notas, conteúdos e avisos no menu inferior.</p>
     </div>
 
     <!-- SEÇÃO 1: PAINEL / NOTAS DO ALUNO -->
