@@ -1423,10 +1423,19 @@
         perfilFeedback.className = tipo ? `perfil-feedback ${tipo}` : 'perfil-feedback';
     }
 
+    function dataParaCampoInput(valor) {
+        const texto = String(valor || '').trim();
+        const correspondencia = texto.match(/^(\d{4}-\d{2}-\d{2})/);
+        if (correspondencia) return correspondencia[1];
+
+        const data = new Date(valor);
+        return Number.isNaN(data.getTime()) ? '' : data.toISOString().slice(0, 10);
+    }
+
     function preencherFormularioPerfil(perfil) {
         document.getElementById('perfilNome').value = perfil?.nome || '';
         document.getElementById('perfilEmail').value = perfil?.email || '';
-        document.getElementById('perfilDataNascimento').value = perfil?.data_nascimento || '';
+        document.getElementById('perfilDataNascimento').value = dataParaCampoInput(perfil?.data_nascimento);
         document.getElementById('perfilWhatsapp').value = perfil?.whatsapp || '';
         document.getElementById('perfilContatoEmergencia').value = perfil?.contato_emergencia || '';
         document.getElementById('perfilRestricoesMedicas').value = perfil?.restricoes_medicas || '';
