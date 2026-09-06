@@ -661,6 +661,7 @@
         <button class="nav-btn active" onclick="mudarAba('chamada', this)">📋 Chamada</button>
         <button class="nav-btn" onclick="mudarAba('agenda', this)">🗓️ Agenda</button>
         <button class="nav-btn" onclick="mudarAba('exames', this)">🥋 Exames</button>
+        <button class="nav-btn" onclick="mudarAba('ranking', this)">🏆 Ranking</button>
         <button class="nav-btn" onclick="mudarAba('banners', this)">📢 Banners</button>
         <button class="nav-btn" onclick="mudarAba('justificativas', this)">📝 Justificativas</button>
         <button class="nav-btn" onclick="mudarAba('desafios', this)">🎯 Desafios</button>
@@ -759,6 +760,32 @@
                 <div id="exameFeedbackProfessor" class="cadastro-feedback" role="status" aria-live="polite"></div>
             </form>
             <div id="historicoExamesProfessor" class="agenda-lista" style="margin-top:16px;"><div class="card-mensagem">Selecione um aluno para visualizar o histórico.</div></div>
+        </section>
+
+        <section id="aba-ranking" class="tab-content">
+            <div class="chamada-header">
+                <div>
+                    <h2>🏆 Ranking por temporada</h2>
+                    <p style="color:#94a3b8; margin-top:6px; line-height:1.45;">A temporada atual considera presenças e badges conquistados a partir de 1º de janeiro.</p>
+                </div>
+                <button type="button" class="btn-novo-aluno" id="btnAtualizarRanking">↻ Atualizar ranking</button>
+            </div>
+
+            <div id="rankingAtualProfessor" class="agenda-lista">
+                <div class="card-mensagem">Abra esta aba para carregar o ranking atual.</div>
+            </div>
+
+            <div class="filtro-datas-container" style="margin-top:18px;">
+                <h3 style="margin:0 0 8px;">Arquivar temporada <span id="anoRankingAtual"></span></h3>
+                <p style="color:#cbd5e1; margin:0 0 14px; line-height:1.5;">O arquivamento guarda uma cópia final da classificação e de cada badge conquistado. Nenhuma presença ou badge será apagado; a nova temporada inicia automaticamente em janeiro.</p>
+                <button type="button" class="btn-agenda-acao btn-agenda-excluir" id="btnArquivarRanking">📦 Arquivar ranking desta temporada</button>
+                <div id="rankingArquivoFeedback" class="cadastro-feedback" role="status" aria-live="polite"></div>
+            </div>
+
+            <div style="margin-top:18px;">
+                <h3 style="margin:0 0 10px;">Temporadas arquivadas</h3>
+                <div id="listaArquivosRanking" class="agenda-lista"><div class="card-mensagem">Carregando histórico...</div></div>
+            </div>
         </section>
 
         <section id="aba-banners" class="tab-content">
@@ -1624,6 +1651,98 @@
             }
         });
 
+        function definirFeedbackRanking(texto, tipo = '') {
+            const feedback = document.getElementById('rankingArquivoFeedback');
+            feedback.textContent = texto;
+            feedback.className = tipo ? `cadastro-feedback ${tipo}` : 'cadastro-feedback';
+        }
+
+        function formatarDataArquivoRanking(valor) {
+            if (!valor) return 'Data não informada';
+            const data = new Date(valor);
+            return Number.isNaN(data.getTime()) ? 'Data não informada' : data.toLocaleString('pt-BR');
+        }
+
+        function renderizarArquivosRanking(arquivos) {
+            const container = document.getElementById('listaArquivosRanking');
+            if (!arquivos.length) {
+                container.innerHTML = '<div class="card-mensagem">Nenhuma temporada foi arquivada até o momento.</div>';
+                return;
+            }
+            container.innerHTML = arquivos.map(arquivo => `
+                <article class="agenda-card concluido">
+                    <div class="agenda-card-topo">
+                        <h3>Temporada ${escaparHtml(arquivo.ano)}</h3>
+                        <span class="agenda-status concluido">Arquivada</span>
+                    </div>
+                    <p class="agenda-card-info">👥 ${Number(arquivo.total_alunos) || 0} aluno(s) no ranking</p>
+                    <p class="agenda-card-info">🏆 Maior pontuação: ${Number(arquivo.maior_pontuacao) || 0} pontos</p>
+                    <p class="agenda-card-info">📅 ${escaparHtml(formatarDataArquivoRanking(arquivo.arquivado_em))} por ${escaparHtml(arquivo.arquivado_por)}</p>
+                </article>`).join('');
+        }
+
+        async function carregarRankingProfessor() {
+            const rankingContainer = document.getElementById('rankingAtualProfessor');
+            const arquivosContainer = document.getElementById('listaArquivosRanking');
+            rankingContainer.innerHTML = '<div class="card-mensagem">Carregando ranking da temporada...</div>';
+            arquivosContainer.innerHTML = '<div class="card-mensagem">Carregando histórico...</div>';
+            try {
+                const [dadosRanking, dadosArquivos] = await Promise.all([
+                    apiFetch('/api/ranking'),
+                    apiFetch('/api/ranking/arquivos')
+                ]);
+                const ano = Number(dadosRanking.ano) || new Date().getFullYear();
+                document.getElementById('anoRankingAtual').textContent = String(ano);
+                const ranking = dadosRanking.ranking || [];
+                if (!ranking.length) {
+                    rankingContainer.innerHTML = '<div class="card-mensagem">Não há alunos ativos para exibir no ranking.</div>';
+                } else {
+                    const linhas = ranking.map((aluno, indice) => `<tr>
+                        <td>${indice + 1}º</td>
+                        <td>${escaparHtml(aluno.nome)}</td>
+                        <td>${Number(aluno.presencas) || 0}</td>
+                        <td>${Number(aluno.badges) || 0}</td>
+                        <td><strong>${Number(aluno.pontos) || 0}</strong></td>
+                    </tr>`).join('');
+                    rankingContainer.innerHTML = `<div class="table-responsive"><table class="tabela-resumo"><thead><tr><th>Posição</th><th>Aluno</th><th>Presenças</th><th>Badges</th><th>Pontos</th></tr></thead><tbody>${linhas}</tbody></table></div>`;
+                }
+                renderizarArquivosRanking(dadosArquivos.arquivos || []);
+            } catch (error) {
+                const mensagem = escaparHtml(error.message || 'Não foi possível carregar o ranking.');
+                rankingContainer.innerHTML = `<div class="card-mensagem" style="color:#fecaca;">${mensagem}</div>`;
+                arquivosContainer.innerHTML = '<div class="card-mensagem">Não foi possível carregar o histórico.</div>';
+            }
+        }
+
+        async function arquivarRankingAtual() {
+            const ano = document.getElementById('anoRankingAtual').textContent || String(new Date().getFullYear());
+            if (!confirm(`Arquivar a temporada ${ano}? Será salva uma cópia definitiva do ranking e dos badges. Os dados atuais não serão apagados.`)) return;
+
+            const confirmacao = prompt(`Para confirmar o arquivamento da temporada ${ano}, digite exatamente:\nARQUIVAR ${ano}`);
+            if (confirmacao === null) return;
+
+            const botao = document.getElementById('btnArquivarRanking');
+            botao.disabled = true;
+            botao.textContent = 'Arquivando...';
+            definirFeedbackRanking('');
+            try {
+                const resposta = await apiFetch('/api/ranking/arquivar', {
+                    method: 'POST',
+                    body: JSON.stringify({ ano: Number(ano), confirmacao })
+                });
+                definirFeedbackRanking(resposta.mensagem || 'Temporada arquivada com sucesso.', 'sucesso');
+                await carregarRankingProfessor();
+            } catch (error) {
+                definirFeedbackRanking(error.message || 'Não foi possível arquivar a temporada.', 'erro');
+            } finally {
+                botao.disabled = false;
+                botao.textContent = '📦 Arquivar ranking desta temporada';
+            }
+        }
+
+        document.getElementById('btnAtualizarRanking').addEventListener('click', carregarRankingProfessor);
+        document.getElementById('btnArquivarRanking').addEventListener('click', arquivarRankingAtual);
+
       function mudarAba(nomeAba, elementoBotao) {
             const abas = document.querySelectorAll('.tab-content');
             abas.forEach(aba => aba.classList.remove('active'));
@@ -1643,6 +1762,7 @@
 
             if (nomeAba === 'agenda') carregarAgendaProfessor();
             else if (nomeAba === 'exames') carregarHistoricoExamesProfessor();
+            else if (nomeAba === 'ranking') carregarRankingProfessor();
             else if (nomeAba === 'banners') carregarBannersProfessor();
             else if (nomeAba === 'justificativas') carregarJustificativasProfessor();
             else if (nomeAba === 'resumo') carregarResumoFrequencia();
