@@ -2101,6 +2101,7 @@
                             <div class="card-list-detail">
                                 <strong>Vídeo:</strong> <span style="color: #60a5fa;">Verifique os envios no Google Forms/Drive</span>
                             </div>
+                            ${item.comentario_professor ? `<div class="card-list-detail"><strong>Comentário do Sensei:</strong> ${escaparHtml(item.comentario_professor)}</div>` : ''}
                             <div class="card-list-date">Enviado em: ${escaparHtml(item.data_solicitacao)}</div>
 
                             ${ehPendente ? `
@@ -2118,12 +2119,24 @@
         }
 
         async function responderDesafio(id, status) {
-            if (!confirm(`Deseja marcar este vídeo como ${status.toUpperCase()}? Se aprovado, destrava o Badge para o aluno.`)) return;
+            let comentario = null;
+            if (status === 'reprovado') {
+                comentario = prompt(`Deseja marcar este vídeo como REPROVADO?\n\nPor favor, informe o motivo da reprovação (obrigatório):`);
+                if (comentario === null) return;
+                comentario = comentario.trim();
+                if (!comentario) {
+                    alert("O comentário é obrigatório ao reprovar um desafio.");
+                    return;
+                }
+            } else if (!confirm('Deseja marcar este vídeo como APROVADO? O Badge será liberado para o aluno.')) {
+                return;
+            }
+
             try {
                 const response = await fetchAutenticado(`${URL_API_SERVIDOR}/api/desafio/resposta`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ id, status })
+                    body: JSON.stringify({ id, status, comentario })
                 });
                 const result = await response.json();
                 if (response.ok) {
