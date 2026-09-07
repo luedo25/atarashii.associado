@@ -154,6 +154,9 @@
     window.Professor = {
         notificarPerfisIncompletos() {
             return apiFetch('/api/professor/notificar-perfis-incompletos', { method: 'POST' });
+        },
+        notificarFrequenciaBaixa() {
+            return apiFetch('/api/professor/notificar-frequencia-baixa', { method: 'POST' });
         }
     };
     window.Agenda = {
