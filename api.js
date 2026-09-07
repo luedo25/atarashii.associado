@@ -151,6 +151,11 @@
             });
         }
     };
+    window.Professor = {
+        notificarPerfisIncompletos() {
+            return apiFetch('/api/professor/notificar-perfis-incompletos', { method: 'POST' });
+        }
+    };
     window.Agenda = {
         listar() {
             return apiFetch('/api/agenda');
