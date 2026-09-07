@@ -224,6 +224,14 @@
         .mensagem-frequencia.alerta-piscante { color:#fca5a5; animation: piscarAlertaFrequencia 1.15s ease-in-out infinite; }
         .mensagem-frequencia.parabens { color:#86efac; }
         .badges-miniaturas { display:flex; flex-wrap:wrap; gap:4px; margin-top:7px; min-height:0; }
+        .linha-tempo { margin-top:24px; padding:16px; border:1px solid var(--border-color); border-radius:var(--radius-md); background:rgba(15,23,42,.48); }
+        .linha-tempo h3 { margin:0 0 14px; font-size:15px; }
+        .linha-tempo-lista { display:grid; gap:10px; }
+        .linha-tempo-item { position:relative; padding:10px 12px 10px 22px; border-left:2px solid var(--accent-blue); background:rgba(30,41,59,.62); border-radius:0 8px 8px 0; font-size:13px; }
+        .linha-tempo-item::before { content:''; position:absolute; left:-6px; top:15px; width:10px; height:10px; border-radius:50%; background:var(--accent-blue); }
+        .linha-tempo-item.alerta { border-left-color:#f59e0b; } .linha-tempo-item.alerta::before { background:#f59e0b; }
+        .linha-tempo-item.sucesso { border-left-color:#10b981; } .linha-tempo-item.sucesso::before { background:#10b981; }
+        .linha-tempo-data { display:block; color:var(--text-muted); font-size:11px; font-weight:700; margin-bottom:3px; text-transform:uppercase; }
         .badge-miniatura { width:23px; height:23px; border-radius:50%; display:flex; align-items:center; justify-content:center; background:linear-gradient(135deg,#f8fafc 0%,#94a3b8 50%,#334155 100%); border:1px solid #fff; box-shadow:0 0 7px rgba(248,250,252,.35); color:#0f172a; }
         .badge-miniatura svg { width:12px; height:12px; stroke-width:2.4; }
         @keyframes piscarAlertaFrequencia { 0%, 100% { opacity:1; } 50% { opacity:.35; } }
@@ -465,6 +473,16 @@
                 </tbody>
             </table>
         </div>
+
+        <section class="linha-tempo" aria-labelledby="tituloLinhaFaixas">
+            <h3 id="tituloLinhaFaixas">🥋 Linha do tempo de faixas</h3>
+            <div id="linhaTempoFaixas" class="linha-tempo-lista">Carregando histórico de graduações...</div>
+        </section>
+
+        <section class="linha-tempo" aria-labelledby="tituloLinhaFrequencia">
+            <h3 id="tituloLinhaFrequencia">📈 Frequência mensal — últimos 12 meses</h3>
+            <div id="linhaTempoFrequencia" class="linha-tempo-lista">Carregando frequência mensal...</div>
+        </section>
 
         <div class="grafico-container" style="position: relative; width: 100%; max-width: 420px; margin: 25px auto 0 auto;">
             <h3 style="justify-content: center; margin-bottom: 15px;">📊 Frequência de Aulas</h3>
@@ -1812,6 +1830,36 @@
         }
     }
 
+    function normalizarPeriodoExame(periodo) {
+        const valor = String(periodo || '').trim();
+        const achado = valor.match(/(junho|dezembro)\s*\/\s*(\d{4})/i);
+        if (!achado) return valor || 'Mês não informado';
+        return `${achado[1].charAt(0).toUpperCase()}${achado[1].slice(1).toLowerCase()} de ${achado[2]}`;
+    }
+
+    async function carregarLinhasDoTempoAluno() {
+        const faixas = document.getElementById('linhaTempoFaixas');
+        const frequencia = document.getElementById('linhaTempoFrequencia');
+        try {
+            const [exames, dadosFrequencia] = await Promise.all([
+                apiFetch('/api/exames/me'),
+                apiFetch('/api/frequencia/me/linha-do-tempo')
+            ]);
+            faixas.innerHTML = Array.isArray(exames) && exames.length
+                ? exames.slice().reverse().map(exame => `<article class="linha-tempo-item sucesso"><span class="linha-tempo-data">${escaparHtml(normalizarPeriodoExame(exame.ano))}</span><strong>Nova faixa: ${escaparHtml(exame.faixa)}</strong></article>`).join('')
+                : '<div class="linha-tempo-item"><strong>Nenhuma graduação registrada ainda.</strong></div>';
+            const meses = Array.isArray(dadosFrequencia?.meses) ? dadosFrequencia.meses : [];
+            frequencia.innerHTML = meses.map(mes => {
+                const percentual = mes.percentual;
+                const classe = percentual == null ? '' : percentual < 75 ? 'alerta' : 'sucesso';
+                const resumo = percentual == null ? 'Sem aulas registradas.' : `${mes.presencas}/${mes.total_aulas} aula(s) — ${percentual}% de presença`;
+                return `<article class="linha-tempo-item ${classe}"><span class="linha-tempo-data">${escaparHtml(mes.rotulo)}</span><strong>${escaparHtml(resumo)}</strong></article>`;
+            }).join('') || '<div class="linha-tempo-item"><strong>Nenhum dado de frequência encontrado.</strong></div>';
+        } catch (error) {
+            faixas.innerHTML = frequencia.innerHTML = `<div class="linha-tempo-item alerta">Não foi possível carregar o histórico agora.</div>`;
+        }
+    }
+
     async function carregarResumoPersonalizado() {
         try {
             const [agenda, frequencia, exames, dadosBadges] = await Promise.all([
@@ -2348,6 +2396,7 @@
                 carregarBadgesAluno(),
                 carregarRanking(),
                 carregarNotasAluno(),
+                carregarLinhasDoTempoAluno(),
                 carregarResumoPersonalizado(),
                 carregarGraficoFrequencia(),
                 carregarStatusJustificativas(),
