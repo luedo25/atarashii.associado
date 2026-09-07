@@ -754,7 +754,10 @@
         <section id="aba-chamada" class="tab-content">
             <div class="chamada-header">
                 <h2>🥋 Chamada dos Alunos</h2>
-                <button type="button" class="btn-novo-aluno" id="btnAbrirCadastro">＋ Novo aluno</button>
+                <div style="display:flex; gap:8px; flex-wrap:wrap;">
+                    <button type="button" class="btn-agenda-acao" id="btnNotificarPerfis">🔔 Lembrar perfis incompletos</button>
+                    <button type="button" class="btn-novo-aluno" id="btnAbrirCadastro">＋ Novo aluno</button>
+                </div>
             </div>
             <label for="dataAula" style="font-size: 0.85rem; color: #94a3b8; font-weight: bold;">Selecione a Data da Aula (Ter, Qui ou Sáb):</label>
             <input type="date" id="dataAula">
@@ -1546,6 +1549,21 @@
         }
 
         document.getElementById('btnNovoEvento').addEventListener('click', () => abrirModalAgenda());
+        document.getElementById('btnNotificarPerfis').addEventListener('click', async () => {
+            const botao = document.getElementById('btnNotificarPerfis');
+            botao.disabled = true;
+            botao.textContent = 'Enviando...';
+            try {
+                const resposta = await Professor.notificarPerfisIncompletos();
+                alert(resposta.mensagem || 'Lembretes enviados.');
+                carregarDashboardProfessor();
+            } catch (error) {
+                alert(error.message || 'Não foi possível enviar os lembretes.');
+            } finally {
+                botao.disabled = false;
+                botao.textContent = '🔔 Lembrar perfis incompletos';
+            }
+        });
         document.getElementById('btnFecharAgenda').addEventListener('click', fecharModalAgenda);
         document.getElementById('filtroAgendaStatus').addEventListener('change', renderizarAgendaProfessor);
         document.getElementById('filtroAgendaCategoria').addEventListener('change', renderizarAgendaProfessor);
