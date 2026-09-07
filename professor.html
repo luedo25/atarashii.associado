@@ -1898,17 +1898,17 @@
             mudarAba(nomeAba, obterBotaoAba(nomeAba));
         }
 
-        function resumoIndicador(itens, formatarItem, vazio = 'Nenhum registro no momento.') {
+        function resumoIndicador(itens, formatarItem, vazio = 'Nenhum registro no momento.', mostrarTodos = false) {
             if (!Array.isArray(itens) || itens.length === 0) return vazio;
-            return itens.slice(0, 3).map(formatarItem).map(escaparHtml).join('<br>');
+            return (mostrarTodos ? itens : itens.slice(0, 3)).map(formatarItem).map(escaparHtml).join('<br>');
         }
 
-        function cardDashboard({ titulo, total, itens, aba, classe = '', formatarItem, vazio }) {
+        function cardDashboard({ titulo, total, itens, aba, classe = '', formatarItem, vazio, mostrarTodos = false }) {
             return `
                 <button type="button" class="dashboard-card ${classe}" onclick="abrirIndicadorDashboard('${aba}')">
                     <span class="dashboard-card-titulo">${titulo}</span>
                     <span class="dashboard-card-total">${Number(total) || 0}</span>
-                    <span class="dashboard-card-detalhe">${resumoIndicador(itens, formatarItem, vazio)}</span>
+                    <span class="dashboard-card-detalhe">${resumoIndicador(itens, formatarItem, vazio, mostrarTodos)}</span>
                     <span class="dashboard-card-acao">Abrir detalhes →</span>
                 </button>`;
         }
@@ -1926,8 +1926,8 @@
                     cardDashboard({ titulo: '🎯 Desafios pendentes', total: dados.desafios?.total, itens: dados.desafios?.itens, aba: 'desafios', classe: 'alerta', formatarItem: item => `${item.nome} • ${item.nome_desafio}` }),
                     cardDashboard({ titulo: '🗓️ Próximos eventos', total: dados.proximos_eventos?.total, itens: dados.proximos_eventos?.itens, aba: 'agenda', classe: 'sucesso', formatarItem: item => `${item.data} • ${item.nome_evento}` }),
                     cardDashboard({ titulo: '👥 Respostas pendentes na agenda', total: dados.respostas_pendentes?.total, itens: dados.respostas_pendentes?.itens, aba: 'agenda', classe: 'alerta', formatarItem: item => `${item.nome_evento}: ${item.nao_respondidos} sem resposta`, vazio: 'Todos os participantes já responderam.' }),
-                    cardDashboard({ titulo: '⚠️ Frequência abaixo de 75%', total: dados.frequencia_baixa?.total, itens: dados.frequencia_baixa?.itens, aba: 'resumo', classe: 'critico', formatarItem: item => `${item.nome} • ${item.percentual}% — ${tituloSemestre}`, vazio: `Nenhum aluno abaixo do limite no ${tituloSemestre}.` }),
-                    cardDashboard({ titulo: '👤 Perfis incompletos', total: dados.perfis_incompletos?.total, itens: dados.perfis_incompletos?.itens, aba: 'chamada', classe: 'alerta', formatarItem: item => item.nome, vazio: 'Todos os perfis ativos possuem os dados essenciais.' }),
+                    cardDashboard({ titulo: '⚠️ Frequência abaixo de 75%', total: dados.frequencia_baixa?.total, itens: dados.frequencia_baixa?.itens, aba: 'resumo', classe: 'critico', formatarItem: item => `${item.nome} • ${item.percentual}% — ${tituloSemestre}`, vazio: `Nenhum aluno abaixo do limite no ${tituloSemestre}.`, mostrarTodos: true }),
+                    cardDashboard({ titulo: '👤 Perfis incompletos', total: dados.perfis_incompletos?.total, itens: dados.perfis_incompletos?.itens, aba: 'chamada', classe: 'alerta', formatarItem: item => item.nome, vazio: 'Todos os perfis ativos possuem os dados essenciais.', mostrarTodos: true }),
                     cardDashboard({ titulo: '🎂 Próximos aniversários (30 dias)', total: dados.aniversarios?.total, itens: dados.aniversarios?.itens, aba: 'chamada', classe: 'sucesso', formatarItem: item => `${item.data} • ${item.nome}`, vazio: 'Nenhum aniversário nos próximos 30 dias.' })
                 ].join('');
             } catch (error) {
