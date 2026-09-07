@@ -755,6 +755,7 @@
             <div class="chamada-header">
                 <h2>🥋 Chamada dos Alunos</h2>
                 <div style="display:flex; gap:8px; flex-wrap:wrap;">
+                    <button type="button" class="btn-agenda-acao" id="btnNotificarFrequencia">⚠️ Alertar frequência abaixo de 75%</button>
                     <button type="button" class="btn-agenda-acao" id="btnNotificarPerfis">🔔 Lembrar perfis incompletos</button>
                     <button type="button" class="btn-novo-aluno" id="btnAbrirCadastro">＋ Novo aluno</button>
                 </div>
@@ -1549,6 +1550,21 @@
         }
 
         document.getElementById('btnNovoEvento').addEventListener('click', () => abrirModalAgenda());
+        document.getElementById('btnNotificarFrequencia').addEventListener('click', async () => {
+            const botao = document.getElementById('btnNotificarFrequencia');
+            if (!confirm('Enviar um aviso personalizado para cada aluno com frequência abaixo de 75%?')) return;
+            botao.disabled = true;
+            botao.textContent = 'Enviando...';
+            try {
+                const resposta = await Professor.notificarFrequenciaBaixa();
+                alert(resposta.mensagem || 'Avisos enviados.');
+            } catch (error) {
+                alert(error.message || 'Não foi possível enviar os avisos.');
+            } finally {
+                botao.disabled = false;
+                botao.textContent = '⚠️ Alertar frequência abaixo de 75%';
+            }
+        });
         document.getElementById('btnNotificarPerfis').addEventListener('click', async () => {
             const botao = document.getElementById('btnNotificarPerfis');
             botao.disabled = true;
