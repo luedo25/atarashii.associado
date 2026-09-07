@@ -409,6 +409,49 @@
         .agenda-card-info { margin-top: 8px; color: #94a3b8; font-size: 0.88rem; line-height: 1.5; }
         .agenda-card-descricao { margin-top: 8px; color: #cbd5e1; white-space: pre-wrap; }
 
+        .agenda-confirmacoes {
+            margin-top: 12px;
+            border: 1px solid #334155;
+            border-radius: 8px;
+            background: rgba(15, 23, 42, 0.72);
+            overflow: hidden;
+        }
+
+        .agenda-confirmacoes summary {
+            padding: 10px 12px;
+            color: #e2e8f0;
+            cursor: pointer;
+            font-size: 0.86rem;
+            font-weight: 800;
+        }
+
+        .agenda-confirmacoes-lista { padding: 0 10px 10px; }
+
+        .agenda-confirmacao-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 10px;
+            padding: 9px 2px;
+            border-top: 1px solid #1e293b;
+        }
+
+        .agenda-confirmacao-aluno { color: #f8fafc; font-size: 0.86rem; }
+        .agenda-confirmacao-data { display: block; margin-top: 2px; color: #64748b; font-size: 0.72rem; }
+
+        .agenda-confirmacao-badge {
+            flex: 0 0 auto;
+            padding: 4px 8px;
+            border-radius: 999px;
+            font-size: 0.7rem;
+            font-weight: 800;
+            text-transform: uppercase;
+        }
+
+        .agenda-confirmacao-badge.confirmado { background: #064e3b; color: #a7f3d0; }
+        .agenda-confirmacao-badge.recusado { background: #7f1d1d; color: #fecaca; }
+        .agenda-sem-confirmacoes { padding: 2px 2px 8px; color: #94a3b8; font-size: 0.82rem; }
+
         .agenda-status {
             padding: 5px 9px;
             border-radius: 999px;
@@ -1328,6 +1371,22 @@
                 const horario = evento.hora_inicio
                     ? ` • ${escaparHtml(evento.hora_inicio)}${evento.hora_fim ? ` às ${escaparHtml(evento.hora_fim)}` : ''}`
                     : '';
+                const confirmacoes = Array.isArray(evento.confirmacoes) ? evento.confirmacoes : [];
+                const respostasHtml = confirmacoes.length
+                    ? confirmacoes.map(resposta => {
+                        const confirmado = resposta.status === 'confirmado';
+                        return `
+                            <div class="agenda-confirmacao-item">
+                                <div class="agenda-confirmacao-aluno">
+                                    <strong>${escaparHtml(resposta.nome_aluno)}</strong>
+                                    <span class="agenda-confirmacao-data">Usuário: ${escaparHtml(resposta.usuario)} • Atualizado em ${escaparHtml(resposta.atualizado_em)}</span>
+                                </div>
+                                <span class="agenda-confirmacao-badge ${confirmado ? 'confirmado' : 'recusado'}">
+                                    ${confirmado ? '✅ Confirmado' : '❌ Não participará'}
+                                </span>
+                            </div>`;
+                    }).join('')
+                    : '<div class="agenda-sem-confirmacoes">Nenhum aluno respondeu a este evento.</div>';
                 return `
                     <article class="agenda-card ${escaparHtml(evento.status)}" data-agenda-id="${evento.id}">
                         <div class="agenda-card-topo">
@@ -1339,11 +1398,15 @@
                             <div>📍 ${escaparHtml(evento.local)}</div>
                             <div>🏷️ ${escaparHtml(rotulosAgenda[evento.categoria] || 'Outro evento')}</div>
                             ${evento.participantes ? `<div>🥋 ${escaparHtml(evento.participantes)}</div>` : ''}
-                            <div>👥 Confirmados: ${Number(evento.confirmados_count) || 0}</div>
+                            <div>✅ Confirmados: ${Number(evento.confirmados_count) || 0} • ❌ Não participarão: ${Number(evento.recusados_count) || 0}</div>
                             <div>🎯 Público: ${escaparHtml(evento.publico === 'grupo' ? `Grupo ${evento.grupo}` : evento.publico === 'selecionados' ? 'Alunos selecionados' : 'Todos os alunos')}</div>
                             ${evento.anexo_url ? `<div>📎 <a href="${escaparHtml(evento.anexo_url)}" target="_blank" rel="noopener">${escaparHtml(evento.anexo_nome || 'Abrir anexo')}</a></div>` : ''}
                         </div>
                         ${evento.descricao ? `<p class="agenda-card-descricao">${escaparHtml(evento.descricao)}</p>` : ''}
+                        <details class="agenda-confirmacoes">
+                            <summary>👥 Ver respostas dos alunos (${confirmacoes.length})</summary>
+                            <div class="agenda-confirmacoes-lista">${respostasHtml}</div>
+                        </details>
                         <div class="agenda-card-acoes">
                             <select data-agenda-status="${evento.id}" aria-label="Alterar status de ${escaparHtml(evento.nome_evento)}" style="width:auto; margin:0; padding:8px;">
                                 <option value="agendado" ${evento.status === 'agendado' ? 'selected' : ''}>Agendado</option>
