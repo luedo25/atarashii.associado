@@ -177,6 +177,9 @@
                 method: 'POST',
                 body: JSON.stringify({ status })
             });
+        },
+        notificarPendentes(id) {
+            return apiFetch(`/api/agenda/${encodeURIComponent(id)}/notificar-pendentes`, { method: 'POST' });
         }
     };
     window.Banners = {
