@@ -1846,7 +1846,13 @@
             );
         }
 
+        let periodoFrequenciaDashboard = null;
+
         function abrirIndicadorDashboard(nomeAba) {
+            if (nomeAba === 'resumo' && periodoFrequenciaDashboard) {
+                document.getElementById('dataInicio').value = periodoFrequenciaDashboard.inicio;
+                document.getElementById('dataFim').value = periodoFrequenciaDashboard.fim;
+            }
             mudarAba(nomeAba, obterBotaoAba(nomeAba));
         }
 
@@ -1871,12 +1877,14 @@
             container.innerHTML = '<div class="card-mensagem">Carregando indicadores...</div>';
             try {
                 const dados = await apiFetch('/api/professor/dashboard');
+                periodoFrequenciaDashboard = dados.frequencia_baixa?.periodo || null;
+                const tituloSemestre = periodoFrequenciaDashboard?.titulo || 'semestre atual';
                 container.innerHTML = [
                     cardDashboard({ titulo: '📝 Justificativas aguardando avaliação', total: dados.justificativas?.total, itens: dados.justificativas?.itens, aba: 'justificativas', classe: 'alerta', formatarItem: item => `${item.nome} • falta em ${item.data_falta}` }),
                     cardDashboard({ titulo: '🎯 Desafios pendentes', total: dados.desafios?.total, itens: dados.desafios?.itens, aba: 'desafios', classe: 'alerta', formatarItem: item => `${item.nome} • ${item.nome_desafio}` }),
                     cardDashboard({ titulo: '🗓️ Próximos eventos', total: dados.proximos_eventos?.total, itens: dados.proximos_eventos?.itens, aba: 'agenda', classe: 'sucesso', formatarItem: item => `${item.data} • ${item.nome_evento}` }),
                     cardDashboard({ titulo: '👥 Respostas pendentes na agenda', total: dados.respostas_pendentes?.total, itens: dados.respostas_pendentes?.itens, aba: 'agenda', classe: 'alerta', formatarItem: item => `${item.nome_evento}: ${item.nao_respondidos} sem resposta`, vazio: 'Todos os participantes já responderam.' }),
-                    cardDashboard({ titulo: '⚠️ Frequência abaixo de 75%', total: dados.frequencia_baixa?.total, itens: dados.frequencia_baixa?.itens, aba: 'resumo', classe: 'critico', formatarItem: item => `${item.nome} • ${item.percentual}% no mês`, vazio: 'Nenhum aluno abaixo do limite no mês.' }),
+                    cardDashboard({ titulo: '⚠️ Frequência abaixo de 75%', total: dados.frequencia_baixa?.total, itens: dados.frequencia_baixa?.itens, aba: 'resumo', classe: 'critico', formatarItem: item => `${item.nome} • ${item.percentual}% — ${tituloSemestre}`, vazio: `Nenhum aluno abaixo do limite no ${tituloSemestre}.` }),
                     cardDashboard({ titulo: '👤 Perfis incompletos', total: dados.perfis_incompletos?.total, itens: dados.perfis_incompletos?.itens, aba: 'chamada', classe: 'alerta', formatarItem: item => item.nome, vazio: 'Todos os perfis ativos possuem os dados essenciais.' }),
                     cardDashboard({ titulo: '🎂 Próximos aniversários (30 dias)', total: dados.aniversarios?.total, itens: dados.aniversarios?.itens, aba: 'chamada', classe: 'sucesso', formatarItem: item => `${item.data} • ${item.nome}`, vazio: 'Nenhum aniversário nos próximos 30 dias.' })
                 ].join('');
