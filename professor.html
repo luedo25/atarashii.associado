@@ -1178,6 +1178,14 @@
                         <label for="agendaHoraFim">Hora final (opcional)</label>
                         <input type="time" id="agendaHoraFim">
                     </div>
+                    <div class="cadastro-campo">
+                        <label for="agendaLimiteVagas">Limite de vagas (opcional)</label>
+                        <input type="number" id="agendaLimiteVagas" min="1" max="10000" placeholder="Sem limite">
+                    </div>
+                    <div class="cadastro-campo">
+                        <label for="agendaPrazoConfirmacao">Prazo de confirmação (opcional)</label>
+                        <input type="datetime-local" id="agendaPrazoConfirmacao">
+                    </div>
                     <div class="cadastro-campo cadastro-campo-full">
                         <label for="agendaParticipantes">Participantes</label>
                         <textarea id="agendaParticipantes" maxlength="1000" placeholder="Ex.: Todos os alunos ou nomes separados por vírgula"></textarea>
@@ -1433,6 +1441,9 @@
                             <div>🏷️ ${escaparHtml(rotulosAgenda[evento.categoria] || 'Outro evento')}</div>
                             ${evento.participantes ? `<div>🥋 ${escaparHtml(evento.participantes)}</div>` : ''}
                             <div>✅ Confirmados: ${Number(evento.confirmados_count) || 0} • ❌ Não participarão: ${Number(evento.recusados_count) || 0}</div>
+                            <div>📊 Confirmação: ${Number(evento.total_participantes) ? Math.round((Number(evento.confirmados_count || 0) / Number(evento.total_participantes)) * 100) : 0}%</div>
+                            ${evento.limite_vagas ? `<div>🎟️ Vagas: ${Number(evento.confirmados_count) || 0}/${Number(evento.limite_vagas)} • ⏳ Espera: ${Number(evento.lista_espera_count) || 0}</div>` : ''}
+                            ${evento.prazo_confirmacao ? `<div>⏰ Prazo: ${escaparHtml(evento.prazo_confirmacao.replace('T', ' às '))}</div>` : ''}
                             <div>🎯 Público: ${escaparHtml(evento.publico === 'grupo' ? `Grupo ${evento.grupo}` : evento.publico === 'selecionados' ? 'Alunos selecionados' : 'Todos os alunos')}</div>
                             ${evento.anexo_url ? `<div>📎 <a href="${escaparHtml(evento.anexo_url)}" target="_blank" rel="noopener">${escaparHtml(evento.anexo_nome || 'Abrir anexo')}</a></div>` : ''}
                         </div>
@@ -1449,6 +1460,7 @@
                                 <option value="cancelado" ${evento.status === 'cancelado' ? 'selected' : ''}>Cancelado</option>
                             </select>
                             <button type="button" class="btn-agenda-acao" data-agenda-editar="${evento.id}">Editar</button>
+                            <button type="button" class="btn-agenda-acao" data-agenda-notificar="${evento.id}">🔔 Lembrar pendentes</button>
                             <button type="button" class="btn-agenda-acao btn-agenda-excluir" data-agenda-excluir="${evento.id}">Excluir</button>
                         </div>
                     </article>`;
@@ -1487,6 +1499,8 @@
             document.getElementById('agendaDescricao').value = evento?.descricao || '';
             document.getElementById('agendaAnexoNome').value = evento?.anexo_nome || '';
             document.getElementById('agendaAnexoUrl').value = evento?.anexo_url || '';
+            document.getElementById('agendaLimiteVagas').value = evento?.limite_vagas || '';
+            document.getElementById('agendaPrazoConfirmacao').value = evento?.prazo_confirmacao || '';
             atualizarCamposPublicoAgenda();
             modalAgenda.showModal();
             document.getElementById('agendaNome').focus();
@@ -1513,7 +1527,9 @@
                 grupo: document.getElementById('agendaGrupo').value.trim(),
                 participantesUsuarios,
                 anexoNome: document.getElementById('agendaAnexoNome').value.trim(),
-                anexoUrl: document.getElementById('agendaAnexoUrl').value.trim()
+                anexoUrl: document.getElementById('agendaAnexoUrl').value.trim(),
+                limiteVagas: document.getElementById('agendaLimiteVagas').value,
+                prazoConfirmacao: document.getElementById('agendaPrazoConfirmacao').value
             };
         }
 
@@ -1541,6 +1557,14 @@
         document.getElementById('listaAgendaProfessor').addEventListener('click', async event => {
             const editar = event.target.closest('[data-agenda-editar]');
             const excluir = event.target.closest('[data-agenda-excluir]');
+            const notificar = event.target.closest('[data-agenda-notificar]');
+            if (notificar) {
+                notificar.disabled = true;
+                try { const resposta = await Agenda.notificarPendentes(notificar.dataset.agendaNotificar); alert(resposta.mensagem || 'Lembretes enviados.'); }
+                catch (error) { alert(error.message || 'Não foi possível enviar os lembretes.'); }
+                finally { notificar.disabled = false; }
+                return;
+            }
             if (editar) {
                 const item = listaAgenda.find(e => String(e.id) === editar.dataset.agendaEditar);
                 if (item) abrirModalAgenda(item);
