@@ -2203,11 +2203,15 @@
 
             container.innerHTML = dados.map(item => {
                 let corBadge = item.status === 'aprovado' ? '#10b981' : (item.status === 'reprovado' ? '#ef4444' : '#f59e0b');
+                const comentarioHtml = item.comentario_professor
+                    ? `<div style="margin-top: 6px; padding: 8px; background: rgba(239, 68, 68, 0.1); border-left: 3px solid #ef4444; color: #fca5a5; border-radius: 4px; font-size: 12px;"><strong>Motivo da Reprovação:</strong> ${escaparHtml(item.comentario_professor)}</div>`
+                    : '';
                 return `
                     <div style="background: rgba(0,0,0,0.2); padding: 10px; border-radius: 6px; margin-bottom: 8px; border-left: 4px solid ${corBadge}; text-align: left;">
                         <div><strong>Desafio:</strong> ${escaparHtml(item.nome_desafio)}</div>
                         <div><strong>Vídeo:</strong> <span style="color: #60a5fa;">Enviado via Google Forms</span></div>
                         <div><strong>Status:</strong> <span style="color: ${corBadge}; font-weight: bold; text-transform: uppercase;">${escaparHtml(item.status)}</span></div>
+                        ${comentarioHtml}
                         <div style="font-size: 11px; color: var(--text-muted); margin-top: 4px;">Solicitado em: ${escaparHtml(item.data_solicitacao)}</div>
                     </div>
                 `;
