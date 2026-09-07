@@ -655,6 +655,21 @@
             display: inline-block;
         }
 
+        .dashboard-intro { margin: 0 0 18px; color: #94a3b8; line-height: 1.5; }
+        .dashboard-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 12px; }
+        .dashboard-card {
+            width: 100%; min-height: 156px; padding: 16px; border: 1px solid #334155; border-left: 4px solid #3b82f6;
+            border-radius: 10px; background: #0f172a; color: #f8fafc; text-align: left; cursor: pointer;
+        }
+        .dashboard-card:hover, .dashboard-card:focus-visible { background: #172554; border-color: #60a5fa; outline: none; }
+        .dashboard-card.alerta { border-left-color: #f59e0b; }
+        .dashboard-card.critico { border-left-color: #ef4444; }
+        .dashboard-card.sucesso { border-left-color: #10b981; }
+        .dashboard-card-titulo { display:block; color:#cbd5e1; font-size:.86rem; font-weight:700; }
+        .dashboard-card-total { display:block; margin:8px 0; color:#f8fafc; font-size:2rem; font-weight:800; }
+        .dashboard-card-detalhe { display:block; color:#94a3b8; font-size:.78rem; line-height:1.45; }
+        .dashboard-card-acao { display:block; margin-top:10px; color:#93c5fd; font-size:.76rem; font-weight:800; }
+
         /* OTIMIZAÇÃO EXTRA PARA SMARTPHONES PEQUENOS */
         @media (max-width: 480px) {
             .top-bar { justify-content: center; text-align: center; padding: 12px; }
@@ -677,6 +692,7 @@
             .btn-nome-aluno { flex: 1; }
             .agenda-filtro { grid-template-columns: 1fr; }
             h2 { font-size: 1.3rem; }
+            .dashboard-grid { grid-template-columns: 1fr; }
         }
     </style>
 </head>
@@ -701,7 +717,8 @@
 
     <!-- MENU DE ABAS COM SCROLL LATERAL EM TELAS MENORES -->
    <nav class="tabs-nav">
-        <button class="nav-btn active" onclick="mudarAba('chamada', this)">📋 Chamada</button>
+        <button class="nav-btn active" onclick="mudarAba('visao-geral', this)">📌 Visão Geral</button>
+        <button class="nav-btn" onclick="mudarAba('chamada', this)">📋 Chamada</button>
         <button class="nav-btn" onclick="mudarAba('agenda', this)">🗓️ Agenda</button>
         <button class="nav-btn" onclick="mudarAba('exames', this)">🥋 Exames</button>
         <button class="nav-btn" onclick="mudarAba('ranking', this)">🏆 Ranking</button>
@@ -716,8 +733,16 @@
     <!-- CONTEÚDO DAS ABAS -->
     <main class="content-container">
 
+        <section id="aba-visao-geral" class="tab-content active">
+            <h2>📌 Visão Geral</h2>
+            <p class="dashboard-intro">Acompanhe as pendências e os próximos pontos de atenção. Toque em um indicador para abrir a área correspondente.</p>
+            <div id="dashboardProfessor" class="dashboard-grid" aria-live="polite">
+                <div class="card-mensagem">Carregando indicadores...</div>
+            </div>
+        </section>
+
         <!-- ABA 1: CHAMADA -->
-        <section id="aba-chamada" class="tab-content active">
+        <section id="aba-chamada" class="tab-content">
             <div class="chamada-header">
                 <h2>🥋 Chamada dos Alunos</h2>
                 <button type="button" class="btn-novo-aluno" id="btnAbrirCadastro">＋ Novo aluno</button>
@@ -1806,6 +1831,51 @@
         document.getElementById('btnAtualizarRanking').addEventListener('click', carregarRankingProfessor);
         document.getElementById('btnArquivarRanking').addEventListener('click', arquivarRankingAtual);
 
+        function obterBotaoAba(nomeAba) {
+            return Array.from(document.querySelectorAll('.nav-btn')).find(botao =>
+                String(botao.getAttribute('onclick') || '').includes(`'${nomeAba}'`)
+            );
+        }
+
+        function abrirIndicadorDashboard(nomeAba) {
+            mudarAba(nomeAba, obterBotaoAba(nomeAba));
+        }
+
+        function resumoIndicador(itens, formatarItem, vazio = 'Nenhum registro no momento.') {
+            if (!Array.isArray(itens) || itens.length === 0) return vazio;
+            return itens.slice(0, 3).map(formatarItem).map(escaparHtml).join('<br>');
+        }
+
+        function cardDashboard({ titulo, total, itens, aba, classe = '', formatarItem, vazio }) {
+            return `
+                <button type="button" class="dashboard-card ${classe}" onclick="abrirIndicadorDashboard('${aba}')">
+                    <span class="dashboard-card-titulo">${titulo}</span>
+                    <span class="dashboard-card-total">${Number(total) || 0}</span>
+                    <span class="dashboard-card-detalhe">${resumoIndicador(itens, formatarItem, vazio)}</span>
+                    <span class="dashboard-card-acao">Abrir detalhes →</span>
+                </button>`;
+        }
+
+        async function carregarDashboardProfessor() {
+            const container = document.getElementById('dashboardProfessor');
+            if (!container) return;
+            container.innerHTML = '<div class="card-mensagem">Carregando indicadores...</div>';
+            try {
+                const dados = await apiFetch('/api/professor/dashboard');
+                container.innerHTML = [
+                    cardDashboard({ titulo: '📝 Justificativas aguardando avaliação', total: dados.justificativas?.total, itens: dados.justificativas?.itens, aba: 'justificativas', classe: 'alerta', formatarItem: item => `${item.nome} • falta em ${item.data_falta}` }),
+                    cardDashboard({ titulo: '🎯 Desafios pendentes', total: dados.desafios?.total, itens: dados.desafios?.itens, aba: 'desafios', classe: 'alerta', formatarItem: item => `${item.nome} • ${item.nome_desafio}` }),
+                    cardDashboard({ titulo: '🗓️ Próximos eventos', total: dados.proximos_eventos?.total, itens: dados.proximos_eventos?.itens, aba: 'agenda', classe: 'sucesso', formatarItem: item => `${item.data} • ${item.nome_evento}` }),
+                    cardDashboard({ titulo: '👥 Respostas pendentes na agenda', total: dados.respostas_pendentes?.total, itens: dados.respostas_pendentes?.itens, aba: 'agenda', classe: 'alerta', formatarItem: item => `${item.nome_evento}: ${item.nao_respondidos} sem resposta`, vazio: 'Todos os participantes já responderam.' }),
+                    cardDashboard({ titulo: '⚠️ Frequência abaixo de 75%', total: dados.frequencia_baixa?.total, itens: dados.frequencia_baixa?.itens, aba: 'resumo', classe: 'critico', formatarItem: item => `${item.nome} • ${item.percentual}% no mês`, vazio: 'Nenhum aluno abaixo do limite no mês.' }),
+                    cardDashboard({ titulo: '👤 Perfis incompletos', total: dados.perfis_incompletos?.total, itens: dados.perfis_incompletos?.itens, aba: 'chamada', classe: 'alerta', formatarItem: item => item.nome, vazio: 'Todos os perfis ativos possuem os dados essenciais.' }),
+                    cardDashboard({ titulo: '🎂 Próximos aniversários (30 dias)', total: dados.aniversarios?.total, itens: dados.aniversarios?.itens, aba: 'chamada', classe: 'sucesso', formatarItem: item => `${item.data} • ${item.nome}`, vazio: 'Nenhum aniversário nos próximos 30 dias.' })
+                ].join('');
+            } catch (error) {
+                container.innerHTML = `<div class="card-mensagem" style="color:#fecaca;">${escaparHtml(error.message || 'Não foi possível carregar os indicadores.')}</div>`;
+            }
+        }
+
       function mudarAba(nomeAba, elementoBotao) {
             const abas = document.querySelectorAll('.tab-content');
             abas.forEach(aba => aba.classList.remove('active'));
@@ -1823,7 +1893,8 @@
                 elementoBotao.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
             }
 
-            if (nomeAba === 'agenda') carregarAgendaProfessor();
+            if (nomeAba === 'visao-geral') carregarDashboardProfessor();
+            else if (nomeAba === 'agenda') carregarAgendaProfessor();
             else if (nomeAba === 'exames') carregarHistoricoExamesProfessor();
             else if (nomeAba === 'ranking') carregarRankingProfessor();
             else if (nomeAba === 'banners') carregarBannersProfessor();
@@ -2020,6 +2091,7 @@
                 listaAlunos = await apiFetch('/api/usuarios');
                 renderizarAlunos();
                 await carregarChamadaRegistrada();
+                await carregarDashboardProfessor();
             } catch (error) {
                 document.getElementById('listaAlunosContainer').innerHTML = `<p style="color:#f87171">${escaparHtml(error.message)}</p>`;
             }
