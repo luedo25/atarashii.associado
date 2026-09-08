@@ -988,36 +988,15 @@
 
         <!-- ABA FINANÇAS -->
         <section id="aba-financas" class="tab-content">
-            <h2 style="margin-bottom: 15px;">💰 Atualizar Finanças da Associação</h2>
-            <div class="filtro-datas-container">
-                <div class="filtro-campo">
-                    <label>Arrecadação de Valores:</label>
-                    <input type="text" id="inputArrecadacao" placeholder="Ex: R$ 4.354,90">
-                </div>
-                <div class="filtro-campo">
-                    <label>Investimentos da Associação (Total):</label>
-                    <input type="text" id="inputInvestimentos" placeholder="Ex: R$ 1.995,32">
-                </div>
-                <div class="filtro-campo">
-                    <label>Valor em Caixa:</label>
-                    <input type="text" id="inputCaixa" placeholder="Ex: R$ 2.359,58">
-                </div>
-                
-                <h4 style="color: #f8fafc; margin-top: 15px; margin-bottom: 10px;">Valor Investido 2026</h4>
-                <div class="filtro-campo">
-                    <label>Cursos:</label>
-                    <input type="text" id="inputCursos" placeholder="Ex: R$ 449,50">
-                </div>
-                <div class="filtro-campo">
-                    <label>Campeonatos:</label>
-                    <input type="text" id="inputCampeonatos" placeholder="Ex: R$ 1.160,00">
-                </div>
-                <div class="filtro-campo">
-                    <label>Associação:</label>
-                    <input type="text" id="inputAssoc2026" placeholder="Ex: R$ 637,60">
-                </div>
-                <button onclick="salvarFinancas()" class="btn-salvar">💾 Salvar Alterações Financeiras</button>
-            </div>
+            <h2 style="margin-bottom: 15px;">💰 Lançamentos financeiros</h2>
+            <form id="formFinancas" class="filtro-datas-container"><div class="filtro-grid">
+                <div class="filtro-campo"><label>Data</label><input id="financeData" type="date" required></div>
+                <div class="filtro-campo"><label>Tipo</label><select id="financeTipo"><option value="entrada">Entrada</option><option value="saida">Saída</option></select></div>
+                <div class="filtro-campo"><label>Categoria</label><input id="financeCategoria" type="text" required></div>
+                <div class="filtro-campo"><label>Valor (R$)</label><input id="financeValor" type="number" min="0.01" step="0.01" required></div>
+                <div class="filtro-campo" style="grid-column:1/-1"><label>Descrição</label><input id="financeDescricao" type="text" required></div>
+            </div><button class="btn-salvar">Adicionar lançamento</button></form>
+            <div id="resumoFinancas" class="card-mensagem" style="margin-top:14px;">Carregando lançamentos...</div>
         </section>
 
     </main>
@@ -1994,42 +1973,18 @@
             try {
                 const res = await fetchAutenticado(`${URL_API_SERVIDOR}/api/financas`);
                 const data = await res.json();
-                document.getElementById('inputArrecadacao').value = data.arrecadacao_total || '';
-                document.getElementById('inputInvestimentos').value = data.investimento_total || '';
-                document.getElementById('inputCaixa').value = data.valor_caixa || '';
-                document.getElementById('inputCursos').value = data.cursos_2026 || '';
-                document.getElementById('inputCampeonatos').value = data.campeonatos_2026 || '';
-                document.getElementById('inputAssoc2026').value = data.associacao_2026 || '';
+                document.getElementById('resumoFinancas').innerHTML = `<strong>Entradas: ${data.arrecadacao_total}</strong> • <strong>Saídas: ${data.investimento_total}</strong> • <strong>Saldo: ${data.valor_caixa}</strong><br><br>${(data.lancamentos || []).map(l => `${l.data} — ${l.tipo} — ${l.categoria}: R$ ${Number(l.valor).toFixed(2)} (${l.descricao})`).join('<br>') || 'Nenhum lançamento.'}`;
             } catch (e) {
                 console.error("Erro ao carregar dados financeiros.", e);
             }
         }
 
-        async function salvarFinancas() {
-            const payload = {
-                arrecadacao_total: document.getElementById('inputArrecadacao').value,
-                investimento_total: document.getElementById('inputInvestimentos').value,
-                valor_caixa: document.getElementById('inputCaixa').value,
-                cursos_2026: document.getElementById('inputCursos').value,
-                campeonatos_2026: document.getElementById('inputCampeonatos').value,
-                associacao_2026: document.getElementById('inputAssoc2026').value
-            };
-
-            try {
-                const response = await fetchAutenticado(`${URL_API_SERVIDOR}/api/financas`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(payload)
-                });
-                if (response.ok) {
-                    alert("Informações financeiras atualizadas com sucesso!");
-                } else {
-                    alert("Erro ao atualizar finanças.");
-                }
-            } catch (e) {
-                alert("Erro de conexão.");
-            }
-        }
+        document.getElementById('formFinancas').addEventListener('submit', async event => {
+            event.preventDefault();
+            const dados = { data: document.getElementById('financeData').value, tipo: document.getElementById('financeTipo').value, categoria: document.getElementById('financeCategoria').value, descricao: document.getElementById('financeDescricao').value, valor: document.getElementById('financeValor').value };
+            try { await fetchAutenticado(`${URL_API_SERVIDOR}/api/financas/lancamentos`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(dados) }); event.target.reset(); document.getElementById('financeData').value = new Date().toISOString().slice(0, 10); carregarFinancasProfessor(); }
+            catch (error) { alert(error.message || 'Não foi possível adicionar o lançamento.'); }
+        });
 
         function renderizarAlunos() {
             const container = document.getElementById('listaAlunosContainer');
@@ -2172,6 +2127,7 @@
 
             usuarioAtivo = usuario.usuario;
             preencherFiltrosComPeriodoAtual();
+            document.getElementById('financeData').value = new Date().toISOString().slice(0, 10);
             document.getElementById('exameAno').value = String(new Date().getFullYear());
             atualizarCalculoExame();
             try {
