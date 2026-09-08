@@ -30,7 +30,12 @@ self.addEventListener('push', (event) => {
 // Ação ao clicar na notificação
 self.addEventListener('notificationclick', (event) => {
     event.notification.close();
+    const destino = event.notification.data?.url || 'area-associado.html';
+    const url = new URL(destino, self.registration.scope).href;
     event.waitUntil(
-        clients.openWindow('/') // Abre ou foca o seu app
+        clients.matchAll({ type: 'window', includeUncontrolled: true }).then(janelas => {
+            const existente = janelas.find(janela => janela.url === url);
+            return existente ? existente.focus() : clients.openWindow(url);
+        })
     );
 });
