@@ -902,11 +902,11 @@
                     </div>
                     <div class="filtro-campo">
                         <label for="dataInicioJustificativa">📅 Data Inicial:</label>
-                        <input type="date" id="dataInicioJustificativa" value="2026-08-01">
+                        <input type="date" id="dataInicioJustificativa">
                     </div>
                     <div class="filtro-campo">
                         <label for="dataFimJustificativa">📅 Data Final:</label>
-                        <input type="date" id="dataFimJustificativa" value="2026-12-31">
+                        <input type="date" id="dataFimJustificativa">
                     </div>
                 </div>
                 <button onclick="carregarJustificativasProfessor()" class="btn-filtrar">🔍 Filtrar Justificativas</button>
@@ -942,11 +942,11 @@
                     </div>
                     <div class="filtro-campo">
                         <label for="dataInicio">📅 Data Inicial:</label>
-                        <input type="date" id="dataInicio" value="2026-07-01">
+                        <input type="date" id="dataInicio">
                     </div>
                     <div class="filtro-campo">
                         <label for="dataFim">📅 Data Final:</label>
-                        <input type="date" id="dataFim" value="2026-12-31">
+                        <input type="date" id="dataFim">
                     </div>
                 </div>
                 <button onclick="carregarResumoFrequencia()" class="btn-filtrar">🔍 Consultar Frequência</button>
@@ -1219,6 +1219,17 @@
         let listaAgenda = [];
         let perfilAlunoAtual = null;
         const URL_API_SERVIDOR = API_URL;
+
+        function preencherFiltrosComPeriodoAtual() {
+            const hoje = new Date();
+            const ano = hoje.getFullYear();
+            const mes = String(hoje.getMonth() + 1).padStart(2, '0');
+            const dia = String(hoje.getDate()).padStart(2, '0');
+            const inicioAno = `${ano}-01-01`;
+            const fimAtual = `${ano}-${mes}-${dia}`;
+            ['dataInicio', 'dataInicioJustificativa'].forEach(id => { const campo = document.getElementById(id); if (campo && !campo.value) campo.value = inicioAno; });
+            ['dataFim', 'dataFimJustificativa'].forEach(id => { const campo = document.getElementById(id); if (campo && !campo.value) campo.value = fimAtual; });
+        }
 
         async function fetchAutenticado(url, opcoes = {}) {
             const caminho = url.startsWith(URL_API_SERVIDOR) ? url.slice(URL_API_SERVIDOR.length) : url;
@@ -2160,6 +2171,7 @@
             if (!usuario) return;
 
             usuarioAtivo = usuario.usuario;
+            preencherFiltrosComPeriodoAtual();
             document.getElementById('exameAno').value = String(new Date().getFullYear());
             atualizarCalculoExame();
             try {
