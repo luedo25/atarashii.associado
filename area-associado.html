@@ -1998,9 +1998,9 @@
                 document.getElementById('valArrecadacao').textContent = data.arrecadacao_total || 'R$ 0,00';
                 document.getElementById('valInvestimentos').textContent = data.investimento_total || 'R$ 0,00';
                 document.getElementById('valCaixa').textContent = data.valor_caixa || 'R$ 0,00';
-                document.getElementById('valCursos').textContent = data.cursos_2026 || 'R$ 0,00';
-                document.getElementById('valCampeonatos').textContent = data.campeonatos_2026 || 'R$ 0,00';
-                document.getElementById('valAssoc2026').textContent = data.associacao_2026 || 'R$ 0,00';
+                document.getElementById('valCursos').textContent = data.cursos || 'R$ 0,00';
+                document.getElementById('valCampeonatos').textContent = data.campeonatos || 'R$ 0,00';
+                document.getElementById('valAssoc2026').textContent = data.associacao || 'R$ 0,00';
             })
             .catch(() => console.error("Erro ao carregar finanças"));
     }
