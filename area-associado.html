@@ -490,12 +490,12 @@
             <div id="filtroFrequencia" style="display: flex; gap: 8px; align-items: center; justify-content: center; margin-bottom: 15px; background: rgba(15, 23, 42, 0.6); padding: 12px; border-radius: var(--radius-md); border: 1px solid var(--border-color); flex-wrap: wrap;">
                 <div style="display: flex; flex-direction: column; gap: 4px; flex: 1; min-width: 120px;">
                     <label for="mesInicioFrequencia" style="font-size: 11px; color: var(--text-muted); font-weight: bold;">Mês Inicial:</label>
-                    <input type="month" id="mesInicioFrequencia" value="2026-07" style="padding: 6px 8px; border-radius: 6px; border: 1px solid var(--border-color); background: var(--bg-primary); color: var(--text-main); font-size: 12px; width: 100%;">
+                    <input type="month" id="mesInicioFrequencia" style="padding: 6px 8px; border-radius: 6px; border: 1px solid var(--border-color); background: var(--bg-primary); color: var(--text-main); font-size: 12px; width: 100%;">
                 </div>
 
                 <div style="display: flex; flex-direction: column; gap: 4px; flex: 1; min-width: 120px;">
                     <label for="mesFimFrequencia" style="font-size: 11px; color: var(--text-muted); font-weight: bold;">Mês Final:</label>
-                    <input type="month" id="mesFimFrequencia" value="2026-12" style="padding: 6px 8px; border-radius: 6px; border: 1px solid var(--border-color); background: var(--bg-primary); color: var(--text-main); font-size: 12px; width: 100%;">
+                    <input type="month" id="mesFimFrequencia" style="padding: 6px 8px; border-radius: 6px; border: 1px solid var(--border-color); background: var(--bg-primary); color: var(--text-main); font-size: 12px; width: 100%;">
                 </div>
 
                 <button onclick="carregarGraficoFrequencia()" style="padding: 8px 12px; background: var(--accent-blue); color: white; border: none; border-radius: 6px; font-weight: bold; font-size: 12px; cursor: margin-top: 15px; align-self: flex-end;">
@@ -505,7 +505,7 @@
 
             <canvas id="graficoFrequencia"></canvas>
             
-            <div id="resumoFrequencia" style="display: flex; justify-content: space-around; gap: 6px; margin-top: 15px; font-family: sans-serif;">
+            <div id="cardsResumoFrequencia" style="display: flex; justify-content: space-around; gap: 6px; margin-top: 15px; font-family: sans-serif;">
                 <div style="background-color: #10b98122; border: 1px solid var(--accent-green); color: var(--accent-green); padding: 8px 10px; border-radius: 12px; font-weight: bold; text-align: center; flex: 1;">
                     <span style="font-size: 11px; display: block; color: var(--text-muted);">Presenças</span>
                     <span id="qtdPresencas" style="font-size: 16px;">0</span>
@@ -569,12 +569,12 @@
             <div id="filtroJustificativa" style="display: flex; gap: 8px; align-items: center; justify-content: center; margin-bottom: 15px; background: rgba(15, 23, 42, 0.4); padding: 10px; border-radius: var(--radius-md); border: 1px solid var(--border-color); flex-wrap: wrap;">
                 <div style="display: flex; flex-direction: column; gap: 4px; flex: 1; min-width: 120px;">
                     <label for="mesInicioJustificativa" style="font-size: 11px; color: var(--text-muted); font-weight: bold;">Mês Inicial:</label>
-                    <input type="month" id="mesInicioJustificativa" value="2026-07" style="padding: 6px 8px; border-radius: 6px; border: 1px solid var(--border-color); background: var(--bg-primary); color: var(--text-main); font-size: 12px; width: 100%;">
+                    <input type="month" id="mesInicioJustificativa" style="padding: 6px 8px; border-radius: 6px; border: 1px solid var(--border-color); background: var(--bg-primary); color: var(--text-main); font-size: 12px; width: 100%;">
                 </div>
 
                 <div style="display: flex; flex-direction: column; gap: 4px; flex: 1; min-width: 120px;">
                     <label for="mesFimJustificativa" style="font-size: 11px; color: var(--text-muted); font-weight: bold;">Mês Final:</label>
-                    <input type="month" id="mesFimJustificativa" value="2026-12" style="padding: 6px 8px; border-radius: 6px; border: 1px solid var(--border-color); background: var(--bg-primary); color: var(--text-main); font-size: 12px; width: 100%;">
+                    <input type="month" id="mesFimJustificativa" style="padding: 6px 8px; border-radius: 6px; border: 1px solid var(--border-color); background: var(--bg-primary); color: var(--text-main); font-size: 12px; width: 100%;">
                 </div>
 
                 <button onclick="carregarStatusJustificativas()" style="padding: 8px 12px; background: var(--accent-blue); color: white; border: none; border-radius: 6px; font-weight: bold; font-size: 12px; cursor: pointer; margin-top: 15px; align-self: flex-end;">
@@ -1830,6 +1830,20 @@
         }
     }
 
+    function preencherFiltrosComPeriodoAtual() {
+        const agora = new Date();
+        const ano = agora.getFullYear();
+        const mesAtual = String(agora.getMonth() + 1).padStart(2, '0');
+        const inicioAno = `${ano}-01`;
+        const fimAtual = `${ano}-${mesAtual}`;
+        ['mesInicioFrequencia', 'mesInicioJustificativa'].forEach(id => {
+            const campo = document.getElementById(id); if (campo && !campo.value) campo.value = inicioAno;
+        });
+        ['mesFimFrequencia', 'mesFimJustificativa'].forEach(id => {
+            const campo = document.getElementById(id); if (campo && !campo.value) campo.value = fimAtual;
+        });
+    }
+
     function normalizarPeriodoExame(periodo) {
         const valor = String(periodo || '').trim();
         const achado = valor.match(/(junho|dezembro)\s*\/\s*(\d{4})/i);
@@ -2186,8 +2200,9 @@
     
     async function carregarStatusJustificativas() {
         const container = document.getElementById('listaJustificativasAluno'); if (!container) return;
-        const dataInicio = `${document.getElementById('mesInicioJustificativa')?.value || '2026-07'}-01`;
-        const [anoFim, mesFim] = (document.getElementById('mesFimJustificativa')?.value || '2026-12').split('-').map(Number);
+        const agora = new Date(); const periodoInicioPadrao = `${agora.getFullYear()}-01`, periodoFimPadrao = `${agora.getFullYear()}-${String(agora.getMonth() + 1).padStart(2, '0')}`;
+        const dataInicio = `${document.getElementById('mesInicioJustificativa')?.value || periodoInicioPadrao}-01`;
+        const [anoFim, mesFim] = (document.getElementById('mesFimJustificativa')?.value || periodoFimPadrao).split('-').map(Number);
         const dataFim = `${anoFim}-${String(mesFim).padStart(2, '0')}-${String(new Date(anoFim, mesFim, 0).getDate()).padStart(2, '0')}`;
 
         try {
@@ -2285,8 +2300,9 @@
         const containerLista = document.getElementById('listaRelatorioFrequencia');
         if (!usuarioAtivo || !containerLista) return;
 
-        const dataInicio = `${document.getElementById('mesInicioFrequencia')?.value || '2026-07'}-01`;
-        const [anoFim, mesFim] = (document.getElementById('mesFimFrequencia')?.value || '2026-12').split('-').map(Number);
+        const agora = new Date(); const periodoInicioPadrao = `${agora.getFullYear()}-01`, periodoFimPadrao = `${agora.getFullYear()}-${String(agora.getMonth() + 1).padStart(2, '0')}`;
+        const dataInicio = `${document.getElementById('mesInicioFrequencia')?.value || periodoInicioPadrao}-01`;
+        const [anoFim, mesFim] = (document.getElementById('mesFimFrequencia')?.value || periodoFimPadrao).split('-').map(Number);
         const dataFim = `${anoFim}-${String(mesFim).padStart(2, '0')}-${String(new Date(anoFim, mesFim, 0).getDate()).padStart(2, '0')}`;
 
         containerLista.innerHTML = "Carregando histórico detalhado...";
@@ -2322,8 +2338,9 @@
     let instanciaGrafico = null;
     async function carregarGraficoFrequencia() {
         if (!usuarioAtivo || !document.getElementById('graficoFrequencia')) return;
-        const dataInicio = `${document.getElementById('mesInicioFrequencia')?.value || '2026-07'}-01`;
-        const [anoFim, mesFim] = (document.getElementById('mesFimFrequencia')?.value || '2026-12').split('-').map(Number);
+        const agora = new Date(); const periodoInicioPadrao = `${agora.getFullYear()}-01`, periodoFimPadrao = `${agora.getFullYear()}-${String(agora.getMonth() + 1).padStart(2, '0')}`;
+        const dataInicio = `${document.getElementById('mesInicioFrequencia')?.value || periodoInicioPadrao}-01`;
+        const [anoFim, mesFim] = (document.getElementById('mesFimFrequencia')?.value || periodoFimPadrao).split('-').map(Number);
         const dataFim = `${anoFim}-${String(mesFim).padStart(2, '0')}-${String(new Date(anoFim, mesFim, 0).getDate()).padStart(2, '0')}`;
 
         try {
@@ -2378,6 +2395,7 @@
             if (!usuario) return;
 
             usuarioAtivo = usuario.usuario;
+            preencherFiltrosComPeriodoAtual();
             nomeDoAluno = usuario.nome || 'Associado';
             atualizarNomeBoasVindas(nomeDoAluno);
             window.addEventListener('resize', () => atualizarNomeBoasVindas(nomeDoAluno));
