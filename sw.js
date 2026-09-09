@@ -10,14 +10,16 @@ self.addEventListener('push', (event) => {
         }
     }
 
+    const destino = typeof data.url === 'string' && data.url.trim() ? data.url.trim() : 'index.html';
     const options = {
         body: data.body,
-        icon: '/atarashii-192.png', // Caminho do ícone do seu App
-        badge: '/atarashii-192.png',
+        icon: './atarashii-192.png',
+        badge: './atarashii-192.png',
         vibrate: [100, 50, 100],
         data: {
             dateOfArrival: Date.now(),
-            primaryKey: '1'
+            primaryKey: '1',
+            url: destino
         }
     };
 
@@ -30,7 +32,7 @@ self.addEventListener('push', (event) => {
 // Ação ao clicar na notificação
 self.addEventListener('notificationclick', (event) => {
     event.notification.close();
-    const destino = event.notification.data?.url || 'area-associado.html';
+    const destino = event.notification.data?.url || 'index.html';
     const url = new URL(destino, self.registration.scope).href;
     event.waitUntil(
         clients.matchAll({ type: 'window', includeUncontrolled: true }).then(janelas => {
