@@ -1133,20 +1133,12 @@
 
         <h3 style="margin-top: 35px;">🎯 Desafios Práticos em Vídeo</h3>
         <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 16px;">
-            Grave o vídeo do seu desafio e envie através do nosso formulário oficial. Após o envio, selecione o desafio abaixo e clique em notificar.
+            Grave o vídeo, selecione o desafio e envie diretamente por aqui. O vídeo será encaminhado ao Sensei para avaliação.
         </p>
         <div style="background: rgba(15, 23, 42, 0.6); border: 1px solid var(--border-color); padding: 20px; border-radius: var(--radius-md);">
-            
-            <div style="margin-bottom: 20px; padding: 15px; background: rgba(59, 130, 246, 0.1); border: 1px solid var(--accent-blue); border-radius: 8px; text-align: center;">
-                <strong style="display: block; font-size: 14px; color: var(--text-main); margin-bottom: 10px;">Passo 1: Enviar Vídeo</strong>
-                <a href="https://forms.gle/uozSLmYvnwACC9t7A" target="_blank" class="btn-action" style="background: #3b82f6; display: inline-flex; width: auto; padding: 10px 20px;">
-                    📹 Abrir Google Forms para Upload
-                </a>
-            </div>
-
             <form id="formDesafio">
-                <strong style="display: block; font-size: 14px; color: var(--text-main); margin-bottom: 10px;">Passo 2: Notificar o Sensei</strong>
-                <label style="display: block; font-size: 13px; color: var(--text-muted); margin-bottom: 6px;">Selecione o desafio que você enviou no formulário:</label>
+                <strong style="display: block; font-size: 14px; color: var(--text-main); margin-bottom: 10px;">Enviar desafio para o Sensei</strong>
+                <label style="display: block; font-size: 13px; color: var(--text-muted); margin-bottom: 6px;">Selecione o desafio:</label>
                 <select id="nomeDesafio" required style="width: 100%; padding: 10px; border-radius: 6px; border: 1px solid var(--border-color); background: var(--bg-primary); color: var(--text-main); margin-bottom: 15px;">
                     <option value="">Escolha...</option>
                     <option value="Kata - Acima da Faixa">Kata - Acima da Faixa</option>
@@ -1162,7 +1154,10 @@
                     <option value="Saltos Zenkutsu 2 Min">Saltos na Base Zenkutsu-Dachi (2 min)</option>
                 </select>
 
-                <button type="submit" class="btn-action" style="background: #10b981;">📤 Notificar Envio do Desafio</button>
+                <label style="display: block; font-size: 13px; color: var(--text-muted); margin-bottom: 6px;">Vídeo do desafio (MP4, WebM ou MOV, até 200 MB):</label>
+                <input id="videoDesafio" type="file" accept="video/mp4,video/webm,video/quicktime,.mp4,.webm,.mov" required style="width: 100%; padding: 10px; border-radius: 6px; border: 1px solid var(--border-color); background: var(--bg-primary); color: var(--text-main); margin-bottom: 10px;">
+                <p id="progressoEnvioDesafio" role="status" style="font-size: 12px; color: var(--text-muted); margin: 0 0 12px;"></p>
+                <button type="submit" class="btn-action" style="background: #10b981;">📤 Enviar vídeo para avaliação</button>
             </form>
 
             <h4 style="margin-top: 25px; margin-bottom: 10px; font-size: 14px; color: var(--text-muted);">Status dos Meus Desafios</h4>
@@ -2119,24 +2114,34 @@
     document.getElementById('formDesafio').addEventListener('submit', async function(e) {
         e.preventDefault();
         const nomeDesafio = document.getElementById('nomeDesafio').value;
+        const video = document.getElementById('videoDesafio').files[0];
+        const progresso = document.getElementById('progressoEnvioDesafio');
 
-        if (!nomeDesafio) return alert("Por favor, selecione o desafio que foi enviado.");
+        if (!nomeDesafio || !video) return alert("Selecione o desafio e o vídeo antes de enviar.");
+        if (video.size > 200 * 1024 * 1024) return alert("O vídeo pode ter no máximo 200 MB.");
 
         const btnSubmit = this.querySelector('button[type="submit"]');
         document.getElementById('modalLoading').style.display = 'flex';
         btnSubmit.disabled = true;
         btnSubmit.style.opacity = '0.6';
+        progresso.textContent = 'Enviando vídeo para avaliação. Mantenha esta tela aberta até a confirmação.';
 
         try {
-            const result = await apiFetch('/api/desafio', {
+            const dados = new FormData();
+            dados.append('nome_desafio', nomeDesafio);
+            dados.append('video', video);
+            const result = await apiFetch('/api/desafio/upload', {
                 method: 'POST',
-                body: JSON.stringify({ nome_desafio: nomeDesafio })
+                body: dados,
+                timeoutMs: 600000
             });
-            alert(result.mensagem || "Desafio notificado com sucesso!");
+            alert(result.mensagem || "Vídeo enviado para avaliação!");
             document.getElementById('formDesafio').reset();
+            progresso.textContent = '';
             carregarMeusDesafios();
         } catch (err) { 
-            alert("Erro de rede ao enviar solicitação."); 
+            progresso.textContent = err.message || 'Não foi possível enviar o vídeo.';
+            alert(err.message || "Erro de rede ao enviar o vídeo.");
         } finally {
             document.getElementById('modalLoading').style.display = 'none';
             btnSubmit.disabled = false;
@@ -2163,7 +2168,7 @@
                 return `
                     <div style="background: rgba(0,0,0,0.2); padding: 10px; border-radius: 6px; margin-bottom: 8px; border-left: 4px solid ${corBadge}; text-align: left;">
                         <div><strong>Desafio:</strong> ${escaparHtml(item.nome_desafio)}</div>
-                        <div><strong>Vídeo:</strong> <span style="color: #60a5fa;">Enviado via Google Forms</span></div>
+                        <div><strong>Vídeo:</strong> <span style="color: #60a5fa;">${String(item.link_video || '').includes('forms.gle') ? 'Enviado via Google Forms' : 'Enviado pelo aplicativo'}</span></div>
                         <div><strong>Status:</strong> <span style="color: ${corBadge}; font-weight: bold; text-transform: uppercase;">${escaparHtml(item.status)}</span></div>
                         ${comentarioHtml}
                         <div style="font-size: 11px; color: var(--text-muted); margin-top: 4px;">Solicitado em: ${escaparHtml(item.data_solicitacao)}</div>
