@@ -461,6 +461,10 @@
             <div class="painel-resumo-card resumo-badges"><small>Badges</small><strong id="resumoBadgesRestantes">Carregando...</strong><div id="resumoBadgesMiniaturas" class="badges-miniaturas" aria-label="Badges conquistados"></div></div>
             <div class="painel-resumo-card resumo-ranking"><small>🏆 Minha colocação no ranking</small><strong id="resumoMinhaColocacao">Carregando...</strong></div>
         </div>
+        <section class="linha-tempo" aria-labelledby="tituloProntuarioTecnico">
+            <h3 id="tituloProntuarioTecnico">📝 Prontuário técnico para exame</h3>
+            <div id="prontuarioTecnicoAluno" class="linha-tempo-lista">Aguardando avaliação do professor.</div>
+        </section>
 
         <h3>🥋 Exames de Faixa</h3>
         <div class="table-container">
@@ -1750,6 +1754,17 @@
         }
     }
 
+    async function carregarProntuarioTecnicoAluno() {
+        const container = document.getElementById('prontuarioTecnicoAluno');
+        try {
+            const prontuario = (await apiFetch('/api/prontuario/me')).prontuario;
+            if (!prontuario) { container.innerHTML = '<div class="linha-tempo-item"><strong>Aguardando a primeira avaliação do professor.</strong></div>'; return; }
+            const itens = [['Kata', prontuario.kata_status, prontuario.kata_observacao, prontuario.kata_obrigatorio], ['Kihon', prontuario.kihon_status, prontuario.kihon_observacao], ['Kumite', prontuario.kumite_status, prontuario.kumite_observacao]];
+            const elegivel = itens.every(item => item[1] === 'aprovado');
+            container.innerHTML = `<div class="linha-tempo-item ${elegivel ? 'sucesso' : 'alerta'}"><strong>Participação em exame: ${elegivel ? '✅ Aprovada' : '⏳ Pendente'}</strong><br>Faixa objetivo: ${escaparHtml(prontuario.faixa_objetivo)}</div>` + itens.map(([nome,status,obs,kata]) => `<div class="linha-tempo-item ${status === 'aprovado' ? 'sucesso' : 'alerta'}"><strong>${nome}: ${status === 'aprovado' ? '✅ Aprovado' : '⏳ Pendente'}</strong>${kata ? `<br>Kata obrigatório: ${escaparHtml(kata)}` : ''}${obs ? `<br>Observação: ${escaparHtml(obs)}` : ''}</div>`).join('');
+        } catch (error) { container.innerHTML = '<div class="linha-tempo-item alerta">Não foi possível carregar o prontuário.</div>'; }
+    }
+
     async function carregarResumoPersonalizado() {
         try {
             const [agenda, frequencia, exames, dadosBadges] = await Promise.all([
@@ -2291,6 +2306,7 @@
                 carregarRanking(),
                 carregarNotasAluno(),
                 carregarLinhasDoTempoAluno(),
+                carregarProntuarioTecnicoAluno(),
                 carregarResumoPersonalizado(),
                 carregarGraficoFrequencia(),
                 carregarStatusJustificativas(),
