@@ -840,6 +840,18 @@
                 <button type="submit" class="btn-salvar" id="btnSalvarExame">Salvar exame</button>
                 <div id="exameFeedbackProfessor" class="cadastro-feedback" role="status" aria-live="polite"></div>
             </form>
+            <form id="formProntuarioTecnico" class="filtro-datas-container" style="margin-top:18px;">
+                <h3 style="margin:0 0 8px;">📝 Prontuário técnico e elegibilidade</h3>
+                <p style="color:#94a3b8; margin-bottom:12px;">A participação no exame é aprovada automaticamente somente quando Kata, Kihon e Kumite estiverem aprovados.</p>
+                <div class="cadastro-grid">
+                    <div class="cadastro-campo cadastro-campo-full"><label>Aluno</label><select id="prontuarioAluno" required></select></div>
+                    <div class="cadastro-campo"><label>Faixa objetivo</label><select id="prontuarioFaixa"><option value="Branca/Amarela">Branca/Amarela</option><option value="Amarela/Vermelha">Amarela/Vermelha</option><option value="Vermelha/Laranja">Vermelha/Laranja</option><option value="Laranja/Verde">Laranja/Verde</option><option value="Verde/Roxa">Verde/Roxa</option><option value="Roxa/Marrom">Roxa/Marrom</option></select></div>
+                    <div class="cadastro-campo"><label>Kata obrigatório</label><textarea id="prontuarioKataObrigatorio" readonly></textarea></div>
+                    <div class="cadastro-campo"><label>Kata</label><select id="prontuarioKataStatus"><option value="pendente">Pendente</option><option value="aprovado">Aprovado</option></select><textarea id="prontuarioKataObservacao" placeholder="O que precisa melhorar no Kata"></textarea></div>
+                    <div class="cadastro-campo"><label>Kihon</label><select id="prontuarioKihonStatus"><option value="pendente">Pendente</option><option value="aprovado">Aprovado</option></select><textarea id="prontuarioKihonObservacao" placeholder="O que precisa melhorar no Kihon"></textarea></div>
+                    <div class="cadastro-campo"><label>Kumite</label><select id="prontuarioKumiteStatus"><option value="pendente">Pendente</option><option value="aprovado">Aprovado</option></select><textarea id="prontuarioKumiteObservacao" placeholder="O que precisa melhorar no Kumite"></textarea></div>
+                </div><button class="btn-salvar">Salvar prontuário</button><div id="prontuarioFeedback" class="cadastro-feedback"></div>
+            </form>
             <div id="historicoExamesProfessor" class="agenda-lista" style="margin-top:16px;"><div class="card-mensagem">Selecione um aluno para visualizar o histórico.</div></div>
         </section>
 
@@ -1768,6 +1780,38 @@
         }
 
         camposNotasExame.forEach(id => document.getElementById(id).addEventListener('input', atualizarCalculoExame));
+        const katasPorFaixa = {
+            'Branca/Amarela': 'Heian-Shodan (com contagem)',
+            'Amarela/Vermelha': 'Heian-Shodan e Heian-Nidan (sem contagem)',
+            'Vermelha/Laranja': 'Heian-Nidan, Heian-Sandan e Heian-Yondan',
+            'Laranja/Verde': 'Heian-Sandan, Heian-Yondan e Heian-Godan',
+            'Verde/Roxa': 'Heian-Godan e Bassai-Dai',
+            'Roxa/Marrom': 'Tekki-Shodan, Bassai-Dai, Kanku-Dai e Jion'
+        };
+        function atualizarKataObrigatorio() { document.getElementById('prontuarioKataObrigatorio').value = katasPorFaixa[document.getElementById('prontuarioFaixa').value] || 'Definido pelo professor'; }
+        async function carregarProntuarioProfessor() {
+            const usuario = document.getElementById('prontuarioAluno').value; atualizarKataObrigatorio(); if (!usuario) return;
+            try { const p = (await apiFetch(`/api/prontuario/${encodeURIComponent(usuario)}`)).prontuario;
+                if (!p) {
+                    ['Kata','Kihon','Kumite'].forEach(nome => { document.getElementById(`prontuario${nome}Status`).value = 'pendente'; document.getElementById(`prontuario${nome}Observacao`).value = ''; });
+                    document.getElementById('prontuarioFeedback').textContent = 'Este aluno ainda não possui prontuário técnico.';
+                    return;
+                }
+                document.getElementById('prontuarioFaixa').value = p.faixa_objetivo; atualizarKataObrigatorio();
+                ['Kata','Kihon','Kumite'].forEach(nome => { const chave = nome.toLowerCase(); document.getElementById(`prontuario${nome}Status`).value = p[`${chave}_status`]; document.getElementById(`prontuario${nome}Observacao`).value = p[`${chave}_observacao`] || ''; });
+                document.getElementById('prontuarioFeedback').textContent = '';
+            } catch (error) { document.getElementById('prontuarioFeedback').textContent = error.message; }
+        }
+        document.getElementById('prontuarioAluno').addEventListener('change', carregarProntuarioProfessor);
+        document.getElementById('prontuarioFaixa').addEventListener('change', atualizarKataObrigatorio);
+        document.getElementById('formProntuarioTecnico').addEventListener('submit', async event => {
+            event.preventDefault(); const usuario = document.getElementById('prontuarioAluno').value; if (!usuario) return;
+            const dados = { faixaObjetivo: document.getElementById('prontuarioFaixa').value, kataObrigatorio: document.getElementById('prontuarioKataObrigatorio').value };
+            ['Kata','Kihon','Kumite'].forEach(nome => { dados[`${nome.toLowerCase()}Status`] = document.getElementById(`prontuario${nome}Status`).value; dados[`${nome.toLowerCase()}Observacao`] = document.getElementById(`prontuario${nome}Observacao`).value; });
+            try { await apiFetch(`/api/prontuario/${encodeURIComponent(usuario)}`, { method:'PUT', body:JSON.stringify(dados) }); document.getElementById('prontuarioFeedback').textContent = 'Prontuário salvo. Elegibilidade atualizada.'; }
+            catch (error) { document.getElementById('prontuarioFeedback').textContent = error.message; }
+        });
+        atualizarKataObrigatorio();
         document.getElementById('exameAluno').addEventListener('change', carregarHistoricoExamesProfessor);
         document.getElementById('formExameProfessor').addEventListener('submit', async event => {
             event.preventDefault();
@@ -2000,6 +2044,7 @@
             const selectAlunoDesafio = document.getElementById('filtroAlunoDesafio');
             const selectDestinatarioPush = document.getElementById('destinatarioPush');
             const selectExameAluno = document.getElementById('exameAluno');
+            const selectProntuarioAluno = document.getElementById('prontuarioAluno');
             const exameSelecionadoAntes = selectExameAluno?.value || '';
             
             if (container) container.innerHTML = '';
@@ -2008,6 +2053,7 @@
             if (selectAlunoDesafio) selectAlunoDesafio.innerHTML = '<option value="todos">Todos os Alunos</option>';
             if (selectDestinatarioPush) selectDestinatarioPush.innerHTML = '<option value="">🌐 Enviar para Todos os Alunos</option>';
             if (selectExameAluno) selectExameAluno.innerHTML = '<option value="">Selecione o aluno</option>';
+            if (selectProntuarioAluno) selectProntuarioAluno.innerHTML = '<option value="">Selecione o aluno</option>';
 
             const alunos = listaAlunos.filter(u => String(u.tipo).toLowerCase() !== 'professor');
 
@@ -2039,6 +2085,7 @@
                 if (selectExameAluno && aluno.ativo !== false) {
                     selectExameAluno.appendChild(makeOption());
                 }
+                if (selectProntuarioAluno && aluno.ativo !== false) selectProntuarioAluno.appendChild(makeOption());
                 
                 if (selectDestinatarioPush && aluno.ativo !== false) {
                     const optPush = makeOption();
