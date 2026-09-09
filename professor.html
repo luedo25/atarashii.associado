@@ -2330,7 +2330,7 @@
                             </div>
                             <div class="card-list-detail"><strong>Desafio:</strong> ${escaparHtml(item.nome_desafio)}</div>
                             <div class="card-list-detail">
-                                <strong>Vídeo:</strong> <span style="color: #60a5fa;">Verifique os envios no Google Forms/Drive</span>
+                                <strong>Vídeo:</strong> ${item.link_video && !String(item.link_video).includes('forms.gle') ? `<a href="${escaparHtml(item.link_video)}" target="_blank" rel="noopener" style="color: #60a5fa;">▶ Abrir vídeo no Google Drive</a>` : '<span style="color: #94a3b8;">Envio legado via Google Forms</span>'}
                             </div>
                             ${item.comentario_professor ? `<div class="card-list-detail"><strong>Comentário do Sensei:</strong> ${escaparHtml(item.comentario_professor)}</div>` : ''}
                             <div class="card-list-date">Enviado em: ${escaparHtml(item.data_solicitacao)}</div>
