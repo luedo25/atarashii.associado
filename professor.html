@@ -2169,6 +2169,12 @@
         document.getElementById('dataAula').addEventListener('change', carregarChamadaRegistrada);
         document.getElementById('btnExportarFrequencia').addEventListener('click', exportarFrequenciaCsv);
 
+        function definirCarregamentoChamada(ativo) {
+            document.getElementById('modalSalvandoChamada').style.display = ativo ? 'flex' : 'none';
+            const botao = document.querySelector('#aba-chamada .btn-salvar');
+            if (botao) botao.disabled = ativo;
+        }
+
         async function salvarChamada() {
             const data = document.getElementById('dataAula').value;
             if (!data) return alert("Selecione uma data.");
@@ -2179,6 +2185,7 @@
                 presente: chk.checked
             }));
 
+            definirCarregamentoChamada(true);
             try {
                 const response = await fetchAutenticado(`${URL_API_SERVIDOR}/api/chamada`, {
                     method: 'POST',
@@ -2191,6 +2198,8 @@
                 else alert("Erro: " + result.erro);
             } catch (error) {
                 alert("Erro ao conectar ao servidor.");
+            } finally {
+                definirCarregamentoChamada(false);
             }
         }
 
@@ -2522,5 +2531,12 @@
             }
         }
     </script>
+    <div id="modalSalvandoChamada" role="status" aria-live="assertive" style="display:none; position:fixed; inset:0; z-index:10050; background:rgba(2,6,23,.86); backdrop-filter:blur(4px); align-items:center; justify-content:center; padding:20px;">
+        <div style="width:min(88vw,360px); padding:28px 22px; text-align:center; background:#1e293b; border:1px solid #3b82f6; border-radius:14px; box-shadow:0 18px 44px rgba(0,0,0,.55);">
+            <div style="width:44px; height:44px; margin:0 auto 16px; border:4px solid #334155; border-top-color:#60a5fa; border-radius:50%; animation:spin 1s linear infinite;"></div>
+            <strong style="font-size:19px; color:#f8fafc;">Salvando chamada...</strong>
+            <p style="margin-top:9px; color:#94a3b8; font-size:13px; line-height:1.45;">Registrando presença e atualizando os dados no banco.</p>
+        </div>
+    </div>
 </body>
 </html>
