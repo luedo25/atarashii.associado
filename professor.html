@@ -929,6 +929,12 @@
         <!-- ABA DESAFIOS EM VÍDEO -->
         <section id="aba-desafios" class="tab-content">
             <h2 style="margin-bottom: 15px;">🎯 Avaliação de Desafios</h2>
+            <div style="margin-bottom:16px; padding:16px; border:1px solid #334155; border-radius:10px; background:rgba(15,23,42,.55);">
+                <strong style="display:block; margin-bottom:6px;">☁️ Conexão com Google Drive</strong>
+                <p style="margin:0 0 12px; color:#94a3b8; font-size:13px;">Use somente na configuração inicial. A autorização cria uma pasta privada para os vídeos dos desafios na sua conta Google.</p>
+                <button type="button" id="btnConectarGoogleDrive" class="btn-filtrar">Conectar meu Google Drive</button>
+                <span id="feedbackGoogleDrive" style="margin-left:8px; font-size:12px; color:#94a3b8;"></span>
+            </div>
             <div class="filtro-datas-container">
                 <div class="filtro-campo">
                     <label for="filtroAlunoDesafio">🥋 Aluno:</label>
@@ -1229,6 +1235,19 @@
             const dados = await apiFetch(caminho, opcoes);
             return { ok: true, status: 200, json: async () => dados };
         }
+
+        document.getElementById('btnConectarGoogleDrive').addEventListener('click', async () => {
+            const botao = document.getElementById('btnConectarGoogleDrive');
+            const feedback = document.getElementById('feedbackGoogleDrive');
+            botao.disabled = true; feedback.textContent = 'Abrindo autorização do Google...';
+            try {
+                const dados = await apiFetch('/api/google-drive/autorizacao');
+                window.location.assign(dados.url);
+            } catch (error) {
+                feedback.textContent = error.message || 'Não foi possível iniciar a autorização.';
+                botao.disabled = false;
+            }
+        });
 
         function escaparHtml(valor) {
             return String(valor ?? '')
