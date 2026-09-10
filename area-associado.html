@@ -1157,6 +1157,7 @@
                 <label style="display: block; font-size: 13px; color: var(--text-muted); margin-bottom: 6px;">Vídeo do desafio (MP4, WebM ou MOV, até 200 MB):</label>
                 <input id="videoDesafio" type="file" accept="video/mp4,video/webm,video/quicktime,.mp4,.webm,.mov" required style="width: 100%; padding: 10px; border-radius: 6px; border: 1px solid var(--border-color); background: var(--bg-primary); color: var(--text-main); margin-bottom: 10px;">
                 <p id="progressoEnvioDesafio" role="status" style="font-size: 12px; color: var(--text-muted); margin: 0 0 12px;"></p>
+                <progress id="barraEnvioDesafio" value="0" max="100" hidden style="display:block; width:100%; height:14px; margin:-4px 0 14px;"></progress>
                 <button type="submit" class="btn-action" style="background: #10b981;">📤 Enviar vídeo para avaliação</button>
             </form>
 
@@ -2111,39 +2112,66 @@
         } catch (err) { container.innerHTML = "<p style='color: red;'>Erro ao carregar justificativas.</p>"; }
     }
 
+    function enviarDesafioComProgresso(formData, aoProgresso) {
+        return new Promise((resolve, reject) => {
+            const xhr = new XMLHttpRequest();
+            const token = Auth.obterToken();
+            xhr.open('POST', `${API_URL}/api/desafio/upload`, true);
+            xhr.timeout = 600000;
+            xhr.setRequestHeader('Accept', 'application/json');
+            if (token) xhr.setRequestHeader('Authorization', `Bearer ${token}`);
+            xhr.upload.addEventListener('progress', evento => {
+                if (evento.lengthComputable) aoProgresso(Math.min(100, Math.round((evento.loaded / evento.total) * 100)));
+            });
+            xhr.addEventListener('load', () => {
+                let dados = null;
+                try { dados = xhr.responseText ? JSON.parse(xhr.responseText) : null; } catch (erro) { dados = { erro: xhr.responseText }; }
+                if (xhr.status === 401) { Auth.sair(); return reject(new Error(dados?.erro || 'Sua sessão expirou.')); }
+                if (xhr.status < 200 || xhr.status >= 300) return reject(new Error(dados?.erro || `Erro ${xhr.status} ao enviar o vídeo.`));
+                return resolve(dados);
+            });
+            xhr.addEventListener('error', () => reject(new Error('Falha de rede durante o envio do vídeo.')));
+            xhr.addEventListener('timeout', () => reject(new Error('O envio demorou mais que o esperado. Tente novamente.')));
+            xhr.send(formData);
+        });
+    }
+
     document.getElementById('formDesafio').addEventListener('submit', async function(e) {
         e.preventDefault();
         const nomeDesafio = document.getElementById('nomeDesafio').value;
         const video = document.getElementById('videoDesafio').files[0];
         const progresso = document.getElementById('progressoEnvioDesafio');
+        const barra = document.getElementById('barraEnvioDesafio');
 
         if (!nomeDesafio || !video) return alert("Selecione o desafio e o vídeo antes de enviar.");
         if (video.size > 200 * 1024 * 1024) return alert("O vídeo pode ter no máximo 200 MB.");
 
         const btnSubmit = this.querySelector('button[type="submit"]');
-        document.getElementById('modalLoading').style.display = 'flex';
         btnSubmit.disabled = true;
         btnSubmit.style.opacity = '0.6';
-        progresso.textContent = 'Enviando vídeo para avaliação. Mantenha esta tela aberta até a confirmação.';
+        barra.hidden = false;
+        barra.value = 0;
+        progresso.textContent = 'Preparando envio: 0%. Mantenha esta tela aberta até a confirmação.';
 
         try {
             const dados = new FormData();
             dados.append('nome_desafio', nomeDesafio);
             dados.append('video', video);
-            const result = await apiFetch('/api/desafio/upload', {
-                method: 'POST',
-                body: dados,
-                timeoutMs: 600000
+            const result = await enviarDesafioComProgresso(dados, percentual => {
+                barra.value = percentual;
+                progresso.textContent = percentual < 100
+                    ? `Enviando vídeo: ${percentual}%`
+                    : 'Upload concluído: 100%. Salvando vídeo no Google Drive...';
             });
             alert(result.mensagem || "Vídeo enviado para avaliação!");
             document.getElementById('formDesafio').reset();
             progresso.textContent = '';
+            barra.hidden = true;
             carregarMeusDesafios();
         } catch (err) { 
             progresso.textContent = err.message || 'Não foi possível enviar o vídeo.';
             alert(err.message || "Erro de rede ao enviar o vídeo.");
         } finally {
-            document.getElementById('modalLoading').style.display = 'none';
             btnSubmit.disabled = false;
             btnSubmit.style.opacity = '1';
         }
