@@ -369,6 +369,18 @@
     </div>
 </div>
 
+<!-- BLOQUEIO EXCLUSIVO DURANTE O ENVIO DE VÍDEO -->
+<div id="modalProgressoDesafio" class="modal-overlay" role="dialog" aria-modal="true" aria-labelledby="tituloProgressoDesafio" aria-live="assertive" style="display: none; z-index: 10020;">
+    <div style="width:min(88vw,380px); text-align:center; background:var(--bg-card); border:1px solid var(--accent-blue); border-radius:16px; padding:28px 22px; box-shadow:0 16px 42px rgba(0,0,0,.65);">
+        <div style="font-size:42px; margin-bottom:8px;">📹</div>
+        <h2 id="tituloProgressoDesafio" style="margin:0 0 8px; font-size:20px; color:var(--text-main);">Enviando desafio</h2>
+        <strong id="percentualEnvioDesafio" style="display:block; font-size:42px; color:var(--accent-blue); margin:14px 0 8px;">0%</strong>
+        <progress id="barraModalEnvioDesafio" value="0" max="100" style="display:block; width:100%; height:16px; margin:0 0 14px;"></progress>
+        <p id="mensagemModalEnvioDesafio" style="margin:0; color:var(--text-muted); font-size:14px; line-height:1.45;">Preparando o envio do vídeo...</p>
+        <p style="margin:16px 0 0; color:#fbbf24; font-size:12px; line-height:1.45;">Não feche, atualize ou saia do aplicativo até receber a confirmação.</p>
+    </div>
+</div>
+
 <dialog id="modalPerfil" class="perfil-dialog" aria-labelledby="tituloModalPerfil">
     <div class="perfil-dialog-content">
         <div class="perfil-dialog-header">
@@ -2112,6 +2124,31 @@
         } catch (err) { container.innerHTML = "<p style='color: red;'>Erro ao carregar justificativas.</p>"; }
     }
 
+    let envioDesafioEmAndamento = false;
+    let overflowAntesDoEnvio = '';
+    window.addEventListener('beforeunload', evento => {
+        if (!envioDesafioEmAndamento) return;
+        evento.preventDefault();
+        evento.returnValue = '';
+    });
+
+    function mostrarBloqueioEnvioDesafio(percentual = 0, mensagem = 'Preparando o envio do vídeo...') {
+        const modal = document.getElementById('modalProgressoDesafio');
+        document.getElementById('percentualEnvioDesafio').textContent = `${percentual}%`;
+        document.getElementById('barraModalEnvioDesafio').value = percentual;
+        document.getElementById('mensagemModalEnvioDesafio').textContent = mensagem;
+        modal.style.display = 'flex';
+        modal.setAttribute('aria-hidden', 'false');
+    }
+
+    function esconderBloqueioEnvioDesafio() {
+        const modal = document.getElementById('modalProgressoDesafio');
+        modal.style.display = 'none';
+        modal.setAttribute('aria-hidden', 'true');
+        document.body.style.overflow = overflowAntesDoEnvio;
+        envioDesafioEmAndamento = false;
+    }
+
     function enviarDesafioComProgresso(formData, aoProgresso) {
         return new Promise((resolve, reject) => {
             const xhr = new XMLHttpRequest();
@@ -2149,6 +2186,10 @@
         const btnSubmit = this.querySelector('button[type="submit"]');
         btnSubmit.disabled = true;
         btnSubmit.style.opacity = '0.6';
+        envioDesafioEmAndamento = true;
+        overflowAntesDoEnvio = document.body.style.overflow;
+        document.body.style.overflow = 'hidden';
+        mostrarBloqueioEnvioDesafio(0);
         barra.hidden = false;
         barra.value = 0;
         progresso.textContent = 'Preparando envio: 0%. Mantenha esta tela aberta até a confirmação.';
@@ -2159,9 +2200,9 @@
             dados.append('video', video);
             const result = await enviarDesafioComProgresso(dados, percentual => {
                 barra.value = percentual;
-                progresso.textContent = percentual < 100
-                    ? `Enviando vídeo: ${percentual}%`
-                    : 'Upload concluído: 100%. Salvando vídeo no Google Drive...';
+                const mensagem = percentual < 100 ? `Enviando vídeo: ${percentual}%` : 'Upload concluído. Salvando vídeo no Google Drive...';
+                progresso.textContent = mensagem;
+                mostrarBloqueioEnvioDesafio(percentual, mensagem);
             });
             alert(result.mensagem || "Vídeo enviado para avaliação!");
             document.getElementById('formDesafio').reset();
@@ -2172,6 +2213,7 @@
             progresso.textContent = err.message || 'Não foi possível enviar o vídeo.';
             alert(err.message || "Erro de rede ao enviar o vídeo.");
         } finally {
+            esconderBloqueioEnvioDesafio();
             btnSubmit.disabled = false;
             btnSubmit.style.opacity = '1';
         }
