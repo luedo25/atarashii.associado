@@ -404,17 +404,17 @@
             </div>
             <div class="perfil-campo">
                 <label for="perfilWhatsapp">WhatsApp</label>
-                <input type="tel" id="perfilWhatsapp" maxlength="30" inputmode="tel" autocomplete="tel" placeholder="(11) 99999-9999">
+                <input type="tel" id="perfilWhatsapp" maxlength="30" inputmode="tel" autocomplete="tel" placeholder="(11) 99999-9999" required>
                 <small>Inclua o DDD.</small>
             </div>
             <div class="perfil-campo">
                 <label for="perfilContatoEmergencia">Contato de emergência</label>
-                <input type="text" id="perfilContatoEmergencia" maxlength="250" placeholder="Nome, parentesco e telefone">
+                <input type="text" id="perfilContatoEmergencia" maxlength="250" placeholder="Nome, parentesco e telefone" required>
             </div>
             <div class="perfil-campo">
                 <label for="perfilRestricoesMedicas">Restrições médicas relevantes</label>
-                <textarea id="perfilRestricoesMedicas" maxlength="2000" placeholder="Ex.: alergias, limitações, medicação ou nenhuma restrição"></textarea>
-                <small>Esses dados são pessoais. Informe apenas o necessário para sua segurança nos treinos.</small>
+                <textarea id="perfilRestricoesMedicas" maxlength="2000" placeholder="Ex.: alergias, limitações, medicação ou nenhuma restrição" required></textarea>
+                <small>Esses dados são pessoais. Informe apenas o necessário para sua segurança nos treinos. Caso não tenha restrições, escreva “Nenhuma”.</small>
             </div>
             <button type="submit" class="btn-action" id="btnSalvarPerfil">Salvar alterações</button>
             <div id="perfilFeedback" class="perfil-feedback" role="status" aria-live="polite"></div>
@@ -1338,6 +1338,7 @@
     const modalPerfil = document.getElementById('modalPerfil');
     const formPerfil = document.getElementById('formPerfil');
     const perfilFeedback = document.getElementById('perfilFeedback');
+    let perfilObrigatorio = false;
 
     function definirFeedbackPerfil(texto, tipo = '') {
         perfilFeedback.textContent = texto;
@@ -1385,11 +1386,26 @@
         document.getElementById('perfilRestricoesMedicas').value = perfil?.restricoes_medicas || '';
     }
 
-    async function abrirPerfil() {
+    function perfilEstaCompleto(perfil) {
+        return ['email', 'data_nascimento', 'whatsapp', 'contato_emergencia', 'restricoes_medicas']
+            .every((campo) => String(perfil?.[campo] || '').trim().length > 0);
+    }
+
+    function configurarModalPerfilObrigatorio(obrigatorio) {
+        perfilObrigatorio = obrigatorio;
+        document.getElementById('tituloModalPerfil').textContent = obrigatorio ? 'Complete seu perfil' : 'Editar meu perfil';
+        document.querySelector('.perfil-descricao').textContent = obrigatorio
+            ? 'Para continuar no aplicativo, complete todos os dados abaixo. Caso não possua restrições médicas, informe “Nenhuma”.'
+            : 'Mantenha seus dados atualizados. Informe somente restrições médicas relevantes para a prática esportiva.';
+        document.getElementById('btnFecharPerfil').style.display = obrigatorio ? 'none' : '';
+    }
+
+    async function abrirPerfil({ obrigatorio = false, perfilInicial = null } = {}) {
         const botaoSalvar = document.getElementById('btnSalvarPerfil');
         definirFeedbackPerfil('');
-        preencherFormularioPerfil({ nome: nomeDoAluno });
-        modalPerfil.showModal();
+        configurarModalPerfilObrigatorio(obrigatorio);
+        preencherFormularioPerfil(perfilInicial || { nome: nomeDoAluno });
+        if (!modalPerfil.open) modalPerfil.showModal();
         botaoSalvar.disabled = true;
         botaoSalvar.textContent = 'Carregando...';
 
@@ -1406,6 +1422,7 @@
     }
 
     function fecharPerfil() {
+        if (perfilObrigatorio) return;
         if (!modalPerfil.open) return;
         modalPerfil.close();
         definirFeedbackPerfil('');
@@ -1416,6 +1433,9 @@
     document.getElementById('perfilDataNascimento').max = new Date().toISOString().slice(0, 10);
     modalPerfil.addEventListener('click', (event) => {
         if (event.target === modalPerfil) fecharPerfil();
+    });
+    modalPerfil.addEventListener('cancel', (event) => {
+        if (perfilObrigatorio) event.preventDefault();
     });
 
     formPerfil.addEventListener('submit', async (event) => {
@@ -1447,7 +1467,12 @@
             atualizarNomeBoasVindas(nomeDoAluno);
             preencherFormularioPerfil(dados.perfil);
             definirFeedbackPerfil(dados.mensagem || 'Perfil atualizado com sucesso.', 'sucesso');
-            setTimeout(fecharPerfil, 1200);
+            if (perfilObrigatorio) {
+                perfilObrigatorio = false;
+                setTimeout(fecharPerfil, 800);
+            } else {
+                setTimeout(fecharPerfil, 1200);
+            }
         } catch (error) {
             definirFeedbackPerfil(error.message || 'Não foi possível salvar o perfil.', 'erro');
         } finally {
@@ -2365,6 +2390,16 @@
             nomeDoAluno = usuario.nome || 'Associado';
             atualizarNomeBoasVindas(nomeDoAluno);
             window.addEventListener('resize', () => atualizarNomeBoasVindas(nomeDoAluno));
+
+            // Exibe o cadastro apenas para quem ainda não informou todos os dados obrigatórios.
+            try {
+                const dadosPerfil = await Perfil.obter();
+                if (!perfilEstaCompleto(dadosPerfil?.perfil)) {
+                    await abrirPerfil({ obrigatorio: true, perfilInicial: dadosPerfil?.perfil });
+                }
+            } catch (error) {
+                console.error('Não foi possível verificar o perfil obrigatório:', error);
+            }
 
             try {
                 const configuracao = await apiFetch('/api/config');
