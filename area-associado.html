@@ -599,6 +599,19 @@
             </div>
 
             <div id="listaJustificativasAluno" style="font-size: 13px;">Carregando histórico...</div>
+
+            <dialog id="modalComprovanteJustificativa" class="perfil-dialog" aria-labelledby="tituloComprovanteJustificativa">
+                <div class="perfil-dialog-content">
+                    <div class="perfil-dialog-header">
+                        <h2 id="tituloComprovanteJustificativa">Anexar comprovante</h2>
+                        <button type="button" class="btn-fechar-perfil" id="btnFecharComprovante">&times;</button>
+                    </div>
+                    <p class="perfil-descricao">Opcional: envie uma foto ou PDF de atestado ou outro comprovante. Limite de 10 MB.</p>
+                    <input type="file" id="arquivoComprovanteJustificativa" accept="application/pdf,image/jpeg,image/png,image/webp" style="width:100%; margin:10px 0 18px; color:var(--text-main);">
+                    <button type="button" id="btnEnviarSemComprovante" class="btn-action">Enviar sem anexo</button>
+                    <button type="button" id="btnEnviarComComprovante" class="btn-action" style="margin-top:10px;">Enviar com anexo</button>
+                </div>
+            </dialog>
         </div>
         <p> </p>
         <div class="card-item" style="flex-direction: column; align-items: flex-start; gap: 10px; margin-top: 15px;">
@@ -2071,6 +2084,46 @@
         if (diaSemana !== 2 && diaSemana !== 4 && diaSemana !== 6) { alert("Aulas ocorrem apenas Terças, Quintas e Sábados."); this.value = ''; }
     });
 
+    const modalComprovante = document.getElementById('modalComprovanteJustificativa');
+    const arquivoComprovante = document.getElementById('arquivoComprovanteJustificativa');
+    let justificativaPendente = null;
+
+    async function enviarJustificativaComOuSemComprovante(comprovante) {
+        const btnSubmit = document.querySelector('#formJustificativa button[type="submit"]');
+        document.getElementById('modalLoading').style.display = 'flex';
+        btnSubmit.disabled = true;
+        try {
+            if (comprovante) {
+                const dados = new FormData();
+                dados.append('data_falta', justificativaPendente.dataFalta);
+                dados.append('motivo', justificativaPendente.motivo);
+                dados.append('comprovante', comprovante);
+                await apiFetch('/api/justificativa/upload', { method: 'POST', body: dados });
+            } else {
+                await apiFetch('/api/justificativa', { method: 'POST', body: JSON.stringify({ data_falta: justificativaPendente.dataFalta, motivo: justificativaPendente.motivo }) });
+            }
+            alert(comprovante ? 'Justificativa e comprovante enviados!' : 'Justificativa enviada!');
+            document.getElementById('formJustificativa').reset();
+            alternarCampoTextoOutro();
+            carregarStatusJustificativas();
+            if (modalComprovante.open) modalComprovante.close();
+        } catch (err) {
+            alert(err.message || 'Erro ao enviar solicitação.');
+        } finally {
+            document.getElementById('modalLoading').style.display = 'none';
+            btnSubmit.disabled = false;
+        }
+    }
+
+    document.getElementById('btnFecharComprovante').addEventListener('click', () => modalComprovante.close());
+    document.getElementById('btnEnviarSemComprovante').addEventListener('click', () => enviarJustificativaComOuSemComprovante(null));
+    document.getElementById('btnEnviarComComprovante').addEventListener('click', () => {
+        const arquivo = arquivoComprovante.files?.[0];
+        if (!arquivo) return alert('Selecione um arquivo ou escolha “Enviar sem anexo”.');
+        if (arquivo.size > 10 * 1024 * 1024) return alert('O comprovante pode ter no máximo 10 MB.');
+        enviarJustificativaComOuSemComprovante(arquivo);
+    });
+
     document.getElementById('formJustificativa').addEventListener('submit', async function(e) {
         e.preventDefault();
         
@@ -2099,27 +2152,9 @@
         let listaMotivos = [...marcados];
         if (checkOutro?.checked && textoOutro) listaMotivos.push(`Outro: ${textoOutro}`);
 
-        const btnSubmit = this.querySelector('button[type="submit"]');
-        document.getElementById('modalLoading').style.display = 'flex';
-        btnSubmit.disabled = true;
-        btnSubmit.style.opacity = '0.6';
-
-        try {
-            await apiFetch('/api/justificativa', {
-                method: 'POST', 
-                body: JSON.stringify({ data_falta: dataFalta, motivo: listaMotivos.join('; ') })
-            });
-            alert("Justificativa enviada!");
-            document.getElementById('formJustificativa').reset();
-            alternarCampoTextoOutro();
-            carregarStatusJustificativas();
-        } catch (err) { 
-            alert("Erro ao enviar solicitação."); 
-        } finally {
-            document.getElementById('modalLoading').style.display = 'none';
-            btnSubmit.disabled = false;
-            btnSubmit.style.opacity = '1';
-        }
+        justificativaPendente = { dataFalta, motivo: listaMotivos.join('; ') };
+        arquivoComprovante.value = '';
+        modalComprovante.showModal();
     });
     
     async function carregarStatusJustificativas() {
@@ -2144,6 +2179,7 @@
                     <div><strong>Motivo:</strong> ${escaparHtml(item.motivo)}</div>
                     <div><strong>Status:</strong> <span style="color: ${corBadge}; font-weight: bold; text-transform: uppercase;">${escaparHtml(item.status)}</span></div>
                     ${comentarioHtml}
+                    ${item.comprovante_url ? `<div style="margin-top:6px;"><a href="${escaparHtml(item.comprovante_url)}" target="_blank" rel="noopener" style="color:#93c5fd;font-weight:bold;">📎 Comprovante anexado</a></div>` : ''}
                     <div style="font-size: 11px; color: var(--text-muted); margin-top: 4px;">Solicitado em: ${escaparHtml(item.data_solicitacao)}</div></div>`;
             }).join('');
         } catch (err) { container.innerHTML = "<p style='color: red;'>Erro ao carregar justificativas.</p>"; }
