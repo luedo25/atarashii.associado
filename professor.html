@@ -2275,6 +2275,7 @@
                             </div>
                             <div class="card-list-detail"><strong>Data da Falta:</strong> ${escaparHtml(item.data_falta.split('-').reverse().join('/'))}</div>
                             <div class="card-list-detail"><strong>Motivo:</strong> ${escaparHtml(item.motivo)}</div>
+                            ${item.comprovante_url ? `<div class="card-list-detail"><a href="${escaparHtml(item.comprovante_url)}" target="_blank" rel="noopener" style="color:#93c5fd;font-weight:bold;">📎 Abrir comprovante${item.comprovante_nome ? `: ${escaparHtml(item.comprovante_nome)}` : ''}</a></div>` : ''}
                             ${item.comentario_professor ? `<div class="card-list-detail"><strong>Comentário do Sensei:</strong> ${escaparHtml(item.comentario_professor)}</div>` : ''}
                             <div class="card-list-date">Enviado em: ${escaparHtml(item.data_solicitacao)}</div>
 
