@@ -1352,6 +1352,30 @@
     const formPerfil = document.getElementById('formPerfil');
     const perfilFeedback = document.getElementById('perfilFeedback');
     let perfilObrigatorio = false;
+    let bloqueioNavegacaoPerfilAtivo = false;
+
+    // O Android pode usar o histórico do navegador ao pressionar o botão voltar,
+    // mesmo quando um <dialog> modal está aberto. Criamos um estado adicional e
+    // o recolocamos sempre que o aluno tentar voltar enquanto o perfil estiver
+    // incompleto.
+    function ativarBloqueioNavegacaoPerfil() {
+        if (bloqueioNavegacaoPerfilAtivo) return;
+        bloqueioNavegacaoPerfilAtivo = true;
+        history.pushState({ perfilObrigatorio: true }, '', window.location.href);
+    }
+
+    function desativarBloqueioNavegacaoPerfil() {
+        if (!bloqueioNavegacaoPerfilAtivo) return;
+        bloqueioNavegacaoPerfilAtivo = false;
+        history.replaceState({ perfilConcluido: true }, '', window.location.href);
+    }
+
+    window.addEventListener('popstate', () => {
+        if (!bloqueioNavegacaoPerfilAtivo) return;
+        history.pushState({ perfilObrigatorio: true }, '', window.location.href);
+        if (!modalPerfil.open) modalPerfil.showModal();
+        definirFeedbackPerfil('Complete seu perfil para continuar usando o aplicativo.', 'erro');
+    });
 
     function definirFeedbackPerfil(texto, tipo = '') {
         perfilFeedback.textContent = texto;
@@ -1406,6 +1430,7 @@
 
     function configurarModalPerfilObrigatorio(obrigatorio) {
         perfilObrigatorio = obrigatorio;
+        if (obrigatorio) ativarBloqueioNavegacaoPerfil();
         document.getElementById('tituloModalPerfil').textContent = obrigatorio ? 'Complete seu perfil' : 'Editar meu perfil';
         document.querySelector('.perfil-descricao').textContent = obrigatorio
             ? 'Para continuar no aplicativo, complete todos os dados abaixo. Caso não possua restrições médicas, informe “Nenhuma”.'
@@ -1482,6 +1507,7 @@
             definirFeedbackPerfil(dados.mensagem || 'Perfil atualizado com sucesso.', 'sucesso');
             if (perfilObrigatorio) {
                 perfilObrigatorio = false;
+                desativarBloqueioNavegacaoPerfil();
                 setTimeout(fecharPerfil, 800);
             } else {
                 setTimeout(fecharPerfil, 1200);
@@ -2435,6 +2461,9 @@
                 }
             } catch (error) {
                 console.error('Não foi possível verificar o perfil obrigatório:', error);
+                // Em caso de falha temporária na consulta, mantém o aluno no
+                // fluxo obrigatório até que o perfil possa ser salvo.
+                await abrirPerfil({ obrigatorio: true, perfilInicial: { nome: nomeDoAluno } });
             }
 
             try {
