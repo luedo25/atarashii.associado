@@ -235,6 +235,44 @@
             box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
         }
 
+        /* SPINNER DE CARREGAMENTO */
+        .spinner-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(15, 23, 42, 0.85);
+            z-index: 1000000;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            backdrop-filter: blur(4px);
+        }
+
+        .spinner {
+            width: 50px;
+            height: 50px;
+            border: 5px solid #ccc;
+            border-top-color: #007bff;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-bottom: 20px;
+        }
+
+        .spinner-text {
+            color: #ffffff;
+            font-size: 16px;
+            font-weight: bold;
+            text-align: center;
+            padding: 0 20px;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
         /* REGRAS EXCLUSIVAS PARA TELAS DE CELULAR (ATÉ 600px de largura) */
         @media (max-width: 600px) {
             body {
@@ -298,6 +336,12 @@
         </div>
     </div>
 
+    <!-- SPINNER OVERLAY PARA LOGIN -->
+    <div id="loadingSpinner" class="spinner-overlay">
+        <div class="spinner"></div>
+        <div class="spinner-text">Carregando os dados Karateka... Aguarde....</div>
+    </div>
+
     <dialog id="recoveryDialog" class="recovery-dialog" aria-labelledby="recoveryTitle">
         <div class="dialog-content">
             <div class="dialog-header">
@@ -350,10 +394,16 @@
             const senhaInput = document.getElementById('password').value;
             const errorMessage = document.getElementById('errorMessage');
             const botao = this.querySelector('button[type="submit"]');
+            const loadingSpinner = document.getElementById('loadingSpinner');
 
             errorMessage.style.display = 'none';
             botao.disabled = true;
             botao.textContent = 'Entrando...';
+
+            // Inicia a contagem de 2 segundos para exibir o spinner
+            const spinnerTimeout = setTimeout(() => {
+                loadingSpinner.style.display = 'flex';
+            }, 2000);
 
             try {
                 const dados = await apiFetch('/api/auth/login', {
@@ -365,14 +415,18 @@
                 Auth.salvarSessao(dados);
                 window.location.replace(dados.usuario.tipo === 'professor' ? 'professor.html' : 'area-associado.html');
             } catch (error) {
+                // Cancela o spinner se houver erro
+                clearTimeout(spinnerTimeout);
+                loadingSpinner.style.display = 'none';
+                
                 errorMessage.textContent = error.message || 'Usuário ou senha incorretos.';
                 errorMessage.style.display = 'block';
                 document.getElementById('password').value = '';
                 document.getElementById('password').focus();
-            } finally {
+                
                 botao.disabled = false;
                 botao.textContent = 'Entrar';
-            }
+            } 
         });
 
         const recoveryDialog = document.getElementById('recoveryDialog');
