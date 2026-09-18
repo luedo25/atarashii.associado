@@ -676,6 +676,13 @@
         .dashboard-card-total { display:block; margin:8px 0; color:#f8fafc; font-size:2rem; font-weight:800; }
         .dashboard-card-detalhe { display:block; color:#94a3b8; font-size:.78rem; line-height:1.45; }
         .dashboard-card-acao { display:block; margin-top:10px; color:#93c5fd; font-size:.76rem; font-weight:800; }
+        .acessos-painel { margin-top: 18px; padding-top: 18px; border-top: 1px solid #334155; }
+        .acessos-cabecalho { display:flex; align-items:center; justify-content:space-between; gap:12px; flex-wrap:wrap; margin-bottom:10px; }
+        .acessos-cabecalho h3 { margin:0; font-size:1.05rem; }
+        .acessos-resumo { color:#94a3b8; font-size:.84rem; line-height:1.45; margin-bottom:12px; }
+        .acesso-atrasado { color:#fca5a5; font-weight:800; }
+        .acesso-nunca { color:#fcd34d; font-weight:800; }
+        .acessos-historico { max-height: 390px; overflow:auto; }
 
         /* OTIMIZAÇÃO EXTRA PARA SMARTPHONES PEQUENOS */
         @media (max-width: 640px) {
@@ -747,6 +754,16 @@
             <p class="dashboard-intro">Acompanhe as pendências e os próximos pontos de atenção. Toque em um indicador para abrir a área correspondente.</p>
             <div id="dashboardProfessor" class="dashboard-grid" aria-live="polite">
                 <div class="card-mensagem">Carregando indicadores...</div>
+            </div>
+            <div class="acessos-painel">
+                <div class="acessos-cabecalho">
+                    <h3>🔐 Histórico de acesso dos alunos</h3>
+                    <button type="button" class="btn-agenda-acao" id="btnNotificarAcessosAtrasados">🔔 Alertar quem está há mais de 15 dias sem acessar</button>
+                </div>
+                <p id="resumoAcessosAlunos" class="acessos-resumo">Carregando histórico de acessos...</p>
+                <div id="historicoAcessosAlunos" class="acessos-historico">
+                    <div class="card-mensagem">Carregando histórico de acessos...</div>
+                </div>
             </div>
         </section>
 
@@ -1984,12 +2001,70 @@
                 </button>`;
         }
 
+        function formatarDataHoraAcesso(valor) {
+            if (!valor) return 'Nunca acessou';
+            const data = new Date(valor);
+            if (Number.isNaN(data.getTime())) return 'Data não disponível';
+            return data.toLocaleString('pt-BR', { dateStyle: 'short', timeStyle: 'short' });
+        }
+
+        function renderizarHistoricoAcessos(acessos = {}) {
+            const resumo = document.getElementById('resumoAcessosAlunos');
+            const container = document.getElementById('historicoAcessosAlunos');
+            if (!resumo || !container) return;
+
+            const alunos = Array.isArray(acessos.alunos) ? acessos.alunos : [];
+            const atrasados = Number(acessos.sem_acesso) || 0;
+            resumo.innerHTML = `${alunos.length} aluno(s) no histórico. <span class="${atrasados ? 'acesso-atrasado' : ''}">${atrasados} aluno(s) ativo(s) há mais de 15 dias sem acessar</span>.`;
+
+            if (!alunos.length) {
+                container.innerHTML = '<div class="card-mensagem">Nenhum aluno cadastrado para exibir.</div>';
+                return;
+            }
+
+            const linhas = alunos.map(aluno => {
+                const dias = aluno.dias_sem_acesso == null ? null : Number(aluno.dias_sem_acesso);
+                const atrasado = aluno.ativo !== false && (dias === null || dias > 15);
+                const status = aluno.ativo === false
+                    ? '<span style="color:#94a3b8;">Inativo</span>'
+                    : atrasado
+                        ? `<span class="${dias === null ? 'acesso-nunca' : 'acesso-atrasado'}">${dias === null ? 'Nunca acessou' : `${dias} dia(s) sem acesso`}</span>`
+                        : `<span style="color:#86efac;">${dias === 0 ? 'Acessou hoje' : `${dias} dia(s) sem acesso`}</span>`;
+                return `<tr>
+                    <td style="font-weight:700;color:#f8fafc;">${escaparHtml(aluno.nome)}${aluno.ativo === false ? ' <small>(inativo)</small>' : ''}</td>
+                    <td>${Number(aluno.total_acessos) || 0}</td>
+                    <td>${formatarDataHoraAcesso(aluno.ultimo_acesso_em)}</td>
+                    <td>${status}</td>
+                </tr>`;
+            }).join('');
+
+            container.innerHTML = `<div class="table-responsive"><table class="tabela-resumo"><thead><tr><th>Aluno</th><th>Acessos</th><th>Último acesso</th><th>Situação</th></tr></thead><tbody>${linhas}</tbody></table></div>`;
+        }
+
+        document.getElementById('btnNotificarAcessosAtrasados').addEventListener('click', async () => {
+            const botao = document.getElementById('btnNotificarAcessosAtrasados');
+            if (!confirm('Enviar um aviso para todos os alunos ativos com mais de 15 dias sem acessar o APP?')) return;
+            botao.disabled = true;
+            botao.textContent = 'Enviando...';
+            try {
+                const resposta = await apiFetch('/api/professor/notificar-acessos-atrasados', { method: 'POST' });
+                alert(resposta.mensagem || 'Avisos enviados.');
+                await carregarDashboardProfessor();
+            } catch (error) {
+                alert(error.message || 'Não foi possível enviar os avisos de acesso.');
+            } finally {
+                botao.disabled = false;
+                botao.textContent = '🔔 Alertar quem está há mais de 15 dias sem acessar';
+            }
+        });
+
         async function carregarDashboardProfessor() {
             const container = document.getElementById('dashboardProfessor');
             if (!container) return;
             container.innerHTML = '<div class="card-mensagem">Carregando indicadores...</div>';
             try {
                 const dados = await apiFetch('/api/professor/dashboard');
+                renderizarHistoricoAcessos(dados.acessos);
                 periodoFrequenciaDashboard = dados.frequencia_baixa?.periodo || null;
                 const tituloSemestre = periodoFrequenciaDashboard?.titulo || 'semestre atual';
                 container.innerHTML = [
