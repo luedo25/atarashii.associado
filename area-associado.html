@@ -443,7 +443,7 @@
         </div>
         <div class="snake-painel">
             <p style="color:var(--text-muted);font-size:13px;line-height:1.5;margin-bottom:16px;">
-                Cada maçã vale 1 ponto. A cada 20 pontos no jogo, você ganha 1 ponto no ranking, até o limite de 100 pontos.
+                Cada maçã vale 1 ponto. A cada 20 pontos no jogo, você ganha 1 ponto no ranking. Ao alcançar 50 pontos, recebe mais 10 pontos de bônus. Limite total: 100 pontos extras.
             </p>
             <div class="snake-status">
                 <div class="snake-status-card"><small>Pontuação</small><strong id="snakeScore">0</strong></div>
@@ -1239,7 +1239,7 @@
         <div class="ranking-container">
             <h3 class="ranking-title">🏆 Ranking Geral do Dojo</h3>
             <p style="font-size: 13px; color: var(--text-muted); text-align: center; margin-bottom: 20px;">
-                Ganhe 25 pontos por cada conquista, 2 pontos por aula presente e até 100 pontos extras no jogo da cobrinha!
+                Ganhe 25 pontos por cada conquista, 2 pontos por aula presente e até 100 pontos extras no jogo da cobrinha: 1 ponto a cada 20 no jogo, mais 10 de bônus ao alcançar 50.
             </p>
             <div id="listaRanking" class="ranking-list">
                 <p style="text-align: center; color: var(--text-muted);">Carregando ranking oficial...</p>
@@ -1251,7 +1251,7 @@
     <!-- SEÇÃO 6: ATARASHII -->
        <div id="saldo" class="tab-content">
         <button type="button" class="btn-action" id="btnAbrirJogoCobrinha" style="margin-bottom:18px;background:linear-gradient(135deg,#16a34a,#15803d);">🐍 Jogar Cobrinha e ganhar pontos</button>
-        <p style="font-size:12px;color:var(--text-muted);margin:-8px 0 18px;line-height:1.45;text-align:center;">Abra o jogo, faça seu recorde e conquiste até 100 pontos extras no ranking.</p>
+        <p style="font-size:12px;color:var(--text-muted);margin:-8px 0 18px;line-height:1.45;text-align:center;">Ganhe 1 ponto no ranking a cada 20 no jogo e um bônus de 10 pontos ao alcançar 50. Limite: 100 pontos extras.</p>
         <h3>📢 Regras e Normas da Associação</h3>
         <div id="blocoTermoPendente">
             <p style="font-size: 14px; color: var(--text-muted); margin-bottom: 16px;">
@@ -2200,6 +2200,11 @@
             snakePontuacao += 1;
             atualizarPainelCobrinha();
             gerarComidaCobrinha();
+            if (snakePontuacao === 40) {
+                if (snakeIntervalo) window.clearInterval(snakeIntervalo);
+                snakeIntervalo = window.setInterval(avancarCobrinha, 110);
+                document.getElementById('snakeMensagem').textContent = 'Boa! A cobrinha acelerou um pouco. Continue!';
+            }
         } else {
             snakeCorpo.pop();
         }
