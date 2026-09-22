@@ -1915,8 +1915,12 @@
             ]);
             const proximo = (agenda?.eventos || []).find(evento => !['concluido', 'cancelado'].includes(evento.status));
             document.getElementById('resumoProximoEvento').textContent = proximo ? `${proximo.nome_evento} (${String(proximo.data_evento).split('-').reverse().join('/')})` : 'Nenhum agendado';
-            const presencas = Number(frequencia?.presencas || 0), faltas = Number(frequencia?.faltas || 0), total = presencas + faltas;
-            const percentual = total ? Math.round((presencas / total) * 100) : 0;
+            const presencas = Number(frequencia?.presencas || 0);
+            const faltas = Number(frequencia?.faltas || 0);
+            const justificativasAprovadas = Math.min(Number(frequencia?.justificativas_aprovadas || 0), faltas);
+            const total = presencas + faltas;
+            const presencasConsideradas = presencas + justificativasAprovadas;
+            const percentual = total ? Math.round((presencasConsideradas / total) * 100) : 0;
             const freqEl = document.getElementById('resumoFrequencia');
             const mensagemFrequencia = document.getElementById('mensagemFrequencia');
             freqEl.textContent = `${percentual}%`;
