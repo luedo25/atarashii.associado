@@ -603,24 +603,19 @@
                 <label style="display: block; font-size: 13px; color: var(--text-muted); margin-bottom: 8px;">Selecione o motivo da falta:</label>
                 
                 <div style="display: flex; flex-direction: column; gap: 8px; font-size: 13px; color: var(--text-main); text-align: left; margin-bottom: 15px;">
-                    <label><input type="checkbox" name="motivoFalta" value="Doença do aluno"> a) Doença do aluno.</label>
-                    <label><input type="checkbox" name="motivoFalta" value="Falecimento de familiar"> b) Falecimento de familiar.</label>
-                    <label><input type="checkbox" name="motivoFalta" value="Nascimento de irmão ou filho"> c) Nascimento de irmão ou filho.</label>
-                    <label><input type="checkbox" name="motivoFalta" value="Realização de tratamento ambulatório, em virtude de doença ou deficiência"> d) Realização de tratamento ambulatório, em virtude de doença ou deficiência.</label>
-                    <label><input type="checkbox" name="motivoFalta" value="Assistência na doença a membro do agregado familiar"> e) Assistência na doença a membro do agregado familiar.</label>
-                    <label><input type="checkbox" name="motivoFalta" value="Ato decorrente da religião professada pelo aluno"> f) Ato decorrente da religião professada pelo aluno.</label>
-                    <label><input type="checkbox" name="motivoFalta" value="Participação em atividades culturais e lazer"> g) Participação em atividades culturais e lazer.</label>
-                    <label><input type="checkbox" name="motivoFalta" value="Preparação e participação em atividades desportivas, trabalho ou escolares"> h) Preparação e participação em atividades desportivas, trabalho ou escolares.</label>
-                    <label><input type="checkbox" name="motivoFalta" value="Participação de estudo previstas no plano de atividades da escola"> i) Participação de estudo previstas no plano de atividades da escola.</label>
+                    <label><input type="radio" name="motivoFalta" value="Doença do aluno" required> a) Doença do aluno.</label>
+                    <label><input type="radio" name="motivoFalta" value="Falecimento de familiar"> b) Falecimento de familiar.</label>
+                    <label><input type="radio" name="motivoFalta" value="Nascimento de irmão ou filho"> c) Nascimento de irmão ou filho.</label>
+                    <label><input type="radio" name="motivoFalta" value="Realização de tratamento ambulatório, em virtude de doença ou deficiência"> d) Realização de tratamento ambulatório, em virtude de doença ou deficiência.</label>
+                    <label><input type="radio" name="motivoFalta" value="Assistência na doença a membro do agregado familiar"> e) Assistência na doença a membro do agregado familiar.</label>
+                    <label><input type="radio" name="motivoFalta" value="Ato decorrente da religião professada pelo aluno"> f) Ato decorrente da religião professada pelo aluno.</label>
+                    <label><input type="radio" name="motivoFalta" value="Participação em atividades culturais e lazer"> g) Participação em atividades culturais e lazer.</label>
+                    <label><input type="radio" name="motivoFalta" value="Preparação e participação em atividades desportivas, trabalho ou escolares"> h) Preparação e participação em atividades desportivas, trabalho ou escolares.</label>
+                    <label><input type="radio" name="motivoFalta" value="Participação de estudo previstas no plano de atividades da escola"> i) Participação de estudo previstas no plano de atividades da escola.</label>
                     
                     <label style="font-weight: bold; color: var(--accent-blue);">
-                        <input type="checkbox" id="checkOutro" onchange="alternarCampoTextoOutro()"> j) Outro(s)
+                        <input type="radio" name="motivoFalta" id="checkOutro" value="Outro" required> j) Outro(s)
                     </label>
-                </div>
-
-                <div id="containerTextoOutro" style="display: none; margin-bottom: 15px;">
-                    <label style="display: block; font-size: 13px; color: var(--text-muted); margin-bottom: 6px;">Especifique o motivo da falta:</label>
-                    <textarea id="textoJustificativaOutro" rows="3" placeholder="Escreva aqui o motivo detalhado da falta..." style="width: 100%; padding: 10px; border-radius: 6px; border: 1px solid var(--border-color); background: var(--bg-primary); color: var(--text-main); resize: vertical; font-size: 13px;"></textarea>
                 </div>
 
                 <button type="submit" class="btn-action">📤 Enviar Justificativa</button>
@@ -656,6 +651,20 @@
                     <input type="file" id="arquivoComprovanteJustificativa" accept="application/pdf,image/jpeg,image/png,image/webp" style="width:100%; margin:10px 0 18px; color:var(--text-main);">
                     <button type="button" id="btnEnviarSemComprovante" class="btn-action">Enviar sem anexo</button>
                     <button type="button" id="btnEnviarComComprovante" class="btn-action" style="margin-top:10px;">Enviar com anexo</button>
+                </div>
+            </dialog>
+            <dialog id="modalComentarioJustificativa" class="perfil-dialog" aria-labelledby="tituloComentarioJustificativa">
+                <div class="perfil-dialog-content">
+                    <div class="perfil-dialog-header">
+                        <h2 id="tituloComentarioJustificativa">Explique o motivo</h2>
+                        <button type="button" class="btn-fechar-perfil" id="btnFecharComentarioJustificativa" aria-label="Fechar">&times;</button>
+                    </div>
+                    <p class="perfil-descricao">Descreva obrigatoriamente o motivo da falta. Essa informação será analisada pelo professor.</p>
+                    <textarea id="comentarioJustificativaAluno" rows="5" maxlength="2000" required placeholder="Digite aqui os detalhes do motivo da falta..." style="width:100%; padding:10px; border-radius:6px; border:1px solid var(--border-color); background:var(--bg-primary); color:var(--text-main); resize:vertical; font-size:13px;"></textarea>
+                    <div style="display:flex; gap:10px; margin-top:12px;">
+                        <button type="button" id="btnCancelarComentarioJustificativa" class="btn-action" style="background:#475569;">Cancelar</button>
+                        <button type="button" id="btnConfirmarComentarioJustificativa" class="btn-action">Continuar</button>
+                    </div>
                 </div>
             </dialog>
         </div>
@@ -2403,12 +2412,6 @@
         Auth.sair();
     });
 
-    function alternarCampoTextoOutro() {
-        const checkOutro = document.getElementById('checkOutro'), containerTexto = document.getElementById('containerTextoOutro'), campoTexto = document.getElementById('textoJustificativaOutro');
-        if (checkOutro && checkOutro.checked) { if (containerTexto) containerTexto.style.display = 'block'; if (campoTexto) campoTexto.focus(); }
-        else { if (containerTexto) containerTexto.style.display = 'none'; if (campoTexto) campoTexto.value = ''; }
-    }
-
     document.getElementById('dataFaltaAluno').addEventListener('blur', function() {
         if (!this.value) return;
         const partes = this.value.split('-'); if (partes.length !== 3) return;
@@ -2419,6 +2422,8 @@
 
     const modalComprovante = document.getElementById('modalComprovanteJustificativa');
     const arquivoComprovante = document.getElementById('arquivoComprovanteJustificativa');
+    const modalComentario = document.getElementById('modalComentarioJustificativa');
+    const comentarioJustificativaAluno = document.getElementById('comentarioJustificativaAluno');
     let justificativaPendente = null;
 
     async function enviarJustificativaComOuSemComprovante(comprovante) {
@@ -2430,14 +2435,16 @@
                 const dados = new FormData();
                 dados.append('data_falta', justificativaPendente.dataFalta);
                 dados.append('motivo', justificativaPendente.motivo);
+                dados.append('comentario', justificativaPendente.comentario);
                 dados.append('comprovante', comprovante);
                 await apiFetch('/api/justificativa/upload', { method: 'POST', body: dados });
             } else {
-                await apiFetch('/api/justificativa', { method: 'POST', body: JSON.stringify({ data_falta: justificativaPendente.dataFalta, motivo: justificativaPendente.motivo }) });
+                await apiFetch('/api/justificativa', { method: 'POST', body: JSON.stringify({ data_falta: justificativaPendente.dataFalta, motivo: justificativaPendente.motivo, comentario: justificativaPendente.comentario }) });
             }
             alert(comprovante ? 'Justificativa e comprovante enviados!' : 'Justificativa enviada!');
             document.getElementById('formJustificativa').reset();
-            alternarCampoTextoOutro();
+            comentarioJustificativaAluno.value = '';
+            justificativaPendente = null;
             carregarStatusJustificativas();
             if (modalComprovante.open) modalComprovante.close();
         } catch (err) {
@@ -2449,6 +2456,20 @@
     }
 
     document.getElementById('btnFecharComprovante').addEventListener('click', () => modalComprovante.close());
+    document.getElementById('btnFecharComentarioJustificativa').addEventListener('click', () => modalComentario.close());
+    document.getElementById('btnCancelarComentarioJustificativa').addEventListener('click', () => modalComentario.close());
+    document.getElementById('btnConfirmarComentarioJustificativa').addEventListener('click', () => {
+        const comentario = comentarioJustificativaAluno.value.trim();
+        if (!comentario) {
+            alert('O comentário sobre o motivo da falta é obrigatório.');
+            comentarioJustificativaAluno.focus();
+            return;
+        }
+        justificativaPendente.comentario = comentario;
+        modalComentario.close();
+        arquivoComprovante.value = '';
+        modalComprovante.showModal();
+    });
     document.getElementById('btnEnviarSemComprovante').addEventListener('click', () => enviarJustificativaComOuSemComprovante(null));
     document.getElementById('btnEnviarComComprovante').addEventListener('click', () => {
         const arquivo = arquivoComprovante.files?.[0];
@@ -2461,8 +2482,7 @@
         e.preventDefault();
         
         const dataFalta = document.getElementById('dataFaltaAluno').value;
-        const marcados = Array.from(document.querySelectorAll('input[name="motivoFalta"]:checked')).map(cb => cb.value);
-        const checkOutro = document.getElementById('checkOutro'), textoOutro = document.getElementById('textoJustificativaOutro')?.value.trim();
+        const motivoSelecionado = document.querySelector('input[name="motivoFalta"]:checked');
         
         if (!dataFalta) return alert("Selecione a data.");
         const partes = dataFalta.split('-');
@@ -2479,15 +2499,12 @@
             return alert("O prazo para justificar é de até 48 horas (2 dias) antes ou após a data da aula.");
         }
 
-        if (checkOutro?.checked && !textoOutro) return alert("Descreva o motivo no campo texto.");
-        if (marcados.length === 0 && !checkOutro?.checked) return alert("Selecione ao menos um motivo.");
+        if (!motivoSelecionado) return alert("Selecione um motivo.");
 
-        let listaMotivos = [...marcados];
-        if (checkOutro?.checked && textoOutro) listaMotivos.push(`Outro: ${textoOutro}`);
-
-        justificativaPendente = { dataFalta, motivo: listaMotivos.join('; ') };
-        arquivoComprovante.value = '';
-        modalComprovante.showModal();
+        justificativaPendente = { dataFalta, motivo: motivoSelecionado.value, comentario: '' };
+        comentarioJustificativaAluno.value = '';
+        modalComentario.showModal();
+        setTimeout(() => comentarioJustificativaAluno.focus(), 50);
     });
     
     async function carregarStatusJustificativas() {
@@ -2507,10 +2524,12 @@
             container.innerHTML = dadosFiltrados.map(item => {
                 let corBadge = item.status === 'aprovado' ? '#10b981' : (item.status === 'reprovado' ? '#ef4444' : '#f59e0b');
                 let comentarioHtml = item.comentario_professor ? `<div style="margin-top: 6px; padding: 8px; background: rgba(239, 68, 68, 0.1); border-left: 3px solid #ef4444; color: #fca5a5; border-radius: 4px; font-size: 12px;"><strong>Motivo da Reprovação:</strong> ${escaparHtml(item.comentario_professor)}</div>` : '';
+                let comentarioAlunoHtml = item.comentario_aluno ? `<div style="margin-top: 6px; padding: 8px; background: rgba(59, 130, 246, 0.1); border-left: 3px solid #3b82f6; color: #bfdbfe; border-radius: 4px; font-size: 12px;"><strong>Comentário enviado:</strong> ${escaparHtml(item.comentario_aluno)}</div>` : '';
                 return `<div style="background: rgba(0,0,0,0.2); padding: 10px; border-radius: 6px; margin-bottom: 8px; border-left: 4px solid ${corBadge}; text-align: left;">
                     <div><strong>Data da Falta:</strong> ${escaparHtml(item.data_falta.split('-').reverse().join('/'))}</div>
                     <div><strong>Motivo:</strong> ${escaparHtml(item.motivo)}</div>
                     <div><strong>Status:</strong> <span style="color: ${corBadge}; font-weight: bold; text-transform: uppercase;">${escaparHtml(item.status)}</span></div>
+                    ${comentarioAlunoHtml}
                     ${comentarioHtml}
                     ${item.comprovante_url ? `<div style="margin-top:6px;"><a href="${escaparHtml(item.comprovante_url)}" target="_blank" rel="noopener" style="color:#93c5fd;font-weight:bold;">📎 Comprovante anexado</a></div>` : ''}
                     <div style="font-size: 11px; color: var(--text-muted); margin-top: 4px;">Solicitado em: ${escaparHtml(item.data_solicitacao)}</div></div>`;
