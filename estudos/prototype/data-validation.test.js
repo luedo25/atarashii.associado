@@ -70,7 +70,7 @@ test("todos os assets locais do precache existem", () => {
 });
 test("HTML carrega todos os modulos antes do app", () => {
   const html = fs.readFileSync(path.join(__dirname, "index.html"), "utf8");
-  const scripts = ["progress-service.js", "learning-engine.js", "assessment-engine.js", "challenge-engine.js", "search-service.js", "gamification.js", "app.js"];
+  const scripts = ["progress-service.js", "curriculum-engine.js", "learning-engine.js", "assessment-engine.js", "challenge-engine.js", "search-service.js", "gamification.js", "app.js"];
   let previous = -1;
   for (const script of scripts) {
     const index = html.indexOf(script);

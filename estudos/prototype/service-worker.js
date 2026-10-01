@@ -1,10 +1,11 @@
-const CACHE_NAME = "atarashii-app-v8";
+const CACHE_NAME = "atarashii-app-v9";
 const ASSETS = [
   "./",
   "./index.html",
   "./styles.css",
   "./app.js",
   "./progress-service.js",
+  "./curriculum-engine.js",
   "./learning-engine.js",
   "./assessment-engine.js",
   "./challenge-engine.js",

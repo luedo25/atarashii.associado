@@ -3,7 +3,7 @@
 
   const STORAGE_KEY = "karate-shotokan-progress";
   const SCHEMA_VERSION = 2;
-  const CURRICULUM_VERSION = 1;
+  const CURRICULUM_VERSION = 2;
 
   function initialState() {
     return {
@@ -84,7 +84,18 @@
   }
 
   function migrate(raw, catalog) {
-    if (raw?.schemaVersion === SCHEMA_VERSION) return normalizeV2(raw);
+    if (raw?.schemaVersion === SCHEMA_VERSION) {
+      const next = normalizeV2(raw);
+      const storedCurriculumVersion = Number.isInteger(raw.curriculumVersion) ? raw.curriculumVersion : 0;
+      if (storedCurriculumVersion < CURRICULUM_VERSION) {
+        next.learningProgress = initialState().learningProgress;
+        for (const key of ["pilar-basico", "pilar-intermediario", "pilar-avancado", "pilar-especialista"]) {
+          next.assessments[key] = { attempts: [], passed: false };
+        }
+        next.curriculumVersion = CURRICULUM_VERSION;
+      }
+      return next;
+    }
     const next = initialState();
     if (!raw || typeof raw !== "object") return next;
 

@@ -5,7 +5,7 @@
   "description": "Experiência educacional de apoio aos alunos da Associação Atarashii Karate-do Shotokan.",
   "scripts": {
     "test": "node --test prototype/*.test.js",
-    "check": "node --check prototype/app.js && node --check prototype/progress-service.js && node --check prototype/learning-engine.js && node --check prototype/assessment-engine.js && node --check prototype/challenge-engine.js && node --check prototype/search-service.js && node --test prototype/*.test.js",
+    "check": "node --check prototype/app.js && node --check prototype/progress-service.js && node --check prototype/curriculum-engine.js && node --check prototype/learning-engine.js && node --check prototype/assessment-engine.js && node --check prototype/challenge-engine.js && node --check prototype/search-service.js && node --test prototype/*.test.js",
     "serve": "python -m http.server 8765"
   }
 }

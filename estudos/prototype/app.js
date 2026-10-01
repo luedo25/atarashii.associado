@@ -143,6 +143,12 @@ function pillarProgress(pillar) {
 function pillarAssessmentState(pillar) {
   return progressState().assessments[pillarAssessmentKey(pillar)];
 }
+function canAccessPillar(pillar) {
+  return CurriculumEngine.canAccessPillar(pillar, PILLARS, progressState().assessments);
+}
+function pillarPrerequisite(pillar) {
+  return CurriculumEngine.prerequisiteFor(pillar, PILLARS);
+}
 function pillarCanQuiz(pillar) {
   const record = pillarAssessmentState(pillar);
   const p = pillarProgress(pillar);
@@ -163,6 +169,10 @@ function routeTo(route) {
 function openDetail(kind, id) {
   const item = findItem(kind, id);
   if (!item) return;
+  if (!canAccessPillar(item.pillar)) {
+    routeTo(`pilar:${item.pillar}`);
+    return;
+  }
   if (!state.route.startsWith("detail:")) state.returnRoute = state.route;
   if (!item.mediaRequired && !item.pending) {
     state.progressService.update((progress, now) => LearningEngine.markItemOpened(progress, item, now(), "content"));
@@ -201,18 +211,23 @@ function homeView() {
       <section class="next-action"><div><p class="eyebrow">Sua próxima etapa</p><h3>${incomplete ? `Pilar ${PILLAR_LABEL[incomplete.key]}` : "Jornada concluída"}</h3><p>Quatro temas · 40 questões · mínimo de 70% para aprovação</p></div><button class="primary-button" data-route="${incomplete ? `pilar:${incomplete.key}` : "progresso"}" type="button">${incomplete ? "Continuar" : "Ver progresso"}</button></section>
       <section class="pillar-grid" aria-label="Pilares de estudo">${PILLARS.map((pillar, index) => {
         const p = pillarProgress(pillar.key), exam = pillarAssessmentState(pillar.key);
-        return `<button class="pillar-card" data-route="pilar:${pillar.key}" type="button"><span class="pillar-card__top"><span>${pillar.icon}</span><small>0${index + 1}</small></span><strong>${pillar.label}</strong><span>${pillar.description}</span><span class="pillar-card__progress">${p.completed}/${p.total} conteúdos · ${p.percent}%</span><span class="pillar-card__status">${exam.passed ? "✓ Quiz aprovado" : exam.needsReread ? "Leitura completa obrigatória" : `${exam.attempts.length}/3 tentativas utilizadas`}</span></button>`;
+        const unlocked = canAccessPillar(pillar.key), prerequisite = pillarPrerequisite(pillar.key);
+        return `<button class="pillar-card ${unlocked ? "" : "is-locked"}" data-route="pilar:${pillar.key}" type="button"><span class="pillar-card__top"><span>${pillar.icon}</span><small>${unlocked ? `0${index + 1}` : "🔒"}</small></span><strong>${pillar.label}</strong><span>${pillar.description}</span><span class="pillar-card__progress">${p.completed}/${p.total} conteúdos · ${p.percent}%</span><span class="pillar-card__status">${exam.passed ? "✓ Quiz aprovado" : unlocked ? `${exam.attempts.length}/3 tentativas utilizadas` : `Bloqueado · aprove ${prerequisite.label}`}</span></button>`;
       }).join("")}</section>
       <section class="study-rules"><strong>Como funciona</strong><p>Leia e marque como concluído todo o conteúdo dos quatro temas. Depois, responda 10 questões por tema. Você tem três tentativas por pilar; após três reprovações, será necessário reler todo o conteúdo daquele pilar antes de tentar novamente.</p></section>
       <section class="institutional-grid"><button class="quiet-card" data-route="atarashii" type="button"><strong>A Atarashii</strong><span>Conheça nossa história.</span></button><button class="quiet-card" data-route="contato" type="button"><strong>Contato</strong><span>Endereço e redes da associação.</span></button></section>
     </section>`;
 }
 function pillarHubView() {
-  return `<section class="page"><header class="page-header"><p class="eyebrow">Trilha de aprendizagem</p><h2>Escolha seu pilar</h2><p>Cada pilar reúne leitura obrigatória de Kata, Kihon, Kumite e assuntos gerais, seguida por um quiz de 40 perguntas.</p></header><div class="pillar-grid">${PILLARS.map((pillar, index) => `<button class="pillar-card" data-route="pilar:${pillar.key}" type="button"><span class="pillar-card__top"><span>${pillar.icon}</span><small>0${index + 1}</small></span><strong>${pillar.label}</strong><span>${pillar.description}</span><span class="pillar-card__progress">${pillarProgress(pillar.key).percent}% concluído</span></button>`).join("")}</div></section>`;
+  return `<section class="page"><header class="page-header"><p class="eyebrow">Trilha de aprendizagem</p><h2>Progressão dos pilares</h2><p>Avance na ordem indicada. Cada pilar é liberado após a aprovação no quiz do pilar anterior.</p></header><div class="pillar-grid">${PILLARS.map((pillar, index) => { const unlocked = canAccessPillar(pillar.key), prerequisite = pillarPrerequisite(pillar.key), exam = pillarAssessmentState(pillar.key); return `<button class="pillar-card ${unlocked ? "" : "is-locked"}" data-route="pilar:${pillar.key}" type="button"><span class="pillar-card__top"><span>${pillar.icon}</span><small>${unlocked ? `0${index + 1}` : "🔒"}</small></span><strong>${pillar.label}</strong><span>${pillar.description}</span><span class="pillar-card__progress">${pillarProgress(pillar.key).percent}% concluído</span><span class="pillar-card__status">${exam.passed ? "✓ Quiz aprovado" : unlocked ? "Disponível" : `Aprove ${prerequisite.label} para desbloquear`}</span></button>`; }).join("")}</div></section>`;
 }
 function pillarView(key) {
   const pillar = PILLARS.find((item) => item.key === key);
   if (!pillar) return homeView();
+  if (!canAccessPillar(key)) {
+    const prerequisite = pillarPrerequisite(key);
+    return `<section class="locked-view"><span class="locked-view__icon">🔒</span><p class="eyebrow">Pilar bloqueado</p><h2>${pillar.label}</h2><p>Para liberar este conteúdo, conclua o material e seja aprovado no quiz ${prerequisite.label}.</p><button class="primary-button" data-route="pilar:${prerequisite.key}" type="button">Continuar no pilar ${prerequisite.label}</button><button class="secondary-button" data-route="pilares" type="button">Ver sequência completa</button></section>`;
+  }
   const p = pillarProgress(key), exam = pillarAssessmentState(key);
   return `<section class="page"><button class="back-button" data-route="pilares" type="button">← Todos os pilares</button><header class="page-header"><p class="eyebrow">Pilar de estudo</p><h2>${pillar.label}</h2><p>${pillar.description} Leia e conclua todos os itens de cada tema para liberar o quiz.</p>${progressBar(p, `Leitura do pilar ${pillar.label}`)}</header><div class="subject-grid">${SUBJECTS.map((subject) => {
     const items = pillarItems(key, subject.key);
@@ -288,6 +303,10 @@ function listSection(title, values) {
 function detailView(kind, id) {
   const item = findItem(kind, id);
   if (!item) return '<p class="empty">Conteúdo não encontrado.</p>';
+  if (!canAccessPillar(item.pillar)) {
+    const prerequisite = pillarPrerequisite(item.pillar);
+    return `<section class="locked-view"><span class="locked-view__icon">🔒</span><p class="eyebrow">Conteúdo bloqueado</p><h2>${escapeHtml(item.title)}</h2><p>Este conteúdo pertence ao pilar ${PILLAR_LABEL[item.pillar]}. Primeiro, conclua o pilar ${prerequisite.label} e seja aprovado no quiz.</p><button class="primary-button" data-route="pilar:${prerequisite.key}" type="button">Voltar ao pilar ${prerequisite.label}</button></section>`;
+  }
   const raw = item.raw;
   const status = itemStatus(item);
   const canComplete = LearningEngine.canCompleteItem(progressState(), item);
@@ -327,7 +346,7 @@ function assessmentQuestions(key) {
 }
 function startAssessment(key) {
   const pillar = key.startsWith("pilar-") ? key.slice(6) : "";
-  if (!pillar || !pillarCanQuiz(pillar)) {
+  if (!pillar || !canAccessPillar(pillar) || !pillarCanQuiz(pillar)) {
     state.notice = "Conclua a leitura obrigatória do pilar antes de iniciar o quiz. Após três reprovações, releia todos os conteúdos para liberar novas tentativas."; render(); return;
   }
   const record = pillarAssessmentState(pillar);
@@ -340,6 +359,11 @@ function startAssessment(key) {
 }
 function assessmentLanding(key) {
   const pillar = key.startsWith("pilar-") ? key.slice(6) : "";
+  if (!pillar || !PILLAR_LABEL[pillar]) return homeView();
+  if (!canAccessPillar(pillar)) {
+    const prerequisite = pillarPrerequisite(pillar);
+    return `<section class="locked-view"><span class="locked-view__icon">🔒</span><p class="eyebrow">Quiz bloqueado</p><h2>Quiz ${PILLAR_LABEL[pillar]}</h2><p>Seja aprovado no quiz ${prerequisite.label} para liberar este pilar e sua avaliação.</p><button class="primary-button" data-route="pilar:${prerequisite.key}" type="button">Continuar no pilar ${prerequisite.label}</button></section>`;
+  }
   const record = pillar ? pillarAssessmentState(pillar) : { attempts: [], passed: false };
   const label = pillar ? `Pilar ${PILLAR_LABEL[pillar]}` : ASSESSMENT_LABELS[key] || "Avaliação";
   return `<section class="assessment-intro"><span class="assessment-intro__icon">問</span><p class="eyebrow">Avaliação obrigatória</p><h2>${escapeHtml(label)}</h2><p>São 40 perguntas: 10 de Kata, 10 de Kihon, 10 de Kumite e 10 de assuntos gerais. Aproveitamento mínimo: 70%. Você tem até três tentativas antes de precisar reler todo o conteúdo deste pilar.</p><p class="muted">Tentativas disponíveis: ${Math.max(0, 3 - record.attempts.length)} de 3${record.bestPercent != null ? ` · melhor resultado: ${record.bestPercent}%` : ""}</p><button class="primary-button" data-action="start-assessment:${key}" type="button" ${pillar && pillarCanQuiz(pillar) ? "" : "disabled"}>Começar quiz</button><button class="text-button" data-route="pilar:${pillar}" type="button">Voltar ao conteúdo</button></section>`;
@@ -470,9 +494,9 @@ function render() {
   else if (state.route.startsWith("pilar:")) view = pillarView(state.route.split(":")[1]);
   else {
     const views = {
-      home: homeView, pilares: pillarHubView, aprender: () => areaView("aprender"), treinar: () => areaView("treinar"),
-      katas: kataHubView, "kata-iniciante": () => kataLevelView("iniciante"),
-      "kata-intermediario": () => kataLevelView("intermediario"), "kata-avancado": () => kataLevelView("avancado"),
+      home: homeView, pilares: pillarHubView, aprender: pillarHubView, treinar: pillarHubView,
+      katas: pillarHubView, "kata-iniciante": pillarHubView,
+      "kata-intermediario": pillarHubView, "kata-avancado": pillarHubView,
       "assessment-run": assessmentRunView, "assessment-result": assessmentResultView,
       "desafio-final": finalChallengeView, "challenge-run": challengeRunView,
       "challenge-result": challengeResultView, busca: searchView, progresso: progressView,

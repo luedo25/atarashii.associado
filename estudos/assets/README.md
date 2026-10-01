@@ -12,3 +12,4 @@ Arquivos visuais usados pelo Atarashii App.
 ## Logo
 
 - `brand/atarashii-logo.png`: logo oficial informada para uso no app.
+

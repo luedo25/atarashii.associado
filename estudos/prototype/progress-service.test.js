@@ -49,6 +49,16 @@ test("persistencia salva schema versionado", () => {
   assert.equal(JSON.parse(storage.value()).schemaVersion, 2);
   assert.deepEqual(JSON.parse(storage.value()).achievements.medals, ["aprender"]);
 });
+test("nova trilha exige releitura e aprovação mesmo para progresso da versão anterior", () => {
+  const previous = ProgressService.initialState();
+  previous.curriculumVersion = 1;
+  previous.learningProgress.aprender.items["conteudo:c1"] = { status: "COMPLETED" };
+  previous.assessments["pilar-basico"].passed = true;
+  const migrated = ProgressService.migrate(previous, catalog);
+  assert.equal(migrated.curriculumVersion, ProgressService.CURRICULUM_VERSION);
+  assert.deepEqual(migrated.learningProgress.aprender.items, {});
+  assert.equal(migrated.assessments["pilar-basico"].passed, false);
+});
 test("atalho de teste completa a jornada com 100 por cento", () => {
   const service = ProgressService.create(storageWith(null), catalog);
   const timestamp = "2026-09-05T20:00:00.000Z";
