@@ -78,3 +78,12 @@ test("HTML carrega todos os modulos antes do app", () => {
     previous = index;
   }
 });
+test("navegacao fixa inclui Atarashii e Contato sem cards duplicados na home", () => {
+  const html = fs.readFileSync(path.join(__dirname, "index.html"), "utf8");
+  for (const route of ["home", "pilares", "progresso", "atarashii", "contato"]) {
+    assert.match(html, new RegExp(`data-route="${route}"`), `${route} ausente da navegacao`);
+  }
+  const app = fs.readFileSync(path.join(__dirname, "app.js"), "utf8");
+  const home = app.slice(app.indexOf("function homeView()"), app.indexOf("function pillarHubView()"));
+  assert.equal(home.includes("institutional-grid"), false, "links institucionais duplicados na home");
+});

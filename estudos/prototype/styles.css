@@ -32,7 +32,7 @@ input {
 
 .app-shell {
   min-height: 100vh;
-  padding-bottom: 78px;
+  padding-bottom: 100px;
 }
 
 .topbar {
@@ -84,13 +84,17 @@ input {
 
 .tabbar {
   background: var(--surface-strong);
-  border-top: 1px solid var(--line);
-  bottom: 0;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  bottom: max(12px, env(safe-area-inset-bottom));
+  box-shadow: 0 8px 28px rgba(32, 36, 43, 0.18);
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  left: 0;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  left: 50%;
+  max-width: 760px;
   position: fixed;
-  right: 0;
+  transform: translateX(-50%);
+  width: calc(100% - 24px);
   z-index: 20;
 }
 
@@ -100,7 +104,10 @@ input {
   color: var(--muted);
   font-size: 12px;
   min-height: 62px;
-  padding: 8px 2px;
+  line-height: 1.15;
+  min-width: 0;
+  padding: 8px 4px;
+  white-space: normal;
 }
 
 .tab.is-active {
@@ -555,26 +562,9 @@ button:disabled {
   opacity: 0.6;
 }
 @media (min-width: 760px) {
-  .app-shell {
-    padding-bottom: 0;
-  }
-
   .topbar {
     padding-left: 32px;
     padding-right: 32px;
-  }
-
-  .tabbar {
-    border: 1px solid var(--line);
-    border-radius: 8px;
-    bottom: auto;
-    gap: 4px;
-    left: 50%;
-    max-width: 760px;
-    padding: 6px;
-    position: sticky;
-    top: 82px;
-    transform: translateX(-50%);
   }
 
   .tab {
@@ -1083,7 +1073,7 @@ button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible
   .progress-dashboard { grid-template-columns: 1fr; }
 }
 @media (max-width: 620px) {
-  .content { padding: 14px 14px 96px; }
+  .content { padding: 14px 14px 112px; }
   .topbar { padding: 12px 14px; }
   .brand-mark { height: 44px; width: 44px; }
   .topbar h1 { font-size: 20px; }

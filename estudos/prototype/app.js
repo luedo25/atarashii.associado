@@ -215,7 +215,6 @@ function homeView() {
         return `<button class="pillar-card ${unlocked ? "" : "is-locked"}" data-route="pilar:${pillar.key}" type="button"><span class="pillar-card__top"><span>${pillar.icon}</span><small>${unlocked ? `0${index + 1}` : "🔒"}</small></span><strong>${pillar.label}</strong><span>${pillar.description}</span><span class="pillar-card__progress">${p.completed}/${p.total} conteúdos · ${p.percent}%</span><span class="pillar-card__status">${exam.passed ? "✓ Quiz aprovado" : unlocked ? `${exam.attempts.length}/3 tentativas utilizadas` : `Bloqueado · aprove ${prerequisite.label}`}</span></button>`;
       }).join("")}</section>
       <section class="study-rules"><strong>Como funciona</strong><p>Leia e marque como concluído todo o conteúdo dos quatro temas. Depois, responda 10 questões por tema. Você tem três tentativas por pilar; após três reprovações, será necessário reler todo o conteúdo daquele pilar antes de tentar novamente.</p></section>
-      <section class="institutional-grid"><button class="quiet-card" data-route="atarashii" type="button"><strong>A Atarashii</strong><span>Conheça nossa história.</span></button><button class="quiet-card" data-route="contato" type="button"><strong>Contato</strong><span>Endereço e redes da associação.</span></button></section>
     </section>`;
 }
 function pillarHubView() {
