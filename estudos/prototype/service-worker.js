@@ -1,0 +1,93 @@
+const CACHE_NAME = "atarashii-app-v8";
+const ASSETS = [
+  "./",
+  "./index.html",
+  "./styles.css",
+  "./app.js",
+  "./progress-service.js",
+  "./learning-engine.js",
+  "./assessment-engine.js",
+  "./challenge-engine.js",
+  "./search-service.js",
+  "./gamification.js",
+  "./manifest.json",
+  "../data/content-items.json",
+  "../data/techniques.json",
+  "../data/stances.json",
+  "../data/katas-shotokan-complete.json",
+  "../data/glossary.json",
+  "../data/rules.json",
+  "../data/quiz.json",
+  "../data/quiz-kata-iniciante.json",
+  "../data/quiz-kata-intermediario.json",
+  "../data/quiz-kata-avancado.json",
+  "../data/final-challenge.json",
+  "../data/training-content.json",
+  "../assets/brand/atarashii-logo.png",
+  "../assets/bases/bases-01.png",
+  "../assets/bases/bases-02.png",
+  "../assets/bases/bases-03.png",
+  "../assets/katas/heian-sandan-yondan-godan-bassai-dai.png",
+  "../assets/katas/heian-shodan-nidan.png",
+  "../assets/katas/tekki-shodan-nidan-sandan.png"
+];
+
+// Instala o Service Worker e adiciona os recursos ao cache
+self.addEventListener("install", (event) => {
+  event.waitUntil(
+    caches.open(CACHE_NAME).then((cache) => {
+      return Promise.allSettled(ASSETS.map((asset) => cache.add(asset)));
+    })
+  );
+  self.skipWaiting();
+});
+
+// Ativa o Service Worker e remove caches antigos, se houver
+self.addEventListener("activate", (event) => {
+  event.waitUntil(
+    caches.keys().then((keys) => {
+      return Promise.all(
+        keys.map((key) => {
+          if (key !== CACHE_NAME) {
+            console.log("[Service Worker] Removing old cache", key);
+            return caches.delete(key);
+          }
+        })
+      );
+    })
+  );
+  self.clients.claim();
+});
+
+// Intercepta requisições de rede
+self.addEventListener("fetch", (event) => {
+  // Ignora requisições que não sejam do tipo GET ou para destinos externos (ex: embeds do YouTube)
+  if (event.request.method !== "GET" || !event.request.url.startsWith(self.location.origin)) {
+    return;
+  }
+
+  // Estrutura Network-First para garantir atualizações imediatas quando houver rede ativa
+  event.respondWith(
+    fetch(event.request)
+      .then((networkResponse) => {
+        if (networkResponse && networkResponse.status === 200) {
+          const responseToCache = networkResponse.clone();
+          caches.open(CACHE_NAME).then((cache) => {
+            cache.put(event.request, responseToCache);
+          });
+        }
+        return networkResponse;
+      })
+      .catch(() => {
+        // Fallback para cache offline caso a rede falhe
+        return caches.match(event.request).then((cachedResponse) => {
+          if (cachedResponse) {
+            return cachedResponse;
+          }
+          console.log("[Service Worker] Resource not found in cache and network failed");
+        });
+      })
+  );
+});
+
+// Force deploy trigger 2026-08-07
