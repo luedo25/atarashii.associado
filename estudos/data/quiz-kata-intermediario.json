@@ -1,51 +1,51 @@
 [
   {
     "id": "quiz-kata-intermediario-01",
-    "category": "Katas - Intermediario",
-    "question": "Qual e o significado do kata Tekki Shodan?",
+    "category": "Katas - Intermediário",
+    "question": "Qual é o significado do kata Tekki Shodan?",
     "options": [
-      "Cavaleiro de ferro nivel 1",
-      "Cavaleiro de ferro nivel 2",
+      "Cavaleiro de ferro nível 1",
+      "Cavaleiro de ferro nível 2",
       "Romper a fortaleza - forma menor",
       "Voo da andorinha"
     ],
     "correctOption": 0,
-    "explanation": "Tekki Shodan (鉄騎初段) significa \"Cavaleiro de ferro nivel 1\"."
+    "explanation": "Tekki Shodan (鉄騎初段) significa \"Cavaleiro de ferro nível 1\"."
   },
   {
     "id": "quiz-kata-intermediario-02",
-    "category": "Katas - Intermediario",
-    "question": "Qual e o significado do kata Tekki Nidan?",
+    "category": "Katas - Intermediário",
+    "question": "Qual é o significado do kata Tekki Nidan?",
     "options": [
-      "Cavaleiro de ferro nivel 1",
+      "Cavaleiro de ferro nível 1",
       "Romper a fortaleza - forma menor",
       "Voo da andorinha",
-      "Cavaleiro de ferro nivel 2"
+      "Cavaleiro de ferro nível 2"
     ],
     "correctOption": 3,
-    "explanation": "Tekki Nidan (鉄騎二段) significa \"Cavaleiro de ferro nivel 2\"."
+    "explanation": "Tekki Nidan (鉄騎二段) significa \"Cavaleiro de ferro nível 2\"."
   },
   {
     "id": "quiz-kata-intermediario-03",
-    "category": "Katas - Intermediario",
-    "question": "Qual e o significado do kata Tekki Sandan?",
+    "category": "Katas - Intermediário",
+    "question": "Qual é o significado do kata Tekki Sandan?",
     "options": [
       "Romper a fortaleza - forma menor",
       "Voo da andorinha",
-      "Cavaleiro de ferro nivel 3",
-      "Cavaleiro de ferro nivel 1"
+      "Cavaleiro de ferro nível 3",
+      "Cavaleiro de ferro nível 1"
     ],
     "correctOption": 2,
-    "explanation": "Tekki Sandan (鉄騎三段) significa \"Cavaleiro de ferro nivel 3\"."
+    "explanation": "Tekki Sandan (鉄騎三段) significa \"Cavaleiro de ferro nível 3\"."
   },
   {
     "id": "quiz-kata-intermediario-04",
-    "category": "Katas - Intermediario",
-    "question": "Qual e o significado do kata Bassai Dai?",
+    "category": "Katas - Intermediário",
+    "question": "Qual é o significado do kata Bassai Dai?",
     "options": [
       "Voo da andorinha",
       "Romper a fortaleza",
-      "Cavaleiro de ferro nivel 1",
+      "Cavaleiro de ferro nível 1",
       "Romper a fortaleza - forma menor"
     ],
     "correctOption": 1,
@@ -53,11 +53,11 @@
   },
   {
     "id": "quiz-kata-intermediario-05",
-    "category": "Katas - Intermediario",
-    "question": "Qual e o significado do kata Bassai Sho?",
+    "category": "Katas - Intermediário",
+    "question": "Qual é o significado do kata Bassai Sho?",
     "options": [
       "Romper a fortaleza - forma menor",
-      "Cavaleiro de ferro nivel 1",
+      "Cavaleiro de ferro nível 1",
       "Romper a fortaleza",
       "Voo da andorinha"
     ],
@@ -66,10 +66,10 @@
   },
   {
     "id": "quiz-kata-intermediario-06",
-    "category": "Katas - Intermediario",
-    "question": "Qual e o significado do kata Kanku Dai?",
+    "category": "Katas - Intermediário",
+    "question": "Qual é o significado do kata Kanku Dai?",
     "options": [
-      "Cavaleiro de ferro nivel 1",
+      "Cavaleiro de ferro nível 1",
       "Romper a fortaleza",
       "Voo da andorinha",
       "Contemplar o ceu"
@@ -79,25 +79,25 @@
   },
   {
     "id": "quiz-kata-intermediario-07",
-    "category": "Katas - Intermediario",
-    "question": "Qual e o significado do kata Kanku Sho?",
+    "category": "Katas - Intermediário",
+    "question": "Qual é o significado do kata Kanku Sho?",
     "options": [
       "Romper a fortaleza",
       "Voo da andorinha",
       "Contemplar o ceu - forma menor",
-      "Cavaleiro de ferro nivel 1"
+      "Cavaleiro de ferro nível 1"
     ],
     "correctOption": 2,
     "explanation": "Kanku Sho (観空小) significa \"Contemplar o ceu - forma menor\"."
   },
   {
     "id": "quiz-kata-intermediario-08",
-    "category": "Katas - Intermediario",
-    "question": "Qual e o significado do kata Empi?",
+    "category": "Katas - Intermediário",
+    "question": "Qual é o significado do kata Empi?",
     "options": [
       "Contemplar o ceu - forma menor",
       "Voo da andorinha",
-      "Cavaleiro de ferro nivel 1",
+      "Cavaleiro de ferro nível 1",
       "Romper a fortaleza"
     ],
     "correctOption": 1,
@@ -105,11 +105,11 @@
   },
   {
     "id": "quiz-kata-intermediario-09",
-    "category": "Katas - Intermediario",
-    "question": "Qual e o significado do kata Hangetsu?",
+    "category": "Katas - Intermediário",
+    "question": "Qual é o significado do kata Hangetsu?",
     "options": [
       "Meia-lua",
-      "Cavaleiro de ferro nivel 1",
+      "Cavaleiro de ferro nível 1",
       "Romper a fortaleza",
       "Contemplar o ceu - forma menor"
     ],
@@ -118,26 +118,26 @@
   },
   {
     "id": "quiz-kata-intermediario-10",
-    "category": "Katas - Intermediario",
-    "question": "Qual e o significado do kata Jion?",
+    "category": "Katas - Intermediário",
+    "question": "Qual é o significado do kata Jion?",
     "options": [
-      "Cavaleiro de ferro nivel 1",
+      "Cavaleiro de ferro nível 1",
       "Romper a fortaleza",
       "Contemplar o ceu - forma menor",
-      "Amor e gratidao"
+      "Amor e gratidão"
     ],
     "correctOption": 3,
-    "explanation": "Jion (慈恩) significa \"Amor e gratidao\"."
+    "explanation": "Jion (慈恩) significa \"Amor e gratidão\"."
   },
   {
     "id": "quiz-kata-intermediario-11",
-    "category": "Katas - Intermediario",
-    "question": "Qual e o significado do kata Jiin?",
+    "category": "Katas - Intermediário",
+    "question": "Qual é o significado do kata Jiin?",
     "options": [
       "Romper a fortaleza",
       "Contemplar o ceu - forma menor",
       "Amor e protecao",
-      "Cavaleiro de ferro nivel 1"
+      "Cavaleiro de ferro nível 1"
     ],
     "correctOption": 2,
     "explanation": "Jiin (慈陰) significa \"Amor e protecao\"."

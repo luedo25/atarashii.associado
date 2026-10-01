@@ -4,8 +4,8 @@ Esta pasta contem a primeira estrutura de dados em JSON para o App Karate Shotok
 
 ## Arquivos
 
-- `content-items.json`: conteudos conceituais, historicos e formativos.
-- `techniques.json`: tecnicas basicas citadas na apostila.
+- `content-items.json`: conteúdos conceituais, historicos e formativos.
+- `techniques.json`: técnicas básicas citadas na apostila.
 - `stances.json`: bases/Dachi citadas na apostila.
 - `katas.json`: katas iniciais definidos para o MVP.
 - `glossary.json`: termos japoneses e conceitos de consulta.
@@ -26,8 +26,8 @@ Esta pasta contem a primeira estrutura de dados em JSON para o App Karate Shotok
 
 - `id`: identificador estavel para relacionamentos internos.
 - `slug`: identificador amigavel para rotas.
-- `level`: nivel recomendado do conteudo.
-- `relatedIds`: ids de conteudos relacionados.
+- `level`: nível recomendado do conteúdo.
+- `relatedIds`: ids de conteúdos relacionados.
 - `sourcePages`: paginas da apostila usadas como origem quando mapeadas.
 - `videoUrl`: link de video quando houver.
 - `videoProvider`: provedor do video, por exemplo `youtube`.
@@ -38,6 +38,6 @@ Esta pasta contem a primeira estrutura de dados em JSON para o App Karate Shotok
 ## Observacoes
 
 - Imagens e diagramas foram adicionados depois da validacao de direito de uso.
-- O conteudo foi sintetizado para uso educacional no app.
-- O Sensei Online e recursos de IA nao entram no MVP.
+- O conteúdo foi sintetizado para uso educacional no app.
+- O Sensei Online e recursos de IA não entram no MVP.
 - Katas e Kihon devem aceitar videos oficiais em fases futuras sem alterar a estrutura principal.

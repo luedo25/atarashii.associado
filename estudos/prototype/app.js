@@ -331,7 +331,7 @@ function assessmentQuestions(key) {
   if (!key.startsWith("pilar-")) return [];
   const pools = {
     kata: [...state.data.quiz.filter((q) => /kata/i.test(q.category)), ...state.data.quizKataIniciante, ...state.data.quizKataIntermediario, ...state.data.quizKataAvancado],
-    kihon: state.data.quiz.filter((q) => ["Fundamentos", "Tecnicas Basicas", "Bases e Termos"].includes(q.category)),
+    kihon: state.data.quiz.filter((q) => ["Fundamentos", "Técnicas Básicas", "Bases e Termos"].includes(q.category)),
     kumite: [
       ...state.data.quiz.filter((q) => q.category === "Regras de Kumite"),
       { id: "kumite-extra-kiken", category: "Regras de Kumite", question: "Nas regras estudadas, quando pode ser aplicado o Kiken?", options: ["Quando o atleta não se apresenta, abandona ou não pode continuar", "Quando o atleta marca o primeiro ponto", "Quando o árbitro encerra o tempo normalmente", "Quando os atletas iniciam a saudação"], correctOption: 0, explanation: "Kiken se aplica quando o atleta não se apresenta, abandona, não pode continuar ou é retirado por ordem médica." },
@@ -339,7 +339,7 @@ function assessmentQuestions(key) {
       { id: "kumite-extra-criteria", category: "Regras de Kumite", question: "Qual conjunto reúne critérios de avaliação de uma técnica de Kumite?", options: ["Boa forma, atitude esportiva, vigor, Zanshin, tempo e distância", "Somente força e velocidade", "Altura do salto e duração do kiai", "Número de técnicas executadas sem pausa"], correctOption: 0, explanation: "Os critérios incluem boa forma, atitude esportiva, aplicação vigorosa, Zanshin, tempo e distância correta." },
       { id: "kumite-extra-timing", category: "Regras de Kumite", question: "Quando começa a cronometragem de uma disputa de Kumite?", options: ["Quando os atletas entram no ginásio", "Quando o árbitro dá o sinal para começar", "Após o primeiro ponto", "Quando termina a saudação final"], correctOption: 1, explanation: "A cronometragem começa com o sinal do árbitro para iniciar o encontro." },
     ],
-    geral: state.data.quiz.filter((q) => !/kata/i.test(q.category) && !["Fundamentos", "Tecnicas Basicas", "Bases e Termos", "Regras de Kumite"].includes(q.category)),
+    geral: state.data.quiz.filter((q) => !/kata/i.test(q.category) && !["Fundamentos", "Técnicas Básicas", "Bases e Termos", "Regras de Kumite"].includes(q.category)),
   };
   const pillarKey = key.slice("pilar-".length);
   return SUBJECTS.flatMap((subject) => {
