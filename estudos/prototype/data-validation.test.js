@@ -150,3 +150,16 @@ test("cabeçalho do guia exibe somente atualizar e área do associado, com biogr
   assert.match(app, /Hoje, posso afirmar com o coração cheio: o Karatê é a minha vida/);
   assert.doesNotMatch(app, /progressButton/);
 });
+
+test("painel do associado mostra meses na faixa e diferencia o status dos estudos por cor", () => {
+  const root = path.resolve(__dirname, "../..");
+  const student = fs.readFileSync(path.join(root, "area-associado.html"), "utf8");
+  const requirements = fs.readFileSync(path.join(root, "estudos-requisitos.js"), "utf8");
+  assert.match(student, /id="tempoFaixaAtual"/);
+  assert.match(student, /EstudosRequisitos\.mesesDesdePeriodo\(ultimo\?\.ano\)/);
+  assert.match(student, /objetivo-estudos-pendente/);
+  assert.match(student, /objetivo-estudos-concluido/);
+  assert.match(student, /\.objetivo-estudos-pendente\s*\{\s*color:#f87171/);
+  assert.match(student, /\.objetivo-estudos-concluido\s*\{\s*color:#86efac/);
+  assert.match(requirements, /function mesesDesdePeriodo\(/);
+});

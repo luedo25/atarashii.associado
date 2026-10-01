@@ -31,3 +31,11 @@ test("pendências mostram apenas níveis exigidos que não foram aprovados", () 
   assert.deepEqual(Requirements.niveisPendentes(progresso, "Laranja"), ["intermediario"]);
   assert.deepEqual(Requirements.niveisPendentes(progresso, "Branca"), []);
 });
+
+test("calcula os meses completos na faixa usando o período do último exame", () => {
+  const hoje = new Date(2026, 9, 1);
+  assert.equal(Requirements.mesesDesdePeriodo("Junho / 2025", hoje), 16);
+  assert.equal(Requirements.mesesDesdePeriodo("2025-06", hoje), 16);
+  assert.equal(Requirements.mesesDesdePeriodo("10/2026", hoje), 0);
+  assert.equal(Requirements.mesesDesdePeriodo("período não informado", hoje), null);
+});
