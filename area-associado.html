@@ -679,6 +679,11 @@
     <!-- SEÇÃO 2: CONTEÚDO PROGRAMÁTICO (EXAME) -->
     <div id="conteudo-programatico" class="tab-content">
         <h3>📖 Conteúdo Programático</h3>
+        <div class="card-item" style="flex-direction: column; align-items: flex-start; gap: 10px; margin-bottom: 18px;">
+            <strong style="font-size: 15px;">📚 Guia de Estudos de Karate</strong>
+            <p style="font-size: 12px; color: var(--text-muted);">Acesse sua trilha de estudos e avance pelos quatro níveis.</p>
+            <a href="estudos/prototype/" class="btn-action">Abrir Guia de Estudos</a>
+        </div>
         
         <details class="modulo-faixa">
             <summary class="botao-expandir">
@@ -1954,14 +1959,7 @@
             .replace(/[\u0300-\u036f]/g, '')
             .toLowerCase();
         const faixaAtual = ordem.find(faixa => faixaNormalizada.includes(faixa.toLowerCase())) || parteFinalFaixa;
-        const indice = ordem.indexOf(faixaAtual);
-
         document.getElementById('resumoFaixaAtual').textContent = faixaAtual;
-        document.getElementById('resumoProximoObjetivo').textContent = indice >= 0 && indice < ordem.length - 1
-            ? `Próxima: ${ordem[indice + 1]}`
-            : indice === ordem.length - 1
-                ? 'Manter evolução'
-                : 'Próximo exame';
             const badgesDisponiveis = [
                 'frequencia_ferro', 'guardiao', 'badge_kata_avancado', 'badge_mae_geri',
                 'badge_fisico_abs', 'badge_tsuki', 'badge_prancha_baixa', 'badge_polichinelo',
@@ -1995,6 +1993,33 @@
                 }).join('');
         } catch (error) {
             console.error('Erro ao carregar resumo personalizado:', error);
+        }
+    }
+
+    async function carregarObjetivoEstudos() {
+        const elemento = document.getElementById('resumoProximoObjetivo');
+        if (!elemento) return;
+        try {
+            const resposta = await EstudosProgresso.obter();
+            const progresso = resposta?.progresso;
+            const pilares = [
+                ['basico', 'Básico'],
+                ['intermediario', 'Intermediário'],
+                ['avancado', 'Avançado'],
+                ['especialista', 'Especialista']
+            ];
+            const proximo = pilares.find(([chave]) => !progresso?.assessments?.[`pilar-${chave}`]?.passed);
+            if (!proximo) {
+                elemento.textContent = 'Estudos concluídos';
+                return;
+            }
+            const avaliacao = progresso?.assessments?.[`pilar-${proximo[0]}`];
+            elemento.textContent = avaliacao?.needsReread
+                ? `Releitura do pilar ${proximo[1]}`
+                : `Concluir pilar ${proximo[1]} nos estudos`;
+        } catch (error) {
+            console.error('Não foi possível carregar o objetivo de estudos:', error);
+            elemento.textContent = 'Progresso dos estudos indisponível';
         }
     }
 
@@ -2801,7 +2826,8 @@
                 carregarResumoPersonalizado(),
                 carregarGraficoFrequencia(),
                 carregarStatusJustificativas(),
-                carregarMeusDesafios()
+                carregarMeusDesafios(),
+                carregarObjetivoEstudos()
             ]);
 
             registrarPushNativo();

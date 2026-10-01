@@ -70,13 +70,35 @@ test("todos os assets locais do precache existem", () => {
 });
 test("HTML carrega todos os modulos antes do app", () => {
   const html = fs.readFileSync(path.join(__dirname, "index.html"), "utf8");
-  const scripts = ["progress-service.js", "curriculum-engine.js", "learning-engine.js", "assessment-engine.js", "challenge-engine.js", "search-service.js", "gamification.js", "app.js"];
+  assert.ok(html.indexOf("../../api.js") < html.indexOf("progress-service.js"), "API de autenticação e progresso deve carregar primeiro");
+  const scripts = ["../../api.js", "progress-service.js", "curriculum-engine.js", "learning-engine.js", "assessment-engine.js", "challenge-engine.js", "search-service.js", "gamification.js", "app.js"];
   let previous = -1;
   for (const script of scripts) {
     const index = html.indexOf(script);
     assert.ok(index > previous, script + " fora de ordem ou ausente");
     previous = index;
   }
+});
+test("guia exige login e usa o PWA principal sem persistir progresso localmente", () => {
+  const html = fs.readFileSync(path.join(__dirname, "index.html"), "utf8");
+  const app = fs.readFileSync(path.join(__dirname, "app.js"), "utf8");
+  const progress = fs.readFileSync(path.join(__dirname, "progress-service.js"), "utf8");
+  assert.equal(html.includes('rel="manifest"'), false, "não deve registrar um segundo PWA");
+  assert.equal(html.includes('register("./service-worker.js")'), false, "deve usar o service worker da raiz");
+  assert.match(app, /Auth\.exigirSessao\("aluno"\)/);
+  assert.match(app, /ProgressService\.createRemote/);
+  assert.equal(/\blocalStorage\b|\bsessionStorage\b/.test(progress), false, "o serviço de progresso não deve usar Storage local");
+});
+test("link de Estudos fica somente na aba Exame e a página redireciona ao login raiz", () => {
+  const root = path.resolve(__dirname, "../..");
+  const login = fs.readFileSync(path.join(root, "index.html"), "utf8");
+  const student = fs.readFileSync(path.join(root, "area-associado.html"), "utf8");
+  const api = fs.readFileSync(path.join(root, "api.js"), "utf8");
+  assert.doesNotMatch(login, /href=["'][^"']*estudos\/prototype/);
+  assert.match(student, /id="conteudo-programatico"[\s\S]*?href="estudos\/prototype\/"/);
+  assert.match(api, /new URL\('index\.html', SITE_ROOT_URL\)/);
+  assert.match(api, /\/api\/estudos\/progresso/);
+  assert.ok(fs.existsSync(path.join(root, "database", "estudos_progresso.sql")));
 });
 test("navegacao fixa inclui Atarashii e Contato sem cards duplicados na home", () => {
   const html = fs.readFileSync(path.join(__dirname, "index.html"), "utf8");

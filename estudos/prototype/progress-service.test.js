@@ -2,10 +2,6 @@ const test = require("node:test");
 const assert = require("node:assert/strict");
 const ProgressService = require("./progress-service.js");
 
-function storageWith(value) {
-  let stored = value == null ? null : JSON.stringify(value);
-  return { getItem: () => stored, setItem: (_, next) => { stored = next; }, value: () => stored };
-}
 const catalog = [
   { id: "c1", key: "conteudo:c1", area: "aprender" },
   { id: "t1", key: "tecnica:t1", area: "treinar" },
@@ -37,17 +33,18 @@ test("migration repetida e idempotente", () => {
   assert.deepEqual(twice, once);
 });
 test("estado corrompido recupera estado inicial", () => {
-  const storage = { getItem: () => "{ruim", setItem: () => {} };
-  const service = ProgressService.create(storage, catalog);
-  assert.equal(service.getState().schemaVersion, 2);
-  assert.deepEqual(service.getState().achievements.medals, []);
+  const invalid = ProgressService.migrate("{ruim", catalog);
+  assert.equal(invalid.schemaVersion, 2);
+  assert.deepEqual(invalid.achievements.medals, []);
 });
-test("persistencia salva schema versionado", () => {
-  const storage = storageWith(null);
-  const service = ProgressService.create(storage, catalog);
+test("serviço grava progresso por adaptador remoto sem usar Storage do navegador", async () => {
+  const writes = [];
+  const service = ProgressService.createRemote(null, catalog, async (state) => writes.push(state));
   service.update((state) => state.achievements.medals.push("aprender"));
-  assert.equal(JSON.parse(storage.value()).schemaVersion, 2);
-  assert.deepEqual(JSON.parse(storage.value()).achievements.medals, ["aprender"]);
+  await service.flush();
+  assert.equal(writes.length, 2);
+  assert.equal(writes[1].schemaVersion, 2);
+  assert.deepEqual(writes[1].achievements.medals, ["aprender"]);
 });
 test("nova trilha exige releitura e aprovação mesmo para progresso da versão anterior", () => {
   const previous = ProgressService.initialState();
@@ -60,7 +57,7 @@ test("nova trilha exige releitura e aprovação mesmo para progresso da versão 
   assert.equal(migrated.assessments["pilar-basico"].passed, false);
 });
 test("atalho de teste completa a jornada com 100 por cento", () => {
-  const service = ProgressService.create(storageWith(null), catalog);
+  const service = ProgressService.createRemote(null, catalog, async () => {});
   const timestamp = "2026-09-05T20:00:00.000Z";
   service.update((state) => ProgressService.activateTestMode(state, catalog, timestamp));
   const state = service.getState();

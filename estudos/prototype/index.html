@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Atarashii App - MVP</title>
     <link rel="stylesheet" href="styles.css" />
-    <link rel="manifest" href="manifest.json" />
     <link rel="icon" type="image/png" href="../assets/brand/atarashii-logo.png" />
   </head>
   <body>
@@ -19,7 +18,7 @@
         <button class="icon-button" id="progressButton" type="button" title="Abrir progresso" aria-label="Abrir progresso">◎</button>
       </header>
 
-      <main id="app" class="content" aria-live="polite"></main>
+      <main id="app" class="content" aria-live="polite"><p class="empty">Validando sua sessão...</p></main>
 
       <nav class="tabbar" aria-label="Navegacao principal">
         <button class="tab is-active" data-route="home" type="button">Início</button>
@@ -30,6 +29,17 @@
       </nav>
     </div>
 
+    <script src="../../api.js"></script>
+    <script>
+      if ("serviceWorker" in navigator) {
+        navigator.serviceWorker.getRegistrations().then((registrations) => {
+          const studyScope = new URL("./", location.href).pathname;
+          registrations
+            .filter((registration) => new URL(registration.scope).pathname === studyScope)
+            .forEach((registration) => registration.unregister());
+        }).catch(() => {});
+      }
+    </script>
     <script src="progress-service.js"></script>
     <script src="curriculum-engine.js"></script>
     <script src="learning-engine.js"></script>
@@ -38,17 +48,6 @@
     <script src="search-service.js"></script>
     <script src="gamification.js"></script>
     <script src="app.js"></script>
-    <script>
-      if ("serviceWorker" in navigator) {
-        window.addEventListener("load", () => {
-          navigator.serviceWorker.register("./service-worker.js")
-            .then((reg) => console.log("[PWA] Service Worker registrado!", reg.scope))
-            .catch((err) => console.warn("[PWA] Falha ao registrar Service Worker", err));
-        });
-      }
-    </script>
   </body>
 </html>
-
-
 

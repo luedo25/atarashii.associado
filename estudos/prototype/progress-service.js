@@ -1,7 +1,6 @@
 (function (root) {
   "use strict";
 
-  const STORAGE_KEY = "karate-shotokan-progress";
   const SCHEMA_VERSION = 2;
   const CURRICULUM_VERSION = 2;
 
@@ -147,18 +146,20 @@
     return next;
   }
 
-  function create(storage, catalog, clock) {
+  function createRemote(remoteState, catalog, saveRemote, clock) {
     const now = clock || (() => new Date().toISOString());
-    let state;
-    try {
-      const raw = JSON.parse(storage.getItem(STORAGE_KEY));
-      state = migrate(raw, catalog);
-    } catch {
-      state = initialState();
-    }
+    let state = migrate(remoteState, catalog);
+    let pendingSave = Promise.resolve();
 
     function save() {
-      storage.setItem(STORAGE_KEY, JSON.stringify(state));
+      if (typeof saveRemote !== "function") return Promise.reject(new Error("A gravação remota do progresso não foi configurada."));
+      const snapshot = clone(state);
+      pendingSave = pendingSave.catch(() => undefined).then(() => saveRemote(snapshot));
+      pendingSave.catch((error) => {
+        if (typeof root.dispatchEvent === "function" && typeof root.CustomEvent === "function") {
+          root.dispatchEvent(new root.CustomEvent("study:progress-sync-error", { detail: { message: error.message } }));
+        }
+      });
       return state;
     }
 
@@ -168,16 +169,18 @@
 
     function update(mutator) {
       mutator(state, now);
-      return save();
+      save();
+      return state;
     }
 
     function reset() {
       state = initialState();
-      return save();
+      save();
+      return state;
     }
 
-    save();
-    return { getState, save, update, reset, now };
+    if (!remoteState || (Number.isInteger(remoteState.curriculumVersion) && remoteState.curriculumVersion < CURRICULUM_VERSION)) save();
+    return { getState, save, update, reset, now, flush: () => pendingSave };
   }
 
   function activateTestMode(progress, catalog, timestamp) {
@@ -201,7 +204,7 @@
     return progress;
   }
 
-  const api = { STORAGE_KEY, SCHEMA_VERSION, CURRICULUM_VERSION, initialState, normalizeV2, migrate, create, activateTestMode };
+  const api = { SCHEMA_VERSION, CURRICULUM_VERSION, initialState, normalizeV2, migrate, createRemote, activateTestMode };
   if (typeof module !== "undefined" && module.exports) module.exports = api;
   else root.ProgressService = api;
 })(typeof window !== "undefined" ? window : globalThis);

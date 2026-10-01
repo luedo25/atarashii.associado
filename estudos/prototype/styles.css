@@ -792,6 +792,7 @@ button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible
 .dashboard-hero p:last-child { color: #d6d9de; line-height: 1.55; margin: 0; }
 .dashboard-hero img { background: white; border: 4px solid rgba(255,255,255,.25); border-radius: 50%; height: 112px; object-fit: cover; position: relative; width: 112px; z-index: 1; }
 .dashboard-hero .eyebrow { color: #edc58d; }
+.dashboard-hero__student { color: #fff; display: inline-block; font-weight: 700; margin-left: 4px; }
 
 .next-action {
   align-items: center;

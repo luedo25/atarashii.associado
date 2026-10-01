@@ -35,6 +35,10 @@ O guia de estudo é dividido em quatro pilares: Básico, Intermediário, Avança
 
 Cada pilar permite três tentativas. Após três reprovações, todo o conteúdo daquele pilar precisa ser lido novamente antes da liberação de uma nova série de tentativas.
 
+## Integração com a Área do Associado
+
+O guia é servido dentro do mesmo domínio e usa a sessão autenticada e o PWA principal do site. O progresso é enviado à API autenticada do Render, que o persiste no Supabase; ele não é guardado no Storage do navegador. O servidor e suas rotas de progresso estão incluídos em `../api-render/`; veja [RENDER-SUPABASE.md](RENDER-SUPABASE.md) para configurar o serviço Render.
+
 ## Versão 2 — Jornada de Aprendizagem
 
 O app agora organiza a experiência em três trilhas independentes:

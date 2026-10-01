@@ -4,6 +4,8 @@
     const API_URL = 'https://api-associacao-mp.onrender.com';
     const CHAVE_TOKEN = 'atarashii_token';
     const CHAVE_USUARIO = 'atarashii_usuario';
+    const API_SCRIPT_URL = document.currentScript?.src ? new URL(document.currentScript.src) : new URL('./api.js', location.href);
+    const SITE_ROOT_URL = new URL('./', API_SCRIPT_URL);
 
     function obterToken() {
         return sessionStorage.getItem(CHAVE_TOKEN);
@@ -41,8 +43,9 @@
 
     function voltarAoLogin() {
         limparSessao();
-        if (!location.pathname.endsWith('/index.html') && !location.pathname.endsWith('/')) {
-            location.replace('index.html');
+        const loginUrl = new URL('index.html', SITE_ROOT_URL);
+        if (location.pathname !== loginUrl.pathname) {
+            location.replace(loginUrl.href);
         }
     }
 
@@ -108,7 +111,8 @@
             sessionStorage.setItem(CHAVE_USUARIO, JSON.stringify(usuario));
 
             if (tipoObrigatorio && String(usuario.tipo).toLowerCase() !== tipoObrigatorio) {
-                location.replace(usuario.tipo === 'professor' ? 'professor.html' : 'area-associado.html');
+                const destino = usuario.tipo === 'professor' ? 'professor.html' : 'area-associado.html';
+                location.replace(new URL(destino, SITE_ROOT_URL).href);
                 return null;
             }
 
@@ -121,6 +125,17 @@
 
     window.API_URL = API_URL;
     window.apiFetch = apiFetch;
+    window.EstudosProgresso = {
+        obter() {
+            return apiFetch('/api/estudos/progresso');
+        },
+        salvar(progresso) {
+            return apiFetch('/api/estudos/progresso', {
+                method: 'PUT',
+                body: JSON.stringify({ progresso })
+            });
+        }
+    };
     window.Usuarios = {
         criar(dados) {
             return apiFetch('/api/usuarios', {
@@ -221,7 +236,7 @@
         },
         sair() {
             limparSessao();
-            location.replace('index.html');
+            location.replace(new URL('index.html', SITE_ROOT_URL).href);
         }
     };
 })();
