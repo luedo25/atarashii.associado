@@ -1,0 +1,190 @@
+[
+  {
+    "id": "dojo-01",
+    "round": 1,
+    "area": "aprender",
+    "type": "MULTIPLE_CHOICE",
+    "prompt": "O significado literal de Karate é:",
+    "options": ["Arte das armas", "Mãos vazias", "Caminho da espada", "Mãos fechadas"],
+    "correctAnswer": 1,
+    "explanation": "A apostila apresenta Karate como “mãos vazias”.",
+    "difficulty": 1,
+    "sourceId": "q001"
+  },
+  {
+    "id": "dojo-02",
+    "round": 1,
+    "area": "treinar",
+    "type": "IMAGE_IDENTIFICATION",
+    "prompt": "Qual técnica está representada nesta imagem?",
+    "media": { "type": "image", "url": "assets/training/mae_geri.png", "alt": "Demonstração de uma técnica de Karate" },
+    "options": ["Oi-Zuki", "Mae-Geri", "Age-Uke", "Kiba-Dachi"],
+    "correctAnswer": 1,
+    "explanation": "Mae-Geri corresponde ao chute frontal.",
+    "difficulty": 1,
+    "sourceId": "q043"
+  },
+  {
+    "id": "dojo-03",
+    "round": 1,
+    "area": "kata",
+    "type": "VIDEO_IDENTIFICATION",
+    "prompt": "Qual kata é demonstrado neste vídeo?",
+    "media": { "type": "video", "url": "https://www.youtube.com/watch?v=N3KSQQ--LB0" },
+    "options": ["Heian Shodan", "Kanku Dai", "Wankan", "Tekki Shodan"],
+    "correctAnswer": 0,
+    "explanation": "O vídeo está cadastrado no catálogo do Heian Shodan.",
+    "difficulty": 1,
+    "sourceId": "heian-shodan"
+  },
+  {
+    "id": "dojo-04",
+    "round": 2,
+    "area": "aprender",
+    "type": "TRUE_FALSE",
+    "prompt": "O Karate inicia e termina com saudação.",
+    "options": ["Verdadeiro", "Falso"],
+    "correctAnswer": 0,
+    "explanation": "Esse é um dos princípios apresentados no Niju Kun.",
+    "difficulty": 1,
+    "sourceId": "q037"
+  },
+  {
+    "id": "dojo-05",
+    "round": 2,
+    "area": "treinar",
+    "type": "MULTIPLE_CHOICE",
+    "prompt": "Gyaku-Zuki é:",
+    "options": ["Soco com a mão da perna de trás", "Chute frontal", "Defesa ascendente", "Base do gato"],
+    "correctAnswer": 0,
+    "explanation": "Gyaku-Zuki é o soco reverso executado com o braço oposto à perna da frente.",
+    "difficulty": 1,
+    "sourceId": "q042"
+  },
+  {
+    "id": "dojo-06",
+    "round": 2,
+    "area": "kata",
+    "type": "MULTIPLE_CHOICE",
+    "prompt": "A série Heian deriva de qual kata avançado?",
+    "options": ["Bassai Dai", "Kanku Dai", "Sochin", "Unsu"],
+    "correctAnswer": 1,
+    "explanation": "A apostila informa que os Heians são derivações de Kanku Dai.",
+    "difficulty": 2,
+    "sourceId": "q007"
+  },
+  {
+    "id": "dojo-07",
+    "round": 3,
+    "area": "aprender",
+    "type": "MATCHING",
+    "prompt": "Associe cada termo ao seu significado.",
+    "pairs": [
+      { "left": "Sensei", "right": "Professor" },
+      { "left": "Deshi", "right": "Aluno" },
+      { "left": "Dojo", "right": "Local de treinamento" }
+    ],
+    "correctAnswer": { "Sensei": "Professor", "Deshi": "Aluno", "Dojo": "Local de treinamento" },
+    "explanation": "Os pares usam as definições do glossário do aplicativo.",
+    "difficulty": 2
+  },
+  {
+    "id": "dojo-08",
+    "round": 3,
+    "area": "treinar",
+    "type": "MATCHING",
+    "prompt": "Associe a técnica à descrição correta.",
+    "pairs": [
+      { "left": "Oi-Zuki", "right": "Soco direto avançando" },
+      { "left": "Mae-Geri", "right": "Chute frontal" },
+      { "left": "Age-Uke", "right": "Defesa ascendente" }
+    ],
+    "correctAnswer": { "Oi-Zuki": "Soco direto avançando", "Mae-Geri": "Chute frontal", "Age-Uke": "Defesa ascendente" },
+    "explanation": "As associações vêm dos conteúdos de técnicas e do quiz.",
+    "difficulty": 2
+  },
+  {
+    "id": "dojo-09",
+    "round": 3,
+    "area": "kata",
+    "type": "TRUE_FALSE",
+    "prompt": "Wankan é apresentado como o kata mais curto do Shotokan e possui um Kiai.",
+    "options": ["Verdadeiro", "Falso"],
+    "correctAnswer": 0,
+    "explanation": "Essa informação consta no quiz baseado na apostila.",
+    "difficulty": 2,
+    "sourceId": "q025"
+  },
+  {
+    "id": "dojo-10",
+    "round": 4,
+    "area": "aprender",
+    "type": "MULTIPLE_CHOICE",
+    "prompt": "No Kumite, Yuko vale:",
+    "options": ["1 ponto", "2 pontos", "3 pontos", "4 pontos"],
+    "correctAnswer": 0,
+    "explanation": "Yuko vale um ponto.",
+    "difficulty": 2,
+    "sourceId": "q026"
+  },
+  {
+    "id": "dojo-11",
+    "round": 4,
+    "area": "treinar",
+    "type": "ORDERING",
+    "prompt": "Coloque as etapas resumidas do Oi-Zuki na ordem apresentada no conteúdo.",
+    "options": ["Preparação e Guarda", "Avanço e Deslocamento", "Rotação do Quadril", "Extensão do Braço e Hikite", "Foco e Kime"],
+    "correctAnswer": ["Preparação e Guarda", "Avanço e Deslocamento", "Rotação do Quadril", "Extensão do Braço e Hikite", "Foco e Kime"],
+    "explanation": "A sequência segue o passo a passo cadastrado para Oi-Zuki.",
+    "difficulty": 3,
+    "sourceId": "oi-zuki"
+  },
+  {
+    "id": "dojo-12",
+    "round": 4,
+    "area": "kata",
+    "type": "MULTIPLE_CHOICE",
+    "prompt": "Qual kata é um dos mais longos do Shotokan, com cerca de 65 movimentos?",
+    "options": ["Wankan", "Kanku Dai", "Heian Shodan", "Tekki Shodan"],
+    "correctAnswer": 1,
+    "explanation": "A apostila identifica Kanku Dai como um dos katas mais longos.",
+    "difficulty": 2,
+    "sourceId": "q024"
+  },
+  {
+    "id": "dojo-13",
+    "round": 5,
+    "area": "aprender",
+    "type": "MULTIPLE_CHOICE",
+    "prompt": "Quem é considerado o pai do Karate moderno e fundador do Shotokan?",
+    "options": ["Kanryo Higaonna", "Gichin Funakoshi", "Choki Motobu", "Sokon Matsumura"],
+    "correctAnswer": 1,
+    "explanation": "A apostila apresenta Gichin Funakoshi dessa forma.",
+    "difficulty": 2,
+    "sourceId": "q008"
+  },
+  {
+    "id": "dojo-14",
+    "round": 5,
+    "area": "treinar",
+    "type": "MULTIPLE_CHOICE",
+    "prompt": "Neko Ashi-Dachi é:",
+    "options": ["Base do gato", "Posição cavaleiro", "Base de avanço", "Defesa ascendente"],
+    "correctAnswer": 0,
+    "explanation": "Neko Ashi-Dachi é a base do gato.",
+    "difficulty": 2,
+    "sourceId": "q049"
+  },
+  {
+    "id": "dojo-15",
+    "round": 5,
+    "area": "kata",
+    "type": "MULTIPLE_CHOICE",
+    "prompt": "Quantos katas tradicionais compõem a base do Shotokan conforme a apostila?",
+    "options": ["20", "24", "26", "27"],
+    "correctAnswer": 2,
+    "explanation": "A apostila lista 26 katas tradicionais; o catálogo do app inclui também Taikyoku Shodan como conteúdo adicional.",
+    "difficulty": 3,
+    "sourceId": "q022"
+  }
+]
