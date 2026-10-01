@@ -683,6 +683,10 @@
         .acesso-atrasado { color:#fca5a5; font-weight:800; }
         .acesso-nunca { color:#fcd34d; font-weight:800; }
         .acessos-historico { max-height: 390px; overflow:auto; }
+        .status-estudo { display:inline-block; padding:5px 8px; border-radius:7px; font-size:.75rem; font-weight:800; white-space:nowrap; }
+        .status-estudo.aprovado { background:rgba(16,185,129,.18); color:#86efac; }
+        .status-estudo.pendente { background:rgba(245,158,11,.16); color:#fcd34d; }
+        .status-estudo.nao-iniciado { background:rgba(148,163,184,.16); color:#cbd5e1; }
 
         /* OTIMIZAÇÃO EXTRA PARA SMARTPHONES PEQUENOS */
         @media (max-width: 640px) {
@@ -741,6 +745,7 @@
         <button class="nav-btn" onclick="mudarAba('banners', this)">📢 Banners</button>
         <button class="nav-btn" onclick="mudarAba('justificativas', this)">📝 Justificativas</button>
         <button class="nav-btn" onclick="mudarAba('desafios', this)">🎯 Desafios</button>
+        <button class="nav-btn" onclick="mudarAba('estudos', this)">📘 Estudos</button>
         <button class="nav-btn" onclick="mudarAba('resumo', this)">📊 Resumo</button>
         <button class="nav-btn" onclick="mudarAba('financas', this)">💰 Finanças</button>
         <button class="nav-btn" onclick="mudarAba('notificacoes', this)">🔔 Notificações</button>
@@ -962,6 +967,13 @@
                 <button onclick="carregarDesafiosProfessor()" class="btn-filtrar">🔍 Filtrar Desafios</button>
             </div>
             <div id="listaDesafiosProfessor">Carregando desafios...</div>
+        </section>
+
+        <section id="aba-estudos" class="tab-content">
+            <h2 style="margin-bottom: 8px;">📘 Progresso dos níveis de estudo</h2>
+            <p class="dashboard-intro">Consulte os níveis aprovados e o status dos quizzes de cada aluno.</p>
+            <button type="button" class="btn-filtrar" id="btnAtualizarEstudosProfessor" onclick="carregarProgressoEstudosProfessor()">🔄 Atualizar status</button>
+            <div id="statusEstudosProfessor" aria-live="polite" style="margin-top:16px;"><div class="card-mensagem">Carregando progresso dos alunos...</div></div>
         </section>
 
         <!-- ABA 3: RESUMO DE FREQUÊNCIA -->
@@ -2101,12 +2113,55 @@
             if (nomeAba === 'visao-geral') carregarDashboardProfessor();
             else if (nomeAba === 'agenda') carregarAgendaProfessor();
             else if (nomeAba === 'exames') carregarHistoricoExamesProfessor();
+            else if (nomeAba === 'estudos') carregarProgressoEstudosProfessor();
             else if (nomeAba === 'ranking') carregarRankingProfessor();
             else if (nomeAba === 'banners') carregarBannersProfessor();
             else if (nomeAba === 'justificativas') carregarJustificativasProfessor();
             else if (nomeAba === 'resumo') carregarResumoFrequencia();
             else if (nomeAba === 'desafios') carregarDesafiosProfessor();
             else if (nomeAba === 'financas') carregarFinancasProfessor();
+        }
+
+        async function carregarProgressoEstudosProfessor() {
+            const container = document.getElementById('statusEstudosProfessor');
+            const botao = document.getElementById('btnAtualizarEstudosProfessor');
+            if (!container) return;
+            if (botao) botao.disabled = true;
+            container.innerHTML = '<div class="card-mensagem">Carregando progresso dos alunos...</div>';
+            try {
+                const resposta = await fetchAutenticado(`${URL_API_SERVIDOR}/api/professor/estudos/progresso`);
+                const dados = await resposta.json();
+                const alunos = Array.isArray(dados?.alunos) ? dados.alunos : [];
+                if (!alunos.length) {
+                    container.innerHTML = '<div class="card-mensagem">Nenhum aluno cadastrado.</div>';
+                    return;
+                }
+                const niveis = [
+                    ['basico', 'Básico'],
+                    ['intermediario', 'Intermediário'],
+                    ['avancado', 'Avançado'],
+                    ['especialista', 'Especialista']
+                ];
+                const statusNivel = (aluno, nivel) => {
+                    const avaliacao = aluno.progresso?.assessments?.[`pilar-${nivel}`];
+                    if (avaliacao?.passed) return { classe: 'aprovado', texto: '✓ Aprovado' };
+                    if (avaliacao?.needsReread) return { classe: 'pendente', texto: 'Releitura obrigatória' };
+                    if (avaliacao?.attempts?.length) return { classe: 'pendente', texto: `Quiz pendente · ${avaliacao.attempts.length}/3` };
+                    return aluno.progresso
+                        ? { classe: 'pendente', texto: 'Sem aprovação' }
+                        : { classe: 'nao-iniciado', texto: 'Não iniciado' };
+                };
+                const formatarData = (valor) => {
+                    if (!valor) return 'Nunca';
+                    const data = new Date(valor);
+                    return Number.isNaN(data.getTime()) ? 'Data indisponível' : data.toLocaleDateString('pt-BR');
+                };
+                container.innerHTML = `<div class="table-responsive"><table class="tabela-resumo"><thead><tr><th>Aluno</th><th>Usuário</th>${niveis.map(([, nome]) => `<th>${nome}</th>`).join('')}<th>Última atualização</th></tr></thead><tbody>${alunos.map(aluno => `<tr><td>${escaparHtml(aluno.nome || 'Aluno')}</td><td>${escaparHtml(aluno.usuario)}</td>${niveis.map(([nivel]) => { const status = statusNivel(aluno, nivel); return `<td><span class="status-estudo ${status.classe}">${status.texto}</span></td>`; }).join('')}<td>${formatarData(aluno.atualizado_em)}</td></tr>`).join('')}</tbody></table></div>`;
+            } catch (error) {
+                container.innerHTML = `<div class="card-mensagem" style="color:#fecaca;">${escaparHtml(error.message || 'Não foi possível carregar os status dos estudos.')}</div>`;
+            } finally {
+                if (botao) botao.disabled = false;
+            }
         }
 
         async function carregarFinancasProfessor() {

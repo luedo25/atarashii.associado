@@ -44,6 +44,9 @@ Cada pilar permite três tentativas. Após três reprovações, todo o conteúdo
 - Preta: os quatro pilares, seguindo a progressão da faixa mais alta.
 
 O Painel e a aba Exame exibem os níveis ainda pendentes e a próxima faixa prevista.
+Após a aprovação, o aluno pode baixar um certificado PDF daquele nível. O certificado é montado no navegador com o logo oficial e a assinatura fornecida pelo Sensei Luiz Costa.
+
+Na página do Professor, a aba Estudos consulta a API autenticada para listar o status de aprovação de cada aluno nos quatro pilares.
 
 ## Integração com a Área do Associado
 

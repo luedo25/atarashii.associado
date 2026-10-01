@@ -107,7 +107,7 @@ async function loadData() {
   if (!currentUser) return false;
   state.currentUser = currentUser;
   const studentName = document.querySelector("#studentName");
-  if (studentName) studentName.textContent = currentUser.nome || currentUser.usuario || "Associado";
+  if (studentName) studentName.textContent = `Olá, ${currentUser.nome || currentUser.usuario || "Associado"}`;
   const entries = await Promise.all(Object.entries(dataFiles).map(async ([key, path]) => {
     const response = await fetch(path);
     if (!response.ok) throw new Error(`Falha ao carregar ${path}: ${response.status}`);
@@ -240,7 +240,7 @@ function pillarView(key) {
     const items = pillarItems(key, subject.key);
     const done = items.filter(item => itemStatus(item) === "COMPLETED").length;
     return `<section class="subject-panel"><header><span>${subject.icon}</span><div><h3>${subject.label}</h3><small>${done} de ${items.length} concluídos</small></div></header><div class="subject-items">${items.map(itemCard).join("") || `<p class="muted">Nenhum conteúdo disponível nesta seção.</p>`}</div></section>`;
-  }).join("")}</div><section class="assessment-gate ${exam.passed ? "is-complete" : ""}"><div><span>${exam.passed ? "✓ Pilar aprovado" : p.percent === 100 ? "Leitura concluída · quiz liberado" : "Quiz bloqueado até concluir toda a leitura"}</span><strong>Quiz ${pillar.label} · 40 perguntas</strong><small>${exam.attempts.length}/3 tentativas nesta etapa ${exam.bestPercent != null ? `· melhor nota ${exam.bestPercent}%` : ""}</small></div><button class="primary-button" data-route="assessment:${pillarAssessmentKey(key)}" type="button" ${pillarCanQuiz(key) ? "" : "disabled"}>${exam.needsReread ? "Reler e fazer quiz" : exam.passed ? "Aprovado" : "Abrir quiz"}</button></section></section>`;
+  }).join("")}</div><section class="assessment-gate ${exam.passed ? "is-complete" : ""}"><div><span>${exam.passed ? "✓ Pilar aprovado" : p.percent === 100 ? "Leitura concluída · quiz liberado" : "Quiz bloqueado até concluir toda a leitura"}</span><strong>Quiz ${pillar.label} · 40 perguntas</strong><small>${exam.attempts.length}/3 tentativas nesta etapa ${exam.bestPercent != null ? `· melhor nota ${exam.bestPercent}%` : ""}</small></div><button class="primary-button" data-route="assessment:${pillarAssessmentKey(key)}" type="button" ${pillarCanQuiz(key) ? "" : "disabled"}>${exam.needsReread ? "Reler e fazer quiz" : exam.passed ? "Aprovado" : "Abrir quiz"}</button>${exam.passed ? `<button class="secondary-button certificate-button" data-action="certificate:${key}" type="button">⬇ Salvar certificado PDF</button>` : ""}</section></section>`;
 }
 
 function itemCard(item) {
@@ -411,7 +411,7 @@ function assessmentResultView() {
   if (!result) return homeView();
   const wrong = result.questions.map((question, index) => ({ question, answer: result.answers[index] })).filter(({ question, answer }) => answer !== question.correctOption);
   const backRoute = result.key.startsWith("kata-") ? result.key : result.key;
-  return `<section class="result-page ${result.passed ? "is-pass" : "is-fail"}"><span class="result-icon">${result.passed ? "✓" : "↻"}</span><p class="eyebrow">${result.passed ? "Avaliação concluída" : "Continue praticando"}</p><h2>${result.percent}% de aproveitamento</h2><p>${result.score} de ${result.total} respostas corretas. ${result.passed ? "Você atingiu o resultado necessário." : result.exhausted ? "As três tentativas foram utilizadas. Releia todos os conteúdos deste pilar para liberar uma nova série de tentativas." : "Revise os pontos abaixo e tente novamente quando estiver pronto."}</p>${wrong.length ? `<section class="review-list"><h3>Revise estes pontos</h3>${wrong.map(({ question }) => `<div><strong>${escapeHtml(question.question)}</strong><span>${escapeHtml(question.explanation)}</span></div>`).join("")}</section>` : ""}<div class="result-actions">${!result.passed && !result.exhausted ? `<button class="primary-button" data-action="start-assessment:${result.key}" type="button">Tentar novamente (${Math.max(0, 3 - pillarAssessmentState(result.key.slice(6)).attempts.length)} restantes)</button>` : ""}<button class="secondary-button" data-route="pilar:${result.key.slice(6)}" type="button">Voltar ao pilar</button></div></section>`;
+  return `<section class="result-page ${result.passed ? "is-pass" : "is-fail"}"><span class="result-icon">${result.passed ? "✓" : "↻"}</span><p class="eyebrow">${result.passed ? "Avaliação concluída" : "Continue praticando"}</p><h2>${result.percent}% de aproveitamento</h2><p>${result.score} de ${result.total} respostas corretas. ${result.passed ? "Você atingiu o resultado necessário." : result.exhausted ? "As três tentativas foram utilizadas. Releia todos os conteúdos deste pilar para liberar uma nova série de tentativas." : "Revise os pontos abaixo e tente novamente quando estiver pronto."}</p>${wrong.length ? `<section class="review-list"><h3>Revise estes pontos</h3>${wrong.map(({ question }) => `<div><strong>${escapeHtml(question.question)}</strong><span>${escapeHtml(question.explanation)}</span></div>`).join("")}</section>` : ""}<div class="result-actions">${result.passed && result.key.startsWith("pilar-") ? `<button class="primary-button" data-action="certificate:${result.key.slice(6)}" type="button">⬇ Salvar certificado PDF</button>` : ""}${!result.passed && !result.exhausted ? `<button class="primary-button" data-action="start-assessment:${result.key}" type="button">Tentar novamente (${Math.max(0, 3 - pillarAssessmentState(result.key.slice(6)).attempts.length)} restantes)</button>` : ""}<button class="secondary-button" data-route="pilar:${result.key.slice(6)}" type="button">Voltar ao pilar</button></div></section>`;
 }
 
 function finalChallengeView() {
@@ -476,8 +476,143 @@ function searchView() {
 function progressView() {
   return `<section class="page"><header class="page-header"><p class="eyebrow">Sua jornada</p><h2>Progresso dos pilares</h2><p>Acompanhe leituras concluídas, aprovação e tentativas restantes em cada etapa.</p></header><div class="progress-dashboard">${PILLARS.map((pillar) => {
     const p = pillarProgress(pillar.key), exam = pillarAssessmentState(pillar.key);
-    return `<section><div class="progress-dashboard__title"><strong>${pillar.label}</strong><span>${exam.passed ? "✓ Aprovado" : `${Math.max(0, 3 - exam.attempts.length)} tentativa(s) restante(s)`}</span></div>${progressBar(p, "Conteúdo lido")}${exam.bestPercent != null ? `<p class="muted">Melhor resultado no quiz: ${exam.bestPercent}%</p>` : ""}${exam.needsReread ? `<p class="form-notice">Leia novamente todo o conteúdo deste pilar para continuar.</p>` : ""}</section>`;
+    return `<section><div class="progress-dashboard__title"><strong>${pillar.label}</strong><span>${exam.passed ? "✓ Aprovado" : `${Math.max(0, 3 - exam.attempts.length)} tentativa(s) restante(s)`}</span></div>${progressBar(p, "Conteúdo lido")}${exam.bestPercent != null ? `<p class="muted">Melhor resultado no quiz: ${exam.bestPercent}%</p>` : ""}${exam.needsReread ? `<p class="form-notice">Leia novamente todo o conteúdo deste pilar para continuar.</p>` : ""}${exam.passed ? `<button class="secondary-button certificate-button" data-action="certificate:${pillar.key}" type="button">⬇ Salvar certificado PDF</button>` : ""}</section>`;
   }).join("")}</div></section>`;
+}
+
+function loadImageForCertificate(path) {
+  return new Promise((resolve, reject) => {
+    const image = new Image();
+    image.onload = () => resolve(image);
+    image.onerror = () => reject(new Error("Não foi possível carregar o logo ou a assinatura do certificado."));
+    image.src = new URL(path, location.href).href;
+  });
+}
+
+function drawCertificateWrappedText(context, text, centerX, startY, maxWidth, lineHeight) {
+  const words = String(text).split(/\s+/);
+  const lines = [];
+  let line = "";
+  for (const word of words) {
+    const candidate = line ? `${line} ${word}` : word;
+    if (line && context.measureText(candidate).width > maxWidth) {
+      lines.push(line);
+      line = word;
+    } else line = candidate;
+  }
+  if (line) lines.push(line);
+  lines.forEach((value, index) => context.fillText(value, centerX, startY + index * lineHeight));
+  return lines.length;
+}
+
+async function downloadStudyCertificate(pillarKey) {
+  const pillar = PILLARS.find((item) => item.key === pillarKey);
+  const assessment = pillar ? pillarAssessmentState(pillar.key) : null;
+  if (!pillar || !assessment?.passed) throw new Error("O certificado fica disponível após a aprovação no quiz do nível.");
+
+  const [logo, signature] = await Promise.all([
+    loadImageForCertificate("../assets/brand/atarashii-logo.png"),
+    loadImageForCertificate("../assets/brand/assinatura-sensei-luiz-costa.jpg"),
+  ]);
+  const canvas = document.createElement("canvas");
+  canvas.width = 2480;
+  canvas.height = 3508;
+  const context = canvas.getContext("2d", { alpha: false });
+  if (!context) throw new Error("Seu navegador não conseguiu preparar o certificado.");
+
+  const w = canvas.width, h = canvas.height, center = w / 2;
+  context.fillStyle = "#fffdf7";
+  context.fillRect(0, 0, w, h);
+  context.strokeStyle = "#7f1717";
+  context.lineWidth = 28;
+  context.strokeRect(76, 76, w - 152, h - 152);
+  context.strokeStyle = "#bf9853";
+  context.lineWidth = 8;
+  context.strokeRect(112, 112, w - 224, h - 224);
+
+  const logoHeight = 470;
+  const logoWidth = logoHeight * (logo.naturalWidth / logo.naturalHeight);
+  context.drawImage(logo, center - logoWidth / 2, 250, logoWidth, logoHeight);
+  context.textAlign = "center";
+  context.fillStyle = "#7f1717";
+  context.font = "bold 58px Georgia, serif";
+  context.fillText("ASSOCIAÇÃO ATARASHII KARATE-DO SHOTOKAN", center, 845);
+  context.fillStyle = "#20242b";
+  context.font = "bold 96px Georgia, serif";
+  context.fillText("CERTIFICADO DE CONCLUSÃO", center, 1110);
+  context.strokeStyle = "#bf9853";
+  context.lineWidth = 5;
+  context.beginPath(); context.moveTo(420, 1185); context.lineTo(w - 420, 1185); context.stroke();
+  context.fillStyle = "#555b63";
+  context.font = "48px Georgia, serif";
+  context.fillText("Certificamos que", center, 1380);
+
+  const studentName = state.currentUser?.nome || state.currentUser?.usuario || "Aluno";
+  let nameFontSize = 96;
+  context.font = `bold ${nameFontSize}px Georgia, serif`;
+  while (context.measureText(studentName).width > w - 520 && nameFontSize > 54) {
+    nameFontSize -= 2;
+    context.font = `bold ${nameFontSize}px Georgia, serif`;
+  }
+  context.fillStyle = "#20242b";
+  const nameLineHeight = Math.round(nameFontSize * 1.2);
+  const nameLineCount = drawCertificateWrappedText(context, studentName, center, 1605, w - 520, nameLineHeight);
+  const nameShift = Math.max(0, nameLineCount - 1) * nameLineHeight;
+  context.strokeStyle = "#7f1717";
+  context.lineWidth = 3;
+  context.beginPath(); context.moveTo(450, 1655 + nameShift); context.lineTo(w - 450, 1655 + nameShift); context.stroke();
+
+  context.fillStyle = "#555b63";
+  context.font = "48px Georgia, serif";
+  context.fillText("concluiu com êxito e foi aprovado no nível", center, 1845 + nameShift);
+  context.fillStyle = "#7f1717";
+  context.font = "bold 116px Georgia, serif";
+  context.fillText(pillar.label.toUpperCase(), center, 2075 + nameShift);
+  context.fillStyle = "#343a40";
+  context.font = "42px Georgia, serif";
+  drawCertificateWrappedText(
+    context,
+    "do Guia de Estudos de Karate Shotokan, após concluir os conteúdos obrigatórios e obter aprovação no quiz correspondente.",
+    center,
+    2235 + nameShift,
+    w - 560,
+    64
+  );
+
+  const issued = assessment.passedAt ? new Date(assessment.passedAt) : new Date();
+  const dateLabel = Number.isNaN(issued.getTime()) ? new Date().toLocaleDateString("pt-BR") : issued.toLocaleDateString("pt-BR", { day: "2-digit", month: "long", year: "numeric" });
+  context.fillStyle = "#555b63";
+  context.font = "38px Georgia, serif";
+  context.fillText(`Emitido em ${dateLabel}`, center, 2550 + nameShift);
+
+  const signatureWidth = 560;
+  const signatureHeight = signatureWidth * (signature.naturalHeight / signature.naturalWidth);
+  context.drawImage(signature, center - signatureWidth / 2, 2730 + nameShift, signatureWidth, signatureHeight);
+  context.strokeStyle = "#343a40";
+  context.lineWidth = 3;
+  context.beginPath(); context.moveTo(center - 390, 2965 + nameShift); context.lineTo(center + 390, 2965 + nameShift); context.stroke();
+  context.fillStyle = "#20242b";
+  context.font = "bold 42px Georgia, serif";
+  context.fillText("Sensei Luiz Costa", center, 3035 + nameShift);
+  context.fillStyle = "#555b63";
+  context.font = "34px Georgia, serif";
+  context.fillText("Professor responsável", center, 3090 + nameShift);
+  context.font = "bold 30px Georgia, serif";
+  context.fillStyle = "#7f1717";
+  context.fillText("ASSOCIAÇÃO ATARASHII KARATE-DO SHOTOKAN", center, 3260 + nameShift);
+
+  const jpegUrl = canvas.toDataURL("image/jpeg", 0.94);
+  const jpegBinary = atob(jpegUrl.slice(jpegUrl.indexOf(",") + 1));
+  const jpegBytes = new Uint8Array(jpegBinary.length);
+  for (let index = 0; index < jpegBinary.length; index += 1) jpegBytes[index] = jpegBinary.charCodeAt(index);
+  const pdfBytes = CertificatePdf.pdfFromJpeg(jpegBytes, canvas.width, canvas.height);
+  const pdf = new Blob([pdfBytes], { type: "application/pdf" });
+  const studentSlug = studentName.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
+  const link = document.createElement("a");
+  link.href = URL.createObjectURL(pdf);
+  link.download = `certificado-atarashii-${pillarKey}-${studentSlug || "aluno"}.pdf`;
+  link.click();
+  setTimeout(() => URL.revokeObjectURL(link.href), 60000);
 }
 
 function atarashiiView() {
@@ -547,6 +682,16 @@ document.addEventListener("click", (event) => {
   if (!actionTarget) return;
   const action = actionTarget.dataset.action;
   if (action === "back") routeTo(state.returnRoute || "home");
+  else if (action.startsWith("certificate:")) {
+    const pillarKey = action.slice("certificate:".length);
+    downloadStudyCertificate(pillarKey).then(() => {
+      state.notice = `Certificado do nível ${PILLAR_LABEL[pillarKey]} baixado.`;
+      render();
+    }).catch((error) => {
+      state.notice = error.message || "Não foi possível gerar o certificado.";
+      render();
+    });
+  }
   else if (action === "home-search" || action === "search") {
     state.search = document.querySelector(action === "home-search" ? "#homeSearch" : "#searchInput")?.value || "";
     if (state.search.trim().toUpperCase() === "AMS1981") {

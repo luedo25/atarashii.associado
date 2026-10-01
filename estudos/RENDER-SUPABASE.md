@@ -20,5 +20,6 @@ Na próxima inicialização, o servidor cria a tabela se ela ainda não existir.
 
 - `GET /api/estudos/progresso` responde `{ "progresso": <estado JSON ou null>, "atualizado_em": <data ou null> }`.
 - `PUT /api/estudos/progresso` recebe `{ "progresso": <estado JSON> }` e responde `{ "ok": true, "atualizado_em": <data> }`.
+- `GET /api/professor/estudos/progresso` exige uma sessão de professor e responde com os alunos e seus estados salvos para os quatro pilares.
 
 A identidade persistida vem exclusivamente de `req.usuario.usuario`, preenchida após validar a sessão e consultar o cadastro ativo do aluno.

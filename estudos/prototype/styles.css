@@ -1079,6 +1079,7 @@ button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible
 .search-groups h3 span { color: var(--muted); font-size: 13px; }
 .progress-dashboard { display: grid; gap: 12px; grid-template-columns: repeat(3, 1fr); }
 .progress-dashboard > section, .medal-cabinet, .history-panel, .contact-card { background: white; border: 1px solid var(--line); border-radius: 14px; padding: 18px; }
+.certificate-button { display:inline-flex; margin-top:12px; }
 .progress-dashboard__title { align-items: center; display: flex; justify-content: space-between; }
 .medal-cabinet > div { display: flex; flex-wrap: wrap; gap: 8px; }
 .history-panel > div { border-top: 1px solid var(--line); display: flex; gap: 12px; justify-content: space-between; padding: 12px 0; }

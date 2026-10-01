@@ -71,7 +71,7 @@ test("todos os assets locais do precache existem", () => {
 test("HTML carrega todos os modulos antes do app", () => {
   const html = fs.readFileSync(path.join(__dirname, "index.html"), "utf8");
   assert.ok(html.indexOf("../../api.js") < html.indexOf("progress-service.js"), "API de autenticação e progresso deve carregar primeiro");
-  const scripts = ["../../api.js", "progress-service.js", "curriculum-engine.js", "learning-engine.js", "assessment-engine.js", "challenge-engine.js", "search-service.js", "gamification.js", "app.js"];
+  const scripts = ["../../api.js", "progress-service.js", "certificate-pdf.js", "curriculum-engine.js", "learning-engine.js", "assessment-engine.js", "challenge-engine.js", "search-service.js", "gamification.js", "app.js"];
   let previous = -1;
   for (const script of scripts) {
     const index = html.indexOf(script);
@@ -103,7 +103,7 @@ test("links de Estudos ficam nas abas Exame e Atarashii, e a página redireciona
   assert.match(student, /EstudosRequisitos\.niveisObrigatorios\(faixa\)/);
   assert.match(student, /EstudosRequisitos\.niveisPendentes\(progresso, faixa\)/);
   assert.match(student, /class="btn-action"[^>]*>📚 Abrir Guia de Estudos/);
-  assert.match(student, /id="saldo"[\s\S]*?btnAbrirJogoCobrinha[\s\S]*?📚 Abrir Guia de Estudos/);
+  assert.match(student, /id="saldo"[\s\S]*?📚 Abrir Guia de Estudos[\s\S]*?btnAbrirJogoCobrinha/);
   assert.ok(fs.existsSync(path.join(root, "api-render", "server.js")));
 });
 
@@ -114,10 +114,17 @@ test("guia mostra nome do aluno, botão atualizar e retorno à área do associad
   assert.match(html, /<p class="eyebrow">Guia de estudo<\/p>[\s\S]*?<h1 id="studentName">/);
   assert.match(html, /id="refreshButton"/);
   assert.match(html, /href="\.\.\/\.\.\/area-associado\.html"/);
-  assert.match(app, /studentName\.textContent = currentUser\.nome/);
+  assert.match(app, /studentName\.textContent = `Olá, \$\{currentUser\.nome/);
   assert.match(app, /refreshButton.*location\.reload/s);
+  assert.ok(html.includes('certificate-pdf.js'));
   const requirements = require("../../estudos-requisitos.js");
   assert.deepEqual(requirements.niveisObrigatorios("Roxa"), ["basico", "intermediario", "avancado"]);
+  const professor = fs.readFileSync(path.join(root, "professor.html"), "utf8");
+  const api = fs.readFileSync(path.join(root, "api-render", "server.js"), "utf8");
+  assert.match(professor, /mudarAba\('estudos', this\)/);
+  assert.match(professor, /id="statusEstudosProfessor"/);
+  assert.match(professor, /\/api\/professor\/estudos\/progresso/);
+  assert.match(api, /app\.get\('\/api\/professor\/estudos\/progresso', autenticarToken, somenteProfessor/);
 });
 test("navegacao fixa inclui Atarashii e Contato sem cards duplicados na home", () => {
   const html = fs.readFileSync(path.join(__dirname, "index.html"), "utf8");
