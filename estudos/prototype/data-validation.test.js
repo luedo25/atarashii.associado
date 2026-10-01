@@ -126,12 +126,27 @@ test("guia mostra nome do aluno, botão atualizar e retorno à área do associad
   assert.match(professor, /\/api\/professor\/estudos\/progresso/);
   assert.match(api, /app\.get\('\/api\/professor\/estudos\/progresso', autenticarToken, somenteProfessor/);
 });
-test("navegacao fixa inclui Atarashii e Contato sem cards duplicados na home", () => {
+test("navegacao fixa mantém as quatro abas sem Contato nem cards duplicados na home", () => {
   const html = fs.readFileSync(path.join(__dirname, "index.html"), "utf8");
-  for (const route of ["home", "pilares", "progresso", "atarashii", "contato"]) {
+  for (const route of ["home", "pilares", "progresso", "atarashii"]) {
     assert.match(html, new RegExp(`data-route="${route}"`), `${route} ausente da navegacao`);
   }
+  assert.doesNotMatch(html, /data-route="contato"/);
+  assert.equal((html.match(/class="tab(?: is-active)?"/g) || []).length, 4);
   const app = fs.readFileSync(path.join(__dirname, "app.js"), "utf8");
   const home = app.slice(app.indexOf("function homeView()"), app.indexOf("function pillarHubView()"));
   assert.equal(home.includes("institutional-grid"), false, "links institucionais duplicados na home");
+});
+
+test("cabeçalho do guia exibe somente atualizar e área do associado, com biografia atualizada", () => {
+  const html = fs.readFileSync(path.join(__dirname, "index.html"), "utf8");
+  const header = html.slice(html.indexOf('<div class="topbar-actions">'), html.indexOf("</div>", html.indexOf('<div class="topbar-actions">')));
+  assert.match(header, /id="refreshButton"/);
+  assert.match(header, /Área do Associado/);
+  assert.doesNotMatch(header, /progressButton|Progresso/);
+  const app = fs.readFileSync(path.join(__dirname, "app.js"), "utf8");
+  assert.match(app, /Tudo começou no final de 2002/);
+  assert.match(app, /Em 2017, com muito esforço e dedicação/);
+  assert.match(app, /Hoje, posso afirmar com o coração cheio: o Karatê é a minha vida/);
+  assert.doesNotMatch(app, /progressButton/);
 });

@@ -44,14 +44,6 @@ const STATUS_LABELS = {
   NOT_STARTED: "Não iniciado", OPENED: "Aberto",
   COMPLETED: "Concluído", CONTENT_PENDING: "Conteúdo em preparação",
 };
-const contactInfo = {
-  place: "Academia Bee Strong",
-  address: "R. Alm. Luís Penido Burnier, 211 - Jardim Sandra, São Paulo - SP",
-  mapsUrl: "https://www.google.com/maps/search/?api=1&query=R.%20Alm.%20Lu%C3%ADs%20Penido%20Burnier%2C%20211%20-%20Jardim%20Sandra%2C%20S%C3%A3o%20Paulo%20-%20SP",
-  instagramUrl: "https://www.instagram.com/associacao_atarashii_karate/",
-  whatsappNumber: "5511965512234",
-};
-
 function escapeHtml(value) {
   return String(value ?? "").replaceAll("&", "&amp;").replaceAll("<", "&lt;")
     .replaceAll(">", "&gt;").replaceAll('"', "&quot;");
@@ -616,10 +608,23 @@ async function downloadStudyCertificate(pillarKey) {
 }
 
 function atarashiiView() {
-  return `<article class="detail-page institutional"><button class="back-button" data-route="home" type="button">← Home</button><p class="eyebrow">Nossa associação</p><h2>A história por trás da Atarashii</h2><div class="story-copy"><p>A Associação Atarashii Karate-Do Shotokan nasceu da dedicação do Sensei Luiz ao Karate e ao ensino.</p><p>Seu contato com o Karate começou em 2002. Em 2009 conquistou a faixa preta e, a partir de 2014, descobriu sua vocação para ministrar aulas.</p><p>A associação foi criada em 2017 e atende crianças, adolescentes, adultos e idosos.</p><p>O aplicativo amplia esse trabalho como apoio ao estudo. Ele não substitui o dojo, o treino presencial nem a orientação do sensei.</p></div><p class="signature">Sensei Luiz · Fundador da Associação Atarashii Karate-Do Shotokan</p></article>`;
-}
-function contactView() {
-  return `<section class="detail-page institutional"><button class="back-button" data-route="home" type="button">← Home</button><p class="eyebrow">Fale conosco</p><h2>Contato</h2><div class="contact-card"><span>Local de treino</span><strong>${escapeHtml(contactInfo.place)}</strong><p>${escapeHtml(contactInfo.address)}</p><div class="contact-actions"><a class="primary-button" href="${contactInfo.mapsUrl}" target="_blank" rel="noreferrer">Abrir no mapa</a><a class="secondary-button" href="${contactInfo.instagramUrl}" target="_blank" rel="noreferrer">Instagram</a><a class="secondary-button" href="https://wa.me/${contactInfo.whatsappNumber}" target="_blank" rel="noreferrer">WhatsApp</a></div></div></section>`;
+  return `<article class="detail-page institutional"><button class="back-button" data-route="home" type="button">← Home</button><p class="eyebrow">Nossa associação</p><h2>A história por trás da Atarashii</h2><div class="story-copy">
+    <p>Tudo começou no final de 2002. Eu tinha apenas 12 anos quando meu tio Deci me convidou para uma aula de Jiu-Jitsu na academia onde treinava — sem imaginar que aquele convite mudaria o rumo da minha vida para sempre.</p>
+    <p>Chegamos à academia, mas o destino reservava outra surpresa: o professor de Jiu-Jitsu havia faltado. A recepcionista então me disse que a aula de Karatê (estilo Shotokan) estava prestes a começar, que o professor já estava na sala, e que, se eu quisesse, poderia participar para não perder a viagem.</p>
+    <p>Entrei no tatame sem saber que aquele seria o primeiro passo de uma jornada de décadas. Meu tio esperou do lado de fora, e assim que a aula terminou, ele perguntou, ansioso: — E aí, gostou da aula de Karatê?<br>Respondi, cheio de convicção: — Tio, infelizmente você perdeu um “Jiujiteiro”, mas ganhou um Karateca!</p>
+    <p>Ele entendeu, sorriu, e a partir daquele dia passamos a ir juntos à academia toda semana: ele no Jiu-Jitsu, eu no Karatê — e assim nasceu uma paixão que jamais se apagaria.</p>
+    <p>Em 2003, vivi a emoção de conquistar minha primeira faixa, a amarela, e logo em seguida disputei meu primeiro campeonato, saindo vice-campeão paulista. Foi ali que senti, pela primeira vez, o gosto doce da superação.</p>
+    <p>Dali em diante, nunca mais parei. Treinei com garra, competi com o coração, e fui conquistando, uma a uma, minhas graduações — cada faixa representando não apenas uma cor, mas uma transformação dentro de mim.</p>
+    <p>Sob a orientação do meu Sensei Júlio Cesar, me dediquei de corpo e alma, até alcançar, em 2009, aos 18 anos, o tão sonhado título de Faixa Preta — um marco que carrego com orgulho até hoje.</p>
+    <p>Continuei treinando incansavelmente, competindo e evoluindo, até que, em 2014, a vida me presenteou com uma oportunidade única: assumir as aulas no lugar do meu Sensei por um curto período. Entreguei tudo o que tinha, e o carinho e reconhecimento de pais e alunos durante aquele tempo tocaram profundamente meu coração.</p>
+    <p>Foi naquele exato momento que um sonho despertou em mim: o desejo ardente de me tornar professor de Karatê.</p>
+    <p>Em janeiro de 2015, finalmente pude mostrar meu trabalho na academia onde leciono até hoje — e é com imensa emoção que, em janeiro de 2025, celebrei 15 anos como Faixa Preta e 10 anos dedicados ao ensino do Karatê.</p>
+    <p>Em 2017, com muito esforço e dedicação, ajudei a criar a Associação Atarashii Karatê-Do Shotokan, onde hoje tenho a honra de lecionar para pessoas de todas as idades e gêneros — crianças a partir dos 6 anos, adolescentes, adultos e até idosos, todos unidos pela mesma paixão.</p>
+    <p>Faço questão de dizer a todos que me procuram: não existe idade para começar a praticar esporte! E o Karatê vai muito além de colocar a luva e trocar golpes — por trás de cada movimento existe um universo de história, disciplina e significado que só quem vive essa arte consegue verdadeiramente sentir e compreender.</p>
+    <p>Saber que tenho em minhas mãos a responsabilidade de impactar vidas, especialmente de crianças, participando ativamente da sua educação e da construção de seu caráter — valores que elas levarão para a vida inteira — é, sem dúvida, uma das maiores gratificações que já senti.</p>
+    <p>A essência dessa arte marcial vive em cada detalhe: no esforço constante pela formação do bom caráter, na fidelidade ao caminho da razão, na criação de um propósito inabalável, no respeito acima de tudo, e no domínio do espírito de agressão.</p>
+    <p>Hoje, posso afirmar com o coração cheio: o Karatê é a minha vida. São décadas inteiras dedicadas não apenas a uma arte marcial ou técnica de defesa pessoal, mas a uma verdadeira filosofia que me transforma todos os dias. Foram centenas de alunos que passaram por mim, aos quais pude entregar um pedaço dessa lição de vida — o sonho de sermos cidadãos melhores, pais melhores, filhos melhores. E isso, simplesmente, não tem preço que pague.</p>
+  </div><p class="signature">Sensei Luiz · Fundador da Associação Atarashii Karate-Do Shotokan</p></article>`;
 }
 function achievementOverlay() {
   if (!state.achievement) return "";
@@ -642,7 +647,7 @@ function render() {
       "assessment-run": assessmentRunView, "assessment-result": assessmentResultView,
       "desafio-final": finalChallengeView, "challenge-run": challengeRunView,
       "challenge-result": challengeResultView, busca: searchView, progresso: progressView,
-      atarashii: atarashiiView, contato: contactView,
+      atarashii: atarashiiView,
     };
     view = (views[state.route] || homeView)();
   }
@@ -737,7 +742,6 @@ document.addEventListener("click", (event) => {
   } else if (action === "close-achievement") { state.achievement = null; render(); }
 });
 
-document.querySelector("#progressButton").addEventListener("click", () => routeTo("progresso"));
 document.querySelector("#refreshButton").addEventListener("click", () => location.reload());
 window.addEventListener("study:progress-sync-error", () => {
   state.notice = "Não foi possível sincronizar seu progresso. Verifique sua conexão e tente novamente.";
