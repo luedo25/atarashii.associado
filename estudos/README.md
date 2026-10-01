@@ -35,6 +35,16 @@ O guia de estudo é dividido em quatro pilares: Básico, Intermediário, Avança
 
 Cada pilar permite três tentativas. Após três reprovações, todo o conteúdo daquele pilar precisa ser lido novamente antes da liberação de uma nova série de tentativas.
 
+### Níveis obrigatórios por faixa
+
+- Branca, amarela e vermelha: Básico.
+- Laranja e verde: Básico e Intermediário.
+- Roxa: Básico, Intermediário e Avançado.
+- Marrom: os quatro pilares.
+- Preta: os quatro pilares, seguindo a progressão da faixa mais alta.
+
+O Painel e a aba Exame exibem os níveis ainda pendentes e a próxima faixa prevista.
+
 ## Integração com a Área do Associado
 
 O guia é servido dentro do mesmo domínio e usa a sessão autenticada e o PWA principal do site. O progresso é enviado à API autenticada do Render, que o persiste no Supabase; ele não é guardado no Storage do navegador. O servidor e suas rotas de progresso estão incluídos em `../api-render/`; veja [RENDER-SUPABASE.md](RENDER-SUPABASE.md) para configurar o serviço Render.

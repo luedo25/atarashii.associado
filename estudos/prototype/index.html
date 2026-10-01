@@ -13,9 +13,13 @@
         <img class="brand-mark" src="../assets/brand/atarashii-logo.png" alt="Logo Atarashii Karate-do Shotokan" />
         <div class="brand-copy">
           <p class="eyebrow">Guia de estudo</p>
-          <h1>Atarashii App</h1>
+          <h1 id="studentName">Validando sessão...</h1>
         </div>
-        <button class="icon-button" id="progressButton" type="button" title="Abrir progresso" aria-label="Abrir progresso">◎</button>
+        <div class="topbar-actions">
+          <button class="topbar-action" id="refreshButton" type="button">↻ Atualizar</button>
+          <a class="topbar-action" href="../../area-associado.html">← Área do Associado</a>
+          <button class="icon-button" id="progressButton" type="button" title="Abrir progresso" aria-label="Abrir progresso">◎</button>
+        </div>
       </header>
 
       <main id="app" class="content" aria-live="polite"><p class="empty">Validando sua sessão...</p></main>
@@ -50,4 +54,3 @@
     <script src="app.js"></script>
   </body>
 </html>
-

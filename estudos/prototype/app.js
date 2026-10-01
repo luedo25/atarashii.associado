@@ -106,6 +106,8 @@ async function loadData() {
   const currentUser = await Auth.exigirSessao("aluno");
   if (!currentUser) return false;
   state.currentUser = currentUser;
+  const studentName = document.querySelector("#studentName");
+  if (studentName) studentName.textContent = currentUser.nome || currentUser.usuario || "Associado";
   const entries = await Promise.all(Object.entries(dataFiles).map(async ([key, path]) => {
     const response = await fetch(path);
     if (!response.ok) throw new Error(`Falha ao carregar ${path}: ${response.status}`);
@@ -213,7 +215,7 @@ function homeView() {
   const incomplete = PILLARS.find((pillar) => pillarProgress(pillar.key).percent < 100 || !pillarAssessmentState(pillar.key).passed);
   return `
     <section class="dashboard">
-      <header class="dashboard-hero"><div><p class="eyebrow">Guia de estudo · Karate Shotokan <span class="dashboard-hero__student">· Aluno: ${escapeHtml(state.currentUser?.nome || state.currentUser?.usuario || "Associado")}</span></p><h2>Aprenda em quatro pilares</h2><p>Estude todo o conteúdo de Kata, Kihon, Kumite e assuntos gerais em cada etapa. Ao concluir as leituras, faça o quiz obrigatório de 40 perguntas.</p></div><img src="../assets/brand/atarashii-logo.png" alt="Logo Atarashii Karate-do Shotokan" /></header>
+      <header class="dashboard-hero"><div><p class="eyebrow">Guia de estudo · Karate Shotokan</p><h2>Aprenda em quatro pilares</h2><p>Estude todo o conteúdo de Kata, Kihon, Kumite e assuntos gerais em cada etapa. Ao concluir as leituras, faça o quiz obrigatório de 40 perguntas.</p></div><img src="../assets/brand/atarashii-logo.png" alt="Logo Atarashii Karate-do Shotokan" /></header>
       <section class="next-action"><div><p class="eyebrow">Sua próxima etapa</p><h3>${incomplete ? `Pilar ${PILLAR_LABEL[incomplete.key]}` : "Jornada concluída"}</h3><p>Quatro temas · 40 questões · mínimo de 70% para aprovação</p></div><button class="primary-button" data-route="${incomplete ? `pilar:${incomplete.key}` : "progresso"}" type="button">${incomplete ? "Continuar" : "Ver progresso"}</button></section>
       <section class="pillar-grid" aria-label="Pilares de estudo">${PILLARS.map((pillar, index) => {
         const p = pillarProgress(pillar.key), exam = pillarAssessmentState(pillar.key);
@@ -591,6 +593,7 @@ document.addEventListener("click", (event) => {
 });
 
 document.querySelector("#progressButton").addEventListener("click", () => routeTo("progresso"));
+document.querySelector("#refreshButton").addEventListener("click", () => location.reload());
 window.addEventListener("study:progress-sync-error", () => {
   state.notice = "Não foi possível sincronizar seu progresso. Verifique sua conexão e tente novamente.";
   render();

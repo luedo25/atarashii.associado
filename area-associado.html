@@ -231,11 +231,22 @@
         .painel-resumo-card small { display:block; color:var(--text-muted); font-size:10px; font-weight:bold; text-transform:uppercase; margin-bottom:7px; }
         .painel-resumo-card strong { display:block; color:var(--text-main); font-size:14px; line-height:1.35; overflow-wrap:anywhere; }
         .painel-resumo-card strong.alerta { color:#fbbf24; }
+        .painel-resumo-card strong.alerta-piscante { color:#fca5a5; animation: piscarAlertaFrequencia 1.15s ease-in-out infinite; }
+        .painel-resumo-card strong .objetivo-faixa { color:var(--text-main); display:block; font-size:12px; font-weight:600; margin-top:4px; }
         .painel-resumo-card.resumo-ranking { grid-column: 1 / -1; background: linear-gradient(135deg, rgba(245,158,11,.16), rgba(15,23,42,.7)); border-color: rgba(245,158,11,.45); }
         .painel-resumo-card.resumo-ranking strong { color:#fcd34d; font-size:15px; }
         .mensagem-frequencia { display:block; margin-top:6px; font-size:10px; line-height:1.3; font-weight:700; }
         .mensagem-frequencia.alerta-piscante { color:#fca5a5; animation: piscarAlertaFrequencia 1.15s ease-in-out infinite; }
         .mensagem-frequencia.parabens { color:#86efac; }
+        .study-requirements { display:block; margin:-4px 0 18px; padding:15px 17px; border:1px solid var(--border-color); border-radius:var(--radius-md); background:rgba(15,23,42,.58); color:var(--text-main); line-height:1.5; }
+        .study-requirements.is-pending { border-color:rgba(239,68,68,.55); background:rgba(127,29,29,.2); }
+        .study-requirements.is-complete { border-color:rgba(16,185,129,.45); background:rgba(6,78,59,.18); }
+        .study-requirements strong { display:block; margin-bottom:5px; font-size:14px; }
+        .study-requirements p { margin:4px 0; font-size:12px; color:var(--text-muted); }
+        .study-requirements .study-requirements-alert { color:#fca5a5; font-weight:700; animation:piscarAlertaFrequencia 1.15s ease-in-out infinite; }
+        .study-requirements .study-requirements-ok { color:#86efac; font-weight:700; }
+        .study-requirements ul { display:flex; flex-wrap:wrap; gap:6px; margin:9px 0 0; padding:0; list-style:none; }
+        .study-requirements li { padding:4px 8px; border:1px solid var(--border-color); border-radius:999px; font-size:11px; }
         .badges-miniaturas { display:flex; flex-wrap:wrap; gap:4px; margin-top:7px; min-height:0; }
         .linha-tempo { margin-top:24px; padding:16px; border:1px solid var(--border-color); border-radius:var(--radius-md); background:rgba(15,23,42,.48); }
         .linha-tempo h3 { margin:0 0 14px; font-size:15px; }
@@ -684,6 +695,9 @@
             <p style="font-size: 12px; color: var(--text-muted);">Acesse sua trilha de estudos e avance pelos quatro níveis.</p>
             <a href="estudos/prototype/" class="btn-action">Abrir Guia de Estudos</a>
         </div>
+        <section id="alertaPendenciasEstudos" class="study-requirements" role="status" aria-live="polite">
+            <strong>Verificando os níveis de estudo obrigatórios...</strong>
+        </section>
         
         <details class="modulo-faixa">
             <summary class="botao-expandir">
@@ -1265,6 +1279,7 @@
     <!-- SEÇÃO 6: ATARASHII -->
        <div id="saldo" class="tab-content">
         <button type="button" class="btn-action" id="btnAbrirJogoCobrinha" style="margin-bottom:18px;background:linear-gradient(135deg,#16a34a,#15803d);">🐍 Jogar Cobrinha e ganhar pontos</button>
+        <a href="estudos/prototype/" class="btn-action" style="display:block;margin:0 0 18px;">📚 Abrir Guia de Estudos</a>
         <p style="font-size:12px;color:var(--text-muted);margin:-8px 0 18px;line-height:1.45;text-align:center;">Ganhe 1 ponto no ranking a cada 20 no jogo e um bônus de 10 pontos ao alcançar 50. Limite: 100 pontos extras.</p>
         <h3>📢 Regras e Normas da Associação</h3>
         <div id="blocoTermoPendente">
@@ -1394,9 +1409,11 @@
     </button>
 </div>
 
+<script src="estudos-requisitos.js"></script>
 <script>
     let nomeDoAluno = 'Associado';
     let usuarioAtivo = '';
+    let faixaAtualAluno = 'Branca';
     let PUBLIC_VAPID_KEY = '';
     let listaAgendaAluno = [];
 
@@ -1950,16 +1967,12 @@
                 mensagemFrequencia.className = 'mensagem-frequencia parabens';
             }
         const ultimo = Array.isArray(exames) && exames.length ? exames[exames.length - 1] : null;
-        const ordem = ['Branca', 'Amarela', 'Vermelha', 'Laranja', 'Verde', 'Roxa', 'Marrom', 'Preta'];
         // Em graduações com barra (ex.: Verde/Roxa), a faixa válida é a última cor.
         const valorFaixa = String(ultimo?.faixa || '').trim();
-        const parteFinalFaixa = valorFaixa ? valorFaixa.split('/').pop().trim() : 'Branca';
-        const faixaNormalizada = parteFinalFaixa
-            .normalize('NFD')
-            .replace(/[\u0300-\u036f]/g, '')
-            .toLowerCase();
-        const faixaAtual = ordem.find(faixa => faixaNormalizada.includes(faixa.toLowerCase())) || parteFinalFaixa;
+        const faixaAtual = EstudosRequisitos.normalizarFaixa(valorFaixa || 'Branca');
+        faixaAtualAluno = faixaAtual;
         document.getElementById('resumoFaixaAtual').textContent = faixaAtual;
+        await carregarObjetivoEstudos(faixaAtual);
             const badgesDisponiveis = [
                 'frequencia_ferro', 'guardiao', 'badge_kata_avancado', 'badge_mae_geri',
                 'badge_fisico_abs', 'badge_tsuki', 'badge_prancha_baixa', 'badge_polichinelo',
@@ -1993,33 +2006,45 @@
                 }).join('');
         } catch (error) {
             console.error('Erro ao carregar resumo personalizado:', error);
+            await carregarObjetivoEstudos(faixaAtualAluno);
         }
     }
 
-    async function carregarObjetivoEstudos() {
+    async function carregarObjetivoEstudos(faixa = faixaAtualAluno) {
         const elemento = document.getElementById('resumoProximoObjetivo');
+        const alerta = document.getElementById('alertaPendenciasEstudos');
         if (!elemento) return;
         try {
             const resposta = await EstudosProgresso.obter();
             const progresso = resposta?.progresso;
-            const pilares = [
-                ['basico', 'Básico'],
-                ['intermediario', 'Intermediário'],
-                ['avancado', 'Avançado'],
-                ['especialista', 'Especialista']
-            ];
-            const proximo = pilares.find(([chave]) => !progresso?.assessments?.[`pilar-${chave}`]?.passed);
-            if (!proximo) {
-                elemento.textContent = 'Estudos concluídos';
-                return;
+            const rotulos = {
+                basico: 'Básico',
+                intermediario: 'Intermediário',
+                avancado: 'Avançado',
+                especialista: 'Especialista'
+            };
+            const obrigatorios = EstudosRequisitos.niveisObrigatorios(faixa);
+            const pendentes = EstudosRequisitos.niveisPendentes(progresso, faixa);
+            const proxima = EstudosRequisitos.proximaFaixa(faixa);
+            elemento.classList.toggle('alerta-piscante', pendentes.length > 0);
+            const resumoPendencias = pendentes.length
+                ? `⚠️ Estudos pendentes: ${pendentes.map(chave => rotulos[chave]).join(', ')}`
+                : '✓ Estudos obrigatórios concluídos';
+            elemento.innerHTML = `<span>${resumoPendencias}</span><span class="objetivo-faixa">Próxima faixa: ${escaparHtml(proxima)}</span>`;
+
+            if (alerta) {
+                alerta.classList.toggle('is-pending', pendentes.length > 0);
+                alerta.classList.toggle('is-complete', pendentes.length === 0);
+                alerta.innerHTML = `<strong>${pendentes.length ? '⚠️ Pendências obrigatórias para sua faixa' : '✅ Estudos obrigatórios concluídos'}</strong><p>Faixa atual: ${escaparHtml(faixa)} · Próxima faixa: ${escaparHtml(proxima)}.</p><p class="${pendentes.length ? 'study-requirements-alert' : 'study-requirements-ok'}">${pendentes.length ? `Para avançar, conclua e seja aprovado em: ${pendentes.map(chave => rotulos[chave]).join(', ')}.` : 'Você concluiu os níveis de estudo exigidos para sua faixa atual.'}</p><ul>${obrigatorios.map(chave => `<li>${progresso?.assessments?.[`pilar-${chave}`]?.passed ? '✓' : '○'} ${rotulos[chave]}</li>`).join('')}</ul>`;
             }
-            const avaliacao = progresso?.assessments?.[`pilar-${proximo[0]}`];
-            elemento.textContent = avaliacao?.needsReread
-                ? `Releitura do pilar ${proximo[1]}`
-                : `Concluir pilar ${proximo[1]} nos estudos`;
         } catch (error) {
             console.error('Não foi possível carregar o objetivo de estudos:', error);
             elemento.textContent = 'Progresso dos estudos indisponível';
+            elemento.classList.remove('alerta-piscante');
+            if (alerta) {
+                alerta.classList.remove('is-pending', 'is-complete');
+                alerta.innerHTML = '<strong>Não foi possível consultar as pendências dos estudos.</strong><p>Tente novamente ou abra o Guia de Estudos para atualizar o progresso.</p>';
+            }
         }
     }
 
@@ -2826,8 +2851,7 @@
                 carregarResumoPersonalizado(),
                 carregarGraficoFrequencia(),
                 carregarStatusJustificativas(),
-                carregarMeusDesafios(),
-                carregarObjetivoEstudos()
+                carregarMeusDesafios()
             ]);
 
             registrarPushNativo();

@@ -89,7 +89,7 @@ test("guia exige login e usa o PWA principal sem persistir progresso localmente"
   assert.match(app, /ProgressService\.createRemote/);
   assert.equal(/\blocalStorage\b|\bsessionStorage\b/.test(progress), false, "o serviço de progresso não deve usar Storage local");
 });
-test("link de Estudos fica somente na aba Exame e a página redireciona ao login raiz", () => {
+test("links de Estudos ficam nas abas Exame e Atarashii, e a página redireciona ao login raiz", () => {
   const root = path.resolve(__dirname, "../..");
   const login = fs.readFileSync(path.join(root, "index.html"), "utf8");
   const student = fs.readFileSync(path.join(root, "area-associado.html"), "utf8");
@@ -99,6 +99,25 @@ test("link de Estudos fica somente na aba Exame e a página redireciona ao login
   assert.match(api, /new URL\('index\.html', SITE_ROOT_URL\)/);
   assert.match(api, /\/api\/estudos\/progresso/);
   assert.ok(fs.existsSync(path.join(root, "database", "estudos_progresso.sql")));
+  assert.match(student, /id="alertaPendenciasEstudos"/);
+  assert.match(student, /EstudosRequisitos\.niveisObrigatorios\(faixa\)/);
+  assert.match(student, /EstudosRequisitos\.niveisPendentes\(progresso, faixa\)/);
+  assert.match(student, /class="btn-action"[^>]*>📚 Abrir Guia de Estudos/);
+  assert.match(student, /id="saldo"[\s\S]*?btnAbrirJogoCobrinha[\s\S]*?📚 Abrir Guia de Estudos/);
+  assert.ok(fs.existsSync(path.join(root, "api-render", "server.js")));
+});
+
+test("guia mostra nome do aluno, botão atualizar e retorno à área do associado", () => {
+  const root = path.resolve(__dirname, "../..");
+  const html = fs.readFileSync(path.join(__dirname, "index.html"), "utf8");
+  const app = fs.readFileSync(path.join(__dirname, "app.js"), "utf8");
+  assert.match(html, /<p class="eyebrow">Guia de estudo<\/p>[\s\S]*?<h1 id="studentName">/);
+  assert.match(html, /id="refreshButton"/);
+  assert.match(html, /href="\.\.\/\.\.\/area-associado\.html"/);
+  assert.match(app, /studentName\.textContent = currentUser\.nome/);
+  assert.match(app, /refreshButton.*location\.reload/s);
+  const requirements = require("../../estudos-requisitos.js");
+  assert.deepEqual(requirements.niveisObrigatorios("Roxa"), ["basico", "intermediario", "avancado"]);
 });
 test("navegacao fixa inclui Atarashii e Contato sem cards duplicados na home", () => {
   const html = fs.readFileSync(path.join(__dirname, "index.html"), "utf8");
