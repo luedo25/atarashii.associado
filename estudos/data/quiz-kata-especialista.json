@@ -1,0 +1,132 @@
+[
+  {
+    "id": "quiz-kata-especialista-01",
+    "category": "Katas - Especialista",
+    "question": "Qual é o significado do kata Taikyoku Shodan?",
+    "options": [
+      "Primeira forma do grande princípio",
+      "Paz e tranquilidade nível 1",
+      "Vinte e quatro passos",
+      "Coroa real"
+    ],
+    "correctOption": 0,
+    "explanation": "Taikyoku Shodan significa “Primeira forma do grande princípio”."
+  },
+  {
+    "id": "quiz-kata-especialista-02",
+    "category": "Katas - Especialista",
+    "question": "Qual é o significado do kata Hangetsu?",
+    "options": [
+      "Meia-lua",
+      "Dez mãos",
+      "Vinte e quatro passos",
+      "Mãos estranhas"
+    ],
+    "correctOption": 0,
+    "explanation": "Hangetsu significa “Meia-lua”."
+  },
+  {
+    "id": "quiz-kata-especialista-03",
+    "category": "Katas - Especialista",
+    "question": "Qual é o significado do kata Jitte?",
+    "options": [
+      "Coroa real",
+      "Dez mãos",
+      "Espelho limpo",
+      "Amor e proteção"
+    ],
+    "correctOption": 1,
+    "explanation": "Jitte significa “Dez mãos”."
+  },
+  {
+    "id": "quiz-kata-especialista-04",
+    "category": "Katas - Especialista",
+    "question": "Qual é o significado do kata Nijushiho?",
+    "options": [
+      "Vinte e quatro passos",
+      "Cinquenta e quatro passos",
+      "Primeira forma do grande princípio",
+      "Mãos de nuvem"
+    ],
+    "correctOption": 0,
+    "explanation": "Nijushiho significa “Vinte e quatro passos”."
+  },
+  {
+    "id": "quiz-kata-especialista-05",
+    "category": "Katas - Especialista",
+    "question": "Qual é o significado do kata Chinte?",
+    "options": [
+      "Mãos de nuvem",
+      "Mãos estranhas / técnicas estranhas",
+      "Dez mãos",
+      "Meia-lua"
+    ],
+    "correctOption": 1,
+    "explanation": "Chinte significa “Mãos estranhas / técnicas estranhas”."
+  },
+  {
+    "id": "quiz-kata-especialista-06",
+    "category": "Katas - Especialista",
+    "question": "Qual é o significado do kata Meikyo?",
+    "options": [
+      "Coroa real",
+      "Espelho limpo / espelho da alma",
+      "Amor e proteção",
+      "Cinquenta e quatro passos - forma longa"
+    ],
+    "correctOption": 1,
+    "explanation": "Meikyo significa “Espelho limpo / espelho da alma”."
+  },
+  {
+    "id": "quiz-kata-especialista-07",
+    "category": "Katas - Especialista",
+    "question": "Qual é o significado do kata Wankan?",
+    "options": [
+      "Coroa real",
+      "Dez mãos",
+      "Meia-lua",
+      "Vinte e quatro passos"
+    ],
+    "correctOption": 0,
+    "explanation": "Wankan significa “Coroa real”."
+  },
+  {
+    "id": "quiz-kata-especialista-08",
+    "category": "Katas - Especialista",
+    "question": "Qual é o significado do kata Gojushiho Dai?",
+    "options": [
+      "Cinquenta e quatro passos - forma longa",
+      "Cinquenta e quatro passos - forma curta",
+      "Mãos de nuvem",
+      "Grou sobre a rocha"
+    ],
+    "correctOption": 0,
+    "explanation": "Gojushiho Dai significa “Cinquenta e quatro passos - forma longa”."
+  },
+  {
+    "id": "quiz-kata-especialista-09",
+    "category": "Katas - Especialista",
+    "question": "Qual é o significado do kata Jiin, conforme o material de estudo?",
+    "options": [
+      "Amor e proteção",
+      "Paz e tranquilidade",
+      "Espírito inabalável",
+      "Primeira forma do grande princípio"
+    ],
+    "correctOption": 0,
+    "explanation": "O material de estudo apresenta Jiin como “Amor e proteção”."
+  },
+  {
+    "id": "quiz-kata-especialista-10",
+    "category": "Katas - Especialista",
+    "question": "Quantos kiai são indicados no material do Taikyoku Shodan?",
+    "options": [
+      "1",
+      "2",
+      "3",
+      "4"
+    ],
+    "correctOption": 1,
+    "explanation": "O material de estudo indica dois kiai no Taikyoku Shodan."
+  }
+]

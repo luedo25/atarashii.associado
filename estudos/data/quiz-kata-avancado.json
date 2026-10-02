@@ -2,131 +2,131 @@
   {
     "id": "quiz-kata-avancado-01",
     "category": "Katas - Avançado",
-    "question": "Qual é o significado do kata Jitte?",
+    "question": "Qual é o significado do kata Enpi?",
     "options": [
-      "Dez mãos",
+      "Voo da andorinha",
+      "Cinquenta e quatro passos - forma curta",
       "Grou sobre a rocha",
-      "Vinte e quatro passos",
       "Mãos de nuvem"
     ],
     "correctOption": 0,
-    "explanation": "Jitte (十手) significa \"Dez mãos\"."
+    "explanation": "Enpi (também grafado Empi) é associado ao voo da andorinha."
   },
   {
     "id": "quiz-kata-avancado-02",
     "category": "Katas - Avançado",
-    "question": "Qual é o significado do kata Gankaku?",
+    "question": "Qual é o significado do kata Gojushiho Sho?",
     "options": [
-      "Dez mãos",
-      "Vinte e quatro passos",
-      "Mãos de nuvem",
-      "Grou sobre a rocha"
+      "Cinquenta e quatro passos - forma curta",
+      "Cinquenta e quatro passos - forma longa",
+      "Espírito inabalável",
+      "Romper a fortaleza - forma menor"
     ],
-    "correctOption": 3,
-    "explanation": "Gankaku (岩鶴) significa \"Grou sobre a rocha\"."
+    "correctOption": 0,
+    "explanation": "Gojushiho Sho significa “Cinquenta e quatro passos - forma curta”."
   },
   {
     "id": "quiz-kata-avancado-03",
     "category": "Katas - Avançado",
-    "question": "Qual é o significado do kata Chinte?",
+    "question": "Qual é o significado do kata Gankaku?",
     "options": [
-      "Vinte e quatro passos",
       "Mãos de nuvem",
-      "Mãos estranhas / técnicas estranhas",
+      "Grou sobre a rocha",
+      "Voo da andorinha",
       "Dez mãos"
     ],
-    "correctOption": 2,
-    "explanation": "Chinte (珍手) significa \"Mãos estranhas / técnicas estranhas\"."
+    "correctOption": 1,
+    "explanation": "Gankaku significa “Grou sobre a rocha”."
   },
   {
     "id": "quiz-kata-avancado-04",
     "category": "Katas - Avançado",
-    "question": "Qual é o significado do kata Sochin?",
+    "question": "Qual é o significado do kata Kanku Sho?",
     "options": [
-      "Mãos de nuvem",
-      "Espírito inabalável",
-      "Dez mãos",
-      "Vinte e quatro passos"
+      "Romper a fortaleza - forma menor",
+      "Contemplar o céu - forma menor",
+      "Cinquenta e quatro passos - forma curta",
+      "Espírito inabalável"
     ],
     "correctOption": 1,
-    "explanation": "Sochin (壮鎮) significa \"Espírito inabalável\"."
+    "explanation": "Kanku Sho significa “Contemplar o céu - forma menor”."
   },
   {
     "id": "quiz-kata-avancado-05",
     "category": "Katas - Avançado",
-    "question": "Qual é o significado do kata Nijushiho?",
+    "question": "Qual é o significado do kata Bassai Sho?",
     "options": [
-      "Vinte e quatro passos",
+      "Romper a fortaleza",
+      "Romper a fortaleza - forma menor",
       "Dez mãos",
-      "Espírito inabalável",
-      "Mãos de nuvem"
+      "Espírito inabalável"
     ],
-    "correctOption": 0,
-    "explanation": "Nijushiho (二十四歩) significa \"Vinte e quatro passos\"."
+    "correctOption": 1,
+    "explanation": "Bassai Sho significa “Romper a fortaleza - forma menor”."
   },
   {
     "id": "quiz-kata-avancado-06",
     "category": "Katas - Avançado",
-    "question": "Qual é o significado do kata Gojushiho Dai?",
+    "question": "Quantos movimentos aproximadamente compõem Tekki Nidan?",
     "options": [
-      "Dez mãos",
-      "Espírito inabalável",
-      "Mãos de nuvem",
-      "Cinquenta e quatro passos - forma longa"
+      "24",
+      "29",
+      "36",
+      "47"
     ],
-    "correctOption": 3,
-    "explanation": "Gojushiho Dai (五十四歩大) significa \"Cinquenta e quatro passos - forma longa\"."
+    "correctOption": 0,
+    "explanation": "O material de estudo indica aproximadamente 24 movimentos em Tekki Nidan."
   },
   {
     "id": "quiz-kata-avancado-07",
     "category": "Katas - Avançado",
-    "question": "Qual é o significado do kata Gojushiho Sho?",
+    "question": "Quantos movimentos aproximadamente compõem Tekki Sandan?",
     "options": [
-      "Espírito inabalável",
-      "Mãos de nuvem",
-      "Cinquenta e quatro passos - forma curta",
-      "Dez mãos"
+      "24",
+      "29",
+      "36",
+      "48"
     ],
     "correctOption": 2,
-    "explanation": "Gojushiho Sho (五十四歩小) significa \"Cinquenta e quatro passos - forma curta\"."
+    "explanation": "O material de estudo indica aproximadamente 36 movimentos em Tekki Sandan."
   },
   {
     "id": "quiz-kata-avancado-08",
     "category": "Katas - Avançado",
     "question": "Qual é o significado do kata Unsu?",
     "options": [
-      "Cinquenta e quatro passos - forma curta",
       "Mãos de nuvem",
-      "Dez mãos",
-      "Espírito inabalável"
+      "Espírito inabalável",
+      "Grou sobre a rocha",
+      "Cinquenta e quatro passos - forma curta"
     ],
-    "correctOption": 1,
-    "explanation": "Unsu (雲手) significa \"Mãos de nuvem\"."
+    "correctOption": 0,
+    "explanation": "Unsu significa “Mãos de nuvem”."
   },
   {
     "id": "quiz-kata-avancado-09",
     "category": "Katas - Avançado",
-    "question": "Qual é o significado do kata Meikyo?",
+    "question": "Qual é o significado do kata Sochin?",
     "options": [
-      "Espelho limpo / espelho da alma",
       "Dez mãos",
       "Espírito inabalável",
-      "Cinquenta e quatro passos - forma curta"
+      "Voo da andorinha",
+      "Contemplar o céu - forma menor"
     ],
-    "correctOption": 0,
-    "explanation": "Meikyo (明鏡) significa \"Espelho limpo / espelho da alma\"."
+    "correctOption": 1,
+    "explanation": "Sochin significa “Espírito inabalável”."
   },
   {
     "id": "quiz-kata-avancado-10",
     "category": "Katas - Avançado",
-    "question": "Qual é o significado do kata Wankan?",
+    "question": "Quantos kiai são indicados no kata Enpi pelo material?",
     "options": [
-      "Dez mãos",
-      "Espírito inabalável",
-      "Cinquenta e quatro passos - forma curta",
-      "Coroa real"
+      "1",
+      "2",
+      "3",
+      "4"
     ],
-    "correctOption": 3,
-    "explanation": "Wankan (王冠) significa \"Coroa real\"."
+    "correctOption": 1,
+    "explanation": "O material de estudo indica dois kiai para Enpi."
   }
 ]

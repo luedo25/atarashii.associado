@@ -19,7 +19,7 @@
       "criador": "Atribuicao varia por fonte Shotokan; validar com a associação.",
       "historico": "Opcional em algumas associações; não aparece na lista dos 26 katas da apostila.",
       "classificacao": {
-        "nivel": "Fundamentos (Kyu)",
+        "nivel": "Especialistas",
         "faixa_sugerida": "Branca / introdutoria, opcional conforme associação",
         "ordem_tradicional_aprendizado": 0,
         "associacao_que_utiliza_sequencia": "Sequência pedagógica Shotokan usada como referência por linhagens JKA, ISKF e SKIF; validar ordem final com a Associação Atarashii."
@@ -127,7 +127,7 @@
         "observacao_divergencia": "Opcional em algumas associações; não aparece na lista dos 26 katas da apostila.",
         "status_validacao": "Pendente de revisao final da Associação Atarashii"
       },
-      "nivelJogo": null
+      "nivelJogo": "especialista"
     },
     {
       "id": "heian-shodan",
@@ -140,7 +140,7 @@
       "criador": "Não confirmado pela apostila, salvo observacoes históricas específicas.",
       "historico": "Apostila, paginas 5 e 6.",
       "classificacao": {
-        "nivel": "Fundamentos (Kyu)",
+        "nivel": "Básico",
         "faixa_sugerida": "Branca",
         "ordem_tradicional_aprendizado": 1,
         "associacao_que_utiliza_sequencia": "Sequência pedagógica Shotokan usada como referência por linhagens JKA, ISKF e SKIF; validar ordem final com a Associação Atarashii."
@@ -261,7 +261,7 @@
       "criador": "Não confirmado pela apostila, salvo observacoes históricas específicas.",
       "historico": "Apostila, paginas 5 e 6. Grafia da apostila: Hein Nidan.",
       "classificacao": {
-        "nivel": "Fundamentos (Kyu)",
+        "nivel": "Básico",
         "faixa_sugerida": "Amarela",
         "ordem_tradicional_aprendizado": 2,
         "associacao_que_utiliza_sequencia": "Sequência pedagógica Shotokan usada como referência por linhagens JKA, ISKF e SKIF; validar ordem final com a Associação Atarashii."
@@ -382,7 +382,7 @@
       "criador": "Não confirmado pela apostila, salvo observacoes históricas específicas.",
       "historico": "Apostila, paginas 5 e 6.",
       "classificacao": {
-        "nivel": "Fundamentos (Kyu)",
+        "nivel": "Básico",
         "faixa_sugerida": "Vermelha",
         "ordem_tradicional_aprendizado": 3,
         "associacao_que_utiliza_sequencia": "Sequência pedagógica Shotokan usada como referência por linhagens JKA, ISKF e SKIF; validar ordem final com a Associação Atarashii."
@@ -505,7 +505,7 @@
       "criador": "Não confirmado pela apostila, salvo observacoes históricas específicas.",
       "historico": "Apostila, paginas 5 e 6.",
       "classificacao": {
-        "nivel": "Fundamentos (Kyu)",
+        "nivel": "Básico",
         "faixa_sugerida": "Laranja",
         "ordem_tradicional_aprendizado": 4,
         "associacao_que_utiliza_sequencia": "Sequência pedagógica Shotokan usada como referência por linhagens JKA, ISKF e SKIF; validar ordem final com a Associação Atarashii."
@@ -630,7 +630,7 @@
       "criador": "Não confirmado pela apostila, salvo observacoes históricas específicas.",
       "historico": "Apostila, paginas 5 e 6.",
       "classificacao": {
-        "nivel": "Fundamentos (Kyu)",
+        "nivel": "Básico",
         "faixa_sugerida": "Verde",
         "ordem_tradicional_aprendizado": 5,
         "associacao_que_utiliza_sequencia": "Sequência pedagógica Shotokan usada como referência por linhagens JKA, ISKF e SKIF; validar ordem final com a Associação Atarashii."
@@ -1106,7 +1106,7 @@
     {
       "id": "empi",
       "slug": "empi",
-      "nome": "Empi",
+      "nome": "Enpi",
       "nome_japones": "燕飛",
       "significado": "Voo da andorinha",
       "pronuncia": "em-pi",
@@ -1360,7 +1360,7 @@
       "criador": "Não confirmado pela apostila, salvo observacoes históricas específicas.",
       "historico": "Apostila, pagina 8.",
       "classificacao": {
-        "nivel": "Avançados",
+        "nivel": "Especialistas",
         "faixa_sugerida": "Preta",
         "ordem_tradicional_aprendizado": 11,
         "associacao_que_utiliza_sequencia": "Sequência pedagógica Shotokan usada como referência por linhagens JKA, ISKF e SKIF; validar ordem final com a Associação Atarashii."
@@ -1469,7 +1469,7 @@
         "observacao_divergencia": "Apostila, pagina 8.",
         "status_validacao": "Pendente de revisao final da Associação Atarashii"
       },
-      "nivelJogo": "avancado"
+      "nivelJogo": "especialista"
     },
     {
       "id": "jitte",
@@ -1482,7 +1482,7 @@
       "criador": "Não confirmado pela apostila, salvo observacoes históricas específicas.",
       "historico": "Apostila, pagina 8.",
       "classificacao": {
-        "nivel": "Avançados",
+        "nivel": "Especialistas",
         "faixa_sugerida": "Preta",
         "ordem_tradicional_aprendizado": 12,
         "associacao_que_utiliza_sequencia": "Sequência pedagógica Shotokan usada como referência por linhagens JKA, ISKF e SKIF; validar ordem final com a Associação Atarashii."
@@ -1591,7 +1591,7 @@
         "observacao_divergencia": "Apostila, pagina 8.",
         "status_validacao": "Pendente de revisao final da Associação Atarashii"
       },
-      "nivelJogo": "avancado"
+      "nivelJogo": "especialista"
     },
     {
       "id": "gankaku",
@@ -1726,7 +1726,7 @@
       "criador": "Não confirmado pela apostila, salvo observacoes históricas específicas.",
       "historico": "Apostila, pagina 6.",
       "classificacao": {
-        "nivel": "Superiores (Faixa Preta)",
+        "nivel": "Avançados",
         "faixa_sugerida": "Preta",
         "ordem_tradicional_aprendizado": 14,
         "associacao_que_utiliza_sequencia": "Sequência pedagógica Shotokan usada como referência por linhagens JKA, ISKF e SKIF; validar ordem final com a Associação Atarashii."
@@ -1841,7 +1841,7 @@
       "criador": "Não confirmado pela apostila, salvo observacoes históricas específicas.",
       "historico": "Apostila, pagina 6. Grafia da apostila: Teki Sandan.",
       "classificacao": {
-        "nivel": "Superiores (Faixa Preta)",
+        "nivel": "Avançados",
         "faixa_sugerida": "Preta",
         "ordem_tradicional_aprendizado": 15,
         "associacao_que_utiliza_sequencia": "Sequência pedagógica Shotokan usada como referência por linhagens JKA, ISKF e SKIF; validar ordem final com a Associação Atarashii."
@@ -1958,7 +1958,7 @@
       "criador": "Não confirmado pela apostila, salvo observacoes históricas específicas.",
       "historico": "Apostila, pagina 7.",
       "classificacao": {
-        "nivel": "Superiores (Faixa Preta)",
+        "nivel": "Avançados",
         "faixa_sugerida": "Preta",
         "ordem_tradicional_aprendizado": 16,
         "associacao_que_utiliza_sequencia": "Sequência pedagógica Shotokan usada como referência por linhagens JKA, ISKF e SKIF; validar ordem final com a Associação Atarashii."
@@ -2082,7 +2082,7 @@
       "criador": "Não confirmado pela apostila, salvo observacoes históricas específicas.",
       "historico": "Apostila, pagina 7.",
       "classificacao": {
-        "nivel": "Superiores (Faixa Preta)",
+        "nivel": "Avançados",
         "faixa_sugerida": "Preta",
         "ordem_tradicional_aprendizado": 17,
         "associacao_que_utiliza_sequencia": "Sequência pedagógica Shotokan usada como referência por linhagens JKA, ISKF e SKIF; validar ordem final com a Associação Atarashii."
@@ -2206,7 +2206,7 @@
       "criador": "Não confirmado pela apostila, salvo observacoes históricas específicas.",
       "historico": "Apostila, pagina 10.",
       "classificacao": {
-        "nivel": "Superiores (Faixa Preta)",
+        "nivel": "Especialistas",
         "faixa_sugerida": "Preta",
         "ordem_tradicional_aprendizado": 18,
         "associacao_que_utiliza_sequencia": "Sequência pedagógica Shotokan usada como referência por linhagens JKA, ISKF e SKIF; validar ordem final com a Associação Atarashii."
@@ -2315,7 +2315,7 @@
         "observacao_divergencia": "Apostila, pagina 10.",
         "status_validacao": "Pendente de revisao final da Associação Atarashii"
       },
-      "nivelJogo": "avancado"
+      "nivelJogo": "especialista"
     },
     {
       "id": "chinte",
@@ -2328,7 +2328,7 @@
       "criador": "Não confirmado pela apostila, salvo observacoes históricas específicas.",
       "historico": "Apostila, pagina 9. Pontos de kiai não informados.",
       "classificacao": {
-        "nivel": "Superiores (Faixa Preta)",
+        "nivel": "Especialistas",
         "faixa_sugerida": "Preta",
         "ordem_tradicional_aprendizado": 19,
         "associacao_que_utiliza_sequencia": "Sequência pedagógica Shotokan usada como referência por linhagens JKA, ISKF e SKIF; validar ordem final com a Associação Atarashii."
@@ -2436,7 +2436,7 @@
         "observacao_divergencia": "Apostila, pagina 9. Pontos de kiai não informados.",
         "status_validacao": "Pendente de revisao final da Associação Atarashii"
       },
-      "nivelJogo": "avancado"
+      "nivelJogo": "especialista"
     },
     {
       "id": "sochin",
@@ -2449,7 +2449,7 @@
       "criador": "Não confirmado pela apostila, salvo observacoes históricas específicas.",
       "historico": "Apostila, paginas 9 e 10.",
       "classificacao": {
-        "nivel": "Superiores (Faixa Preta)",
+        "nivel": "Avançados",
         "faixa_sugerida": "Preta",
         "ordem_tradicional_aprendizado": 20,
         "associacao_que_utiliza_sequencia": "Sequência pedagógica Shotokan usada como referência por linhagens JKA, ISKF e SKIF; validar ordem final com a Associação Atarashii."
@@ -2571,7 +2571,7 @@
       "criador": "Não confirmado pela apostila, salvo observacoes históricas específicas.",
       "historico": "Apostila, paginas 10 e 11.",
       "classificacao": {
-        "nivel": "Superiores (Faixa Preta)",
+        "nivel": "Especialistas",
         "faixa_sugerida": "Preta",
         "ordem_tradicional_aprendizado": 21,
         "associacao_que_utiliza_sequencia": "Sequência pedagógica Shotokan usada como referência por linhagens JKA, ISKF e SKIF; validar ordem final com a Associação Atarashii."
@@ -2680,7 +2680,7 @@
         "observacao_divergencia": "Apostila, paginas 10 e 11.",
         "status_validacao": "Pendente de revisao final da Associação Atarashii"
       },
-      "nivelJogo": "avancado"
+      "nivelJogo": "especialista"
     },
     {
       "id": "wankan",
@@ -2693,7 +2693,7 @@
       "criador": "Não confirmado pela apostila, salvo observacoes históricas específicas.",
       "historico": "Apostila, pagina 11.",
       "classificacao": {
-        "nivel": "Superiores (Faixa Preta)",
+        "nivel": "Especialistas",
         "faixa_sugerida": "Preta",
         "ordem_tradicional_aprendizado": 22,
         "associacao_que_utiliza_sequencia": "Sequência pedagógica Shotokan usada como referência por linhagens JKA, ISKF e SKIF; validar ordem final com a Associação Atarashii."
@@ -2801,7 +2801,7 @@
         "observacao_divergencia": "Apostila, pagina 11.",
         "status_validacao": "Pendente de revisao final da Associação Atarashii"
       },
-      "nivelJogo": "avancado"
+      "nivelJogo": "especialista"
     },
     {
       "id": "unsu",
@@ -2814,7 +2814,7 @@
       "criador": "Não confirmado pela apostila, salvo observacoes históricas específicas.",
       "historico": "Apostila, paginas 9 e 10.",
       "classificacao": {
-        "nivel": "Superiores (Faixa Preta)",
+        "nivel": "Avançados",
         "faixa_sugerida": "Preta avançada",
         "ordem_tradicional_aprendizado": 23,
         "associacao_que_utiliza_sequencia": "Sequência pedagógica Shotokan usada como referência por linhagens JKA, ISKF e SKIF; validar ordem final com a Associação Atarashii."
@@ -2936,7 +2936,7 @@
       "criador": "Não confirmado pela apostila, salvo observacoes históricas específicas.",
       "historico": "Apostila, pagina 10. Validar ordem/nome com a associação.",
       "classificacao": {
-        "nivel": "Superiores (Faixa Preta)",
+        "nivel": "Especialistas",
         "faixa_sugerida": "Preta avançada",
         "ordem_tradicional_aprendizado": 24,
         "associacao_que_utiliza_sequencia": "Sequência pedagógica Shotokan usada como referência por linhagens JKA, ISKF e SKIF; validar ordem final com a Associação Atarashii."
@@ -3045,7 +3045,7 @@
         "observacao_divergencia": "Apostila, pagina 10. Validar ordem/nome com a associação.",
         "status_validacao": "Pendente de revisao final da Associação Atarashii"
       },
-      "nivelJogo": "avancado"
+      "nivelJogo": "especialista"
     },
     {
       "id": "gojushiho-sho",
@@ -3058,7 +3058,7 @@
       "criador": "Não confirmado pela apostila, salvo observacoes históricas específicas.",
       "historico": "Apostila, pagina 10. Validar ordem/nome com a associação.",
       "classificacao": {
-        "nivel": "Superiores (Faixa Preta)",
+        "nivel": "Avançados",
         "faixa_sugerida": "Preta avançada",
         "ordem_tradicional_aprendizado": 25,
         "associacao_que_utiliza_sequencia": "Sequência pedagógica Shotokan usada como referência por linhagens JKA, ISKF e SKIF; validar ordem final com a Associação Atarashii."
@@ -3180,7 +3180,7 @@
       "criador": "Não confirmado pela apostila, salvo observacoes históricas específicas.",
       "historico": "Apostila, pagina 11.",
       "classificacao": {
-        "nivel": "Superiores (Faixa Preta)",
+        "nivel": "Especialistas",
         "faixa_sugerida": "Preta",
         "ordem_tradicional_aprendizado": 26,
         "associacao_que_utiliza_sequencia": "Sequência pedagógica Shotokan usada como referência por linhagens JKA, ISKF e SKIF; validar ordem final com a Associação Atarashii."
@@ -3289,7 +3289,7 @@
         "observacao_divergencia": "Apostila, pagina 11.",
         "status_validacao": "Pendente de revisao final da Associação Atarashii"
       },
-      "nivelJogo": "avancado"
+      "nivelJogo": "especialista"
     }
   ]
 }

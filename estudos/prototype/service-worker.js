@@ -1,4 +1,4 @@
-const CACHE_NAME = "atarashii-app-v12";
+const CACHE_NAME = "atarashii-app-v13";
 const ASSETS = [
   "./",
   "./index.html",
@@ -22,6 +22,7 @@ const ASSETS = [
   "../data/quiz-kata-iniciante.json",
   "../data/quiz-kata-intermediario.json",
   "../data/quiz-kata-avancado.json",
+  "../data/quiz-kata-especialista.json",
   "../data/final-challenge.json",
   "../data/training-content.json",
   "../assets/brand/atarashii-logo.png",

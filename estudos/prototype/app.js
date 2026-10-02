@@ -16,6 +16,7 @@ const dataFiles = {
   quizKataIniciante: "../data/quiz-kata-iniciante.json",
   quizKataIntermediario: "../data/quiz-kata-intermediario.json",
   quizKataAvancado: "../data/quiz-kata-avancado.json",
+  quizKataEspecialista: "../data/quiz-kata-especialista.json",
   finalChallenge: "../data/final-challenge.json", trainingContent: "../data/training-content.json",
 };
 const AREA_LABELS = { aprender: "Aprender", treinar: "Treinar", kata: "Kata" };
@@ -333,7 +334,7 @@ function assessmentQuestions(key) {
       basico: state.data.quizKataIniciante,
       intermediario: state.data.quizKataIntermediario,
       avancado: state.data.quizKataAvancado,
-      especialista: state.data.quizKataAvancado,
+      especialista: state.data.quizKataEspecialista,
     },
     kihon: state.data.quiz.filter((q) => ["Fundamentos", "Técnicas Básicas", "Bases e Termos"].includes(q.category)),
     kumite: [

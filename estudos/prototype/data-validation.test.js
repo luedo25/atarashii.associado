@@ -2,6 +2,7 @@ const test = require("node:test");
 const assert = require("node:assert/strict");
 const fs = require("node:fs");
 const path = require("node:path");
+const Assessment = require("./assessment-engine.js");
 
 const dataDir = path.resolve(__dirname, "../data");
 const read = (name) => JSON.parse(fs.readFileSync(path.join(dataDir, name), "utf8"));
@@ -17,15 +18,15 @@ test("catalogo oficial possui 27 katas com IDs unicos", () => {
   assert.equal(katas.length, 27);
   assert.equal(new Set(katas.map((item) => item.id)).size, 27);
 });
-test("quiz de Kata básico tem 10 perguntas apoiadas nos conteúdos Heian e não cobra kata avançado", () => {
+test("quiz de Kata básico cobre os cinco Heian e não cobra kata de outros pilares", () => {
   const beginnerQuiz = read("quiz-kata-iniciante.json");
-  const beginnerKatas = read("katas-shotokan-complete.json").katas.filter((kata) => kata.nivelJogo === "iniciante");
   assert.equal(beginnerQuiz.length, 10);
+  const beginnerKatas = read("katas-shotokan-complete.json").katas.filter((kata) => kata.nivelJogo === "iniciante");
   assert.equal(beginnerKatas.length, 5);
-  for (const kata of beginnerKatas) assert.ok(beginnerQuiz.some((question) => question.question.includes(kata.nome)));
   const serialized = JSON.stringify(beginnerQuiz).toLowerCase();
-  for (const advancedName of ["kanku", "bassai", "jitte", "gankaku", "nijushiho", "unsu", "sochin"]) {
-    assert.equal(serialized.includes(advancedName), false, `kata avançado vazou para o quiz básico: ${advancedName}`);
+  for (const kata of beginnerKatas) assert.ok(serialized.includes(kata.nome.toLowerCase()), `${kata.nome} ausente do quiz básico`);
+  for (const kataName of ["tekki", "bassai", "kanku", "jion", "enpi", "gankaku", "unsu", "sochin"]) {
+    assert.equal(serialized.includes(kataName), false, `kata de outro pilar vazou para o quiz básico: ${kataName}`);
   }
   assert.match(serialized, /embusen|postura|kiai|ritmo|consultar o material/);
 });
@@ -46,6 +47,61 @@ test("pilar intermediário contém somente os quatro katas definidos e quiz com 
     assert.ok(question.correctOption >= 0 && question.correctOption < 4, question.id);
   }
   for (const kata of intermediate) assert.equal(kata.classificacao.nivel, "Intermediários", kata.id);
+});
+test("pilares avançado e especialista respeitam a lista e seus quizzes têm 10 questões válidas", () => {
+  const catalog = read("katas-shotokan-complete.json").katas;
+  const advancedIds = ["empi", "gojushiho-sho", "gankaku", "kanku-sho", "bassai-sho", "tekki-nidan", "tekki-sandan", "unsu", "sochin"];
+  const advanced = catalog.filter((kata) => kata.nivelJogo === "avancado");
+  assert.deepEqual(advanced.map((kata) => kata.id).sort(), advancedIds.slice().sort());
+  const specialist = catalog.filter((kata) => kata.nivelJogo === "especialista");
+  assert.equal(specialist.length, 9);
+  const advancedQuiz = read("quiz-kata-avancado.json");
+  const specialistQuiz = read("quiz-kata-especialista.json");
+  assert.equal(advancedQuiz.length, 10);
+  assert.equal(specialistQuiz.length, 10);
+  for (const [quiz, allowed, forbidden] of [
+    [advancedQuiz, advanced, ["tekki shodan", "bassai dai", "kanku dai", "jion", "hangetsu", "jitte", "nijushiho", "chinte", "meikyo", "wankan", "gojushiho dai"]],
+    [specialistQuiz, specialist, ["heian", "enpi", "empi", "gojushiho sho", "gankaku", "kanku sho", "bassai sho", "tekki nidan", "tekki sandan", "unsu", "sochin", "tekki shodan", "bassai dai", "kanku dai", "jion"]],
+  ]) {
+    const serialized = JSON.stringify(quiz).toLowerCase();
+    for (const name of forbidden) assert.equal(serialized.includes(name), false, `kata de outro pilar vazou no quiz: ${name}`);
+    for (const kata of allowed) assert.ok(quiz.some((question) => question.question.toLowerCase().includes(kata.nome.toLowerCase())), `${kata.nome} sem questão própria`);
+    for (const question of quiz) {
+      assert.equal(question.options.length, 4, question.id);
+      assert.ok(question.correctOption >= 0 && question.correctOption < 4, question.id);
+    }
+  }
+  for (const kata of advanced) assert.equal(kata.classificacao.nivel, "Avançados", kata.id);
+  for (const kata of specialist) assert.equal(kata.classificacao.nivel, "Especialistas", kata.id);
+});
+test("cada quiz de pilar gera 40 perguntas, com dez de cada tema e Katas do nível correto", () => {
+  const subjects = [
+    { key: "kata", label: "Kata" }, { key: "kihon", label: "Kihon" },
+    { key: "kumite", label: "Kumite" }, { key: "geral", label: "Assuntos gerais" },
+  ];
+  const pools = {
+    kataByPillar: {
+      basico: read("quiz-kata-iniciante.json"),
+      intermediario: read("quiz-kata-intermediario.json"),
+      avancado: read("quiz-kata-avancado.json"),
+      especialista: read("quiz-kata-especialista.json"),
+    },
+    kihon: [{ question: "Kihon" }], kumite: [{ question: "Kumite" }], geral: [{ question: "Assuntos gerais" }],
+  };
+  for (const [index, pillar] of ["basico", "intermediario", "avancado", "especialista"].entries()) {
+    const quiz = Assessment.createPillarQuestions(pillar, subjects, pools, index);
+    assert.equal(quiz.length, 40, pillar);
+    for (const subject of subjects) assert.equal(quiz.filter((question) => question.category === subject.label).length, 10, `${pillar}/${subject.label}`);
+    const kataQuestions = quiz.filter((question) => question.category === "Kata");
+    const kataText = JSON.stringify(kataQuestions).toLowerCase();
+    const forbidden = {
+      basico: ["tekki", "bassai", "kanku", "jion", "enpi", "gankaku", "unsu", "sochin"],
+      intermediario: ["tekki nidan", "tekki sandan", "bassai sho", "kanku sho", "hangetsu", "jitte", "nijushiho", "chinte", "meikyo", "wankan", "jiin"],
+      avancado: ["tekki shodan", "bassai dai", "kanku dai", "jion", "hangetsu", "jitte", "nijushiho", "chinte", "meikyo", "wankan", "gojushiho dai"],
+      especialista: ["heian", "tekki shodan", "bassai dai", "kanku dai", "jion", "enpi", "empi", "gojushiho sho", "gankaku", "kanku sho", "bassai sho", "tekki nidan", "tekki sandan", "unsu", "sochin"],
+    }[pillar];
+    for (const name of forbidden) assert.equal(kataText.includes(name), false, `${name} vazou em ${pillar}`);
+  }
 });
 test("desafio final possui cinco rounds equilibrados", () => {
   const challenges = read("final-challenge.json");
