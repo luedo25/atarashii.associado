@@ -1,0 +1,610 @@
+{
+  "basico": [
+    {
+      "id": "kumite-basico-01",
+      "question": "Quando começa a cronometragem do encontro?",
+      "options": [
+        "Com o sinal do árbitro para começar",
+        "Quando os atletas entram no dojo",
+        "Depois do primeiro ponto",
+        "Após a saudação final"
+      ],
+      "correctOption": 0,
+      "explanation": "A contagem inicia com o comando do árbitro.",
+      "sourceContentIds": [
+        "regras-kumite-duracao"
+      ]
+    },
+    {
+      "id": "kumite-basico-02",
+      "question": "Qual comando interrompe a contagem da disputa?",
+      "options": [
+        "Yame",
+        "Hajime",
+        "Rei",
+        "Oss"
+      ],
+      "correctOption": 0,
+      "explanation": "A contagem é interrompida quando o árbitro anuncia Yame.",
+      "sourceContentIds": [
+        "regras-kumite-duracao"
+      ]
+    },
+    {
+      "id": "kumite-basico-03",
+      "question": "O que indicam os sinais curtos descritos para o fim do tempo?",
+      "options": [
+        "Um sinal curto indica os 15 segundos finais; dois sinais indicam o fim",
+        "Um sinal indica início; dois indicam ponto",
+        "Um sinal indica vitória; dois indicam empate",
+        "Ambos indicam pausa médica"
+      ],
+      "correctOption": 0,
+      "explanation": "O material descreve sinal curto para os 15 segundos finais e dois sinais para o fim.",
+      "sourceContentIds": [
+        "regras-kumite-duracao"
+      ]
+    },
+    {
+      "id": "kumite-basico-04",
+      "question": "Qual situação pode levar à decisão de Kiken?",
+      "options": [
+        "O atleta não se apresenta",
+        "O atleta marca um ponto",
+        "O árbitro anuncia Hajime",
+        "O tempo termina normalmente"
+      ],
+      "correctOption": 0,
+      "explanation": "Kiken pode ocorrer quando o atleta não se apresenta.",
+      "sourceContentIds": [
+        "regras-kumite-kiken"
+      ]
+    },
+    {
+      "id": "kumite-basico-05",
+      "question": "Qual outra situação está ligada ao Kiken?",
+      "options": [
+        "O atleta abandona ou não pode continuar",
+        "O atleta faz a saudação inicial",
+        "O árbitro interrompe para anunciar Yame",
+        "Os dois atletas iniciam a disputa"
+      ],
+      "correctOption": 0,
+      "explanation": "Abandono ou impossibilidade de continuar também pode levar a Kiken.",
+      "sourceContentIds": [
+        "regras-kumite-kiken"
+      ]
+    },
+    {
+      "id": "kumite-basico-06",
+      "question": "Em qual situação o material prevê Kiken por razão médica?",
+      "options": [
+        "Quando o atleta é retirado por ordem médica",
+        "Quando o atleta pede para iniciar",
+        "Quando há sinal dos 15 segundos",
+        "Quando o atleta retorna à posição"
+      ],
+      "correctOption": 0,
+      "explanation": "O material cita retirada por ordem médica entre os casos de Kiken.",
+      "sourceContentIds": [
+        "regras-kumite-kiken"
+      ]
+    },
+    {
+      "id": "kumite-basico-07",
+      "question": "A cronometragem se inicia antes ou depois do sinal de início?",
+      "options": [
+        "Depois do sinal do árbitro",
+        "Antes dos atletas se posicionarem",
+        "Somente após pontuação",
+        "No fim da saudação"
+      ],
+      "correctOption": 0,
+      "explanation": "A cronometragem começa com o sinal do árbitro.",
+      "sourceContentIds": [
+        "regras-kumite-duracao"
+      ]
+    },
+    {
+      "id": "kumite-basico-08",
+      "question": "O que ocorre com o tempo quando o árbitro anuncia Yame?",
+      "options": [
+        "A contagem é interrompida",
+        "A contagem acelera",
+        "O encontro reinicia automaticamente",
+        "A pontuação é apagada"
+      ],
+      "correctOption": 0,
+      "explanation": "Yame interrompe a contagem conforme o conteúdo do módulo.",
+      "sourceContentIds": [
+        "regras-kumite-duracao"
+      ]
+    },
+    {
+      "id": "kumite-basico-09",
+      "question": "Dois sinais curtos indicam o quê, segundo o material?",
+      "options": [
+        "O fim do tempo",
+        "Os 15 segundos finais",
+        "O início do encontro",
+        "Uma saudação"
+      ],
+      "correctOption": 0,
+      "explanation": "Dois sinais indicam o fim do tempo.",
+      "sourceContentIds": [
+        "regras-kumite-duracao"
+      ]
+    },
+    {
+      "id": "kumite-basico-10",
+      "question": "Kiken pode ser aplicado se o competidor...",
+      "options": [
+        "Não comparecer, abandonar ou não puder continuar",
+        "Marcar um Yuko",
+        "Executar uma saudação correta",
+        "Ouvir o sinal de início"
+      ],
+      "correctOption": 0,
+      "explanation": "Essas situações são apresentadas no conteúdo sobre Kiken.",
+      "sourceContentIds": [
+        "regras-kumite-kiken"
+      ]
+    }
+  ],
+  "intermediario": [
+    {
+      "id": "kumite-intermediario-01",
+      "question": "Como deve começar um encontro conforme o conteúdo estudado?",
+      "options": [
+        "Com a saudação correta dos atletas",
+        "Com ataque antes do comando",
+        "Com a saída de um atleta da área",
+        "Com o árbitro anunciando Yame"
+      ],
+      "correctOption": 0,
+      "explanation": "O conteúdo orienta que os atletas saúdem corretamente.",
+      "sourceContentIds": [
+        "regras-kumite-inicio-fim"
+      ]
+    },
+    {
+      "id": "kumite-intermediario-02",
+      "question": "Qual comando interrompe a disputa?",
+      "options": [
+        "Yame",
+        "Hajime",
+        "Kiai",
+        "Rei"
+      ],
+      "correctOption": 0,
+      "explanation": "Yame interrompe a disputa.",
+      "sourceContentIds": [
+        "regras-kumite-inicio-fim"
+      ]
+    },
+    {
+      "id": "kumite-intermediario-03",
+      "question": "O que pode indicar Moto No Ichi?",
+      "options": [
+        "Retorno às posições originais",
+        "Encerramento definitivo do torneio",
+        "Anúncio de três pontos",
+        "Início da contagem"
+      ],
+      "correctOption": 0,
+      "explanation": "Moto No Ichi pode indicar retorno às posições originais.",
+      "sourceContentIds": [
+        "regras-kumite-inicio-fim"
+      ]
+    },
+    {
+      "id": "kumite-intermediario-04",
+      "question": "Qual é um dos critérios de avaliação de uma técnica?",
+      "options": [
+        "Boa forma",
+        "Cor da faixa",
+        "Altura do atleta",
+        "Duração do kata"
+      ],
+      "correctOption": 0,
+      "explanation": "Boa forma faz parte dos critérios de avaliação.",
+      "sourceContentIds": [
+        "regras-kumite-pontuacao"
+      ]
+    },
+    {
+      "id": "kumite-intermediario-05",
+      "question": "O que significa atitude esportiva como critério?",
+      "options": [
+        "Executar sem intenção de ferir e respeitar o encontro",
+        "Tentar atingir com força sem controle",
+        "Ignorar o comando do árbitro",
+        "Evitar a saudação"
+      ],
+      "correctOption": 0,
+      "explanation": "Atitude esportiva e ausência de intenção de ferir estão entre os critérios.",
+      "sourceContentIds": [
+        "regras-kumite-pontuacao"
+      ]
+    },
+    {
+      "id": "kumite-intermediario-06",
+      "question": "Qual conjunto reúne critérios citados no conteúdo?",
+      "options": [
+        "Zanshin, tempo correto e distância adequada",
+        "Altura, idade e cor da faixa",
+        "Quantidade de kiai e número de kata",
+        "Força máxima e contato irrestrito"
+      ],
+      "correctOption": 0,
+      "explanation": "Zanshin, tempo e distância correta constam entre os critérios.",
+      "sourceContentIds": [
+        "regras-kumite-pontuacao"
+      ]
+    },
+    {
+      "id": "kumite-intermediario-07",
+      "question": "Como é descrita a aplicação vigorosa?",
+      "options": [
+        "Técnica executada com vigor, mantendo controle e critérios",
+        "Contato sem controle",
+        "Movimento sem intenção",
+        "Apenas velocidade sem forma"
+      ],
+      "correctOption": 0,
+      "explanation": "A aplicação vigorosa é avaliada junto dos demais critérios de validade.",
+      "sourceContentIds": [
+        "regras-kumite-pontuacao"
+      ]
+    },
+    {
+      "id": "kumite-intermediario-08",
+      "question": "O que os atletas devem fazer no início e no fim do encontro?",
+      "options": [
+        "Saudar corretamente",
+        "Afastar-se sem orientação",
+        "Executar um kata",
+        "Interromper o árbitro"
+      ],
+      "correctOption": 0,
+      "explanation": "O conteúdo destaca a saudação correta.",
+      "sourceContentIds": [
+        "regras-kumite-inicio-fim"
+      ]
+    },
+    {
+      "id": "kumite-intermediario-09",
+      "question": "Qual comando marca o retorno às posições originais?",
+      "options": [
+        "Moto No Ichi",
+        "Yame",
+        "Kiken",
+        "Zanshin"
+      ],
+      "correctOption": 0,
+      "explanation": "Moto No Ichi pode ser usado para indicar retorno às posições originais.",
+      "sourceContentIds": [
+        "regras-kumite-inicio-fim"
+      ]
+    },
+    {
+      "id": "kumite-intermediario-10",
+      "question": "Além da técnica, qual item integra a avaliação?",
+      "options": [
+        "Distância adequada",
+        "Graduação do público",
+        "Número de espectadores",
+        "Tempo de treino do atleta"
+      ],
+      "correctOption": 0,
+      "explanation": "A distância correta é um dos critérios listados.",
+      "sourceContentIds": [
+        "regras-kumite-pontuacao"
+      ]
+    }
+  ],
+  "avancado": [
+    {
+      "id": "kumite-avancado-01",
+      "question": "Quantos pontos vale um Yuko?",
+      "options": [
+        "1 ponto",
+        "2 pontos",
+        "3 pontos",
+        "Nenhum ponto"
+      ],
+      "correctOption": 0,
+      "explanation": "Yuko vale 1 ponto.",
+      "sourceContentIds": [
+        "yuko"
+      ]
+    },
+    {
+      "id": "kumite-avancado-02",
+      "question": "Que tipo de técnica pode marcar Yuko?",
+      "options": [
+        "Tsuki ou Uchi em área válida",
+        "Somente chute Jodan",
+        "Somente queda",
+        "Somente bloqueio"
+      ],
+      "correctOption": 0,
+      "explanation": "Yuko pode ser atribuído a Tsuki ou Uchi em área válida.",
+      "sourceContentIds": [
+        "yuko"
+      ]
+    },
+    {
+      "id": "kumite-avancado-03",
+      "question": "O que mais é necessário para validar um Yuko?",
+      "options": [
+        "Atender aos critérios de avaliação",
+        "Apenas tocar qualquer parte do corpo",
+        "Fazer um kiai longo",
+        "Estar em uma base específica"
+      ],
+      "correctOption": 0,
+      "explanation": "A técnica deve cumprir os critérios de avaliação.",
+      "sourceContentIds": [
+        "yuko"
+      ]
+    },
+    {
+      "id": "kumite-avancado-04",
+      "question": "Quantos pontos vale Waza-Ari?",
+      "options": [
+        "2 pontos",
+        "1 ponto",
+        "3 pontos",
+        "4 pontos"
+      ],
+      "correctOption": 0,
+      "explanation": "Waza-Ari vale 2 pontos.",
+      "sourceContentIds": [
+        "waza-ari"
+      ]
+    },
+    {
+      "id": "kumite-avancado-05",
+      "question": "Qual ação é associada a Waza-Ari?",
+      "options": [
+        "Chute Chudan válido",
+        "Tsuki em área válida",
+        "Chute Jodan",
+        "Saudação"
+      ],
+      "correctOption": 0,
+      "explanation": "Waza-Ari corresponde a chute Chudan válido.",
+      "sourceContentIds": [
+        "waza-ari"
+      ]
+    },
+    {
+      "id": "kumite-avancado-06",
+      "question": "Como deve ser executado o chute para Waza-Ari?",
+      "options": [
+        "Com controle e atendendo aos critérios",
+        "Sem controle e fora da área válida",
+        "Após o tempo terminar",
+        "Com contato irrestrito"
+      ],
+      "correctOption": 0,
+      "explanation": "O conteúdo exige controle e cumprimento dos critérios.",
+      "sourceContentIds": [
+        "waza-ari"
+      ]
+    },
+    {
+      "id": "kumite-avancado-07",
+      "question": "Qual alternativa relaciona corretamente a pontuação?",
+      "options": [
+        "Yuko: 1; Waza-Ari: 2",
+        "Yuko: 2; Waza-Ari: 3",
+        "Yuko: 3; Waza-Ari: 1",
+        "Ambos valem 3"
+      ],
+      "correctOption": 0,
+      "explanation": "Yuko vale 1 ponto e Waza-Ari vale 2 pontos.",
+      "sourceContentIds": [
+        "yuko"
+      ]
+    },
+    {
+      "id": "kumite-avancado-08",
+      "question": "Qual técnica de mão pode ser reconhecida como Yuko?",
+      "options": [
+        "Tsuki ou Uchi",
+        "Somente Age-Uke",
+        "Somente chute",
+        "Somente projeção"
+      ],
+      "correctOption": 0,
+      "explanation": "O material cita Tsuki ou Uchi.",
+      "sourceContentIds": [
+        "yuko"
+      ]
+    },
+    {
+      "id": "kumite-avancado-09",
+      "question": "Qual é o nível do chute associado a Waza-Ari?",
+      "options": [
+        "Chudan",
+        "Jodan",
+        "Gedan",
+        "Acima da cabeça"
+      ],
+      "correctOption": 0,
+      "explanation": "Waza-Ari é associado a chute Chudan.",
+      "sourceContentIds": [
+        "waza-ari"
+      ]
+    },
+    {
+      "id": "kumite-avancado-10",
+      "question": "Um atleta executa um chute Chudan controlado que atende aos critérios. Qual pontuação é correspondente?",
+      "options": [
+        "Waza-Ari, 2 pontos",
+        "Yuko, 1 ponto",
+        "Ippon, 3 pontos",
+        "Kiken"
+      ],
+      "correctOption": 0,
+      "explanation": "O chute Chudan válido corresponde a Waza-Ari, que vale 2 pontos.",
+      "sourceContentIds": [
+        "waza-ari"
+      ]
+    }
+  ],
+  "especialista": [
+    {
+      "id": "kumite-especialista-01",
+      "question": "Quantos pontos vale Ippon?",
+      "options": [
+        "3 pontos",
+        "1 ponto",
+        "2 pontos",
+        "4 pontos"
+      ],
+      "correctOption": 0,
+      "explanation": "Ippon vale 3 pontos.",
+      "sourceContentIds": [
+        "ippon"
+      ]
+    },
+    {
+      "id": "kumite-especialista-02",
+      "question": "Qual tipo de chute pode marcar Ippon?",
+      "options": [
+        "Chute Jodan",
+        "Chute Gedan",
+        "Somente chute Chudan",
+        "Qualquer chute sem controle"
+      ],
+      "correctOption": 0,
+      "explanation": "O Ippon pode ser concedido por chute Jodan válido.",
+      "sourceContentIds": [
+        "ippon"
+      ]
+    },
+    {
+      "id": "kumite-especialista-03",
+      "question": "Qual situação do oponente também pode permitir Ippon para técnica de mão?",
+      "options": [
+        "O oponente está em contato com o tatami com parte do corpo além dos pés",
+        "O oponente está apenas se movendo",
+        "O oponente está fora do ginásio",
+        "O oponente está saudando"
+      ],
+      "correctOption": 0,
+      "explanation": "O material inclui a técnica de mão contra oponente em contato com o tatami além dos pés.",
+      "sourceContentIds": [
+        "ippon"
+      ]
+    },
+    {
+      "id": "kumite-especialista-04",
+      "question": "Qual técnica de mão pode marcar Ippon na situação descrita?",
+      "options": [
+        "Técnica de mão válida contra oponente em contato com o tatami além dos pés",
+        "Qualquer toque no uniforme",
+        "Bloqueio sem alvo",
+        "Saudação"
+      ],
+      "correctOption": 0,
+      "explanation": "Essa situação específica está descrita no conteúdo de Ippon.",
+      "sourceContentIds": [
+        "ippon"
+      ]
+    },
+    {
+      "id": "kumite-especialista-05",
+      "question": "Qual é o valor em pontos de um Ippon válido?",
+      "options": [
+        "3 pontos",
+        "1 ponto",
+        "2 pontos",
+        "4 pontos"
+      ],
+      "correctOption": 0,
+      "explanation": "O Ippon vale 3 pontos.",
+      "sourceContentIds": [
+        "ippon"
+      ]
+    },
+    {
+      "id": "kumite-especialista-06",
+      "question": "O que deve acompanhar uma técnica para ser pontuada como Ippon?",
+      "options": [
+        "Validade conforme os critérios da regra",
+        "Contato sem controle",
+        "Execução depois do fim",
+        "Ausência de alvo válido"
+      ],
+      "correctOption": 0,
+      "explanation": "Ippon depende de uma técnica válida e dos critérios aplicáveis.",
+      "sourceContentIds": [
+        "ippon"
+      ]
+    },
+    {
+      "id": "kumite-especialista-07",
+      "question": "Qual alternativa descreve uma possibilidade de Ippon?",
+      "options": [
+        "Chute Jodan válido",
+        "Chute Gedan sem controle",
+        "Bloqueio para fora da área",
+        "Saudação final"
+      ],
+      "correctOption": 0,
+      "explanation": "Chute Jodan é uma das ações que pode valer Ippon.",
+      "sourceContentIds": [
+        "ippon"
+      ]
+    },
+    {
+      "id": "kumite-especialista-08",
+      "question": "No caso de técnica de mão, qual condição do oponente é citada?",
+      "options": [
+        "Parte do corpo, além dos pés, em contato com o tatami",
+        "Ambos os pés fora da área",
+        "Atleta em pé e distante",
+        "Atleta realizando saudação"
+      ],
+      "correctOption": 0,
+      "explanation": "A regra descrita envolve o oponente em contato com o tatami além dos pés.",
+      "sourceContentIds": [
+        "ippon"
+      ]
+    },
+    {
+      "id": "kumite-especialista-09",
+      "question": "Qual relação entre nome e valor está correta?",
+      "options": [
+        "Ippon vale 3 pontos",
+        "Ippon vale 1 ponto",
+        "Ippon vale 2 pontos",
+        "Ippon não tem valor"
+      ],
+      "correctOption": 0,
+      "explanation": "Ippon vale 3 pontos.",
+      "sourceContentIds": [
+        "ippon"
+      ]
+    },
+    {
+      "id": "kumite-especialista-10",
+      "question": "Qual afirmação está de acordo com o módulo de Ippon?",
+      "options": [
+        "Chute Jodan pode valer 3 pontos quando válido",
+        "Chute Chudan vale sempre 3 pontos",
+        "Qualquer toque vale 3 pontos",
+        "Ippon é uma penalidade"
+      ],
+      "correctOption": 0,
+      "explanation": "O conteúdo define Ippon como 3 pontos para chute Jodan ou situação especificada de técnica de mão.",
+      "sourceContentIds": [
+        "ippon"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,610 @@
+{
+  "basico": [
+    {
+      "id": "kihon-basico-01",
+      "question": "Qual é a característica central do Oi-Zuki?",
+      "options": [
+        "Avança com a perna e golpeia com a mão correspondente à perna da frente",
+        "Golpeia com a mão de trás sem deslocamento",
+        "É um chute frontal",
+        "É uma defesa baixa"
+      ],
+      "correctOption": 0,
+      "explanation": "O Oi-Zuki combina avanço e soco com o braço do lado da perna que avança.",
+      "sourceContentIds": [
+        "oi-zuki"
+      ]
+    },
+    {
+      "id": "kihon-basico-02",
+      "question": "No Gyaku-Zuki, qual braço executa o soco?",
+      "options": [
+        "O braço oposto à perna que está à frente",
+        "Sempre o braço do lado da perna da frente",
+        "Os dois braços ao mesmo tempo",
+        "O braço escolhido sem relação com a base"
+      ],
+      "correctOption": 0,
+      "explanation": "O Gyaku-Zuki usa o braço oposto à perna que está à frente, com rotação coordenada do quadril.",
+      "sourceContentIds": [
+        "gyaku-zuki"
+      ]
+    },
+    {
+      "id": "kihon-basico-03",
+      "question": "O que deve acontecer com o joelho no Mae-Geri antes da extensão?",
+      "options": [
+        "Ser recolhido e preparado antes de estender a perna",
+        "Ficar travado atrás do corpo",
+        "Cruzar completamente a outra perna",
+        "Tocar o chão"
+      ],
+      "correctOption": 0,
+      "explanation": "O Mae-Geri começa com a preparação do joelho, seguido pela extensão e recolhimento controlado.",
+      "sourceContentIds": [
+        "mae-geri"
+      ]
+    },
+    {
+      "id": "kihon-basico-04",
+      "question": "Em que direção é executado o Yoko-Geri?",
+      "options": [
+        "Lateralmente em relação ao corpo",
+        "Diretamente para trás",
+        "Em trajetória circular",
+        "Para baixo com o antebraço"
+      ],
+      "correctOption": 0,
+      "explanation": "Yoko-Geri é o chute lateral.",
+      "sourceContentIds": [
+        "yoko-geri"
+      ]
+    },
+    {
+      "id": "kihon-basico-05",
+      "question": "Qual trajetória caracteriza o Mawashi-Geri?",
+      "options": [
+        "Circular, em arco",
+        "Reta para trás",
+        "Vertical para cima",
+        "Reta para baixo"
+      ],
+      "correctOption": 0,
+      "explanation": "Mawashi-Geri percorre uma trajetória circular.",
+      "sourceContentIds": [
+        "mawashi-geri"
+      ]
+    },
+    {
+      "id": "kihon-basico-06",
+      "question": "Como o material orienta a preparação do Ushiro-Geri?",
+      "options": [
+        "Girar a cabeça e o tronco por cima do ombro para localizar o alvo atrás",
+        "Olhar para baixo e manter o tronco parado",
+        "Cruzar as pernas e olhar para a frente",
+        "Inclinar o tronco sem olhar para o alvo"
+      ],
+      "correctOption": 0,
+      "explanation": "O passo a passo orienta girar a cabeça e o tronco por cima do ombro para enxergar o alvo atrás.",
+      "sourceContentIds": [
+        "ushiro-geri"
+      ]
+    },
+    {
+      "id": "kihon-basico-07",
+      "question": "Para que nível se dirige o Age-Uke?",
+      "options": [
+        "Alto, na região da cabeça",
+        "Baixo, abaixo da faixa",
+        "Somente aos pés",
+        "À linha lateral do joelho"
+      ],
+      "correctOption": 0,
+      "explanation": "Age-Uke é uma defesa ascendente para ataques dirigidos à cabeça ou ao rosto.",
+      "sourceContentIds": [
+        "age-uke"
+      ]
+    },
+    {
+      "id": "kihon-basico-08",
+      "question": "Qual movimento descreve o Soto-Uke?",
+      "options": [
+        "Defesa que vai de fora para dentro",
+        "Defesa que vai de dentro para fora",
+        "Chute circular",
+        "Soco com a mão da frente"
+      ],
+      "correctOption": 0,
+      "explanation": "Soto-Uke é uma defesa de fora para dentro.",
+      "sourceContentIds": [
+        "soto-uke"
+      ]
+    },
+    {
+      "id": "kihon-basico-09",
+      "question": "Que parte do corpo é usada principalmente no Age-Uke para desviar o ataque?",
+      "options": [
+        "Antebraço",
+        "Calcanhar",
+        "Joelho",
+        "Dorso do pé"
+      ],
+      "correctOption": 0,
+      "explanation": "O Age-Uke usa o antebraço para desviar o golpe alto.",
+      "sourceContentIds": [
+        "age-uke"
+      ]
+    },
+    {
+      "id": "kihon-basico-10",
+      "question": "Em que altura costuma atuar o Soto-Uke?",
+      "options": [
+        "Chudan, nível médio",
+        "Jodan, somente cabeça",
+        "Gedan, somente baixo",
+        "Acima da cabeça"
+      ],
+      "correctOption": 0,
+      "explanation": "O Soto-Uke é descrito como defesa Chudan.",
+      "sourceContentIds": [
+        "soto-uke"
+      ]
+    }
+  ],
+  "intermediario": [
+    {
+      "id": "kihon-intermediario-01",
+      "question": "Para que direção o Uchi-Uke desvia o ataque?",
+      "options": [
+        "De dentro para fora",
+        "De fora para dentro",
+        "De cima para baixo",
+        "Em arco com o pé"
+      ],
+      "correctOption": 0,
+      "explanation": "Uchi-Uke protege a linha central desviando de dentro para fora.",
+      "sourceContentIds": [
+        "uchi-uke"
+      ]
+    },
+    {
+      "id": "kihon-intermediario-02",
+      "question": "Qual é a ação do Gedan-Barai?",
+      "options": [
+        "Varre diagonalmente para baixo para proteger a linha baixa",
+        "Eleva o antebraço acima da cabeça",
+        "Golpeia com o cotovelo",
+        "Avança com soco direto"
+      ],
+      "correctOption": 0,
+      "explanation": "Gedan-Barai é uma defesa baixa com varredura diagonal descendente.",
+      "sourceContentIds": [
+        "gedan-barai"
+      ]
+    },
+    {
+      "id": "kihon-intermediario-03",
+      "question": "Que parte da mão caracteriza o Shuto-Uke?",
+      "options": [
+        "Borda lateral da mão aberta",
+        "Punho fechado",
+        "Ponta do cotovelo",
+        "Palma fechada"
+      ],
+      "correctOption": 0,
+      "explanation": "Shuto-Uke usa a borda da mão aberta, chamada Shuto.",
+      "sourceContentIds": [
+        "shuto-uke"
+      ]
+    },
+    {
+      "id": "kihon-intermediario-04",
+      "question": "Em que distância o Empi-Uchi é especialmente útil?",
+      "options": [
+        "Curta distância",
+        "Somente longa distância",
+        "Apenas durante corrida",
+        "Somente no solo"
+      ],
+      "correctOption": 0,
+      "explanation": "O golpe de cotovelo é aplicado especialmente em curta distância.",
+      "sourceContentIds": [
+        "empi-uchi"
+      ]
+    },
+    {
+      "id": "kihon-intermediario-05",
+      "question": "Qual mão executa o Kizami-Zuki?",
+      "options": [
+        "A mão da frente",
+        "A mão de trás sempre",
+        "As duas mãos simultaneamente",
+        "A mão que segura a faixa"
+      ],
+      "correctOption": 0,
+      "explanation": "Kizami-Zuki é o soco com a mão da frente.",
+      "sourceContentIds": [
+        "kizami-zuki"
+      ]
+    },
+    {
+      "id": "kihon-intermediario-06",
+      "question": "O que distingue o Tate-Zuki na orientação do punho?",
+      "options": [
+        "Rotação parcial, com o punho na posição vertical",
+        "Rotação completa com palma para baixo",
+        "Mão aberta em forma de faca",
+        "Punho voltado para trás"
+      ],
+      "correctOption": 0,
+      "explanation": "Tate-Zuki é o soco vertical, com rotação parcial do punho.",
+      "sourceContentIds": [
+        "tate-zuki"
+      ]
+    },
+    {
+      "id": "kihon-intermediario-07",
+      "question": "Que superfície executa o Uraken-Uchi?",
+      "options": [
+        "Dorso do punho",
+        "Borda da mão aberta",
+        "Calcanhar",
+        "Ponta dos dedos"
+      ],
+      "correctOption": 0,
+      "explanation": "Uraken-Uchi é o golpe com o dorso do punho.",
+      "sourceContentIds": [
+        "uraken-uchi"
+      ]
+    },
+    {
+      "id": "kihon-intermediario-08",
+      "question": "Como se forma o Nukite?",
+      "options": [
+        "Com as pontas dos dedos estendidas e controladas",
+        "Com o punho fechado",
+        "Com o cotovelo flexionado",
+        "Com a sola do pé"
+      ],
+      "correctOption": 0,
+      "explanation": "Nukite utiliza a mão em lança, com os dedos estendidos; a prática exige controle e orientação.",
+      "sourceContentIds": [
+        "nukite"
+      ]
+    },
+    {
+      "id": "kihon-intermediario-09",
+      "question": "Qual defesa protege a linha central com movimento de dentro para fora?",
+      "options": [
+        "Uchi-Uke",
+        "Soto-Uke",
+        "Age-Uke",
+        "Gedan-Barai"
+      ],
+      "correctOption": 0,
+      "explanation": "Uchi-Uke desvia o ataque de dentro para fora.",
+      "sourceContentIds": [
+        "uchi-uke"
+      ]
+    },
+    {
+      "id": "kihon-intermediario-10",
+      "question": "Qual técnica intermediária é um golpe de cotovelo?",
+      "options": [
+        "Empi-Uchi",
+        "Kizami-Zuki",
+        "Shuto-Uke",
+        "Nukite"
+      ],
+      "correctOption": 0,
+      "explanation": "Empi-Uchi é o golpe executado com o cotovelo.",
+      "sourceContentIds": [
+        "empi-uchi"
+      ]
+    }
+  ],
+  "avancado": [
+    {
+      "id": "kihon-avancado-01",
+      "question": "Como ficam os pés em Heisoku-Dachi?",
+      "options": [
+        "Totalmente juntos",
+        "Paralelos e bem afastados",
+        "Cruzados com uma perna em gancho",
+        "Calcanhares separados e pontas fechadas"
+      ],
+      "correctOption": 0,
+      "explanation": "Heisoku-Dachi é a postura com os pés totalmente juntos.",
+      "sourceContentIds": [
+        "heisoku-dachi"
+      ]
+    },
+    {
+      "id": "kihon-avancado-02",
+      "question": "Qual postura une os calcanhares e mantém as pontas dos pés abertas?",
+      "options": [
+        "Musubi-Dachi",
+        "Heiko-Dachi",
+        "Kiba-Dachi",
+        "Neko-Ashi-Dachi"
+      ],
+      "correctOption": 0,
+      "explanation": "Em Musubi-Dachi, os calcanhares se unem e as pontas ficam abertas.",
+      "sourceContentIds": [
+        "musubi-dachi"
+      ]
+    },
+    {
+      "id": "kihon-avancado-03",
+      "question": "Como ficam os pés em Heiko-Dachi?",
+      "options": [
+        "Paralelos e confortavelmente afastados",
+        "Totalmente juntos",
+        "Um pé atrás com a maior parte do peso",
+        "Em formato de letra T"
+      ],
+      "correctOption": 0,
+      "explanation": "Heiko-Dachi é uma postura natural de pés paralelos.",
+      "sourceContentIds": [
+        "heiko-dachi"
+      ]
+    },
+    {
+      "id": "kihon-avancado-04",
+      "question": "Que formato ajuda a identificar Hachiji-Dachi?",
+      "options": [
+        "Pés afastados, pontas levemente abertas, como o ideograma oito",
+        "Pés juntos com pontas paralelas",
+        "Pés cruzados em gancho",
+        "Pés em formato de letra T"
+      ],
+      "correctOption": 0,
+      "explanation": "Hachiji-Dachi lembra o formato do ideograma 八, com pontas levemente abertas.",
+      "sourceContentIds": [
+        "hachiji-dachi"
+      ]
+    },
+    {
+      "id": "kihon-avancado-05",
+      "question": "O que caracteriza Kosa-Dachi?",
+      "options": [
+        "As pernas se cruzam para controlar o deslocamento",
+        "Os pés ficam totalmente paralelos",
+        "A base é ampla e lateral",
+        "Os calcanhares ficam unidos"
+      ],
+      "correctOption": 0,
+      "explanation": "Kosa-Dachi é a postura em que as pernas se cruzam.",
+      "sourceContentIds": [
+        "kosa-dachi"
+      ]
+    },
+    {
+      "id": "kihon-avancado-06",
+      "question": "Em Kake-Dachi, como uma perna atua?",
+      "options": [
+        "Como um gancho em uma postura cruzada e compacta",
+        "Fica estendida lateralmente sem flexão",
+        "Permanece atrás com todo o peso",
+        "Fica paralela à outra sem cruzar"
+      ],
+      "correctOption": 0,
+      "explanation": "Kake-Dachi usa uma perna como gancho.",
+      "sourceContentIds": [
+        "kake-dachi"
+      ]
+    },
+    {
+      "id": "kihon-avancado-07",
+      "question": "Qual base é ampla, lateral e com os pés paralelos?",
+      "options": [
+        "Kiba-Dachi",
+        "Musubi-Dachi",
+        "Neko-Ashi-Dachi",
+        "Teiji-Dachi"
+      ],
+      "correctOption": 0,
+      "explanation": "Kiba-Dachi é uma base lateral ampla com pés paralelos e joelhos flexionados.",
+      "sourceContentIds": [
+        "kiba-dachi"
+      ]
+    },
+    {
+      "id": "kihon-avancado-08",
+      "question": "Como se orientam as pontas dos pés em Shiko-Dachi?",
+      "options": [
+        "Voltadas para fora",
+        "Totalmente paralelas",
+        "Uma sobre a outra",
+        "Ambas para dentro e juntas"
+      ],
+      "correctOption": 0,
+      "explanation": "Shiko-Dachi é uma postura baixa e aberta com as pontas dos pés para fora.",
+      "sourceContentIds": [
+        "shiko-dachi"
+      ]
+    },
+    {
+      "id": "kihon-avancado-09",
+      "question": "Qual característica é apresentada para o Kiba-Dachi?",
+      "options": [
+        "Base lateral ampla com os pés paralelos",
+        "Pés totalmente juntos",
+        "Postura recuada com o peso atrás",
+        "Calcanhares unidos e pontas abertas"
+      ],
+      "correctOption": 0,
+      "explanation": "O conteúdo descreve o Kiba-Dachi como uma postura lateral ampla com os pés paralelos.",
+      "sourceContentIds": [
+        "kiba-dachi"
+      ]
+    },
+    {
+      "id": "kihon-avancado-10",
+      "question": "Qual postura mantém os pés paralelos em posição natural?",
+      "options": [
+        "Heiko-Dachi",
+        "Shiko-Dachi",
+        "Kake-Dachi",
+        "Musubi-Dachi"
+      ],
+      "correctOption": 0,
+      "explanation": "Heiko-Dachi mantém os pés paralelos e afastados de modo confortável.",
+      "sourceContentIds": [
+        "heiko-dachi"
+      ]
+    }
+  ],
+  "especialista": [
+    {
+      "id": "kihon-especialista-01",
+      "question": "Em Kokutsu-Dachi, onde fica a maior parte do peso?",
+      "options": [
+        "Na perna de trás",
+        "Na perna da frente",
+        "Distribuído igualmente sempre",
+        "Sobre as pontas dos pés"
+      ],
+      "correctOption": 0,
+      "explanation": "Kokutsu-Dachi é uma postura recuada com a maior parte do peso atrás.",
+      "sourceContentIds": [
+        "kokutsu-dachi"
+      ]
+    },
+    {
+      "id": "kihon-especialista-02",
+      "question": "O que caracteriza Neko-Ashi-Dachi?",
+      "options": [
+        "A perna da frente fica leve e a maior parte do peso atrás",
+        "As pernas ficam cruzadas em gancho",
+        "Os pés ficam paralelos e bem afastados",
+        "Os calcanhares ficam unidos"
+      ],
+      "correctOption": 0,
+      "explanation": "Neko-Ashi-Dachi mantém leve a perna da frente e o peso atrás.",
+      "sourceContentIds": [
+        "neko-ashi-dachi"
+      ]
+    },
+    {
+      "id": "kihon-especialista-03",
+      "question": "Como se organiza Zenkutsu-Dachi?",
+      "options": [
+        "Base avançada, frente flexionada e perna de trás ativa",
+        "Base recuada com o peso todo atrás",
+        "Pés totalmente juntos",
+        "Base lateral com pés paralelos"
+      ],
+      "correctOption": 0,
+      "explanation": "Zenkutsu-Dachi é uma postura de avanço, com a perna da frente flexionada.",
+      "sourceContentIds": [
+        "zenkutsu-dachi"
+      ]
+    },
+    {
+      "id": "kihon-especialista-04",
+      "question": "O que combina Fudo-Dachi?",
+      "options": [
+        "Firmeza e possibilidade de reação",
+        "Imobilidade e pés unidos",
+        "Salto e giro contínuo",
+        "Somente recuo do peso"
+      ],
+      "correctOption": 0,
+      "explanation": "Fudo-Dachi combina estabilidade com possibilidade de reação.",
+      "sourceContentIds": [
+        "fudo-dachi"
+      ]
+    },
+    {
+      "id": "kihon-especialista-05",
+      "question": "O que organiza Sanchin-Dachi conforme o material?",
+      "options": [
+        "Pés, joelhos, quadril e respiração em torno do centro",
+        "Apenas os braços e ombros",
+        "Uma base lateral com pontas para fora",
+        "O peso exclusivamente na perna de trás"
+      ],
+      "correctOption": 0,
+      "explanation": "Sanchin-Dachi organiza pés, joelhos, quadril e respiração em torno do centro.",
+      "sourceContentIds": [
+        "sanchin-dachi"
+      ]
+    },
+    {
+      "id": "kihon-especialista-06",
+      "question": "Que forma os pés representam em Teiji-Dachi?",
+      "options": [
+        "A letra T",
+        "A letra L",
+        "O ideograma oito",
+        "Uma linha paralela"
+      ],
+      "correctOption": 0,
+      "explanation": "Teiji-Dachi forma aproximadamente a letra T vista de cima.",
+      "sourceContentIds": [
+        "teiji-dachi"
+      ]
+    },
+    {
+      "id": "kihon-especialista-07",
+      "question": "Qual caractere lembra o formato de Renoji-Dachi?",
+      "options": [
+        "レ",
+        "八",
+        "一",
+        "十"
+      ],
+      "correctOption": 0,
+      "explanation": "Renoji-Dachi lembra o caractere レ.",
+      "sourceContentIds": [
+        "renoji-dachi"
+      ]
+    },
+    {
+      "id": "kihon-especialista-08",
+      "question": "Qual postura especializada mantém a maioria do peso atrás?",
+      "options": [
+        "Kokutsu-Dachi",
+        "Zenkutsu-Dachi",
+        "Fudo-Dachi",
+        "Sanchin-Dachi"
+      ],
+      "correctOption": 0,
+      "explanation": "Kokutsu-Dachi é a postura recuada com a maior parte do peso na perna de trás.",
+      "sourceContentIds": [
+        "kokutsu-dachi"
+      ]
+    },
+    {
+      "id": "kihon-especialista-09",
+      "question": "Em qual postura a perna da frente permanece leve?",
+      "options": [
+        "Neko-Ashi-Dachi",
+        "Zenkutsu-Dachi",
+        "Shiko-Dachi",
+        "Heiko-Dachi"
+      ],
+      "correctOption": 0,
+      "explanation": "Neko-Ashi-Dachi distribui o peso atrás e deixa leve a perna da frente.",
+      "sourceContentIds": [
+        "neko-ashi-dachi"
+      ]
+    },
+    {
+      "id": "kihon-especialista-10",
+      "question": "Qual postura estreita coordena base, quadril e respiração em torno do centro?",
+      "options": [
+        "Sanchin-Dachi",
+        "Kiba-Dachi",
+        "Musubi-Dachi",
+        "Kosa-Dachi"
+      ],
+      "correctOption": 0,
+      "explanation": "Essa descrição corresponde a Sanchin-Dachi.",
+      "sourceContentIds": [
+        "sanchin-dachi"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,610 @@
+{
+  "basico": [
+    {
+      "id": "geral-basico-01",
+      "question": "Qual é o significado simples de Karate?",
+      "options": [
+        "Mãos vazias",
+        "Caminho da espada",
+        "Arte das armas",
+        "Mãos fechadas"
+      ],
+      "correctOption": 0,
+      "explanation": "O material explica Karate como mãos vazias.",
+      "sourceContentIds": [
+        "historia-karate"
+      ]
+    },
+    {
+      "id": "geral-basico-02",
+      "question": "Em qual ilha se desenvolveram as origens do Karate abordadas no estudo?",
+      "options": [
+        "Okinawa",
+        "Hokkaido",
+        "Honshu",
+        "Kyushu"
+      ],
+      "correctOption": 0,
+      "explanation": "O conteúdo situa as origens em Okinawa.",
+      "sourceContentIds": [
+        "okinawa-ryukyu"
+      ]
+    },
+    {
+      "id": "geral-basico-03",
+      "question": "O que significa Kobudo no contexto estudado?",
+      "options": [
+        "Tradição de práticas com armas e instrumentos",
+        "Nome de uma base",
+        "Saudação inicial",
+        "Um kata Heian"
+      ],
+      "correctOption": 0,
+      "explanation": "Kobudo reúne tradições de uso de armas e instrumentos.",
+      "sourceContentIds": [
+        "kobudo"
+      ]
+    },
+    {
+      "id": "geral-basico-04",
+      "question": "O Karate moderno foi formado por...",
+      "options": [
+        "Várias gerações de mestres de Okinawa",
+        "Uma única pessoa em um único ano",
+        "Somente atletas japoneses modernos",
+        "Um grupo de árbitros"
+      ],
+      "correctOption": 0,
+      "explanation": "O material enfatiza a contribuição de diferentes gerações de mestres.",
+      "sourceContentIds": [
+        "mestres-precursores"
+      ]
+    },
+    {
+      "id": "geral-basico-05",
+      "question": "Onde nasceu Gichin Funakoshi?",
+      "options": [
+        "Okinawa",
+        "Tóquio",
+        "Kyoto",
+        "Osaka"
+      ],
+      "correctOption": 0,
+      "explanation": "Funakoshi nasceu em Okinawa.",
+      "sourceContentIds": [
+        "gichin-funakoshi"
+      ]
+    },
+    {
+      "id": "geral-basico-06",
+      "question": "Qual é uma influência importante na história do Karate no Brasil?",
+      "options": [
+        "A presença da comunidade japonesa e de mestres imigrantes",
+        "A criação do judô no Brasil",
+        "A chegada de uma única equipe olímpica",
+        "A tradição de esgrima europeia"
+      ],
+      "correctOption": 0,
+      "explanation": "O conteúdo relaciona a expansão brasileira à comunidade japonesa e a mestres que chegaram ao país.",
+      "sourceContentIds": [
+        "karate-no-brasil"
+      ]
+    },
+    {
+      "id": "geral-basico-07",
+      "question": "A que mestre se associam os ensinamentos do estilo Shotokan?",
+      "options": [
+        "Gichin Funakoshi",
+        "Sokon Matsumura exclusivamente",
+        "Jigoro Kano",
+        "Morihei Ueshiba"
+      ],
+      "correctOption": 0,
+      "explanation": "Shotokan se desenvolveu a partir dos ensinamentos de Gichin Funakoshi.",
+      "sourceContentIds": [
+        "shotokan"
+      ]
+    },
+    {
+      "id": "geral-basico-08",
+      "question": "O que significa Kihon?",
+      "options": [
+        "Fundamentos",
+        "Combate livre",
+        "Saudação",
+        "Meditação"
+      ],
+      "correctOption": 0,
+      "explanation": "Kihon significa fundamentos.",
+      "sourceContentIds": [
+        "kihon"
+      ]
+    },
+    {
+      "id": "geral-basico-09",
+      "question": "O que é um Kata?",
+      "options": [
+        "Sequência predefinida de técnicas",
+        "Disputa com pontuação",
+        "Uniforme de treino",
+        "Comando para sentar"
+      ],
+      "correctOption": 0,
+      "explanation": "Kata é uma sequência organizada de técnicas defensivas e ofensivas.",
+      "sourceContentIds": [
+        "kata"
+      ]
+    },
+    {
+      "id": "geral-basico-10",
+      "question": "O que é Kumite?",
+      "options": [
+        "Treino ou encontro com parceiro",
+        "Prática individual de bases apenas",
+        "Nome de uma faixa",
+        "Um tipo de saudação"
+      ],
+      "correctOption": 0,
+      "explanation": "Kumite é a prática com parceiro.",
+      "sourceContentIds": [
+        "kumite"
+      ]
+    }
+  ],
+  "intermediario": [
+    {
+      "id": "geral-intermediario-01",
+      "question": "Qual é um objetivo do Dojo Kun?",
+      "options": [
+        "Aperfeiçoar o caráter e cultivar respeito",
+        "Vencer a qualquer custo",
+        "Evitar esforço constante",
+        "Ignorar as regras do dojo"
+      ],
+      "correctOption": 0,
+      "explanation": "O Dojo Kun orienta caráter, respeito, esforço e contenção.",
+      "sourceContentIds": [
+        "dojo-kun"
+      ]
+    },
+    {
+      "id": "geral-intermediario-02",
+      "question": "A que estão associados os Niju Kun?",
+      "options": [
+        "Vinte preceitos ligados a Gichin Funakoshi",
+        "Vinte técnicas de chute",
+        "Regras de pontuação do Kumite",
+        "Uma sequência de vinte katas"
+      ],
+      "correctOption": 0,
+      "explanation": "Niju Kun significa vinte preceitos associados a Funakoshi.",
+      "sourceContentIds": [
+        "niju-kun"
+      ]
+    },
+    {
+      "id": "geral-intermediario-03",
+      "question": "Quando se realiza o cumprimento no Karate?",
+      "options": [
+        "Ao entrar e sair do dojo e no início e fim das práticas",
+        "Somente em campeonatos",
+        "Apenas depois de uma falta",
+        "Somente ao trocar de faixa"
+      ],
+      "correctOption": 0,
+      "explanation": "O cumprimento aparece em vários momentos de entrada, saída e prática.",
+      "sourceContentIds": [
+        "cumprimento"
+      ]
+    },
+    {
+      "id": "geral-intermediario-04",
+      "question": "O que OSS pode expressar dependendo do contexto?",
+      "options": [
+        "Cumprimento, confirmação ou disposição para continuar",
+        "Somente uma ordem para atacar",
+        "O nome de uma base",
+        "O encerramento obrigatório de toda aula"
+      ],
+      "correctOption": 0,
+      "explanation": "OSS pode ter diferentes usos de cortesia e confirmação conforme o contexto.",
+      "sourceContentIds": [
+        "oss"
+      ]
+    },
+    {
+      "id": "geral-intermediario-05",
+      "question": "O que significa Mokuso?",
+      "options": [
+        "Meditar ou pensar em silêncio",
+        "Começar o combate",
+        "Executar um chute lateral",
+        "Organizar-se em fila"
+      ],
+      "correctOption": 0,
+      "explanation": "Mokuso é meditar ou pensar em silêncio.",
+      "sourceContentIds": [
+        "mokuso"
+      ]
+    },
+    {
+      "id": "geral-intermediario-06",
+      "question": "O que é o karate-gui?",
+      "options": [
+        "Roupa tradicional de treino",
+        "Uma técnica de mão",
+        "Um comando do árbitro",
+        "Um tipo de kata"
+      ],
+      "correctOption": 0,
+      "explanation": "Karate-gui é a roupa usada tradicionalmente no treino.",
+      "sourceContentIds": [
+        "karate-gui-graduacao"
+      ]
+    },
+    {
+      "id": "geral-intermediario-07",
+      "question": "Quem é o Sempai no vocabulário do dojo?",
+      "options": [
+        "Pessoa mais antiga ou de maior tempo de prática",
+        "Aluno mais novo",
+        "Professor responsável sempre",
+        "Visitante sem experiência"
+      ],
+      "correctOption": 0,
+      "explanation": "Sempai é quem tem maior tempo ou é mais antigo.",
+      "sourceContentIds": [
+        "sempai"
+      ]
+    },
+    {
+      "id": "geral-intermediario-08",
+      "question": "Quem é o Kohai em relação ao Sempai?",
+      "options": [
+        "Pessoa mais nova ou de menor tempo",
+        "Pessoa mais antiga",
+        "Professor principal",
+        "Árbitro da competição"
+      ],
+      "correctOption": 0,
+      "explanation": "Kohai é quem tem menor tempo ou é mais novo.",
+      "sourceContentIds": [
+        "kohai"
+      ]
+    },
+    {
+      "id": "geral-intermediario-09",
+      "question": "O que significa Deshi?",
+      "options": [
+        "Aluno",
+        "Professor",
+        "Saudação",
+        "Local de treino"
+      ],
+      "correctOption": 0,
+      "explanation": "Deshi significa aluno.",
+      "sourceContentIds": [
+        "deshi"
+      ]
+    },
+    {
+      "id": "geral-intermediario-10",
+      "question": "O que indica Dohai?",
+      "options": [
+        "Pessoas de tempo de prática equivalente",
+        "Professor e aluno",
+        "Pessoa mais antiga",
+        "Pessoa mais nova"
+      ],
+      "correctOption": 0,
+      "explanation": "Dohai indica alguém de tempo equivalente.",
+      "sourceContentIds": [
+        "dohai"
+      ]
+    }
+  ],
+  "avancado": [
+    {
+      "id": "geral-avancado-01",
+      "question": "Como se refere respeitosamente ao professor no dojo?",
+      "options": [
+        "Sensei",
+        "Kohai",
+        "Dohai",
+        "Yame"
+      ],
+      "correctOption": 0,
+      "explanation": "Sensei é a forma respeitosa de se referir ao professor.",
+      "sourceContentIds": [
+        "sensei"
+      ]
+    },
+    {
+      "id": "geral-avancado-02",
+      "question": "O que indica Seiretsu?",
+      "options": [
+        "Organizar a turma em fila",
+        "Ficar sentado em silêncio",
+        "Iniciar o encontro",
+        "Encerrar a disputa"
+      ],
+      "correctOption": 0,
+      "explanation": "Seiretsu é o comando para organizar a turma em fila.",
+      "sourceContentIds": [
+        "seiretsu"
+      ]
+    },
+    {
+      "id": "geral-avancado-03",
+      "question": "Qual ação é indicada pelo comando Kiritsu?",
+      "options": [
+        "Ficar de pé",
+        "Saudar sentado",
+        "Iniciar o combate",
+        "Retornar à posição original"
+      ],
+      "correctOption": 0,
+      "explanation": "Kiritsu é o comando para ficar de pé.",
+      "sourceContentIds": [
+        "kiritsu"
+      ]
+    },
+    {
+      "id": "geral-avancado-04",
+      "question": "O que é Rei?",
+      "options": [
+        "Comando de saudação",
+        "Comando de parada",
+        "Comando de início",
+        "Nome de uma postura"
+      ],
+      "correctOption": 0,
+      "explanation": "Rei é o comando de saudação.",
+      "sourceContentIds": [
+        "rei"
+      ]
+    },
+    {
+      "id": "geral-avancado-05",
+      "question": "Qual comando inicia um exercício ou encontro?",
+      "options": [
+        "Hajime",
+        "Yame",
+        "Rei",
+        "Seiretsu"
+      ],
+      "correctOption": 0,
+      "explanation": "Hajime indica iniciar.",
+      "sourceContentIds": [
+        "hajime"
+      ]
+    },
+    {
+      "id": "geral-avancado-06",
+      "question": "Qual comando interrompe a ação?",
+      "options": [
+        "Yame",
+        "Hajime",
+        "Kiritsu",
+        "Seiretsu"
+      ],
+      "correctOption": 0,
+      "explanation": "Yame indica interromper e retornar à atenção.",
+      "sourceContentIds": [
+        "yame"
+      ]
+    },
+    {
+      "id": "geral-avancado-07",
+      "question": "A que região corresponde Jodan?",
+      "options": [
+        "Cabeça e rosto",
+        "Linha baixa abaixo da faixa",
+        "Pés e tornozelos apenas",
+        "Região do quadril apenas"
+      ],
+      "correctOption": 0,
+      "explanation": "Jodan corresponde à região da cabeça e do rosto.",
+      "sourceContentIds": [
+        "jodan"
+      ]
+    },
+    {
+      "id": "geral-avancado-08",
+      "question": "Qual é a região de Chudan?",
+      "options": [
+        "Nível médio do tronco",
+        "Cabeça e rosto",
+        "Abaixo da linha da faixa",
+        "Somente os pés"
+      ],
+      "correctOption": 0,
+      "explanation": "Chudan é o nível médio do tronco.",
+      "sourceContentIds": [
+        "chudan"
+      ]
+    },
+    {
+      "id": "geral-avancado-09",
+      "question": "O que significa Gedan como nível?",
+      "options": [
+        "Nível baixo, abaixo da linha da faixa",
+        "Nível da cabeça",
+        "Nível médio do peito",
+        "Direção para trás"
+      ],
+      "correctOption": 0,
+      "explanation": "Gedan corresponde ao nível baixo.",
+      "sourceContentIds": [
+        "gedan"
+      ]
+    },
+    {
+      "id": "geral-avancado-10",
+      "question": "Que direção indica Hidari?",
+      "options": [
+        "Esquerda",
+        "Direita",
+        "Frente",
+        "Lateral"
+      ],
+      "correctOption": 0,
+      "explanation": "Hidari indica o lado esquerdo.",
+      "sourceContentIds": [
+        "hidari"
+      ]
+    }
+  ],
+  "especialista": [
+    {
+      "id": "geral-especialista-01",
+      "question": "O que significa Mae?",
+      "options": [
+        "Para a frente",
+        "Para trás",
+        "Para o lado",
+        "Para baixo"
+      ],
+      "correctOption": 0,
+      "explanation": "Mae significa direção para a frente.",
+      "sourceContentIds": [
+        "mae"
+      ]
+    },
+    {
+      "id": "geral-especialista-02",
+      "question": "O que significa Yoko?",
+      "options": [
+        "Direção lateral",
+        "Para a frente",
+        "Para trás",
+        "Para cima"
+      ],
+      "correctOption": 0,
+      "explanation": "Yoko significa direção lateral.",
+      "sourceContentIds": [
+        "yoko"
+      ]
+    },
+    {
+      "id": "geral-especialista-03",
+      "question": "O que significa Ushiro?",
+      "options": [
+        "Para trás",
+        "Para a frente",
+        "Para o lado",
+        "Para cima"
+      ],
+      "correctOption": 0,
+      "explanation": "Ushiro indica direção para trás.",
+      "sourceContentIds": [
+        "ushiro"
+      ]
+    },
+    {
+      "id": "geral-especialista-04",
+      "question": "O que é um Dojo?",
+      "options": [
+        "Local de treinamento e comunidade de prática",
+        "Uma técnica de chute",
+        "Um nível de altura",
+        "Um comando para iniciar"
+      ],
+      "correctOption": 0,
+      "explanation": "Dojo é o local de treinamento e também representa uma comunidade de prática.",
+      "sourceContentIds": [
+        "dojo"
+      ]
+    },
+    {
+      "id": "geral-especialista-05",
+      "question": "O que expressa Karate-do?",
+      "options": [
+        "O caminho das mãos vazias ligado ao desenvolvimento contínuo",
+        "Somente uma competição esportiva",
+        "Uma sequência fixa de saudações",
+        "O nome de uma base"
+      ],
+      "correctOption": 0,
+      "explanation": "Karate-do une a prática técnica ao desenvolvimento e formação do caráter.",
+      "sourceContentIds": [
+        "karate-do"
+      ]
+    },
+    {
+      "id": "geral-especialista-06",
+      "question": "O que caracteriza Kata?",
+      "options": [
+        "Sequência organizada de técnicas que simula combate",
+        "Treino exclusivamente com parceiro",
+        "Comando para interromper",
+        "Uma graduação"
+      ],
+      "correctOption": 0,
+      "explanation": "Kata é uma sequência organizada de técnicas que simula combate.",
+      "sourceContentIds": [
+        "kata-term"
+      ]
+    },
+    {
+      "id": "geral-especialista-07",
+      "question": "O que caracteriza Kumite?",
+      "options": [
+        "Prática com parceiro que requer controle, respeito, distância e tempo",
+        "Prática silenciosa individual",
+        "Uma sequência sem interação",
+        "Uma postura recuada"
+      ],
+      "correctOption": 0,
+      "explanation": "Kumite é prática com parceiro e exige controle e respeito.",
+      "sourceContentIds": [
+        "kumite-term"
+      ]
+    },
+    {
+      "id": "geral-especialista-08",
+      "question": "O que é Kiai segundo o glossário do módulo?",
+      "options": [
+        "Expressão concentrada de energia coordenada com uma técnica",
+        "Comando para formar fila",
+        "Nome de uma postura",
+        "Forma de saudação"
+      ],
+      "correctOption": 0,
+      "explanation": "Kiai coordena energia com a técnica.",
+      "sourceContentIds": [
+        "kiai-term"
+      ]
+    },
+    {
+      "id": "geral-especialista-09",
+      "question": "O que representa Kime?",
+      "options": [
+        "Foco da técnica no instante apropriado, sem tensão prolongada",
+        "Manter tensão máxima o tempo todo",
+        "Uma direção lateral",
+        "O início de uma aula"
+      ],
+      "correctOption": 0,
+      "explanation": "Kime é o foco no instante adequado com controle corporal.",
+      "sourceContentIds": [
+        "kime"
+      ]
+    },
+    {
+      "id": "geral-especialista-10",
+      "question": "A que região se refere Tanden?",
+      "options": [
+        "Região abdominal usada como referência de respiração e estabilidade",
+        "Região da cabeça",
+        "Parte externa do antebraço",
+        "Ponta do pé"
+      ],
+      "correctOption": 0,
+      "explanation": "Tanden é a região abdominal usada como referência de respiração e estabilidade.",
+      "sourceContentIds": [
+        "tanden"
+      ]
+    }
+  ]
+}
