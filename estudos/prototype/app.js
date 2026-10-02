@@ -17,6 +17,9 @@ const dataFiles = {
   quizKataIntermediario: "../data/quiz-kata-intermediario.json",
   quizKataAvancado: "../data/quiz-kata-avancado.json",
   quizKataEspecialista: "../data/quiz-kata-especialista.json",
+  quizKihonByPillar: "../data/quiz-kihon-por-pilar.json",
+  quizKumiteByPillar: "../data/quiz-kumite-por-pilar.json",
+  quizGeralByPillar: "../data/quiz-geral-por-pilar.json",
   finalChallenge: "../data/final-challenge.json", trainingContent: "../data/training-content.json",
 };
 const AREA_LABELS = { aprender: "Aprender", treinar: "Treinar", kata: "Kata" };
@@ -348,6 +351,9 @@ function assessmentQuestions(key) {
       avancado: state.data.quizKataAvancado,
       especialista: state.data.quizKataEspecialista,
     },
+    kihonByPillar: state.data.quizKihonByPillar,
+    kumiteByPillar: state.data.quizKumiteByPillar,
+    geralByPillar: state.data.quizGeralByPillar,
     kihon: state.data.quiz.filter((q) => ["Fundamentos", "Técnicas Básicas", "Bases e Termos"].includes(q.category)),
     kumite: [
       ...state.data.quiz.filter((q) => q.category === "Regras de Kumite"),
