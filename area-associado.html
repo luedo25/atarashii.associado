@@ -2154,6 +2154,8 @@
     const snakeCelula = 380 / snakeTamanhoGrade;
     let snakeCorpo = [];
     let snakeComida = { x: 14, y: 10 };
+    let snakeBomba = null;
+    let snakeProximaBombaEm = 4;
     let snakeDirecao = { x: 1, y: 0 };
     let snakeProximaDirecao = { x: 1, y: 0 };
     let snakePontuacao = 0;
@@ -2186,36 +2188,175 @@
             snakeContext.stroke();
         }
 
-        snakeContext.fillStyle = '#ef4444';
-        snakeContext.beginPath();
-        snakeContext.arc(
-            snakeComida.x * snakeCelula + snakeCelula / 2,
-            snakeComida.y * snakeCelula + snakeCelula / 2,
-            snakeCelula * .34,
-            0,
-            Math.PI * 2
-        );
-        snakeContext.fill();
+        desenharMacaCobrinha(snakeComida);
+        if (snakeBomba) desenharBombaCobrinha(snakeBomba);
 
-        snakeCorpo.forEach((parte, indice) => {
-            snakeContext.fillStyle = indice === 0 ? '#86efac' : '#22c55e';
-            snakeContext.fillRect(
-                parte.x * snakeCelula + 1,
-                parte.y * snakeCelula + 1,
-                snakeCelula - 2,
-                snakeCelula - 2
-            );
+        // Segmentos arredondados com brilho, escamas e sombra para dar volume.
+        snakeCorpo.slice(1).reverse().forEach((parte, indice) => {
+            const cx = parte.x * snakeCelula + snakeCelula / 2;
+            const cy = parte.y * snakeCelula + snakeCelula / 2;
+            const raio = snakeCelula * .43;
+            snakeContext.save();
+            snakeContext.shadowColor = 'rgba(0, 0, 0, .55)';
+            snakeContext.shadowBlur = 4;
+            snakeContext.shadowOffsetY = 3;
+            const gradiente = snakeContext.createRadialGradient(cx - 5, cy - 6, 1, cx, cy, raio * 1.4);
+            gradiente.addColorStop(0, indice % 2 ? '#a3e635' : '#bef264');
+            gradiente.addColorStop(.48, '#4d9b31');
+            gradiente.addColorStop(1, '#17472d');
+            snakeContext.fillStyle = gradiente;
+            snakeContext.beginPath();
+            snakeContext.arc(cx, cy, raio, 0, Math.PI * 2);
+            snakeContext.fill();
+            snakeContext.shadowColor = 'transparent';
+            snakeContext.strokeStyle = 'rgba(220, 252, 180, .32)';
+            snakeContext.lineWidth = 1;
+            snakeContext.beginPath();
+            snakeContext.arc(cx - 1, cy - 1, raio * .68, Math.PI * 1.12, Math.PI * 1.9);
+            snakeContext.stroke();
+            snakeContext.restore();
         });
+
+        desenharCabecaCobrinha(snakeCorpo[0]);
     }
 
-    function gerarComidaCobrinha() {
+    function posicaoLivreCobrinha(ocupadasExtras = []) {
         const livres = [];
         for (let y = 0; y < snakeTamanhoGrade; y += 1) {
             for (let x = 0; x < snakeTamanhoGrade; x += 1) {
-                if (!snakeCorpo.some(parte => parte.x === x && parte.y === y)) livres.push({ x, y });
+                const ocupadaPelaCobra = snakeCorpo.some(parte => parte.x === x && parte.y === y);
+                const ocupadaPorItem = ocupadasExtras.some(item => item && item.x === x && item.y === y);
+                if (!ocupadaPelaCobra && !ocupadaPorItem) livres.push({ x, y });
             }
         }
-        snakeComida = livres.length ? livres[Math.floor(Math.random() * livres.length)] : { x: 10, y: 10 };
+        return livres.length ? livres[Math.floor(Math.random() * livres.length)] : null;
+    }
+
+    function gerarComidaCobrinha() {
+        snakeComida = posicaoLivreCobrinha(snakeBomba ? [snakeBomba] : []) || { x: 10, y: 10 };
+    }
+
+    function desenharMacaCobrinha(item) {
+        if (!item) return;
+        const cx = item.x * snakeCelula + snakeCelula / 2;
+        const cy = item.y * snakeCelula + snakeCelula / 2 + 1;
+        const raio = snakeCelula * .38;
+        snakeContext.save();
+        snakeContext.shadowColor = 'rgba(0, 0, 0, .65)';
+        snakeContext.shadowBlur = 5;
+        snakeContext.shadowOffsetY = 3;
+        const fruta = snakeContext.createRadialGradient(cx - 4, cy - 5, 1, cx + 1, cy + 1, raio * 1.8);
+        fruta.addColorStop(0, '#ffb1a0');
+        fruta.addColorStop(.28, '#f43f3f');
+        fruta.addColorStop(.72, '#c5162e');
+        fruta.addColorStop(1, '#690d24');
+        snakeContext.fillStyle = fruta;
+        snakeContext.beginPath();
+        snakeContext.moveTo(cx, cy - raio * .22);
+        snakeContext.bezierCurveTo(cx - raio * .85, cy - raio * 1.25, cx - raio * 1.35, cy - raio * .05, cx - raio * .88, cy + raio * .65);
+        snakeContext.bezierCurveTo(cx - raio * .35, cy + raio * 1.18, cx - raio * .08, cy + raio * .88, cx, cy + raio * .78);
+        snakeContext.bezierCurveTo(cx + raio * .22, cy + raio * .98, cx + raio * .72, cy + raio * 1.08, cx + raio * 1.02, cy + raio * .52);
+        snakeContext.bezierCurveTo(cx + raio * 1.43, cy - raio * .18, cx + raio * .8, cy - raio * 1.05, cx, cy - raio * .22);
+        snakeContext.fill();
+        snakeContext.shadowColor = 'transparent';
+        snakeContext.strokeStyle = '#61351e';
+        snakeContext.lineWidth = 2.4;
+        snakeContext.beginPath();
+        snakeContext.moveTo(cx, cy - raio * .67);
+        snakeContext.quadraticCurveTo(cx + 1, cy - raio * 1.08, cx + 3, cy - raio * 1.22);
+        snakeContext.stroke();
+        snakeContext.fillStyle = '#65a30d';
+        snakeContext.beginPath();
+        snakeContext.ellipse(cx + raio * .43, cy - raio * 1.04, raio * .42, raio * .19, -.48, 0, Math.PI * 2);
+        snakeContext.fill();
+        snakeContext.fillStyle = 'rgba(255,255,255,.6)';
+        snakeContext.beginPath();
+        snakeContext.ellipse(cx - raio * .55, cy - raio * .32, 1.5, 3.3, -.35, 0, Math.PI * 2);
+        snakeContext.fill();
+        snakeContext.restore();
+    }
+
+    function desenharBombaCobrinha(item) {
+        const cx = item.x * snakeCelula + snakeCelula / 2;
+        const cy = item.y * snakeCelula + snakeCelula / 2 + 1;
+        const raio = snakeCelula * .37;
+        snakeContext.save();
+        snakeContext.shadowColor = 'rgba(0, 0, 0, .75)';
+        snakeContext.shadowBlur = 5;
+        snakeContext.shadowOffsetY = 3;
+        const metal = snakeContext.createRadialGradient(cx - 4, cy - 5, 1, cx + 1, cy + 1, raio * 1.8);
+        metal.addColorStop(0, '#9ca3af');
+        metal.addColorStop(.3, '#4b5563');
+        metal.addColorStop(.75, '#111827');
+        metal.addColorStop(1, '#030712');
+        snakeContext.fillStyle = metal;
+        snakeContext.beginPath();
+        snakeContext.arc(cx, cy, raio, 0, Math.PI * 2);
+        snakeContext.fill();
+        snakeContext.shadowColor = 'transparent';
+        snakeContext.strokeStyle = '#a16207';
+        snakeContext.lineWidth = 2.2;
+        snakeContext.beginPath();
+        snakeContext.moveTo(cx + raio * .35, cy - raio * .8);
+        snakeContext.quadraticCurveTo(cx + raio * .78, cy - raio * 1.34, cx + raio * .9, cy - raio * 1.42);
+        snakeContext.stroke();
+        snakeContext.fillStyle = '#fbbf24';
+        snakeContext.shadowColor = '#fb923c';
+        snakeContext.shadowBlur = 7;
+        snakeContext.beginPath();
+        snakeContext.arc(cx + raio * .93, cy - raio * 1.45, 2, 0, Math.PI * 2);
+        snakeContext.fill();
+        snakeContext.fillStyle = 'rgba(255,255,255,.48)';
+        snakeContext.shadowColor = 'transparent';
+        snakeContext.beginPath();
+        snakeContext.arc(cx - raio * .45, cy - raio * .4, 1.5, 0, Math.PI * 2);
+        snakeContext.fill();
+        snakeContext.restore();
+    }
+
+    function desenharCabecaCobrinha(parte) {
+        if (!parte) return;
+        const cx = parte.x * snakeCelula + snakeCelula / 2;
+        const cy = parte.y * snakeCelula + snakeCelula / 2;
+        const horizontal = snakeDirecao.x !== 0;
+        const rx = horizontal ? snakeCelula * .48 : snakeCelula * .42;
+        const ry = horizontal ? snakeCelula * .42 : snakeCelula * .48;
+        snakeContext.save();
+        snakeContext.shadowColor = 'rgba(0, 0, 0, .65)';
+        snakeContext.shadowBlur = 5;
+        snakeContext.shadowOffsetY = 3;
+        const pele = snakeContext.createRadialGradient(cx - 4, cy - 6, 1, cx, cy, snakeCelula * .9);
+        pele.addColorStop(0, '#d9f99d');
+        pele.addColorStop(.4, '#65a83d');
+        pele.addColorStop(1, '#17472d');
+        snakeContext.fillStyle = pele;
+        snakeContext.beginPath();
+        snakeContext.ellipse(cx, cy, rx, ry, 0, 0, Math.PI * 2);
+        snakeContext.fill();
+        snakeContext.shadowColor = 'transparent';
+        const frenteX = snakeDirecao.x * snakeCelula * .23;
+        const frenteY = snakeDirecao.y * snakeCelula * .23;
+        const ladoX = -snakeDirecao.y * snakeCelula * .2;
+        const ladoY = snakeDirecao.x * snakeCelula * .2;
+        for (const lado of [-1, 1]) {
+            const ex = cx + frenteX + ladoX * lado;
+            const ey = cy + frenteY + ladoY * lado;
+            snakeContext.fillStyle = '#f8fafc';
+            snakeContext.beginPath();
+            snakeContext.arc(ex, ey, 2.6, 0, Math.PI * 2);
+            snakeContext.fill();
+            snakeContext.fillStyle = '#111827';
+            snakeContext.beginPath();
+            snakeContext.arc(ex + snakeDirecao.x, ey + snakeDirecao.y, 1.35, 0, Math.PI * 2);
+            snakeContext.fill();
+        }
+        snakeContext.fillStyle = '#1f2937';
+        for (const lado of [-1, 1]) {
+            snakeContext.beginPath();
+            snakeContext.arc(cx + frenteX * 1.7 + ladoX * lado * .35, cy + frenteY * 1.7 + ladoY * lado * .35, 0.8, 0, Math.PI * 2);
+            snakeContext.fill();
+        }
+        snakeContext.restore();
     }
 
     function iniciarCobrinha() {
@@ -2225,6 +2366,8 @@
         snakeProximaDirecao = { x: 1, y: 0 };
         snakeDirecaoTravadaNoPasso = false;
         snakePontuacao = 0;
+        snakeBomba = null;
+        snakeProximaBombaEm = 4 + Math.floor(Math.random() * 3);
         snakeEmJogo = true;
         atualizarPainelCobrinha();
         gerarComidaCobrinha();
@@ -2243,6 +2386,7 @@
         snakeDirecao = { x: 1, y: 0 };
         snakeProximaDirecao = { x: 1, y: 0 };
         snakeDirecaoTravadaNoPasso = false;
+        snakeBomba = null;
         gerarComidaCobrinha();
         atualizarPainelCobrinha();
         desenharCobrinha();
@@ -2271,11 +2415,21 @@
             return;
         }
 
+        if (snakeBomba && novaCabeca.x === snakeBomba.x && novaCabeca.y === snakeBomba.y) {
+            finalizarCobrinha(true);
+            return;
+        }
+
         snakeCorpo.unshift(novaCabeca);
         if (novaCabeca.x === snakeComida.x && novaCabeca.y === snakeComida.y) {
             snakePontuacao += 1;
             atualizarPainelCobrinha();
+            snakeBomba = null;
             gerarComidaCobrinha();
+            if (snakePontuacao >= snakeProximaBombaEm) {
+                snakeBomba = posicaoLivreCobrinha([snakeComida]);
+                snakeProximaBombaEm = snakePontuacao + 3 + Math.floor(Math.random() * 4);
+            }
             if (snakePontuacao === 40) {
                 if (snakeIntervalo) window.clearInterval(snakeIntervalo);
                 snakeIntervalo = window.setInterval(avancarCobrinha, 110);
@@ -2287,13 +2441,15 @@
         desenharCobrinha();
     }
 
-    async function finalizarCobrinha() {
+    async function finalizarCobrinha(atingiuBomba = false) {
         if (!snakeEmJogo) return;
         snakeEmJogo = false;
         if (snakeIntervalo) window.clearInterval(snakeIntervalo);
         snakeIntervalo = null;
         document.getElementById('btnIniciarCobrinha').textContent = '▶️ Jogar novamente';
-        document.getElementById('snakeMensagem').textContent = `Fim de jogo! Pontuação: ${snakePontuacao}. Salvando seu resultado...`;
+        document.getElementById('snakeMensagem').textContent = atingiuBomba
+            ? `A cobra comeu a bomba! Fim de jogo. Pontuação: ${snakePontuacao}. Salvando seu resultado...`
+            : `Fim de jogo! Pontuação: ${snakePontuacao}. Salvando seu resultado...`;
 
         if (snakeEnviandoPontuacao) return;
         snakeEnviandoPontuacao = true;
