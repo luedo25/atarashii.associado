@@ -13,8 +13,8 @@ self.addEventListener('push', (event) => {
     const destino = typeof data.url === 'string' && data.url.trim() ? data.url.trim() : 'index.html';
     const options = {
         body: data.body,
-        icon: './atarashii-192.png',
-        badge: './atarashii-192.png',
+        icon: './arquivos/atarashii-192.png',
+        badge: './arquivos/atarashii-192.png',
         vibrate: [100, 50, 100],
         data: {
             dateOfArrival: Date.now(),
