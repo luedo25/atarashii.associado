@@ -5,141 +5,128 @@
     "question": "Qual é o significado do kata Tekki Shodan?",
     "options": [
       "Cavaleiro de ferro nível 1",
-      "Cavaleiro de ferro nível 2",
-      "Romper a fortaleza - forma menor",
-      "Voo da andorinha"
+      "Romper a fortaleza",
+      "Contemplar o céu",
+      "Amor e gratidão"
     ],
     "correctOption": 0,
-    "explanation": "Tekki Shodan (鉄騎初段) significa \"Cavaleiro de ferro nível 1\"."
+    "explanation": "Tekki Shodan significa “Cavaleiro de ferro nível 1”."
   },
   {
     "id": "quiz-kata-intermediario-02",
     "category": "Katas - Intermediário",
-    "question": "Qual é o significado do kata Tekki Nidan?",
+    "question": "Qual é o significado do kata Bassai Dai?",
     "options": [
       "Cavaleiro de ferro nível 1",
-      "Romper a fortaleza - forma menor",
-      "Voo da andorinha",
-      "Cavaleiro de ferro nível 2"
+      "Romper a fortaleza",
+      "Contemplar o céu",
+      "Amor e gratidão"
     ],
-    "correctOption": 3,
-    "explanation": "Tekki Nidan (鉄騎二段) significa \"Cavaleiro de ferro nível 2\"."
+    "correctOption": 1,
+    "explanation": "Bassai Dai significa “Romper a fortaleza”."
   },
   {
     "id": "quiz-kata-intermediario-03",
-    "category": "Katas - Intermediário",
-    "question": "Qual é o significado do kata Tekki Sandan?",
-    "options": [
-      "Romper a fortaleza - forma menor",
-      "Voo da andorinha",
-      "Cavaleiro de ferro nível 3",
-      "Cavaleiro de ferro nível 1"
-    ],
-    "correctOption": 2,
-    "explanation": "Tekki Sandan (鉄騎三段) significa \"Cavaleiro de ferro nível 3\"."
-  },
-  {
-    "id": "quiz-kata-intermediario-04",
-    "category": "Katas - Intermediário",
-    "question": "Qual é o significado do kata Bassai Dai?",
-    "options": [
-      "Voo da andorinha",
-      "Romper a fortaleza",
-      "Cavaleiro de ferro nível 1",
-      "Romper a fortaleza - forma menor"
-    ],
-    "correctOption": 1,
-    "explanation": "Bassai Dai (抜塞大) significa \"Romper a fortaleza\"."
-  },
-  {
-    "id": "quiz-kata-intermediario-05",
-    "category": "Katas - Intermediário",
-    "question": "Qual é o significado do kata Bassai Sho?",
-    "options": [
-      "Romper a fortaleza - forma menor",
-      "Cavaleiro de ferro nível 1",
-      "Romper a fortaleza",
-      "Voo da andorinha"
-    ],
-    "correctOption": 0,
-    "explanation": "Bassai Sho (抜塞小) significa \"Romper a fortaleza - forma menor\"."
-  },
-  {
-    "id": "quiz-kata-intermediario-06",
     "category": "Katas - Intermediário",
     "question": "Qual é o significado do kata Kanku Dai?",
     "options": [
       "Cavaleiro de ferro nível 1",
       "Romper a fortaleza",
-      "Voo da andorinha",
-      "Contemplar o ceu"
-    ],
-    "correctOption": 3,
-    "explanation": "Kanku Dai (観空大) significa \"Contemplar o ceu\"."
-  },
-  {
-    "id": "quiz-kata-intermediario-07",
-    "category": "Katas - Intermediário",
-    "question": "Qual é o significado do kata Kanku Sho?",
-    "options": [
-      "Romper a fortaleza",
-      "Voo da andorinha",
-      "Contemplar o ceu - forma menor",
-      "Cavaleiro de ferro nível 1"
+      "Contemplar o céu",
+      "Amor e gratidão"
     ],
     "correctOption": 2,
-    "explanation": "Kanku Sho (観空小) significa \"Contemplar o ceu - forma menor\"."
+    "explanation": "Kanku Dai significa “Contemplar o céu”."
   },
   {
-    "id": "quiz-kata-intermediario-08",
-    "category": "Katas - Intermediário",
-    "question": "Qual é o significado do kata Empi?",
-    "options": [
-      "Contemplar o ceu - forma menor",
-      "Voo da andorinha",
-      "Cavaleiro de ferro nível 1",
-      "Romper a fortaleza"
-    ],
-    "correctOption": 1,
-    "explanation": "Empi (燕飛) significa \"Voo da andorinha\"."
-  },
-  {
-    "id": "quiz-kata-intermediario-09",
-    "category": "Katas - Intermediário",
-    "question": "Qual é o significado do kata Hangetsu?",
-    "options": [
-      "Meia-lua",
-      "Cavaleiro de ferro nível 1",
-      "Romper a fortaleza",
-      "Contemplar o ceu - forma menor"
-    ],
-    "correctOption": 0,
-    "explanation": "Hangetsu (半月) significa \"Meia-lua\"."
-  },
-  {
-    "id": "quiz-kata-intermediario-10",
+    "id": "quiz-kata-intermediario-04",
     "category": "Katas - Intermediário",
     "question": "Qual é o significado do kata Jion?",
     "options": [
       "Cavaleiro de ferro nível 1",
       "Romper a fortaleza",
-      "Contemplar o ceu - forma menor",
+      "Contemplar o céu",
       "Amor e gratidão"
     ],
     "correctOption": 3,
-    "explanation": "Jion (慈恩) significa \"Amor e gratidão\"."
+    "explanation": "Jion significa “Amor e gratidão”."
   },
   {
-    "id": "quiz-kata-intermediario-11",
+    "id": "quiz-kata-intermediario-05",
     "category": "Katas - Intermediário",
-    "question": "Qual é o significado do kata Jiin?",
+    "question": "Qual base é característica no Tekki Shodan?",
     "options": [
-      "Romper a fortaleza",
-      "Contemplar o ceu - forma menor",
-      "Amor e protecao",
-      "Cavaleiro de ferro nível 1"
+      "Zenkutsu-Dachi",
+      "Kokutsu-Dachi",
+      "Kiba-Dachi",
+      "Neko-Ashi-Dachi"
     ],
     "correctOption": 2,
-    "explanation": "Jiin (慈陰) significa \"Amor e protecao\"."
+    "explanation": "O Tekki Shodan é praticado principalmente em Kiba-Dachi, mantendo estabilidade e deslocamentos laterais."
+  },
+  {
+    "id": "quiz-kata-intermediario-06",
+    "category": "Katas - Intermediário",
+    "question": "Quantos movimentos aproximadamente compõem o Tekki Shodan?",
+    "options": [
+      "18",
+      "29",
+      "42",
+      "65"
+    ],
+    "correctOption": 1,
+    "explanation": "O material de estudo indica aproximadamente 29 movimentos no Tekki Shodan."
+  },
+  {
+    "id": "quiz-kata-intermediario-07",
+    "category": "Katas - Intermediário",
+    "question": "Quantos kiai são indicados no Bassai Dai?",
+    "options": [
+      "1",
+      "2",
+      "3",
+      "4"
+    ],
+    "correctOption": 1,
+    "explanation": "O conteúdo do Bassai Dai indica dois kiai."
+  },
+  {
+    "id": "quiz-kata-intermediario-08",
+    "category": "Katas - Intermediário",
+    "question": "Qual técnica aparece no movimento 19 do Bassai Dai, segundo o material?",
+    "options": [
+      "Mae-Geri",
+      "Yoko-Geri Kekomi",
+      "Mawashi-Geri",
+      "Ushiro-Geri"
+    ],
+    "correctOption": 1,
+    "explanation": "O material indica Yoko-Geri Kekomi no movimento 19 do Bassai Dai."
+  },
+  {
+    "id": "quiz-kata-intermediario-09",
+    "category": "Katas - Intermediário",
+    "question": "Quantos movimentos aproximadamente compõem o Kanku Dai?",
+    "options": [
+      "29",
+      "42",
+      "48",
+      "65"
+    ],
+    "correctOption": 3,
+    "explanation": "O material de estudo indica aproximadamente 65 movimentos no Kanku Dai."
+  },
+  {
+    "id": "quiz-kata-intermediario-10",
+    "category": "Katas - Intermediário",
+    "question": "Qual é o tempo médio aproximado de execução do Jion?",
+    "options": [
+      "40 segundos",
+      "50 segundos",
+      "60 segundos",
+      "90 segundos"
+    ],
+    "correctOption": 2,
+    "explanation": "O material indica aproximadamente 60 segundos para a execução do Jion."
   }
 ]

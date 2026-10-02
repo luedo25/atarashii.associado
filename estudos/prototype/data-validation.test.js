@@ -29,6 +29,24 @@ test("quiz de Kata básico tem 10 perguntas apoiadas nos conteúdos Heian e não
   }
   assert.match(serialized, /embusen|postura|kiai|ritmo|consultar o material/);
 });
+test("pilar intermediário contém somente os quatro katas definidos e quiz com 10 questões", () => {
+  const catalog = read("katas-shotokan-complete.json").katas;
+  const expectedIds = ["tekki-shodan", "bassai-dai", "kanku-dai", "jion"];
+  const intermediate = catalog.filter((kata) => kata.nivelJogo === "intermediario");
+  assert.deepEqual(intermediate.map((kata) => kata.id).sort(), expectedIds.slice().sort());
+  const quiz = read("quiz-kata-intermediario.json");
+  assert.equal(quiz.length, 10);
+  const serialized = JSON.stringify(quiz).toLowerCase();
+  for (const name of ["tekki nidan", "tekki sandan", "bassai sho", "kanku sho", "empi", "hangetsu", "jiin"]) {
+    assert.equal(serialized.includes(name), false, `kata fora do pilar intermediário vazou para o quiz: ${name}`);
+  }
+  for (const kata of intermediate) assert.ok(quiz.some((question) => question.question.includes(kata.nome)));
+  for (const question of quiz) {
+    assert.equal(question.options.length, 4, question.id);
+    assert.ok(question.correctOption >= 0 && question.correctOption < 4, question.id);
+  }
+  for (const kata of intermediate) assert.equal(kata.classificacao.nivel, "Intermediários", kata.id);
+});
 test("desafio final possui cinco rounds equilibrados", () => {
   const challenges = read("final-challenge.json");
   assert.deepEqual([...new Set(challenges.map((item) => item.round))], [1, 2, 3, 4, 5]);

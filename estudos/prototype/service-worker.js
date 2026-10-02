@@ -1,4 +1,4 @@
-const CACHE_NAME = "atarashii-app-v11";
+const CACHE_NAME = "atarashii-app-v12";
 const ASSETS = [
   "./",
   "./index.html",
