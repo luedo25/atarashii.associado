@@ -95,6 +95,15 @@
         .snake-acoes { display: flex; gap: 8px; margin-top: 14px; }
         .snake-acoes button { flex: 1; }
         .snake-mensagem { min-height: 22px; margin-top: 12px; color: var(--text-muted); font-size: 13px; line-height: 1.4; }
+        .snake-resultado { margin: 12px auto 0; max-width: 380px; padding: 15px 18px; border: 1px solid rgba(251,191,36,.65); border-radius: 16px; color: #fef3c7; background: radial-gradient(circle at 50% 0, rgba(245,158,11,.24), rgba(15,23,42,.97) 70%); box-shadow: 0 10px 30px rgba(0,0,0,.35), 0 0 24px rgba(245,158,11,.16); }
+        .snake-resultado[hidden] { display: none; }
+        .snake-resultado-icone { display: inline-grid; place-items: center; width: 38px; height: 38px; margin-bottom: 5px; border-radius: 50%; color: #78350f; background: linear-gradient(145deg,#fef3c7,#f59e0b 68%,#b45309); box-shadow: inset 0 2px 5px rgba(255,255,255,.65), 0 4px 10px rgba(0,0,0,.35); font-size: 21px; animation: snakeMedalSpin 1.4s cubic-bezier(.4,0,.2,1) infinite; }
+        .snake-resultado strong { display: block; color: #fde68a; font-size: 19px; }
+        .snake-resultado small { display: block; margin-top: 4px; color: #cbd5e1; }
+        .snake-resultado-carregando .snake-resultado-icone { color: transparent; border: 4px solid rgba(253,230,138,.3); border-top-color: #fde68a; background: transparent; box-shadow: none; animation: snakeLoadingSpin .8s linear infinite; }
+        @keyframes snakeMedalSpin { 0%,100% { transform: rotateY(0) scale(1); } 50% { transform: rotateY(180deg) scale(1.08); } }
+        @keyframes snakeLoadingSpin { to { transform: rotate(360deg); } }
+        @media (prefers-reduced-motion: reduce) { .snake-resultado-icone { animation: none !important; } }
         body.snake-jogo-aberto { overflow: hidden; overscroll-behavior: none; }
         #modalJogoCobrinha.snake-em-tela-cheia { position: fixed; inset: 0; width: 100vw; max-width: none; height: 100vh; height: 100dvh; max-height: none; margin: 0; padding: 0; overflow: auto; border: 0; border-radius: 0; }
         #modalJogoCobrinha.snake-em-tela-cheia .perfil-dialog-content { min-height: 100%; padding: max(14px, env(safe-area-inset-top)) max(14px, env(safe-area-inset-right)) max(14px, env(safe-area-inset-bottom)) max(14px, env(safe-area-inset-left)); }
@@ -463,7 +472,7 @@
         </div>
         <div class="snake-painel">
             <p style="color:var(--text-muted);font-size:13px;line-height:1.5;margin-bottom:16px;">
-                Cada maçã vale 1 ponto. A cada 20 pontos no jogo, você ganha 1 ponto no ranking. Ao alcançar 50 pontos, recebe mais 10 pontos de bônus. Limite total: 100 pontos extras.
+                Cada maçã vale 1 ponto. A cada 20 pontos no jogo, você ganha 1 ponto no ranking. Ao alcançar 50 pontos, recebe mais 10 pontos de bônus. A cada 10 maçãs podem surgir até 6 bombas ao mesmo tempo. Limite total: 100 pontos extras.
             </p>
             <div class="snake-status">
                 <div class="snake-status-card"><small>Pontuação</small><strong id="snakeScore">0</strong></div>
@@ -474,6 +483,11 @@
             <div class="snake-acoes">
                 <button type="button" class="btn-action" id="btnIniciarCobrinha">▶️ Iniciar jogo</button>
                 <button type="button" class="btn-action" id="btnReiniciarCobrinha" style="background:#475569;">↻ Reiniciar</button>
+            </div>
+            <div id="snakeResultado" class="snake-resultado" role="status" aria-live="assertive" hidden>
+                <span class="snake-resultado-icone" aria-hidden="true">🏆</span>
+                <strong id="snakeResultadoTitulo">Resultado da partida</strong>
+                <small id="snakeResultadoDetalhe"></small>
             </div>
             <div id="snakeMensagem" class="snake-mensagem" role="status" aria-live="polite">Pressione “Iniciar jogo” para começar.</div>
         </div>
@@ -2154,8 +2168,8 @@
     const snakeCelula = 380 / snakeTamanhoGrade;
     let snakeCorpo = [];
     let snakeComida = { x: 14, y: 10 };
-    let snakeBomba = null;
-    let snakeProximaBombaEm = 4;
+    let snakeBombas = [];
+    let snakePontosRankingAntesDaPartida = 0;
     let snakeDirecao = { x: 1, y: 0 };
     let snakeProximaDirecao = { x: 1, y: 0 };
     let snakePontuacao = 0;
@@ -2164,6 +2178,7 @@
     let snakeEnviandoPontuacao = false;
     let snakeDirecaoTravadaNoPasso = false;
     let snakePonteiroInicial = null;
+    let snakeCarregamentoDados = Promise.resolve();
 
     function atualizarPainelCobrinha() {
         const score = document.getElementById('snakeScore');
@@ -2189,7 +2204,7 @@
         }
 
         desenharMacaCobrinha(snakeComida);
-        if (snakeBomba) desenharBombaCobrinha(snakeBomba);
+        snakeBombas.forEach(desenharBombaCobrinha);
 
         // Segmentos arredondados com brilho, escamas e sombra para dar volume.
         snakeCorpo.slice(1).reverse().forEach((parte, indice) => {
@@ -2233,7 +2248,17 @@
     }
 
     function gerarComidaCobrinha() {
-        snakeComida = posicaoLivreCobrinha(snakeBomba ? [snakeBomba] : []) || { x: 10, y: 10 };
+        snakeComida = posicaoLivreCobrinha(snakeBombas) || { x: 10, y: 10 };
+    }
+
+    function gerarBombasCobrinha() {
+        // Cada marco de 10 pontos tenta criar até seis bombas. Cada tentativa é
+        // independente para que algumas ondas tragam uma ou nenhuma bomba.
+        for (let tentativa = 0; tentativa < 6; tentativa += 1) {
+            if (Math.random() >= .55) continue;
+            const bomba = posicaoLivreCobrinha([snakeComida, ...snakeBombas]);
+            if (bomba) snakeBombas.push(bomba);
+        }
     }
 
     function desenharMacaCobrinha(item) {
@@ -2359,15 +2384,19 @@
         snakeContext.restore();
     }
 
-    function iniciarCobrinha() {
+    async function iniciarCobrinha() {
         if (snakeEmJogo) return;
+        await snakeCarregamentoDados;
+        if (snakeEnviandoPontuacao) return;
         snakeCorpo = [{ x: 9, y: 10 }, { x: 8, y: 10 }, { x: 7, y: 10 }];
         snakeDirecao = { x: 1, y: 0 };
         snakeProximaDirecao = { x: 1, y: 0 };
         snakeDirecaoTravadaNoPasso = false;
         snakePontuacao = 0;
-        snakeBomba = null;
-        snakeProximaBombaEm = 4 + Math.floor(Math.random() * 3);
+        snakeBombas = [];
+        snakePontosRankingAntesDaPartida = Number(document.getElementById('snakeRankingPoints')?.textContent) || 0;
+        const resultadoCard = document.getElementById('snakeResultado');
+        if (resultadoCard) resultadoCard.hidden = true;
         snakeEmJogo = true;
         atualizarPainelCobrinha();
         gerarComidaCobrinha();
@@ -2386,7 +2415,9 @@
         snakeDirecao = { x: 1, y: 0 };
         snakeProximaDirecao = { x: 1, y: 0 };
         snakeDirecaoTravadaNoPasso = false;
-        snakeBomba = null;
+        snakeBombas = [];
+        const resultadoCard = document.getElementById('snakeResultado');
+        if (resultadoCard) resultadoCard.hidden = true;
         gerarComidaCobrinha();
         atualizarPainelCobrinha();
         desenharCobrinha();
@@ -2415,7 +2446,7 @@
             return;
         }
 
-        if (snakeBomba && novaCabeca.x === snakeBomba.x && novaCabeca.y === snakeBomba.y) {
+        if (snakeBombas.some(bomba => novaCabeca.x === bomba.x && novaCabeca.y === bomba.y)) {
             finalizarCobrinha(true);
             return;
         }
@@ -2424,12 +2455,9 @@
         if (novaCabeca.x === snakeComida.x && novaCabeca.y === snakeComida.y) {
             snakePontuacao += 1;
             atualizarPainelCobrinha();
-            snakeBomba = null;
+            snakeBombas = [];
             gerarComidaCobrinha();
-            if (snakePontuacao >= snakeProximaBombaEm) {
-                snakeBomba = posicaoLivreCobrinha([snakeComida]);
-                snakeProximaBombaEm = snakePontuacao + 3 + Math.floor(Math.random() * 4);
-            }
+            if (snakePontuacao > 0 && snakePontuacao % 10 === 0) gerarBombasCobrinha();
             if (snakePontuacao === 40) {
                 if (snakeIntervalo) window.clearInterval(snakeIntervalo);
                 snakeIntervalo = window.setInterval(avancarCobrinha, 110);
@@ -2447,6 +2475,16 @@
         if (snakeIntervalo) window.clearInterval(snakeIntervalo);
         snakeIntervalo = null;
         document.getElementById('btnIniciarCobrinha').textContent = '▶️ Jogar novamente';
+        document.getElementById('btnIniciarCobrinha').disabled = true;
+        const resultadoCard = document.getElementById('snakeResultado');
+        const resultadoTitulo = document.getElementById('snakeResultadoTitulo');
+        const resultadoDetalhe = document.getElementById('snakeResultadoDetalhe');
+        if (resultadoCard && resultadoTitulo && resultadoDetalhe) {
+            resultadoCard.hidden = false;
+            resultadoCard.classList.add('snake-resultado-carregando');
+            resultadoTitulo.textContent = 'Calculando seus pontos';
+            resultadoDetalhe.textContent = 'Aguarde enquanto salvamos o resultado desta partida.';
+        }
         document.getElementById('snakeMensagem').textContent = atingiuBomba
             ? `A cobra comeu a bomba! Fim de jogo. Pontuação: ${snakePontuacao}. Salvando seu resultado...`
             : `Fim de jogo! Pontuação: ${snakePontuacao}. Salvando seu resultado...`;
@@ -2460,13 +2498,26 @@
             });
             const jogo = resposta?.jogo || {};
             document.getElementById('snakeBest').textContent = Number(jogo.maior_pontuacao) || 0;
-            document.getElementById('snakeRankingPoints').textContent = Number(jogo.pontos_ranking) || 0;
-            document.getElementById('snakeMensagem').textContent = `Resultado salvo! Você acumulou ${Number(jogo.pontos_ranking) || 0}/100 ponto(s) no ranking da cobrinha.`;
+            const pontosRankingAtual = Number(jogo.pontos_ranking) || 0;
+            const pontosGanhosNaPartida = Math.max(0, pontosRankingAtual - snakePontosRankingAntesDaPartida);
+            document.getElementById('snakeRankingPoints').textContent = pontosRankingAtual;
+            if (resultadoCard && resultadoTitulo && resultadoDetalhe) {
+                resultadoCard.classList.remove('snake-resultado-carregando');
+                resultadoTitulo.textContent = `+${pontosGanhosNaPartida} ${pontosGanhosNaPartida === 1 ? 'ponto' : 'pontos'} no ranking nesta partida`;
+                resultadoDetalhe.textContent = `Total acumulado: ${pontosRankingAtual}/100 pontos no ranking da Associação.`;
+            }
+            document.getElementById('snakeMensagem').textContent = `Partida salva! Pontuação do jogo: ${snakePontuacao}.`;
             carregarRanking();
         } catch (error) {
+            if (resultadoCard && resultadoTitulo && resultadoDetalhe) {
+                resultadoCard.classList.remove('snake-resultado-carregando');
+                resultadoTitulo.textContent = 'Não foi possível confirmar os pontos';
+                resultadoDetalhe.textContent = error.message || 'Confira sua conexão e tente novamente mais tarde.';
+            }
             document.getElementById('snakeMensagem').textContent = error.message || 'Não foi possível salvar sua pontuação.';
         } finally {
             snakeEnviandoPontuacao = false;
+            document.getElementById('btnIniciarCobrinha').disabled = false;
         }
     }
 
@@ -2536,7 +2587,7 @@
                 try { modalJogoCobrinha.requestFullscreen({ navigationUI: 'hide' }).catch(() => {}); } catch (_) {}
             }
         }
-        carregarDadosCobrinha();
+        snakeCarregamentoDados = carregarDadosCobrinha();
     });
     document.getElementById('btnFecharJogoCobrinha')?.addEventListener('click', () => {
         pausarCobrinhaAoFechar();

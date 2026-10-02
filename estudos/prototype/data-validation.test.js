@@ -164,7 +164,7 @@ test("painel do associado mostra meses na faixa e diferencia o status dos estudo
   assert.match(requirements, /function mesesDesdePeriodo\(/);
 });
 
-test("jogo da cobrinha usa tela cheia no celular e controles por gesto sem setas", () => {
+test("jogo da cobrinha usa tela cheia, gestos, bombas por marco e resultado por partida", () => {
   const root = path.resolve(__dirname, "../..");
   const student = fs.readFileSync(path.join(root, "area-associado.html"), "utf8");
   assert.doesNotMatch(student, /data-snake-direcao|snake-controles/);
@@ -173,4 +173,9 @@ test("jogo da cobrinha usa tela cheia no celular e controles por gesto sem setas
   assert.match(student, /addEventListener\('pointerup'/);
   assert.match(student, /setPointerCapture/);
   assert.match(student, /snakeDirecaoTravadaNoPasso/);
+  assert.match(student, /id="snakeResultado"/);
+  assert.match(student, /pontosGanhosNaPartida/);
+  assert.match(student, /snakePontuacao % 10 === 0/);
+  assert.match(student, /tentativa < 6/);
+  assert.match(student, /snakeBombas.some/);
 });
