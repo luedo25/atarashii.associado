@@ -14,6 +14,17 @@
     if (!list.includes(value)) list.push(value);
   }
 
+  function createPillarQuestions(pillarKey, subjects, pools, pillarIndex = 0, questionsPerSubject = 10) {
+    return subjects.flatMap((subject) => {
+      const pool = subject.key === "kata" ? pools.kataByPillar?.[pillarKey] : pools[subject.key];
+      if (!Array.isArray(pool) || pool.length === 0) return [];
+      return Array.from({ length: questionsPerSubject }, (_, index) => {
+        const source = pool[(index + pillarIndex) % pool.length];
+        return { ...source, id: `pilar-${pillarKey}-${subject.key}-${index + 1}`, category: subject.label };
+      });
+    });
+  }
+
   function recordAttempt(state, assessmentKey, result, date) {
     const assessment = state.assessments[assessmentKey];
     const attempt = { ...result, date };
@@ -28,7 +39,7 @@
     return attempt;
   }
 
-  const api = { PASS_PERCENT, evaluate, recordAttempt };
+  const api = { PASS_PERCENT, evaluate, recordAttempt, createPillarQuestions };
   if (typeof module !== "undefined" && module.exports) module.exports = api;
   else root.AssessmentEngine = api;
 })(typeof window !== "undefined" ? window : globalThis);

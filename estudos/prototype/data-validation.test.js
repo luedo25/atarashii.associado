@@ -17,6 +17,18 @@ test("catalogo oficial possui 27 katas com IDs unicos", () => {
   assert.equal(katas.length, 27);
   assert.equal(new Set(katas.map((item) => item.id)).size, 27);
 });
+test("quiz de Kata básico tem 10 perguntas apoiadas nos conteúdos Heian e não cobra kata avançado", () => {
+  const beginnerQuiz = read("quiz-kata-iniciante.json");
+  const beginnerKatas = read("katas-shotokan-complete.json").katas.filter((kata) => kata.nivelJogo === "iniciante");
+  assert.equal(beginnerQuiz.length, 10);
+  assert.equal(beginnerKatas.length, 5);
+  for (const kata of beginnerKatas) assert.ok(beginnerQuiz.some((question) => question.question.includes(kata.nome)));
+  const serialized = JSON.stringify(beginnerQuiz).toLowerCase();
+  for (const advancedName of ["kanku", "bassai", "jitte", "gankaku", "nijushiho", "unsu", "sochin"]) {
+    assert.equal(serialized.includes(advancedName), false, `kata avançado vazou para o quiz básico: ${advancedName}`);
+  }
+  assert.match(serialized, /embusen|postura|kiai|ritmo|consultar o material/);
+});
 test("desafio final possui cinco rounds equilibrados", () => {
   const challenges = read("final-challenge.json");
   assert.deepEqual([...new Set(challenges.map((item) => item.round))], [1, 2, 3, 4, 5]);

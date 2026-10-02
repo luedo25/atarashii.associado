@@ -63,5 +63,45 @@
     ],
     "correctOption": 0,
     "explanation": "Heian Godan (平安五段) significa \"Paz e tranquilidade nível 5\"."
+  },
+  {
+    "id": "quiz-kata-iniciante-06",
+    "category": "Katas - Iniciante",
+    "question": "Qual aspecto da execução aparece no checklist dos katas Heian?",
+    "options": ["Manter a postura", "Acelerar todos os movimentos", "Olhar para o público", "Fazer pausas após cada técnica"],
+    "correctOption": 0,
+    "explanation": "O checklist de aprendizagem dos katas Heian inclui manter a postura."
+  },
+  {
+    "id": "quiz-kata-iniciante-07",
+    "category": "Katas - Iniciante",
+    "question": "Segundo o checklist dos katas Heian, quando o praticante deve executar o kiai?",
+    "options": ["Nos pontos previstos", "Em todos os movimentos", "Somente ao iniciar o kata", "Apenas na saudação final"],
+    "correctOption": 0,
+    "explanation": "O material orienta utilizar o kiai nos pontos previstos do kata."
+  },
+  {
+    "id": "quiz-kata-iniciante-08",
+    "category": "Katas - Iniciante",
+    "question": "Qual erro comum dos katas Heian o aluno deve evitar?",
+    "options": ["Perder o embusen", "Manter o ritmo", "Executar com postura", "Usar o quadril nas técnicas"],
+    "correctOption": 0,
+    "explanation": "O material lista perder o embusen entre os erros comuns a evitar."
+  },
+  {
+    "id": "quiz-kata-iniciante-09",
+    "category": "Katas - Iniciante",
+    "question": "Como o ritmo deve ser trabalhado na execução dos katas Heian?",
+    "options": ["Mantendo o ritmo", "Executando todos os movimentos com a mesma velocidade máxima", "Parando entre cada movimento", "Acelerando apenas no início"],
+    "correctOption": 0,
+    "explanation": "O checklist de aprendizagem dos katas Heian inclui manter o ritmo."
+  },
+  {
+    "id": "quiz-kata-iniciante-10",
+    "category": "Katas - Iniciante",
+    "question": "O checklist indica que o praticante deve conseguir executar o kata de que forma?",
+    "options": ["Sem consultar o material", "Somente acompanhando o professor", "Com pausas para ler cada movimento", "Sem manter zanshin"],
+    "correctOption": 0,
+    "explanation": "Um dos itens do checklist dos katas Heian é executar sem consultar o material."
   }
 ]

@@ -12,7 +12,11 @@
     return index > 0 ? pillars[index - 1] : null;
   }
 
-  const api = { canAccessPillar, prerequisiteFor };
+  function pillarForKataLevel(level) {
+    return ({ iniciante: "basico", intermediario: "intermediario", avancado: "avancado" })[level] || "especialista";
+  }
+
+  const api = { canAccessPillar, prerequisiteFor, pillarForKataLevel };
   if (typeof module !== "undefined" && module.exports) module.exports = api;
   else root.CurriculumEngine = api;
 })(typeof window !== "undefined" ? window : globalThis);

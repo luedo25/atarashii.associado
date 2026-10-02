@@ -46,6 +46,21 @@ test("serviço grava progresso por adaptador remoto sem usar Storage do navegado
   assert.equal(writes[1].schemaVersion, 2);
   assert.deepEqual(writes[1].achievements.medals, ["aprender"]);
 });
+test("tentativa de quiz pode ser reenviada depois de falha temporária da conexão", async () => {
+  let calls = 0;
+  const writes = [];
+  const service = ProgressService.createRemote(ProgressService.initialState(), catalog, async (snapshot) => {
+    calls += 1;
+    if (calls === 1) throw new Error("rede indisponível");
+    writes.push(snapshot);
+  });
+  service.update((state) => state.assessments["pilar-basico"].attempts.push({ score: 35, total: 40, percent: 88, passed: true }));
+  await assert.rejects(service.flush(), /rede indisponível/);
+  service.save();
+  await service.flush();
+  assert.equal(writes.length, 1);
+  assert.equal(writes[0].assessments["pilar-basico"].attempts[0].percent, 88);
+});
 test("nova trilha exige releitura e aprovação mesmo para progresso da versão anterior", () => {
   const previous = ProgressService.initialState();
   previous.curriculumVersion = 1;

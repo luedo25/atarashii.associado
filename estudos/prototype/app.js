@@ -3,7 +3,7 @@
 const state = {
   data: null, catalog: [], progressService: null, route: "home", returnRoute: "home",
   currentUser: null,
-  filter: "todos", search: "", assessment: null, assessmentResult: null,
+  filter: "todos", search: "", assessment: null, assessmentResult: null, assessmentSaving: false, pendingAssessmentSave: null,
   challenge: null, challengeResult: null, achievement: null, notice: "",
 };
 
@@ -122,7 +122,12 @@ function subjectForItem(item) {
 function assignCurriculum(catalog) {
   for (const subject of SUBJECTS) {
     const items = catalog.filter((item) => item.required !== false && !item.pending && subjectForItem(item) === subject.key);
-    items.forEach((item, index) => {
+    if (subject.key === "kata") {
+      items.forEach((item) => {
+        item.subject = subject.key;
+        item.pillar = CurriculumEngine.pillarForKataLevel(item.level);
+      });
+    } else items.forEach((item, index) => {
       item.subject = subject.key;
       item.pillar = PILLARS[Math.min(3, Math.floor(index * 4 / Math.max(items.length, 1)))].key;
     });
@@ -144,6 +149,8 @@ function pillarAssessmentState(pillar) {
   return progressState().assessments[pillarAssessmentKey(pillar)];
 }
 function canAccessPillar(pillar) {
+  const pending = state.pendingAssessmentSave;
+  if (pending?.passed && PILLARS.findIndex((item) => item.key === pillar) > PILLARS.findIndex((item) => item.key === pending.key.slice(6))) return false;
   return CurriculumEngine.canAccessPillar(pillar, PILLARS, progressState().assessments);
 }
 function pillarPrerequisite(pillar) {
@@ -322,7 +329,12 @@ function detailView(kind, id) {
 function assessmentQuestions(key) {
   if (!key.startsWith("pilar-")) return [];
   const pools = {
-    kata: [...state.data.quiz.filter((q) => /kata/i.test(q.category)), ...state.data.quizKataIniciante, ...state.data.quizKataIntermediario, ...state.data.quizKataAvancado],
+    kataByPillar: {
+      basico: state.data.quizKataIniciante,
+      intermediario: state.data.quizKataIntermediario,
+      avancado: state.data.quizKataAvancado,
+      especialista: state.data.quizKataAvancado,
+    },
     kihon: state.data.quiz.filter((q) => ["Fundamentos", "Técnicas Básicas", "Bases e Termos"].includes(q.category)),
     kumite: [
       ...state.data.quiz.filter((q) => q.category === "Regras de Kumite"),
@@ -334,14 +346,7 @@ function assessmentQuestions(key) {
     geral: state.data.quiz.filter((q) => !/kata/i.test(q.category) && !["Fundamentos", "Técnicas Básicas", "Bases e Termos", "Regras de Kumite"].includes(q.category)),
   };
   const pillarKey = key.slice("pilar-".length);
-  return SUBJECTS.flatMap((subject) => {
-    const pool = pools[subject.key];
-    if (!pool.length) return [];
-    return Array.from({ length: 10 }, (_, index) => {
-      const source = pool[(index + PILLARS.findIndex((p) => p.key === pillarKey)) % pool.length];
-      return { ...source, id: `${key}-${subject.key}-${index + 1}`, category: subject.label };
-    });
-  });
+  return AssessmentEngine.createPillarQuestions(pillarKey, SUBJECTS, pools, PILLARS.findIndex((p) => p.key === pillarKey));
 }
 function startAssessment(key) {
   const pillar = key.startsWith("pilar-") ? key.slice(6) : "";
@@ -370,11 +375,14 @@ function assessmentLanding(key) {
 
 function assessmentRunView() {
   if (!state.assessment) return homeView();
+  if (state.assessmentSaving) return `<section class="locked-view" role="status" aria-live="polite"><span class="locked-view__icon" aria-hidden="true">⏳</span><p class="eyebrow">Salvando resultado</p><h2>Aguarde um instante</h2><p>Estamos registrando sua nota e a tentativa no sistema. Não feche esta página até a confirmação.</p></section>`;
   const { questions, index, answers, key } = state.assessment;
   const question = questions[index];
   return `<section class="quiz-shell"><header><span>Questão ${index + 1} de ${questions.length}</span><strong>${escapeHtml(key.startsWith("pilar-") ? `Pilar ${PILLAR_LABEL[key.slice(6)]}` : ASSESSMENT_LABELS[key])}</strong></header><div class="quiz-progress"><span style="width:${Math.round(((index + 1) / questions.length) * 100)}%"></span></div><article class="question-card"><p class="eyebrow">${escapeHtml(question.category)}</p><h2>${escapeHtml(question.question)}</h2><div class="answers">${question.options.map((option, optionIndex) => `<button class="answer ${answers[index] === optionIndex ? "is-selected" : ""}" data-answer="${optionIndex}" type="button"><span>${String.fromCharCode(65 + optionIndex)}</span>${escapeHtml(option)}</button>`).join("")}</div></article><button class="primary-button wide" data-action="next-assessment" type="button" ${Number.isInteger(answers[index]) ? "" : "disabled"}>${index === questions.length - 1 ? "Finalizar avaliação" : "Próxima questão"}</button></section>`;
 }
-function finishAssessment() {
+async function finishAssessment() {
+  if (!state.assessment || state.assessmentSaving) return;
+  state.assessmentSaving = true;
   const { key, questions, answers } = state.assessment;
   const before = [...progressState().achievements.medals];
   const result = AssessmentEngine.evaluate(questions, answers);
@@ -393,17 +401,53 @@ function finishAssessment() {
       });
     }
   });
-  state.assessmentResult = { ...result, key, questions, answers, exhausted };
+  state.assessmentResult = { ...result, key, questions, answers, exhausted, synced: false };
   const newMedal = progressState().achievements.medals.find((medal) => !before.includes(medal));
-  if (newMedal) state.achievement = { type: "medal", key: newMedal, percent: result.percent };
+  if (newMedal) state.assessmentResult.medalToAward = newMedal;
+  state.pendingAssessmentSave = { key, passed: result.passed };
+  render();
+  try {
+    await state.progressService.flush();
+    state.assessmentResult.synced = true;
+    state.pendingAssessmentSave = null;
+    if (state.assessmentResult.medalToAward) {
+      state.achievement = { type: "medal", key: state.assessmentResult.medalToAward, percent: result.percent };
+      delete state.assessmentResult.medalToAward;
+    }
+  } catch (error) {
+    console.error("Falha ao sincronizar o resultado do quiz:", error);
+  }
+  state.assessmentSaving = false;
   routeTo("assessment-result");
+}
+async function retryAssessmentSave() {
+  const result = state.assessmentResult;
+  if (!result || result.synced || state.assessmentSaving) return;
+  state.assessmentSaving = true;
+  render();
+  try {
+    state.progressService.save();
+    await state.progressService.flush();
+    result.synced = true;
+    state.pendingAssessmentSave = null;
+    if (result.medalToAward) {
+      state.achievement = { type: "medal", key: result.medalToAward, percent: result.percent };
+      delete result.medalToAward;
+    }
+  } catch (error) {
+    result.syncError = error.message;
+  } finally {
+    state.assessmentSaving = false;
+    render();
+  }
 }
 function assessmentResultView() {
   const result = state.assessmentResult;
   if (!result) return homeView();
   const wrong = result.questions.map((question, index) => ({ question, answer: result.answers[index] })).filter(({ question, answer }) => answer !== question.correctOption);
   const backRoute = result.key.startsWith("kata-") ? result.key : result.key;
-  return `<section class="result-page ${result.passed ? "is-pass" : "is-fail"}"><span class="result-icon">${result.passed ? "✓" : "↻"}</span><p class="eyebrow">${result.passed ? "Avaliação concluída" : "Continue praticando"}</p><h2>${result.percent}% de aproveitamento</h2><p>${result.score} de ${result.total} respostas corretas. ${result.passed ? "Você atingiu o resultado necessário." : result.exhausted ? "As três tentativas foram utilizadas. Releia todos os conteúdos deste pilar para liberar uma nova série de tentativas." : "Revise os pontos abaixo e tente novamente quando estiver pronto."}</p>${wrong.length ? `<section class="review-list"><h3>Revise estes pontos</h3>${wrong.map(({ question }) => `<div><strong>${escapeHtml(question.question)}</strong><span>${escapeHtml(question.explanation)}</span></div>`).join("")}</section>` : ""}<div class="result-actions">${result.passed && result.key.startsWith("pilar-") ? `<button class="primary-button" data-action="certificate:${result.key.slice(6)}" type="button">⬇ Salvar certificado PDF</button>` : ""}${!result.passed && !result.exhausted ? `<button class="primary-button" data-action="start-assessment:${result.key}" type="button">Tentar novamente (${Math.max(0, 3 - pillarAssessmentState(result.key.slice(6)).attempts.length)} restantes)</button>` : ""}<button class="secondary-button" data-route="pilar:${result.key.slice(6)}" type="button">Voltar ao pilar</button></div></section>`;
+  const syncNotice = result.synced === false ? `<div class="form-notice" role="alert"><strong>Resultado ainda não sincronizado.</strong><p>Sua nota de ${result.percent}% está visível nesta sessão, mas o servidor ainda não confirmou a gravação. Reconecte-se e tente salvar novamente antes de sair desta página.</p><button class="primary-button" data-action="retry-assessment-save" type="button">Tentar salvar resultado</button>${result.syncError ? `<small>${escapeHtml(result.syncError)}</small>` : ""}</div>` : `<p class="sync-confirmation" role="status">Resultado salvo no sistema.</p>`;
+  return `<section class="result-page ${result.passed ? "is-pass" : "is-fail"}"><span class="result-icon">${result.passed ? "✓" : "↻"}</span><p class="eyebrow">${result.passed ? "Avaliação concluída" : "Continue praticando"}</p><h2>${result.percent}% de aproveitamento</h2><p>${result.score} de ${result.total} respostas corretas. ${result.passed ? "Você atingiu o resultado necessário." : result.exhausted ? "As três tentativas foram utilizadas. Releia todos os conteúdos deste pilar para liberar uma nova série de tentativas." : "Revise os pontos abaixo e tente novamente quando estiver pronto."}</p>${syncNotice}${wrong.length ? `<section class="review-list"><h3>Revise estes pontos</h3>${wrong.map(({ question }) => `<div><strong>${escapeHtml(question.question)}</strong><span>${escapeHtml(question.explanation)}</span></div>`).join("")}</section>` : ""}<div class="result-actions">${result.synced && result.passed && result.key.startsWith("pilar-") ? `<button class="primary-button" data-action="certificate:${result.key.slice(6)}" type="button">⬇ Salvar certificado PDF</button>` : ""}${result.synced && !result.passed && !result.exhausted ? `<button class="primary-button" data-action="start-assessment:${result.key}" type="button">Tentar novamente (${Math.max(0, 3 - pillarAssessmentState(result.key.slice(6)).attempts.length)} restantes)</button>` : ""}<button class="secondary-button" data-route="pilar:${result.key.slice(6)}" type="button" ${result.synced ? "" : "disabled"}>Voltar ao pilar</button></div></section>`;
 }
 
 function finalChallengeView() {
@@ -659,6 +703,16 @@ function render() {
 }
 
 document.addEventListener("click", (event) => {
+  if (state.assessmentSaving) {
+    event.preventDefault();
+    event.stopImmediatePropagation();
+    return;
+  }
+  if (state.pendingAssessmentSave && !event.target.closest('[data-action="retry-assessment-save"]')) {
+    event.preventDefault();
+    event.stopImmediatePropagation();
+    return;
+  }
   const route = event.target.closest("[data-route]");
   if (route) {
     const target = route.dataset.route;
@@ -687,6 +741,7 @@ document.addEventListener("click", (event) => {
   if (!actionTarget) return;
   const action = actionTarget.dataset.action;
   if (action === "back") routeTo(state.returnRoute || "home");
+  else if (action === "retry-assessment-save") retryAssessmentSave();
   else if (action.startsWith("certificate:")) {
     const pillarKey = action.slice("certificate:".length);
     downloadStudyCertificate(pillarKey).then(() => {
@@ -742,12 +797,30 @@ document.addEventListener("click", (event) => {
   } else if (action === "close-achievement") { state.achievement = null; render(); }
 });
 
-document.querySelector("#refreshButton").addEventListener("click", () => location.reload());
+document.querySelector("#refreshButton").addEventListener("click", (event) => {
+  if (state.pendingAssessmentSave || state.assessmentSaving) { event.preventDefault(); return; }
+  location.reload();
+});
+window.addEventListener("beforeunload", (event) => {
+  if (!state.pendingAssessmentSave && !state.assessmentSaving) return;
+  event.preventDefault();
+  event.returnValue = "";
+});
 window.addEventListener("study:progress-sync-error", () => {
+  if (state.pendingAssessmentSave || state.assessmentSaving) return;
   state.notice = "Não foi possível sincronizar seu progresso. Verifique sua conexão e tente novamente.";
   render();
 });
-window.addEventListener("popstate", () => { state.route = location.hash.slice(1) || "home"; render(); });
+window.addEventListener("online", () => {
+  if (state.pendingAssessmentSave && !state.assessmentSaving) retryAssessmentSave();
+});
+window.addEventListener("popstate", () => {
+  if (state.pendingAssessmentSave || state.assessmentSaving) {
+    history.pushState(null, "", `#${state.route}`);
+    return;
+  }
+  state.route = location.hash.slice(1) || "home"; render();
+});
 loadData().then((authenticated) => { if (!authenticated) return; state.route = location.hash.slice(1) || "home"; render(); }).catch((error) => {
   app.innerHTML = '<p class="empty">Não foi possível carregar o aplicativo. Tente atualizar a página.</p>';
   console.error(error);

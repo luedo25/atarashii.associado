@@ -24,3 +24,8 @@ test("reprovar nao libera o proximo pilar e desconhecidos ficam bloqueados", () 
   assert.equal(Curriculum.canAccessPillar("intermediario", pillars, { "pilar-basico": { passed: false } }), false);
   assert.equal(Curriculum.canAccessPillar("outro", pillars, {}), false);
 });
+test("katas ficam no pilar do nível em que o aluno vai estudá-los", () => {
+  assert.equal(Curriculum.pillarForKataLevel("iniciante"), "basico");
+  assert.equal(Curriculum.pillarForKataLevel("intermediario"), "intermediario");
+  assert.equal(Curriculum.pillarForKataLevel("avancado"), "avancado");
+});
