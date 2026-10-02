@@ -16,7 +16,10 @@
 
   function createPillarQuestions(pillarKey, subjects, pools, pillarIndex = 0, questionsPerSubject = 10) {
     return subjects.flatMap((subject) => {
-      const pool = subject.key === "kata" ? pools.kataByPillar?.[pillarKey] : pools[subject.key];
+      const pillarPool = subject.key === "kata"
+        ? pools.kataByPillar?.[pillarKey]
+        : pools[`${subject.key}ByPillar`]?.[pillarKey];
+      const pool = Array.isArray(pillarPool) ? pillarPool : pools[subject.key];
       if (!Array.isArray(pool) || pool.length === 0) return [];
       return Array.from({ length: questionsPerSubject }, (_, index) => {
         const source = pool[(index + pillarIndex) % pool.length];

@@ -26,6 +26,23 @@ test("quiz do pilar básico usa somente perguntas de kata iniciante e mantém 10
   assert.deepEqual(kata.map((question) => question.question), beginner.map((question) => question.question));
   assert.equal(kata.some((question) => question.question.includes("Kanku")), false);
 });
+test("usa pools específicos por pilar em todos os quatro temas", () => {
+  const subjects = [
+    { key: "kata", label: "Kata" }, { key: "kihon", label: "Kihon" },
+    { key: "kumite", label: "Kumite" }, { key: "geral", label: "Assuntos gerais" },
+  ];
+  const pools = {
+    kataByPillar: { basico: [{ question: "Kata básico" }] },
+    kihonByPillar: { basico: [{ question: "Kihon básico" }] },
+    kumiteByPillar: { basico: [{ question: "Kumite básico" }] },
+    geralByPillar: { basico: [{ question: "Geral básico" }] },
+    kihon: [{ question: "Kihon compartilhado" }],
+    kumite: [{ question: "Kumite compartilhado" }],
+    geral: [{ question: "Geral compartilhado" }],
+  };
+  const quiz = Assessment.createPillarQuestions("basico", subjects, pools, 0, 1);
+  assert.deepEqual(quiz.map(({ question }) => question), ["Kata básico", "Kihon básico", "Kumite básico", "Geral básico"]);
+});
 test("resultado abaixo de 70 nao concede medalha", () => {
   const state = ProgressService.initialState();
   Assessment.recordAttempt(state, "aprender", { score: 1, total: 3, percent: 33, passed: false }, "t");

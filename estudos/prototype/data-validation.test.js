@@ -103,6 +103,29 @@ test("cada quiz de pilar gera 40 perguntas, com dez de cada tema e Katas do nív
     for (const name of forbidden) assert.equal(kataText.includes(name), false, `${name} vazou em ${pillar}`);
   }
 });
+test("nenhuma pergunta se repete entre os quatro quizzes de pilar", () => {
+  const subjects = [
+    { key: "kata", label: "Kata" }, { key: "kihon", label: "Kihon" },
+    { key: "kumite", label: "Kumite" }, { key: "geral", label: "Assuntos gerais" },
+  ];
+  const pools = {
+    kataByPillar: {
+      basico: read("quiz-kata-iniciante.json"),
+      intermediario: read("quiz-kata-intermediario.json"),
+      avancado: read("quiz-kata-avancado.json"),
+      especialista: read("quiz-kata-especialista.json"),
+    },
+    kihonByPillar: read("quiz-kihon-por-pilar.json"),
+    kumiteByPillar: read("quiz-kumite-por-pilar.json"),
+    geralByPillar: read("quiz-geral-por-pilar.json"),
+  };
+  const questions = ["basico", "intermediario", "avancado", "especialista"]
+    .flatMap((pillar, index) => Assessment.createPillarQuestions(pillar, subjects, pools, index));
+  assert.equal(questions.length, 160);
+  const normalize = (value) => value.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLocaleLowerCase("pt-BR").replace(/[^a-z0-9]+/g, " ").trim();
+  const normalizedQuestions = questions.map((question) => normalize(question.question));
+  assert.equal(new Set(normalizedQuestions).size, 160, "há texto de pergunta repetido entre pilares");
+});
 test("desafio final possui cinco rounds equilibrados", () => {
   const challenges = read("final-challenge.json");
   assert.deepEqual([...new Set(challenges.map((item) => item.round))], [1, 2, 3, 4, 5]);
