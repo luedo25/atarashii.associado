@@ -472,7 +472,7 @@
         </div>
         <div class="snake-painel">
             <p style="color:var(--text-muted);font-size:13px;line-height:1.5;margin-bottom:16px;">
-                Cada maçã vale 1 ponto. A cada 20 pontos no jogo, você ganha 1 ponto no ranking. Ao alcançar 50 pontos, recebe mais 10 pontos de bônus. A cada 10 maçãs podem surgir até 6 bombas ao mesmo tempo. Limite total: 100 pontos extras.
+                Cada maçã vale 1 ponto. A cada 20 pontos no jogo, você ganha 1 ponto no ranking. Ao alcançar 50 pontos, recebe mais 10 pontos de bônus. A cada 3 maçãs podem surgir até 6 bombas ao mesmo tempo. Limite total: 100 pontos extras.
             </p>
             <div class="snake-status">
                 <div class="snake-status-card"><small>Pontuação</small><strong id="snakeScore">0</strong></div>
@@ -2252,7 +2252,7 @@
     }
 
     function gerarBombasCobrinha() {
-        // Cada marco de 10 pontos tenta criar até seis bombas. Cada tentativa é
+        // Cada marco de 3 pontos tenta criar até seis bombas. Cada tentativa é
         // independente para que algumas ondas tragam uma ou nenhuma bomba.
         for (let tentativa = 0; tentativa < 6; tentativa += 1) {
             if (Math.random() >= .55) continue;
@@ -2457,7 +2457,7 @@
             atualizarPainelCobrinha();
             snakeBombas = [];
             gerarComidaCobrinha();
-            if (snakePontuacao > 0 && snakePontuacao % 10 === 0) gerarBombasCobrinha();
+            if (snakePontuacao > 0 && snakePontuacao % 3 === 0) gerarBombasCobrinha();
             if (snakePontuacao === 40) {
                 if (snakeIntervalo) window.clearInterval(snakeIntervalo);
                 snakeIntervalo = window.setInterval(avancarCobrinha, 110);

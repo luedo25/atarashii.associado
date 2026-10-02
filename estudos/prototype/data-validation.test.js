@@ -175,7 +175,7 @@ test("jogo da cobrinha usa tela cheia, gestos, bombas por marco e resultado por 
   assert.match(student, /snakeDirecaoTravadaNoPasso/);
   assert.match(student, /id="snakeResultado"/);
   assert.match(student, /pontosGanhosNaPartida/);
-  assert.match(student, /snakePontuacao % 10 === 0/);
+  assert.match(student, /snakePontuacao % 3 === 0/);
   assert.match(student, /tentativa < 6/);
   assert.match(student, /snakeBombas.some/);
 });
