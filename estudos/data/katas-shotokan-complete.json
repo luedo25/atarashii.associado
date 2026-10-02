@@ -1,12 +1,4 @@
 {
-  "metadata": {
-    "nome_base": "Base Oficial de Dados dos Katas - Atarashii App",
-    "idioma": "pt-BR",
-    "fonte_principal": "apostila karate.pdf",
-    "total_katas": 27,
-    "inclui_taikyoku_shodan": true,
-    "status": "Base estruturada para revisao e futura integração no app"
-  },
   "katas": [
     {
       "id": "taikyoku-shodan",
@@ -127,7 +119,8 @@
         "observacao_divergencia": "Opcional em algumas associações; não aparece na lista dos 26 katas da apostila.",
         "status_validacao": "Pendente de revisao final da Associação Atarashii"
       },
-      "nivelJogo": "especialista"
+      "nivelJogo": "especialista",
+      "longDescription": "Apostila apresenta Taikyoku Shodan como forma introdutória opcional em algumas escolas. O estudo pode destacar percurso, postura, ritmo e foco; confirme com o professor se faz parte da sequência da Associação."
     },
     {
       "id": "heian-shodan",
@@ -248,7 +241,8 @@
         "observacao_divergencia": "Apostila, paginas 5 e 6.",
         "status_validacao": "Pendente de revisao final da Associação Atarashii"
       },
-      "nivelJogo": "iniciante"
+      "nivelJogo": "iniciante",
+      "longDescription": "Integra a série Heian, estudada nas faixas iniciais. A apostila informa 21 movimentos, execução aproximada de 30 a 40 segundos e kiai nos movimentos 9 e 17."
     },
     {
       "id": "heian-nidan",
@@ -369,7 +363,8 @@
         "observacao_divergencia": "Apostila, paginas 5 e 6. Grafia da apostila: Hein Nidan.",
         "status_validacao": "Pendente de revisao final da Associação Atarashii"
       },
-      "nivelJogo": "iniciante"
+      "nivelJogo": "iniciante",
+      "longDescription": "Integra a série Heian e amplia o repertório de técnicas básicas. A apostila informa 26 movimentos, cerca de 40 segundos e kiai nos movimentos 11 e 26."
     },
     {
       "id": "heian-sandan",
@@ -492,7 +487,8 @@
         "observacao_divergencia": "Apostila, paginas 5 e 6.",
         "status_validacao": "Pendente de revisao final da Associação Atarashii"
       },
-      "nivelJogo": "iniciante"
+      "nivelJogo": "iniciante",
+      "longDescription": "Na progressão Heian, o estudo deve manter estabilidade nas mudanças de direção. A apostila informa 20 movimentos, cerca de 40 segundos e kiai nos movimentos 10 e 20."
     },
     {
       "id": "heian-yondan",
@@ -617,7 +613,8 @@
         "observacao_divergencia": "Apostila, paginas 5 e 6.",
         "status_validacao": "Pendente de revisao final da Associação Atarashii"
       },
-      "nivelJogo": "iniciante"
+      "nivelJogo": "iniciante",
+      "longDescription": "Integra a série Heian e acrescenta novas combinações. A apostila informa 27 movimentos, cerca de 50 segundos e kiai nos movimentos 13 e 25."
     },
     {
       "id": "heian-godan",
@@ -738,7 +735,8 @@
         "observacao_divergencia": "Apostila, paginas 5 e 6.",
         "status_validacao": "Pendente de revisao final da Associação Atarashii"
       },
-      "nivelJogo": "iniciante"
+      "nivelJogo": "iniciante",
+      "longDescription": "Fecha a série de cinco Heian antes do estudo de outras formas. A apostila informa 23 movimentos, cerca de 50 segundos e kiai nos movimentos 12 e 19."
     },
     {
       "id": "tekki-shodan",
@@ -853,7 +851,8 @@
         "observacao_divergencia": "Apostila, pagina 6.",
         "status_validacao": "Pendente de revisao final da Associação Atarashii"
       },
-      "nivelJogo": "intermediario"
+      "nivelJogo": "intermediario",
+      "longDescription": "A característica de estudo é a sequência predominantemente lateral em Kiba-Dachi, postura que lembra a posição de montar a cavalo. A apostila relaciona essa prática ao desenvolvimento de estabilidade e kime."
     },
     {
       "id": "bassai-dai",
@@ -977,7 +976,8 @@
         "observacao_divergencia": "Apostila, pagina 7.",
         "status_validacao": "Pendente de revisao final da Associação Atarashii"
       },
-      "nivelJogo": "intermediario"
+      "nivelJogo": "intermediario",
+      "longDescription": "A apostila interpreta Bassai Dai como “Romper a Fortaleza” e associa o kata a superar uma situação de confronto exigente. Informa 42 movimentos, cerca de 60 segundos e kiai nos movimentos 19 e 42."
     },
     {
       "id": "kanku-dai",
@@ -1101,7 +1101,8 @@
         "observacao_divergencia": "Apostila, pagina 7.",
         "status_validacao": "Pendente de revisao final da Associação Atarashii"
       },
-      "nivelJogo": "intermediario"
+      "nivelJogo": "intermediario",
+      "longDescription": "O nome remete ao gesto inicial de erguer as mãos e olhar para o céu. A apostila descreve Kanku Dai como um dos katas mais longos do Shotokan, com 65 movimentos e elementos presentes nos cinco Heian."
     },
     {
       "id": "empi",
@@ -1347,7 +1348,8 @@
         "observacao_divergencia": "Apostila, pagina 9.",
         "status_validacao": "Pendente de revisao final da Associação Atarashii"
       },
-      "nivelJogo": "intermediario"
+      "nivelJogo": "intermediario",
+      "longDescription": "A apostila associa Jion a “Amor e Gratidão” e destaca suas bases pesadas. Informa 47 movimentos, aproximadamente 60 segundos e kiai nos movimentos 17 e 47."
     },
     {
       "id": "hangetsu",
@@ -1469,7 +1471,8 @@
         "observacao_divergencia": "Apostila, pagina 8.",
         "status_validacao": "Pendente de revisao final da Associação Atarashii"
       },
-      "nivelJogo": "especialista"
+      "nivelJogo": "especialista",
+      "longDescription": "O nome “Meia-Lua” está ligado aos movimentos semicirculares de mãos e pés. A apostila também destaca a coordenação da respiração com o movimento e informa 41 movimentos."
     },
     {
       "id": "jitte",
@@ -1591,7 +1594,8 @@
         "observacao_divergencia": "Apostila, pagina 8.",
         "status_validacao": "Pendente de revisao final da Associação Atarashii"
       },
-      "nivelJogo": "especialista"
+      "nivelJogo": "especialista",
+      "longDescription": "“Dez Mãos” é a tradução apresentada na apostila. O texto caracteriza Jitte como um kata de postura firme e maior exigência física, com 24 movimentos."
     },
     {
       "id": "gankaku",
@@ -1713,7 +1717,8 @@
         "observacao_divergencia": "Apostila, paginas 8 e 9.",
         "status_validacao": "Pendente de revisao final da Associação Atarashii"
       },
-      "nivelJogo": "avancado"
+      "nivelJogo": "avancado",
+      "longDescription": "A postura em uma perna aparece repetidamente e exige equilíbrio controlado. A apostila usa a imagem do grou sobre a rocha e informa 42 movimentos."
     },
     {
       "id": "tekki-nidan",
@@ -1828,7 +1833,8 @@
         "observacao_divergencia": "Apostila, pagina 6.",
         "status_validacao": "Pendente de revisao final da Associação Atarashii"
       },
-      "nivelJogo": "avancado"
+      "nivelJogo": "avancado",
+      "longDescription": "Como os demais Tekki, enfatiza deslocamentos laterais e Kiba-Dachi. A apostila informa 24 movimentos; mantenha a base estável e a intenção do movimento sem elevar excessivamente o centro de gravidade."
     },
     {
       "id": "tekki-sandan",
@@ -1945,7 +1951,8 @@
         "observacao_divergencia": "Apostila, pagina 6. Grafia da apostila: Teki Sandan.",
         "status_validacao": "Pendente de revisao final da Associação Atarashii"
       },
-      "nivelJogo": "avancado"
+      "nivelJogo": "avancado",
+      "longDescription": "A série Tekki mantém o trabalho lateral em Kiba-Dachi e o desenvolvimento de kime. A apostila informa 36 movimentos e cerca de 40 segundos de execução."
     },
     {
       "id": "bassai-sho",
@@ -2069,7 +2076,8 @@
         "observacao_divergencia": "Apostila, pagina 7.",
         "status_validacao": "Pendente de revisao final da Associação Atarashii"
       },
-      "nivelJogo": "avancado"
+      "nivelJogo": "avancado",
+      "longDescription": "A forma Sho é a versão mais curta de Bassai e preserva o tema de superar uma situação difícil com decisões técnicas precisas. A apostila informa 27 movimentos."
     },
     {
       "id": "kanku-sho",
@@ -2193,7 +2201,8 @@
         "observacao_divergencia": "Apostila, pagina 7.",
         "status_validacao": "Pendente de revisao final da Associação Atarashii"
       },
-      "nivelJogo": "avancado"
+      "nivelJogo": "avancado",
+      "longDescription": "A apostila apresenta Kanku Sho como a forma curta da família Kanku, com 48 movimentos. Observe a continuidade das direções e o controle nas transições."
     },
     {
       "id": "nijushiho",
@@ -2315,7 +2324,8 @@
         "observacao_divergencia": "Apostila, pagina 10.",
         "status_validacao": "Pendente de revisao final da Associação Atarashii"
       },
-      "nivelJogo": "especialista"
+      "nivelJogo": "especialista",
+      "longDescription": "“Vinte e Quatro Passos” é o significado apresentado na apostila. Apesar do nome, o texto informa 34 movimentos e destaca mudanças rápidas de direção e variedade de defesa e contra-ataque."
     },
     {
       "id": "chinte",
@@ -2436,7 +2446,8 @@
         "observacao_divergencia": "Apostila, pagina 9. Pontos de kiai não informados.",
         "status_validacao": "Pendente de revisao final da Associação Atarashii"
       },
-      "nivelJogo": "especialista"
+      "nivelJogo": "especialista",
+      "longDescription": "“Mãos Estranhas” ou “Técnicas Estranhas” é o significado apresentado na apostila. O estudo ressalta a adaptação técnica diante de diferenças de alcance ou vantagem física."
     },
     {
       "id": "sochin",
@@ -2558,7 +2569,8 @@
         "observacao_divergencia": "Apostila, paginas 9 e 10.",
         "status_validacao": "Pendente de revisao final da Associação Atarashii"
       },
-      "nivelJogo": "avancado"
+      "nivelJogo": "avancado",
+      "longDescription": "O nome é apresentado como “Espírito Inabalável”. A apostila destaca bases firmes, postura e força controlada e informa 40 movimentos."
     },
     {
       "id": "meikyo",
@@ -2680,7 +2692,8 @@
         "observacao_divergencia": "Apostila, paginas 10 e 11.",
         "status_validacao": "Pendente de revisao final da Associação Atarashii"
       },
-      "nivelJogo": "especialista"
+      "nivelJogo": "especialista",
+      "longDescription": "“Espelho Limpo” ou “Espelho da Alma” são traduções apresentadas na apostila. Observe a precisão e a clareza das técnicas; o texto informa 34 movimentos."
     },
     {
       "id": "wankan",
@@ -2801,7 +2814,8 @@
         "observacao_divergencia": "Apostila, pagina 11.",
         "status_validacao": "Pendente de revisao final da Associação Atarashii"
       },
-      "nivelJogo": "especialista"
+      "nivelJogo": "especialista",
+      "longDescription": "“Coroa Real” é o significado indicado. A apostila descreve Wankan como o kata mais curto do Shotokan e informa um kiai no movimento 24."
     },
     {
       "id": "unsu",
@@ -2923,7 +2937,8 @@
         "observacao_divergencia": "Apostila, paginas 9 e 10.",
         "status_validacao": "Pendente de revisao final da Associação Atarashii"
       },
-      "nivelJogo": "avancado"
+      "nivelJogo": "avancado",
+      "longDescription": "A apostila também registra a forma de nome Unshō e a tradução “Defesa contra a nuvem”. Caracteriza Unsu como um kata de alto nível técnico, com variedade de movimentos e 48 kyodos."
     },
     {
       "id": "gojushiho-dai",
@@ -3045,7 +3060,8 @@
         "observacao_divergencia": "Apostila, pagina 10. Validar ordem/nome com a associação.",
         "status_validacao": "Pendente de revisao final da Associação Atarashii"
       },
-      "nivelJogo": "especialista"
+      "nivelJogo": "especialista",
+      "longDescription": "A família Gojushiho tem duas formas e o nome remete a “Cinquenta e Quatro Passos”. A apostila indica 67 movimentos para a forma Dai."
     },
     {
       "id": "gojushiho-sho",
@@ -3167,7 +3183,8 @@
         "observacao_divergencia": "Apostila, pagina 10. Validar ordem/nome com a associação.",
         "status_validacao": "Pendente de revisao final da Associação Atarashii"
       },
-      "nivelJogo": "avancado"
+      "nivelJogo": "avancado",
+      "longDescription": "A forma Sho é associada a “Cinquenta e Quatro Passos - forma curta”. A apostila informa 65 movimentos e ressalta técnicas pouco comuns no repertório Shotokan."
     },
     {
       "id": "jiin",
@@ -3289,7 +3306,8 @@
         "observacao_divergencia": "Apostila, pagina 11.",
         "status_validacao": "Pendente de revisao final da Associação Atarashii"
       },
-      "nivelJogo": "especialista"
+      "nivelJogo": "especialista",
+      "longDescription": "A apostila traduz Jiin como “Amor e Proteção” e destaca bases firmes e postura. Informa 35 movimentos e dois pontos de kiai."
     }
   ]
 }

@@ -37,7 +37,8 @@
     "slug": "sensei",
     "meaning": "Professor.",
     "category": "hierarquia",
-    "relatedIds": []
+    "relatedIds": [],
+    "longDescription": "No dojô, é a forma respeitosa de se referir ao professor. Siga as orientações com atenção e peça esclarecimento quando necessário."
   },
   {
     "id": "seiretsu",
@@ -45,7 +46,8 @@
     "slug": "seiretsu",
     "meaning": "Coloque-se em fila.",
     "category": "comandos",
-    "relatedIds": []
+    "relatedIds": [],
+    "longDescription": "Comando para organizar a turma em fila antes da atividade."
   },
   {
     "id": "kiritsu",
@@ -53,7 +55,8 @@
     "slug": "kiritsu",
     "meaning": "Coloque-se de pe.",
     "category": "comandos",
-    "relatedIds": []
+    "relatedIds": [],
+    "longDescription": "Comando para ficar de pé."
   },
   {
     "id": "rei",
@@ -63,7 +66,8 @@
     "category": "comandos",
     "relatedIds": [
       "cumprimento"
-    ]
+    ],
+    "longDescription": "Comando de saudação; a saudação demonstra respeito no início e no fim das práticas."
   },
   {
     "id": "hajime",
@@ -71,7 +75,8 @@
     "slug": "hajime",
     "meaning": "Começar ou iniciar.",
     "category": "comandos",
-    "relatedIds": []
+    "relatedIds": [],
+    "longDescription": "Comando para iniciar o exercício ou encontro."
   },
   {
     "id": "yame",
@@ -81,7 +86,8 @@
     "category": "comandos",
     "relatedIds": [
       "regras-kumite-início-fim"
-    ]
+    ],
+    "longDescription": "Comando para interromper e retornar à atenção; em competição, encerra ou suspende a ação conforme orientação do árbitro."
   },
   {
     "id": "jodan",
@@ -91,7 +97,8 @@
     "category": "niveis",
     "relatedIds": [
       "regras-kumite-pontuação"
-    ]
+    ],
+    "longDescription": "Nível de altura correspondente à região da cabeça/rosto."
   },
   {
     "id": "chudan",
@@ -101,7 +108,8 @@
     "category": "niveis",
     "relatedIds": [
       "regras-kumite-pontuação"
-    ]
+    ],
+    "longDescription": "Nível médio do tronco, aproximadamente entre o peito e a cintura, conforme o contexto técnico."
   },
   {
     "id": "gedan",
@@ -111,7 +119,8 @@
     "category": "niveis",
     "relatedIds": [
       "gedan-barai"
-    ]
+    ],
+    "longDescription": "Nível baixo, abaixo da linha da faixa."
   },
   {
     "id": "hidari",
@@ -119,7 +128,8 @@
     "slug": "hidari",
     "meaning": "Esquerda.",
     "category": "direções",
-    "relatedIds": []
+    "relatedIds": [],
+    "longDescription": "Indica o lado esquerdo; confirme a referência corporal durante a instrução."
   },
   {
     "id": "migi",
@@ -127,7 +137,8 @@
     "slug": "migi",
     "meaning": "Direita.",
     "category": "direções",
-    "relatedIds": []
+    "relatedIds": [],
+    "longDescription": "Indica o lado direito; confirme a referência corporal durante a instrução."
   },
   {
     "id": "mae",
@@ -137,7 +148,8 @@
     "category": "direções",
     "relatedIds": [
       "mae-geri"
-    ]
+    ],
+    "longDescription": "Direção para a frente."
   },
   {
     "id": "yoko",
@@ -147,7 +159,8 @@
     "category": "direções",
     "relatedIds": [
       "yoko-geri"
-    ]
+    ],
+    "longDescription": "Direção lateral."
   },
   {
     "id": "ushiro",
@@ -157,7 +170,8 @@
     "category": "direções",
     "relatedIds": [
       "ushiro-geri"
-    ]
+    ],
+    "longDescription": "Direção para trás."
   },
   {
     "id": "dojo",
@@ -167,7 +181,8 @@
     "category": "conceitos",
     "relatedIds": [
       "dojo-kun"
-    ]
+    ],
+    "longDescription": "Local de treinamento; também representa a comunidade de prática e respeito compartilhado."
   },
   {
     "id": "karate-do",
@@ -177,7 +192,8 @@
     "category": "conceitos",
     "relatedIds": [
       "história-karate"
-    ]
+    ],
+    "longDescription": "O caminho das mãos vazias: prática técnica associada ao desenvolvimento contínuo e à formação do caráter."
   },
   {
     "id": "kata-term",
@@ -187,7 +203,8 @@
     "category": "conceitos",
     "relatedIds": [
       "kata"
-    ]
+    ],
+    "longDescription": "Sequência organizada de técnicas que simula combate; seu estudo inclui forma, ritmo, foco e aplicações possíveis (bunkai)."
   },
   {
     "id": "kumite-term",
@@ -197,7 +214,8 @@
     "category": "conceitos",
     "relatedIds": [
       "kumite"
-    ]
+    ],
+    "longDescription": "Prática com parceiro; requer controle, respeito, distância e tempo adequado."
   },
   {
     "id": "kiai-term",
@@ -207,7 +225,8 @@
     "category": "conceitos",
     "relatedIds": [
       "kiai"
-    ]
+    ],
+    "longDescription": "Expressão concentrada de energia coordenada com uma técnica; os momentos dependem da forma praticada."
   },
   {
     "id": "kime",
@@ -215,7 +234,8 @@
     "slug": "kime",
     "meaning": "Impacto ou potência.",
     "category": "conceitos",
-    "relatedIds": []
+    "relatedIds": [],
+    "longDescription": "Foco da técnica no instante apropriado, com controle corporal e sem tensão prolongada."
   },
   {
     "id": "tanden",
@@ -226,6 +246,7 @@
     "relatedIds": [
       "kiai",
       "mokuso"
-    ]
+    ],
+    "longDescription": "Região abdominal usada como referência de respiração, estabilidade e coordenação corporal na apostila."
   }
 ]

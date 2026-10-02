@@ -16,7 +16,12 @@
     return ({ iniciante: "basico", intermediario: "intermediario", avancado: "avancado" })[level] || "especialista";
   }
 
-  const api = { canAccessPillar, prerequisiteFor, pillarForKataLevel };
+  function isTestProfessor(user) {
+    return String(user?.tipo || "").trim().toLowerCase() === "professor"
+      && String(user?.usuario || "").trim().toLowerCase() === "teste";
+  }
+
+  const api = { canAccessPillar, prerequisiteFor, pillarForKataLevel, isTestProfessor };
   if (typeof module !== "undefined" && module.exports) module.exports = api;
   else root.CurriculumEngine = api;
 })(typeof window !== "undefined" ? window : globalThis);

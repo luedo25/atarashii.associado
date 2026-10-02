@@ -2,7 +2,7 @@
 
 const state = {
   data: null, catalog: [], progressService: null, route: "home", returnRoute: "home",
-  currentUser: null,
+  currentUser: null, testPreview: false,
   filter: "todos", search: "", assessment: null, assessmentResult: null, assessmentSaving: false, pendingAssessmentSave: null,
   challenge: null, challengeResult: null, achievement: null, notice: "",
 };
@@ -96,8 +96,15 @@ function buildCatalog(data) {
   ];
 }
 async function loadData() {
-  const currentUser = await Auth.exigirSessao("aluno");
+  const currentUser = await Auth.exigirSessao();
   if (!currentUser) return false;
+  const userType = String(currentUser.tipo || "").trim().toLowerCase();
+  state.testPreview = CurriculumEngine.isTestProfessor(currentUser);
+  if (userType !== "aluno" && !state.testPreview) {
+    const destination = userType === "professor" ? "../../professor.html" : "../../area-associado.html";
+    location.replace(new URL(destination, location.href).href);
+    return false;
+  }
   state.currentUser = currentUser;
   const studentName = document.querySelector("#studentName");
   if (studentName) studentName.textContent = `Olá, ${currentUser.nome || currentUser.usuario || "Associado"}`;
@@ -110,8 +117,11 @@ async function loadData() {
   state.data.katas = Array.isArray(state.data.katas) ? state.data.katas : state.data.katas.katas;
   state.catalog = buildCatalog(state.data);
   assignCurriculum(state.catalog);
-  const remote = await EstudosProgresso.obter();
-  state.progressService = ProgressService.createRemote(remote?.progresso || null, state.catalog, (progress) => EstudosProgresso.salvar(progress));
+  const remote = state.testPreview ? null : await EstudosProgresso.obter();
+  const saveProgress = state.testPreview
+    ? async () => ({ ok: true, sessionOnly: true })
+    : (progress) => EstudosProgresso.salvar(progress);
+  state.progressService = ProgressService.createRemote(remote?.progresso || null, state.catalog, saveProgress);
   return true;
 }
 function subjectForItem(item) {
@@ -150,6 +160,7 @@ function pillarAssessmentState(pillar) {
   return progressState().assessments[pillarAssessmentKey(pillar)];
 }
 function canAccessPillar(pillar) {
+  if (state.testPreview) return true;
   const pending = state.pendingAssessmentSave;
   if (pending?.passed && PILLARS.findIndex((item) => item.key === pillar) > PILLARS.findIndex((item) => item.key === pending.key.slice(6))) return false;
   return CurriculumEngine.canAccessPillar(pillar, PILLARS, progressState().assessments);
@@ -158,6 +169,7 @@ function pillarPrerequisite(pillar) {
   return CurriculumEngine.prerequisiteFor(pillar, PILLARS);
 }
 function pillarCanQuiz(pillar) {
+  if (state.testPreview) return true;
   const record = pillarAssessmentState(pillar);
   const p = pillarProgress(pillar);
   const allRead = p.total > 0 && p.completed === p.total;
@@ -220,7 +232,7 @@ function homeView() {
       <section class="pillar-grid" aria-label="Pilares de estudo">${PILLARS.map((pillar, index) => {
         const p = pillarProgress(pillar.key), exam = pillarAssessmentState(pillar.key);
         const unlocked = canAccessPillar(pillar.key), prerequisite = pillarPrerequisite(pillar.key);
-        return `<button class="pillar-card ${unlocked ? "" : "is-locked"}" data-route="pilar:${pillar.key}" type="button"><span class="pillar-card__top"><span>${pillar.icon}</span><small>${unlocked ? `0${index + 1}` : "🔒"}</small></span><strong>${pillar.label}</strong><span>${pillar.description}</span><span class="pillar-card__progress">${p.completed}/${p.total} conteúdos · ${p.percent}%</span><span class="pillar-card__status">${exam.passed ? "✓ Quiz aprovado" : unlocked ? `${exam.attempts.length}/3 tentativas utilizadas` : `Bloqueado · aprove ${prerequisite.label}`}</span></button>`;
+        return `<button class="pillar-card ${unlocked ? "" : "is-locked"}" data-route="pilar:${pillar.key}" type="button"><span class="pillar-card__top"><span>${pillar.icon}</span><small>${unlocked ? `0${index + 1}` : "🔒"}</small></span><strong>${pillar.label}</strong><span>${pillar.description}</span><span class="pillar-card__progress">${p.completed}/${p.total} conteúdos · ${p.percent}%</span><span class="pillar-card__status">${exam.passed ? "✓ Quiz aprovado" : unlocked ? (state.testPreview ? "Acesso de conferência · quiz liberado" : `${exam.attempts.length}/3 tentativas utilizadas`) : `Bloqueado · aprove ${prerequisite.label}`}</span></button>`;
       }).join("")}</section>
       <section class="study-rules"><strong>Como funciona</strong><p>Leia e marque como concluído todo o conteúdo dos quatro temas. Depois, responda 10 questões por tema. Você tem três tentativas por pilar; após três reprovações, será necessário reler todo o conteúdo daquele pilar antes de tentar novamente.</p></section>
     </section>`;
@@ -240,7 +252,7 @@ function pillarView(key) {
     const items = pillarItems(key, subject.key);
     const done = items.filter(item => itemStatus(item) === "COMPLETED").length;
     return `<section class="subject-panel"><header><span>${subject.icon}</span><div><h3>${subject.label}</h3><small>${done} de ${items.length} concluídos</small></div></header><div class="subject-items">${items.map(itemCard).join("") || `<p class="muted">Nenhum conteúdo disponível nesta seção.</p>`}</div></section>`;
-  }).join("")}</div><section class="assessment-gate ${exam.passed ? "is-complete" : ""}"><div><span>${exam.passed ? "✓ Pilar aprovado" : p.percent === 100 ? "Leitura concluída · quiz liberado" : "Quiz bloqueado até concluir toda a leitura"}</span><strong>Quiz ${pillar.label} · 40 perguntas</strong><small>${exam.attempts.length}/3 tentativas nesta etapa ${exam.bestPercent != null ? `· melhor nota ${exam.bestPercent}%` : ""}</small></div><button class="primary-button" data-route="assessment:${pillarAssessmentKey(key)}" type="button" ${pillarCanQuiz(key) ? "" : "disabled"}>${exam.needsReread ? "Reler e fazer quiz" : exam.passed ? "Aprovado" : "Abrir quiz"}</button>${exam.passed ? `<button class="secondary-button certificate-button" data-action="certificate:${key}" type="button">⬇ Salvar certificado PDF</button>` : ""}</section></section>`;
+  }).join("")}</div><section class="assessment-gate ${exam.passed ? "is-complete" : ""}"><div><span>${exam.passed ? "✓ Pilar aprovado" : state.testPreview ? "Modo de conferência · leitura e aprovação dispensadas" : p.percent === 100 ? "Leitura concluída · quiz liberado" : "Quiz bloqueado até concluir toda a leitura"}</span><strong>Quiz ${pillar.label} · 40 perguntas</strong><small>${state.testPreview ? "Acesso de teste sem limite de tentativas; resultados temporários." : `${exam.attempts.length}/3 tentativas nesta etapa ${exam.bestPercent != null ? `· melhor nota ${exam.bestPercent}%` : ""}`}</small></div><button class="primary-button" data-route="assessment:${pillarAssessmentKey(key)}" type="button" ${pillarCanQuiz(key) ? "" : "disabled"}>${exam.needsReread ? "Reler e fazer quiz" : exam.passed ? "Aprovado" : "Abrir quiz"}</button>${exam.passed && !state.testPreview ? `<button class="secondary-button certificate-button" data-action="certificate:${key}" type="button">⬇ Salvar certificado PDF</button>` : ""}</section></section>`;
 }
 
 function itemCard(item) {
@@ -351,7 +363,7 @@ function assessmentQuestions(key) {
 }
 function startAssessment(key) {
   const pillar = key.startsWith("pilar-") ? key.slice(6) : "";
-  if (!pillar || !canAccessPillar(pillar) || !pillarCanQuiz(pillar)) {
+  if (!pillar || !canAccessPillar(pillar) || (!state.testPreview && !pillarCanQuiz(pillar))) {
     state.notice = "Conclua a leitura obrigatória do pilar antes de iniciar o quiz. Após três reprovações, releia todos os conteúdos para liberar novas tentativas."; render(); return;
   }
   const record = pillarAssessmentState(pillar);
@@ -371,7 +383,7 @@ function assessmentLanding(key) {
   }
   const record = pillar ? pillarAssessmentState(pillar) : { attempts: [], passed: false };
   const label = pillar ? `Pilar ${PILLAR_LABEL[pillar]}` : ASSESSMENT_LABELS[key] || "Avaliação";
-  return `<section class="assessment-intro"><span class="assessment-intro__icon">問</span><p class="eyebrow">Avaliação obrigatória</p><h2>${escapeHtml(label)}</h2><p>São 40 perguntas: 10 de Kata, 10 de Kihon, 10 de Kumite e 10 de assuntos gerais. Aproveitamento mínimo: 70%. Você tem até três tentativas antes de precisar reler todo o conteúdo deste pilar.</p><p class="muted">Tentativas disponíveis: ${Math.max(0, 3 - record.attempts.length)} de 3${record.bestPercent != null ? ` · melhor resultado: ${record.bestPercent}%` : ""}</p><button class="primary-button" data-action="start-assessment:${key}" type="button" ${pillar && pillarCanQuiz(pillar) ? "" : "disabled"}>Começar quiz</button><button class="text-button" data-route="pilar:${pillar}" type="button">Voltar ao conteúdo</button></section>`;
+  return `<section class="assessment-intro"><span class="assessment-intro__icon">問</span><p class="eyebrow">Avaliação obrigatória</p><h2>${escapeHtml(label)}</h2><p>São 40 perguntas: 10 de Kata, 10 de Kihon, 10 de Kumite e 10 de assuntos gerais. Aproveitamento mínimo: 70%. ${state.testPreview ? "Acesso liberado para conferência; o resultado fica somente nesta sessão." : "Você tem até três tentativas antes de precisar reler todo o conteúdo deste pilar."}</p><p class="muted">${state.testPreview ? "Modo de conferência ativo." : `Tentativas disponíveis: ${Math.max(0, 3 - record.attempts.length)} de 3${record.bestPercent != null ? ` · melhor resultado: ${record.bestPercent}%` : ""}`}</p><button class="primary-button" data-action="start-assessment:${key}" type="button" ${pillar && pillarCanQuiz(pillar) ? "" : "disabled"}>Começar quiz</button><button class="text-button" data-route="pilar:${pillar}" type="button">Voltar ao conteúdo</button></section>`;
 }
 
 function assessmentRunView() {
@@ -394,7 +406,7 @@ async function finishAssessment() {
     record.bestPercent = Math.max(record.bestPercent || 0, result.percent);
     record.passed = result.passed;
     if (result.passed) record.passedAt = now();
-    else if (record.attempts.length >= 3) {
+    else if (!state.testPreview && record.attempts.length >= 3) {
       record.needsReread = true; exhausted = true;
       const pillar = key.slice(6);
       state.catalog.filter((item) => item.pillar === pillar).forEach((item) => {
@@ -402,7 +414,7 @@ async function finishAssessment() {
       });
     }
   });
-  state.assessmentResult = { ...result, key, questions, answers, exhausted, synced: false };
+  state.assessmentResult = { ...result, key, questions, answers, exhausted, synced: false, sessionOnly: state.testPreview };
   const newMedal = progressState().achievements.medals.find((medal) => !before.includes(medal));
   if (newMedal) state.assessmentResult.medalToAward = newMedal;
   state.pendingAssessmentSave = { key, passed: result.passed };
@@ -447,8 +459,10 @@ function assessmentResultView() {
   if (!result) return homeView();
   const wrong = result.questions.map((question, index) => ({ question, answer: result.answers[index] })).filter(({ question, answer }) => answer !== question.correctOption);
   const backRoute = result.key.startsWith("kata-") ? result.key : result.key;
-  const syncNotice = result.synced === false ? `<div class="form-notice" role="alert"><strong>Resultado ainda não sincronizado.</strong><p>Sua nota de ${result.percent}% está visível nesta sessão, mas o servidor ainda não confirmou a gravação. Reconecte-se e tente salvar novamente antes de sair desta página.</p><button class="primary-button" data-action="retry-assessment-save" type="button">Tentar salvar resultado</button>${result.syncError ? `<small>${escapeHtml(result.syncError)}</small>` : ""}</div>` : `<p class="sync-confirmation" role="status">Resultado salvo no sistema.</p>`;
-  return `<section class="result-page ${result.passed ? "is-pass" : "is-fail"}"><span class="result-icon">${result.passed ? "✓" : "↻"}</span><p class="eyebrow">${result.passed ? "Avaliação concluída" : "Continue praticando"}</p><h2>${result.percent}% de aproveitamento</h2><p>${result.score} de ${result.total} respostas corretas. ${result.passed ? "Você atingiu o resultado necessário." : result.exhausted ? "As três tentativas foram utilizadas. Releia todos os conteúdos deste pilar para liberar uma nova série de tentativas." : "Revise os pontos abaixo e tente novamente quando estiver pronto."}</p>${syncNotice}${wrong.length ? `<section class="review-list"><h3>Revise estes pontos</h3>${wrong.map(({ question }) => `<div><strong>${escapeHtml(question.question)}</strong><span>${escapeHtml(question.explanation)}</span></div>`).join("")}</section>` : ""}<div class="result-actions">${result.synced && result.passed && result.key.startsWith("pilar-") ? `<button class="primary-button" data-action="certificate:${result.key.slice(6)}" type="button">⬇ Salvar certificado PDF</button>` : ""}${result.synced && !result.passed && !result.exhausted ? `<button class="primary-button" data-action="start-assessment:${result.key}" type="button">Tentar novamente (${Math.max(0, 3 - pillarAssessmentState(result.key.slice(6)).attempts.length)} restantes)</button>` : ""}<button class="secondary-button" data-route="pilar:${result.key.slice(6)}" type="button" ${result.synced ? "" : "disabled"}>Voltar ao pilar</button></div></section>`;
+  const syncNotice = result.sessionOnly
+    ? `<p class="sync-confirmation" role="status">Resultado temporário da conferência. Não altera o progresso dos alunos.</p>`
+    : result.synced === false ? `<div class="form-notice" role="alert"><strong>Resultado ainda não sincronizado.</strong><p>Sua nota de ${result.percent}% está visível nesta sessão, mas o servidor ainda não confirmou a gravação. Reconecte-se e tente salvar novamente antes de sair desta página.</p><button class="primary-button" data-action="retry-assessment-save" type="button">Tentar salvar resultado</button>${result.syncError ? `<small>${escapeHtml(result.syncError)}</small>` : ""}</div>` : `<p class="sync-confirmation" role="status">Resultado salvo no sistema.</p>`;
+  return `<section class="result-page ${result.passed ? "is-pass" : "is-fail"}"><span class="result-icon">${result.passed ? "✓" : "↻"}</span><p class="eyebrow">${result.passed ? "Avaliação concluída" : "Continue praticando"}</p><h2>${result.percent}% de aproveitamento</h2><p>${result.score} de ${result.total} respostas corretas. ${result.passed ? "Você atingiu o resultado necessário." : result.exhausted ? "As três tentativas foram utilizadas. Releia todos os conteúdos deste pilar para liberar uma nova série de tentativas." : "Revise os pontos abaixo e tente novamente quando estiver pronto."}</p>${syncNotice}${wrong.length ? `<section class="review-list"><h3>Revise estes pontos</h3>${wrong.map(({ question }) => `<div><strong>${escapeHtml(question.question)}</strong><span>${escapeHtml(question.explanation)}</span></div>`).join("")}</section>` : ""}<div class="result-actions">${result.synced && result.passed && result.key.startsWith("pilar-") && !result.sessionOnly ? `<button class="primary-button" data-action="certificate:${result.key.slice(6)}" type="button">⬇ Salvar certificado PDF</button>` : ""}${result.synced && !result.passed && !result.exhausted ? `<button class="primary-button" data-action="start-assessment:${result.key}" type="button">${result.sessionOnly ? "Refazer conferência" : `Tentar novamente (${Math.max(0, 3 - pillarAssessmentState(result.key.slice(6)).attempts.length)} restantes)`}</button>` : ""}<button class="secondary-button" data-route="pilar:${result.key.slice(6)}" type="button" ${result.synced ? "" : "disabled"}>Voltar ao pilar</button></div></section>`;
 }
 
 function finalChallengeView() {

@@ -29,3 +29,15 @@ test("katas ficam no pilar do nível em que o aluno vai estudá-los", () => {
   assert.equal(Curriculum.pillarForKataLevel("intermediario"), "intermediario");
   assert.equal(Curriculum.pillarForKataLevel("avancado"), "avancado");
 });
+test("somente a conta teste com perfil professor recebe acesso de conferência", () => {
+  assert.equal(Curriculum.isTestProfessor({ usuario: "teste", tipo: "professor" }), true);
+  assert.equal(Curriculum.isTestProfessor({ usuario: " TESTE ", tipo: " Professor " }), true);
+  assert.equal(Curriculum.isTestProfessor({ usuario: "teste", tipo: "aluno" }), false);
+  assert.equal(Curriculum.isTestProfessor({ usuario: "outro", tipo: "professor" }), false);
+});
+test("somente a conta teste com perfil professor recebe acesso de conferência", () => {
+  assert.equal(Curriculum.isTestProfessor({ usuario: "teste", tipo: "professor" }), true);
+  assert.equal(Curriculum.isTestProfessor({ usuario: " TESTE ", tipo: " Professor " }), true);
+  assert.equal(Curriculum.isTestProfessor({ usuario: "teste", tipo: "aluno" }), false);
+  assert.equal(Curriculum.isTestProfessor({ usuario: "outro", tipo: "professor" }), false);
+});

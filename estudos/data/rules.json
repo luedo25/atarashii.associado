@@ -9,7 +9,8 @@
     "penaltyLevel": null,
     "sourcePages": [
       25
-    ]
+    ],
+    "longDescription": "A contagem começa com o comando do árbitro e é interrompida em Yame. A apostila descreve sinal curto para os 15 segundos finais e dois sinais para o fim do tempo."
   },
   {
     "id": "regras-kumite-kiken",
@@ -21,7 +22,8 @@
     "penaltyLevel": "desqualificacao da categoria",
     "sourcePages": [
       25
-    ]
+    ],
+    "longDescription": "A decisão também se aplica quando o atleta abandona ou não pode continuar; os pontos decorrentes da desclassificação são registrados conforme a regra da competição."
   },
   {
     "id": "regras-kumite-inicio-fim",
@@ -33,7 +35,8 @@
     "penaltyLevel": null,
     "sourcePages": [
       25
-    ]
+    ],
+    "longDescription": "O atleta deve saudar corretamente. Yame interrompe a disputa; Moto No Ichi pode indicar retorno às posições originais."
   },
   {
     "id": "regras-kumite-pontuacao",
@@ -46,7 +49,8 @@
     "assetUrl": "assets/rules/kumite-pontuacao-avisos.png",
     "sourcePages": [
       26
-    ]
+    ],
+    "longDescription": "Além da técnica controlada, a apostila lista seis critérios: boa forma, atitude esportiva, aplicação vigorosa, zanshin, tempo correto e distância adequada."
   },
   {
     "id": "yuko",
@@ -60,7 +64,8 @@
     "sourcePages": [
       26,
       27
-    ]
+    ],
+    "longDescription": "Yuko vale 1 ponto e é atribuído a tsuki ou uchi em área válida, quando os critérios de avaliação são atendidos."
   },
   {
     "id": "waza-ari",
@@ -74,7 +79,8 @@
     "sourcePages": [
       26,
       27
-    ]
+    ],
+    "longDescription": "Waza-Ari vale 2 pontos e corresponde a chute Chudan válido, executado com controle e atendendo aos critérios de avaliação."
   },
   {
     "id": "ippon",
@@ -88,7 +94,8 @@
     "sourcePages": [
       26,
       27
-    ]
+    ],
+    "longDescription": "Ippon vale 3 pontos: chute Jodan ou técnica de mão quando o oponente está em contato com o tatami, respeitadas as exceções e os critérios de validade."
   },
   {
     "id": "regras-kata-geral",
@@ -100,7 +107,8 @@
     "penaltyLevel": null,
     "sourcePages": [
       30
-    ]
+    ],
+    "longDescription": "A apresentação deve comunicar intenção de combate, concentração e impacto potencial, com potência, velocidade, elegância, ritmo e equilíbrio. Kata não é dança nem encenação."
   },
   {
     "id": "regras-kata-equipe",
@@ -112,7 +120,8 @@
     "penaltyLevel": null,
     "sourcePages": [
       31
-    ]
+    ],
+    "longDescription": "As equipes podem ter três ou quatro integrantes, com três competindo em cada rodada. Em disputas por medalha, a equipe apresenta o kata e demonstra seu significado por meio do bunkai."
   },
   {
     "id": "regras-kata-faltas",
@@ -124,7 +133,8 @@
     "penaltyLevel": "falta",
     "sourcePages": [
       32
-    ]
+    ],
+    "longDescription": "A apostila inclui perda de equilíbrio, técnica incompleta, falta de sincronia, kiai fora de tempo e teatralidade entre os aspectos que prejudicam a avaliação."
   },
   {
     "id": "regras-kata-desclassificacao",
@@ -136,6 +146,7 @@
     "penaltyLevel": "desclassificacao",
     "sourcePages": [
       32
-    ]
+    ],
+    "longDescription": "O texto prevê desclassificação por kata anunciado incorretamente, ausência de saudação, pausa distinta, alteração da forma, queda ou descumprimento das instruções dos juízes."
   }
 ]

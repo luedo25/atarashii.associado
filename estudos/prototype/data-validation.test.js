@@ -171,7 +171,7 @@ test("guia exige login e usa o PWA principal sem persistir progresso localmente"
   const progress = fs.readFileSync(path.join(__dirname, "progress-service.js"), "utf8");
   assert.equal(html.includes('rel="manifest"'), false, "não deve registrar um segundo PWA");
   assert.equal(html.includes('register("./service-worker.js")'), false, "deve usar o service worker da raiz");
-  assert.match(app, /Auth\.exigirSessao\("aluno"\)/);
+  assert.match(app, /Auth\.exigirSessao\(\)/);
   assert.match(app, /ProgressService\.createRemote/);
   assert.equal(/\blocalStorage\b|\bsessionStorage\b/.test(progress), false, "o serviço de progresso não deve usar Storage local");
 });
