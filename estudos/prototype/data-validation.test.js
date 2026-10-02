@@ -163,3 +163,14 @@ test("painel do associado mostra meses na faixa e diferencia o status dos estudo
   assert.match(student, /\.objetivo-estudos-concluido\s*\{\s*color:#86efac/);
   assert.match(requirements, /function mesesDesdePeriodo\(/);
 });
+
+test("jogo da cobrinha usa tela cheia no celular e controles por gesto sem setas", () => {
+  const root = path.resolve(__dirname, "../..");
+  const student = fs.readFileSync(path.join(root, "area-associado.html"), "utf8");
+  assert.doesNotMatch(student, /data-snake-direcao|snake-controles/);
+  assert.match(student, /requestFullscreen\(/);
+  assert.match(student, /snake-em-tela-cheia/);
+  assert.match(student, /addEventListener\('pointerup'/);
+  assert.match(student, /setPointerCapture/);
+  assert.match(student, /snakeDirecaoTravadaNoPasso/);
+});
