@@ -179,6 +179,7 @@ test("links de Estudos ficam nas abas Exame e Atarashii, e a página redireciona
   const root = path.resolve(__dirname, "../..");
   const login = fs.readFileSync(path.join(root, "index.html"), "utf8");
   const student = fs.readFileSync(path.join(root, "area-associado.html"), "utf8");
+  const professor = fs.readFileSync(path.join(root, "professor.html"), "utf8");
   const api = fs.readFileSync(path.join(root, "api.js"), "utf8");
   assert.doesNotMatch(login, /href=["'][^"']*estudos\/prototype/);
   assert.match(student, /id="conteudo-programatico"[\s\S]*?href="estudos\/prototype\/"/);
@@ -190,6 +191,7 @@ test("links de Estudos ficam nas abas Exame e Atarashii, e a página redireciona
   assert.match(student, /EstudosRequisitos\.niveisPendentes\(progresso, faixa\)/);
   assert.match(student, /class="btn-action"[^>]*>📚 Abrir Guia de Estudos/);
   assert.match(student, /id="saldo"[\s\S]*?📚 Abrir Guia de Estudos[\s\S]*?btnAbrirJogoCobrinha/);
+  assert.match(professor, /id="aba-estudos"[\s\S]*?id="btnAbrirGuiaEstudosProfessor" href="estudos\/prototype\/"/);
   assert.ok(fs.existsSync(path.join(root, "api-render", "server.js")));
 });
 

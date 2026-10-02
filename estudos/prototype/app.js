@@ -102,7 +102,7 @@ async function loadData() {
   const currentUser = await Auth.exigirSessao();
   if (!currentUser) return false;
   const userType = String(currentUser.tipo || "").trim().toLowerCase();
-  state.testPreview = CurriculumEngine.isTestProfessor(currentUser);
+  state.testPreview = CurriculumEngine.isStudyReviewProfessor(currentUser);
   if (userType !== "aluno" && !state.testPreview) {
     const destination = userType === "professor" ? "../../professor.html" : "../../area-associado.html";
     location.replace(new URL(destination, location.href).href);
