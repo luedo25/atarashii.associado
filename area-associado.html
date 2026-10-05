@@ -184,6 +184,19 @@
         .badge-faixa-item.marrom { background-color: #78350f; color: #ffffff; }
         .badge-faixa-item.preta { background-color: #000000; color: #ffffff; border: 1px solid #475569; }
 
+        .exam-card { margin: 0 0 16px; padding: 18px; border: 1px solid rgba(148,163,184,.2); border-radius: 18px; background: linear-gradient(145deg,rgba(30,41,59,.82),rgba(15,23,42,.72)); box-shadow: 0 8px 24px rgba(0,0,0,.16); }
+        .exam-card-heading { display:flex; align-items:center; gap:12px; margin-bottom:15px; }
+        .exam-card-icon { display:grid; place-items:center; flex:0 0 42px; width:42px; height:42px; color:#bfdbfe; border:1px solid rgba(96,165,250,.24); border-radius:14px; background:rgba(59,130,246,.13); }
+        .exam-card-icon svg { width:22px; height:22px; fill:none; stroke:currentColor; stroke-width:1.8; stroke-linecap:round; stroke-linejoin:round; }
+        .exam-card-heading h3 { margin:0; font-size:16px; }
+        .exam-card-heading p { margin:4px 0 0; color:var(--text-muted); font-size:12px; line-height:1.45; }
+        .exam-card .linha-tempo { margin-top:0; padding:0; border:0; background:transparent; }
+        .exam-card .linha-tempo h3 { margin:0; }
+        .exam-card .table-container { margin-top:0; }
+        .exam-card--programa .study-requirements { margin-bottom:14px; }
+        .exam-card--programa > .card-item { margin-bottom:14px; }
+        .exam-card--programa .modulo-faixa:last-of-type { margin-bottom:0; }
+        @media (max-width:480px) { .exam-card { padding:14px; } }
         .modulo-faixa { background: rgba(15, 23, 42, 0.4); border: 1px solid var(--border-color); border-radius: var(--radius-md); margin-bottom: 12px; overflow: hidden; transition: all 0.2s ease; }
         .modulo-faixa[open] { border-color: var(--accent-blue); background: rgba(15, 23, 42, 0.8); }
         .botao-expandir { padding: 16px; display: flex; align-items: center; font-weight: 600; font-size: 15px; color: var(--text-main); cursor: pointer; list-style: none; user-select: none; }
@@ -711,23 +724,26 @@
 
     <!-- SEÇÃO 2: CONTEÚDO PROGRAMÁTICO (EXAME) -->
     <div id="conteudo-programatico" class="tab-content">
-        <section class="linha-tempo" aria-labelledby="tituloProntuarioTecnico">
-            <h3 id="tituloProntuarioTecnico">📝 Prontuário técnico para exame</h3>
+        <section class="exam-card" aria-labelledby="tituloProntuarioTecnico">
+            <header class="exam-card-heading"><span class="exam-card-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M8 4H6a2 2 0 0 0-2 2v14h16V6a2 2 0 0 0-2-2h-2"/><rect x="8" y="2" width="8" height="4" rx="1.5"/><path d="M8 11h8M8 15h5"/><path d="m15 17 2 2 4-4"/></svg></span><div><h3 id="tituloProntuarioTecnico">Prontuário técnico para exame</h3><p>Acompanhe os requisitos técnicos registrados pelo professor.</p></div></header>
             <div id="prontuarioTecnicoAluno" class="linha-tempo-lista">Aguardando avaliação do professor.</div>
         </section>
-        <h3>🥋 Exames de Faixa</h3>
-        <div class="table-container">
-            <table>
-                <thead>
-                    <tr><th>FAIXA</th><th>Ano</th><th>KIHON</th><th>KATA</th><th>KUMITE</th><th>Perguntas</th><th>TOTAL</th><th>MÉDIA</th></tr>
-                </thead>
-                <tbody id="corpoTabelaNotas">
-                    <tr><td colspan="8" style="text-align: center; color: var(--text-muted); padding: 20px;">Carregando histórico de exames...</td></tr>
-                </tbody>
-            </table>
-        </div>
+        <section class="exam-card" aria-labelledby="tituloExamesFaixa">
+            <header class="exam-card-heading"><span class="exam-card-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M8 21h8M12 17v4M7 4H4v3a5 5 0 0 0 5 5M17 4h3v3a5 5 0 0 1-5 5"/><path d="M7 3h10v7a5 5 0 0 1-10 0z"/><path d="m12 6 1 2 2 .3-1.5 1.5.4 2.2-1.9-1-1.9 1 .4-2.2L9 8.3l2-.3z"/></svg></span><div><h3 id="tituloExamesFaixa">Exames de Faixa</h3><p>Consulte suas notas e o histórico das graduações.</p></div></header>
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr><th>FAIXA</th><th>Ano</th><th>KIHON</th><th>KATA</th><th>KUMITE</th><th>Perguntas</th><th>TOTAL</th><th>MÉDIA</th></tr>
+                    </thead>
+                    <tbody id="corpoTabelaNotas">
+                        <tr><td colspan="8" style="text-align: center; color: var(--text-muted); padding: 20px;">Carregando histórico de exames...</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
 
-        <h3>📖 Conteúdo Programático</h3>
+        <section class="exam-card exam-card--programa" aria-labelledby="tituloConteudoProgramatico">
+            <header class="exam-card-heading"><span class="exam-card-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M4 5.5A2.5 2.5 0 0 1 6.5 3H20v17H6.5A2.5 2.5 0 0 0 4 22z"/><path d="M4 5.5V22M8 7h8M8 11h8M8 15h5"/></svg></span><div><h3 id="tituloConteudoProgramatico">Conteúdo Programático</h3><p>Consulte os requisitos técnicos, os estudos obrigatórios e as graduações.</p></div></header>
         <div class="card-item" style="flex-direction: column; align-items: flex-start; gap: 10px; margin-bottom: 18px;">
             <strong style="font-size: 15px;">📚 Guia de Estudos de Karate</strong>
             <p style="font-size: 12px; color: var(--text-muted);">Acesse sua trilha de estudos e avance pelos quatro níveis.</p>
@@ -964,8 +980,10 @@
             </div>
         </details>
 
+        </section>
+        <section class="exam-card" aria-labelledby="tituloCarenciaKyu">
+            <header class="exam-card-heading"><span class="exam-card-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2M8 2h8"/><path d="M9 2v3M15 2v3"/></svg></span><div><h3 id="tituloCarenciaKyu">Carência Mínima (Kyu)</h3><p>Tempo mínimo de treinamento recomendado para cada graduação.</p></div></header>
         <div class="container-tabela-carencia">
-            <h3 style="margin-top: 20px;">⏳ Carência Mínima (Kyu)</h3>
             <div class="tabela-carencia-wrapper">
                 <table class="tabela-carencia-custom">
                     <thead><tr><th>Faixa</th><th>Kyu</th><th>Carência Mínima de Treinamento</th></tr></thead>
@@ -982,50 +1000,9 @@
                 </table>
             </div>
             </div>
-        <p></p>
-             <h3>📚 Materiais de Estudo</h3>
-              <div class="card-item" style="flex-direction: column; align-items: flex-start; gap: 10px;">
-            <strong style="font-size: 15px;">📄 Numeral em Japonês</strong>
-            <p style="font-size: 12px; color: var(--text-muted);">Guia de contagem em japonês.</p>
-            <a href="./arquivos/Numeral em japones.pdf" target="_blank" class="btn-action" style="padding: 10px;">📖 Abrir Guia</a>
-            
-            <div class="video-responsivo">
-                <iframe 
-                    src="https://www.youtube.com/embed/dZARRSQ7VjA?start=390" 
-                    title="Números em Japonês: Guia completo de 1 a 1.000.000" 
-                    frameborder="0" 
-                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
-                    allowfullscreen>
-                </iframe>
-            </div>
-        </div>
+        </section>
 
-        <div class="card-item" style="flex-direction: column; align-items: flex-start; gap: 10px;">
-            <strong style="font-size: 15px;">5 HEIAN KATA - SHOTOKAN</strong>
-            <div class="video-responsivo">
-                <iframe 
-                    src="https://www.youtube.com/embed/N3KSQQ--LB0" 
-                    title="5 HEIAN KATA OF SHOTOKAN KARATE (Slow Version)" 
-                    frameborder="0" 
-                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
-                    allowfullscreen>
-                </iframe>
-            </div>
-        </div>
-        <div class="card-item" style="flex-direction: column; align-items: flex-start; gap: 10px;">
-            <strong style="font-size: 15px;">📄 Dojo Kun</strong>
-            <p style="font-size: 12px; color: var(--text-muted);">O dojo kun é o conjunto de cinco regras ou lemas morais do karatê.</p>
-            <a href="./arquivos/Dojo kun.pdf" target="_blank" class="btn-action" style="padding: 10px;">📖 Abrir PDF</a>
-            <div class="video-responsivo">
-                <iframe 
-                    src="https://www.youtube.com/embed/6zRWz06DNa4" 
-                    title="DOJO KUN SHOTOKAN EM JAPONÊS" 
-                    frameborder="0" 
-                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
-                    allowfullscreen>
-                </iframe>
-            </div>
-        </div>
+
     </div>
 
     <!-- SEÇÃO 3: AGENDA -->

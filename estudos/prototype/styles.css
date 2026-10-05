@@ -100,7 +100,7 @@ input {
   padding: 7px;
   position: fixed;
   transform: translateX(-50%);
-  width: min(620px, calc(100% - 28px));
+  width: min(620px, calc(100% - 18px));
   z-index: 20;
 }
 
@@ -963,6 +963,15 @@ button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible
 .filter-chip { background: white; border: 1px solid var(--line); border-radius: 999px; flex: 0 0 auto; padding: 9px 13px; }
 .filter-chip.is-active { background: var(--charcoal); color: white; }
 .content-grid { display: grid; gap: 12px; grid-template-columns: repeat(3, minmax(0, 1fr)); }
+.study-library-grid { display: grid; gap: 14px; grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.study-library-card { align-content: start; background: var(--surface-strong); border: 1px solid var(--line); border-radius: 16px; box-shadow: 0 8px 22px rgba(32,36,43,.07); display: grid; gap: 12px; min-width: 0; padding: 16px; }
+.study-library-heading { align-items: center; display: flex; gap: 11px; min-height: 44px; }
+.study-library-icon { align-items: center; background: #f5e9e4; border: 1px solid #ead4cb; border-radius: 13px; color: var(--red-dark); display: inline-flex; flex: 0 0 42px; font-size: 20px; height: 42px; justify-content: center; width: 42px; }
+.study-library-heading h3 { font-size: 16px; margin: 0; }
+.study-library-heading p { color: var(--muted); font-size: 13px; line-height: 1.4; margin: 4px 0 0; }
+.study-library-link { justify-self: start; min-height: 38px; text-decoration: none; }
+.study-library-video { aspect-ratio: 16 / 9; background: #17191d; border: 1px solid var(--line); border-radius: 12px; overflow: hidden; width: 100%; }
+.study-library-video iframe { border: 0; display: block; height: 100%; width: 100%; }
 .content-card {
   background: white;
   border: 1px solid var(--line);
@@ -1147,6 +1156,9 @@ button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible
 }
 @media (max-width: 620px) {
   .content { padding: 14px 14px 84px; }
+  .tabbar { gap: 2px; padding: 5px; }
+  .tab { font-size: 9px; gap: 3px; min-height: 58px; padding: 5px 2px; }
+  .tab-icon { height: 20px; width: 20px; }
   .topbar { flex-wrap: wrap; padding: 12px 14px; }
   .brand-mark { height: 44px; width: 44px; }
   .brand-copy { margin-left: 8px; }
@@ -1157,7 +1169,7 @@ button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible
   .dashboard-hero img { height: 72px; width: 72px; }
   .dashboard-hero h2 { font-size: 29px; }
   .next-action { align-items: stretch; flex-direction: column; }
-  .journey-grid, .content-grid, .search-panel, .institutional-grid { grid-template-columns: 1fr; }
+  .journey-grid, .content-grid, .search-panel, .institutional-grid, .study-library-grid { grid-template-columns: 1fr; }
   .journey-card { min-height: 175px; }
   .achievement-strip { flex-wrap: wrap; overflow: visible; padding-bottom: 5px; }
   .achievement-pill { flex: 0 0 auto; }

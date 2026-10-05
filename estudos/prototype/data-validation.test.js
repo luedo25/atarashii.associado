@@ -237,16 +237,32 @@ test("guia mostra nome do aluno, botão atualizar e retorno à área do associad
   assert.match(professor, /\/api\/professor\/estudos\/progresso/);
   assert.match(api, /app\.get\('\/api\/professor\/estudos\/progresso', autenticarToken, somenteProfessor/);
 });
-test("navegacao fixa mantém as quatro abas sem Contato nem cards duplicados na home", () => {
+test("navegacao fixa mantém as cinco abas sem Contato nem cards duplicados na home", () => {
   const html = fs.readFileSync(path.join(__dirname, "index.html"), "utf8");
-  for (const route of ["home", "pilares", "progresso", "atarashii"]) {
+  for (const route of ["home", "pilares", "estudos", "progresso", "atarashii"]) {
     assert.match(html, new RegExp(`data-route="${route}"`), `${route} ausente da navegacao`);
   }
   assert.doesNotMatch(html, /data-route="contato"/);
-  assert.equal((html.match(/class="tab(?: is-active)?"/g) || []).length, 4);
+  assert.equal((html.match(/class="tab(?: is-active)?"/g) || []).length, 5);
   const app = fs.readFileSync(path.join(__dirname, "app.js"), "utf8");
   const home = app.slice(app.indexOf("function homeView()"), app.indexOf("function pillarHubView()"));
   assert.equal(home.includes("institutional-grid"), false, "links institucionais duplicados na home");
+});
+
+
+test("materiais de estudo ficam na nova aba Estudos e os quatro grupos do Exame permanecem organizados", () => {
+  const root = path.resolve(__dirname, "../..");
+  const guide = fs.readFileSync(path.join(__dirname, "index.html"), "utf8");
+  const app = fs.readFileSync(path.join(__dirname, "app.js"), "utf8");
+  const styles = fs.readFileSync(path.join(__dirname, "styles.css"), "utf8");
+  const student = fs.readFileSync(path.join(root, "area-associado.html"), "utf8");
+  assert.match(guide, /data-route="estudos"[^>]*>[\s\S]*?<span>Estudos<\/span>/);
+  assert.match(app, /estudos: materiaisEstudoView/);
+  for (const reference of ["Numeral em Japonês", "N3KSQQ--LB0", "6zRWz06DNa4", "dZARRSQ7VjA", "../../arquivos/Dojo kun.pdf"]) assert.ok(app.includes(reference), `${reference} ausente da nova aba`);
+  assert.match(styles, /\.study-library-grid/);
+  const exam = student.split('<div id="conteudo-programatico" class="tab-content">')[1].split('<!-- SEÇÃO 3: AGENDA -->')[0];
+  for (const group of ["tituloProntuarioTecnico", "tituloExamesFaixa", "tituloConteudoProgramatico", "tituloCarenciaKyu"]) assert.ok(exam.includes(group), `${group} ausente da aba Exame`);
+  assert.doesNotMatch(exam, /📚 Materiais de Estudo|Numeral em Japonês|5 HEIAN KATA - SHOTOKAN/);
 });
 
 test("cabeçalho do guia exibe somente atualizar e área do associado, com biografia atualizada", () => {

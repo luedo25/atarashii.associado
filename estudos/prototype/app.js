@@ -663,6 +663,14 @@ async function downloadStudyCertificate(pillarKey) {
   setTimeout(() => URL.revokeObjectURL(link.href), 60000);
 }
 
+function materiaisEstudoView() {
+  return `<section class="page study-library-page"><header class="page-header"><p class="eyebrow">Biblioteca do dojo</p><h2>Materiais de Estudo</h2><p>Consulte os guias e vídeos complementares sobre contagem em japonês, os katas Heian e o Dojo Kun.</p></header><div class="study-library-grid">
+    <article class="study-library-card"><header class="study-library-heading"><span class="study-library-icon" aria-hidden="true">数</span><div><h3>Numeral em Japonês</h3><p>Guia de contagem em japonês.</p></div></header><a class="secondary-button study-library-link" href="../../arquivos/Numeral em japones.pdf" target="_blank" rel="noopener noreferrer">📖 Abrir Guia</a><div class="study-library-video"><iframe src="https://www.youtube.com/embed/dZARRSQ7VjA?start=390" title="Números em Japonês: Guia completo de 1 a 1.000.000" loading="lazy" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe></div></article>
+    <article class="study-library-card"><header class="study-library-heading"><span class="study-library-icon" aria-hidden="true">型</span><div><h3>5 HEIAN KATA - SHOTOKAN</h3><p>Vídeo de referência dos cinco katas Heian.</p></div></header><div class="study-library-video"><iframe src="https://www.youtube.com/embed/N3KSQQ--LB0" title="5 HEIAN KATA OF SHOTOKAN KARATE (Slow Version)" loading="lazy" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe></div></article>
+    <article class="study-library-card"><header class="study-library-heading"><span class="study-library-icon" aria-hidden="true">道</span><div><h3>Dojo Kun</h3><p>O dojo kun é o conjunto de cinco regras ou lemas morais do karatê.</p></div></header><a class="secondary-button study-library-link" href="../../arquivos/Dojo kun.pdf" target="_blank" rel="noopener noreferrer">📖 Abrir PDF</a><div class="study-library-video"><iframe src="https://www.youtube.com/embed/6zRWz06DNa4" title="DOJO KUN SHOTOKAN EM JAPONÊS" loading="lazy" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe></div></article>
+  </div></section>`;
+}
+
 function atarashiiView() {
   return `<article class="detail-page institutional"><button class="back-button" data-route="home" type="button">← Home</button><p class="eyebrow">Nossa associação</p><h2>A história por trás da Atarashii</h2><div class="story-copy">
     <p>Tudo começou no final de 2002. Eu tinha apenas 12 anos quando meu tio Deci me convidou para uma aula de Jiu-Jitsu na academia onde treinava — sem imaginar que aquele convite mudaria o rumo da minha vida para sempre.</p>
@@ -703,7 +711,7 @@ function render() {
       "assessment-run": assessmentRunView, "assessment-result": assessmentResultView,
       "desafio-final": finalChallengeView, "challenge-run": challengeRunView,
       "challenge-result": challengeResultView, busca: searchView, progresso: progressView,
-      atarashii: atarashiiView,
+      estudos: materiaisEstudoView, atarashii: atarashiiView,
     };
     view = (views[state.route] || homeView)();
   }
