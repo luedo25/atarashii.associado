@@ -185,16 +185,17 @@
         .badge-faixa-item.preta { background-color: #000000; color: #ffffff; border: 1px solid #475569; }
 
         .exam-card { margin: 0 0 16px; padding: 18px; border: 1px solid rgba(148,163,184,.2); border-radius: 18px; background: linear-gradient(145deg,rgba(30,41,59,.82),rgba(15,23,42,.72)); box-shadow: 0 8px 24px rgba(0,0,0,.16); }
-        .exam-card-heading { display:flex; align-items:center; gap:12px; margin-bottom:15px; }
+        .exam-card-heading { position:static; top:auto; z-index:auto; background:transparent; border:0; box-shadow:none; padding:0; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:10px; margin:0 0 15px; text-align:center; }
         .exam-card-icon { display:grid; place-items:center; flex:0 0 42px; width:42px; height:42px; color:#bfdbfe; border:1px solid rgba(96,165,250,.24); border-radius:14px; background:rgba(59,130,246,.13); }
         .exam-card-icon svg { width:22px; height:22px; fill:none; stroke:currentColor; stroke-width:1.8; stroke-linecap:round; stroke-linejoin:round; }
-        .exam-card-heading h3 { margin:0; font-size:16px; }
-        .exam-card-heading p { margin:4px 0 0; color:var(--text-muted); font-size:12px; line-height:1.45; }
+        .exam-card-heading > div { width:100%; }
+        .exam-card-heading h3 { display:flex; justify-content:center; width:100%; margin:0; font-size:16px; text-align:center; }
+        .exam-card-heading p { margin:4px 0 0; color:var(--text-muted); font-size:12px; line-height:1.45; text-align:center; }
         .exam-card .linha-tempo { margin-top:0; padding:0; border:0; background:transparent; }
         .exam-card .linha-tempo h3 { margin:0; }
         .exam-card .table-container { margin-top:0; }
-        .exam-card--programa .study-requirements { margin-bottom:14px; }
-        .exam-card--programa > .card-item { margin-bottom:14px; }
+        .exam-card--studies .study-requirements { margin:14px 0 0; }
+        .exam-card--studies .btn-action { margin-top:4px; }
         .exam-card--programa .modulo-faixa:last-of-type { margin-bottom:0; }
         @media (max-width:480px) { .exam-card { padding:14px; } }
         .modulo-faixa { background: rgba(15, 23, 42, 0.4); border: 1px solid var(--border-color); border-radius: var(--radius-md); margin-bottom: 12px; overflow: hidden; transition: all 0.2s ease; }
@@ -724,6 +725,13 @@
 
     <!-- SEÇÃO 2: CONTEÚDO PROGRAMÁTICO (EXAME) -->
     <div id="conteudo-programatico" class="tab-content">
+        <section class="exam-card exam-card--studies" aria-labelledby="tituloGuiaEstudosExame">
+            <header class="exam-card-heading"><span class="exam-card-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M4 5.5A2.5 2.5 0 0 1 6.5 3H20v17H6.5A2.5 2.5 0 0 0 4 22z"/><path d="M4 5.5V22M8 7h8M8 11h8M8 15h5"/></svg></span><div><h3 id="tituloGuiaEstudosExame">Guia de Estudos de Karate</h3><p>Acompanhe a conclusão dos estudos obrigatórios para sua faixa.</p></div></header>
+            <a href="estudos/prototype/" class="btn-action">📚 Abrir Guia de Estudos</a>
+            <section id="alertaPendenciasEstudos" class="study-requirements" role="status" aria-live="polite">
+                <strong>Verificando os níveis de estudo obrigatórios...</strong>
+            </section>
+        </section>
         <section class="exam-card" aria-labelledby="tituloProntuarioTecnico">
             <header class="exam-card-heading"><span class="exam-card-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M8 4H6a2 2 0 0 0-2 2v14h16V6a2 2 0 0 0-2-2h-2"/><rect x="8" y="2" width="8" height="4" rx="1.5"/><path d="M8 11h8M8 15h5"/><path d="m15 17 2 2 4-4"/></svg></span><div><h3 id="tituloProntuarioTecnico">Prontuário técnico para exame</h3><p>Acompanhe os requisitos técnicos registrados pelo professor.</p></div></header>
             <div id="prontuarioTecnicoAluno" class="linha-tempo-lista">Aguardando avaliação do professor.</div>
@@ -743,15 +751,7 @@
         </section>
 
         <section class="exam-card exam-card--programa" aria-labelledby="tituloConteudoProgramatico">
-            <header class="exam-card-heading"><span class="exam-card-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M4 5.5A2.5 2.5 0 0 1 6.5 3H20v17H6.5A2.5 2.5 0 0 0 4 22z"/><path d="M4 5.5V22M8 7h8M8 11h8M8 15h5"/></svg></span><div><h3 id="tituloConteudoProgramatico">Conteúdo Programático</h3><p>Consulte os requisitos técnicos, os estudos obrigatórios e as graduações.</p></div></header>
-        <div class="card-item" style="flex-direction: column; align-items: flex-start; gap: 10px; margin-bottom: 18px;">
-            <strong style="font-size: 15px;">📚 Guia de Estudos de Karate</strong>
-            <p style="font-size: 12px; color: var(--text-muted);">Acesse sua trilha de estudos e avance pelos quatro níveis.</p>
-            <a href="estudos/prototype/" class="btn-action">Abrir Guia de Estudos</a>
-        </div>
-        <section id="alertaPendenciasEstudos" class="study-requirements" role="status" aria-live="polite">
-            <strong>Verificando os níveis de estudo obrigatórios...</strong>
-        </section>
+            <header class="exam-card-heading"><span class="exam-card-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M4 5.5A2.5 2.5 0 0 1 6.5 3H20v17H6.5A2.5 2.5 0 0 0 4 22z"/><path d="M4 5.5V22M8 7h8M8 11h8M8 15h5"/></svg></span><div><h3 id="tituloConteudoProgramatico">Conteúdo Programático</h3><p>Confira as técnicas e os requisitos exigidos em cada graduação.</p></div></header>
         
         <details class="modulo-faixa">
             <summary class="botao-expandir">
