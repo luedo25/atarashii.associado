@@ -32,7 +32,7 @@ input {
 
 .app-shell {
   min-height: 100vh;
-  padding-bottom: 0;
+  padding-bottom: 104px;
 }
 
 .topbar {
@@ -84,36 +84,78 @@ input {
 }
 
 .tabbar {
-  background: var(--surface-strong);
-  border: 1px solid var(--line);
-  border-radius: 14px;
-  bottom: max(12px, env(safe-area-inset-bottom));
-  box-shadow: 0 8px 28px rgba(32, 36, 43, 0.18);
-  display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
+  align-items: center;
+  background: rgba(34, 40, 49, 0.92);
+  backdrop-filter: blur(22px) saturate(160%);
+  -webkit-backdrop-filter: blur(22px) saturate(160%);
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  border-radius: 999px;
+  bottom: max(14px, env(safe-area-inset-bottom));
+  box-shadow: 0 12px 34px rgba(20, 24, 30, 0.34), inset 0 1px 0 rgba(255, 255, 255, 0.09);
+  display: flex;
+  gap: 4px;
+  justify-content: space-around;
   left: 50%;
-  max-width: 760px;
+  max-width: 620px;
+  padding: 7px;
   position: fixed;
   transform: translateX(-50%);
-  width: calc(100% - 24px);
+  width: min(620px, calc(100% - 28px));
   z-index: 20;
 }
 
 .tab {
   background: transparent;
-  border: 0;
-  color: var(--muted);
-  font-size: 12px;
+  border: 1px solid transparent;
+  border-radius: 999px;
+  color: #c2c6cd;
+  cursor: pointer;
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  font-size: 11px;
+  font-weight: 600;
   min-height: 62px;
   line-height: 1.15;
   min-width: 0;
-  padding: 8px 4px;
-  white-space: normal;
+  padding: 6px 3px;
+  transition: color 0.2s, background 0.2s, border-color 0.2s, transform 0.2s;
+  white-space: nowrap;
+}
+
+.tab-icon {
+  display: block;
+  height: 21px;
+  width: 21px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.8;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  transition: transform 0.2s;
 }
 
 .tab.is-active {
-  color: var(--red);
+  background: rgba(179, 34, 34, 0.28);
+  border-color: rgba(248, 113, 113, 0.24);
+  color: #fecaca;
   font-weight: 700;
+}
+
+.tab.is-active .tab-icon {
+  transform: translateY(-1px);
+}
+
+.tab:active {
+  transform: scale(0.96);
+}
+
+.tab:focus-visible {
+  outline: 2px solid #fca5a5;
+  outline-offset: 2px;
 }
 
 .icon-button,
