@@ -15,9 +15,6 @@
     <style>
         :root {
             color-scheme: light;
-            --navy-950: #07111f;
-            --navy-900: #0b1728;
-            --navy-800: #12243b;
             --blue-600: #2563eb;
             --blue-700: #1d4ed8;
             --text: #162235;
@@ -39,62 +36,30 @@
             overflow-x: hidden;
             color: var(--text);
             font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-            background:
-                radial-gradient(ellipse at 13% 12%, rgba(37,99,235,.25), transparent 37%),
-                radial-gradient(ellipse at 88% 92%, rgba(14,165,233,.12), transparent 34%),
-                var(--navy-950);
+            background: radial-gradient(ellipse at 50% 0%, #e6eef9, transparent 48%), #f3f6fa;
         }
         button, input { font: inherit; }
         button:focus-visible, input:focus-visible { outline: 3px solid rgba(59,130,246,.38); outline-offset: 2px; }
 
         .login-layout {
-            width: min(100%, 1040px);
-            min-height: min(690px, calc(100svh - 48px));
+            width: min(100%, 520px);
             display: grid;
-            grid-template-columns: minmax(0, .92fr) minmax(390px, 1.08fr);
+            grid-template-columns: minmax(0, 1fr);
             overflow: hidden;
-            border: 1px solid rgba(255,255,255,.14);
-            border-radius: 28px;
-            background: #f4f7fb;
-            box-shadow: 0 32px 90px rgba(0,0,0,.34), 0 2px 8px rgba(0,0,0,.12);
+            border: 1px solid #e5eaf1;
+            border-radius: 26px;
+            background: #fff;
+            box-shadow: 0 24px 70px rgba(31,52,79,.13), 0 2px 8px rgba(31,52,79,.05);
         }
-        .brand-panel {
-            position: relative;
-            isolation: isolate;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-            min-width: 0;
-            padding: clamp(34px, 5vw, 64px);
-            overflow: hidden;
-            color: #fff;
-            background: linear-gradient(155deg, #122d4d 0%, #0b1b30 56%, #07111f 100%);
-        }
-        .brand-panel::before, .brand-panel::after {
-            position: absolute;
-            z-index: -1;
-            content: "";
-            border: 1px solid rgba(147,197,253,.13);
-            border-radius: 50%;
-            pointer-events: none;
-        }
-        .brand-panel::before { width: 430px; height: 430px; right: -235px; top: 7%; box-shadow: 0 0 0 34px rgba(147,197,253,.025), 0 0 0 72px rgba(147,197,253,.02); }
-        .brand-panel::after { width: 270px; height: 270px; left: -180px; bottom: -76px; }
-        .brand-mark { display: flex; align-items: center; gap: 12px; color: #dbeafe; font-size: 12px; font-weight: 750; letter-spacing: .16em; text-transform: uppercase; }
-        .brand-mark::before { width: 9px; height: 9px; border-radius: 50%; background: #60a5fa; box-shadow: 0 0 18px rgba(96,165,250,.9); content: ""; }
-        .brand-copy { position: relative; z-index: 1; margin: 42px 0; }
-        .brand-logo-wrap { display: grid; place-items: center; width: min(100%, 300px); min-height: 190px; margin: 0 auto 40px; padding: 22px; border: 1px solid rgba(255,255,255,.15); border-radius: 24px; background: rgba(255,255,255,.07); backdrop-filter: blur(8px); }
-        .logo-associacao { display: block; width: min(100%, 250px); max-height: 190px; object-fit: contain; filter: drop-shadow(0 12px 20px rgba(0,0,0,.18)); }
-        .brand-copy h1 { max-width: 460px; margin: 0 0 16px; font-size: clamp(28px, 3.3vw, 42px); line-height: 1.12; letter-spacing: -.04em; }
-        .brand-copy p { max-width: 410px; margin: 0; color: #bdcce0; font-size: 15px; line-height: 1.75; }
-        .brand-footer { color: #90a4bc; font-size: 12px; line-height: 1.5; }
-        .brand-footer strong { color: #dbeafe; font-weight: 650; }
-
-        .login-side { display: flex; flex-direction: column; justify-content: center; align-items: center; min-width: 0; padding: clamp(26px, 5vw, 64px); background: linear-gradient(145deg, #f8fafc, #edf2f8); }
+        .login-side { display:flex; flex-direction:column; justify-content:center; align-items:center; min-width:0; padding:clamp(28px,6vw,52px); background:#fff; }
         .login-content { width: min(100%, 390px); }
+        .brand-copy { margin:0 auto; text-align:center; }
+        .brand-copy h1 { margin:0; color:#17253a; font-size:clamp(24px,4vw,30px); line-height:1.18; letter-spacing:-.035em; }
+        .brand-copy p { margin:9px 0 0; color:#68768a; font-size:14px; line-height:1.5; }
+        .login-logo { display:block; width:min(100%,260px); max-height:132px; height:auto; margin:17px auto 16px; object-fit:contain; }
         .install-button { display: none; width: 100%; margin: 0 0 16px; padding: 12px 16px; border: 1px solid #bfdbfe; border-radius: 12px; color: #1d4ed8; background: #eff6ff; cursor: pointer; font-size: 13px; font-weight: 700; transition: background .2s, transform .2s; }
         .install-button:hover { background: #dbeafe; transform: translateY(-1px); }
-        .login-container { width: 100%; padding: clamp(25px, 4vw, 38px); border: 1px solid #e2e8f0; border-radius: 22px; background: var(--surface); box-shadow: 0 16px 38px rgba(15,23,42,.08); }
+        .login-container { width: 100%; padding: clamp(22px, 4vw, 32px); border: 1px solid #e2e8f0; border-radius: 18px; background: var(--surface); box-shadow: 0 12px 32px rgba(15,23,42,.07); }
         .form-eyebrow { display: block; margin-bottom: 9px; color: var(--blue-700); font-size: 11px; font-weight: 800; letter-spacing: .13em; text-transform: uppercase; }
         .login-container h2 { margin: 0; color: var(--text); font-size: clamp(25px, 3vw, 31px); letter-spacing: -.035em; }
         .login-intro { margin: 9px 0 28px; color: var(--muted); font-size: 14px; line-height: 1.55; }
@@ -136,58 +101,54 @@
 
         @media (max-width: 760px) {
             body { width:100%; height:100vh; height:100svh; min-height:0; padding:8px; overflow:hidden; }
-            .login-layout { width:min(100%,520px); height:calc(100vh - 16px); height:calc(100svh - 16px); min-height:0; grid-template-columns:minmax(0,1fr); grid-template-rows:clamp(64px,12svh,82px) minmax(0,1fr); border-radius:20px; }
-            .brand-panel { min-height:0; padding:5px 12px; display:grid; place-items:center; }
-            .brand-mark { display:none; }
-            .brand-copy { width:100%; height:100%; margin:0; display:grid; place-items:center; }
-            .brand-logo-wrap { position:static; width:66px; height:66px; min-height:0; margin:0; padding:4px; border-radius:14px; transform:none; }
-            .logo-associacao { width:100%; max-height:56px; }
-            .brand-copy h1, .brand-copy p { display:none; }
-            .brand-footer { display: none; }
-            .login-side { min-height:0; padding:10px 14px; overflow:hidden; }
+            .login-layout { width:min(100%,520px); height:calc(100vh - 16px); height:calc(100svh - 16px); min-height:0; grid-template-columns:minmax(0,1fr); border-radius:20px; }
+            .login-side { min-height:0; padding:14px; overflow:hidden; }
             .login-content { max-height:100%; }
-            .install-button { min-height:38px; margin-bottom:8px; padding:8px 12px; font-size:12px; }
-            .login-container { padding:17px 18px; border-radius:17px; }
+            .brand-copy h1 { font-size:clamp(21px,6vw,27px); }
+            .brand-copy p { font-size:12px; }
+            .login-logo { width:min(70%,230px); max-height:96px; margin:12px auto; }
+            .install-button { min-height:38px; margin:0 0 8px; padding:8px 12px; font-size:12px; }
+            .login-container { padding:17px 18px; border-radius:16px; }
             .form-eyebrow { margin-bottom:6px; font-size:10px; }
-            .login-container h2 { font-size:25px; }
-            .login-intro { margin:6px 0 15px; font-size:13px; }
-            .input-group { margin-bottom:12px; }
-            .input-group label { margin-bottom:6px; font-size:12px; }
+            .login-container h2 { font-size:24px; }
+            .login-intro { margin:6px 0 14px; font-size:13px; }
+            .input-group { margin-bottom:11px; }
+            .input-group label { margin-bottom:5px; font-size:12px; }
             .input-group input { min-height:44px; padding:10px 12px; font-size:16px; }
-            .btn-login { min-height:46px; }
-            .password-actions { margin-top:10px; }
+            .btn-login { min-height:44px; }
+            .password-actions { margin-top:8px; }
             .login-security { display:none; }
         }
         @media (max-width: 390px) {
             body { padding:5px; }
-            .login-layout { height:calc(100vh - 10px); height:calc(100svh - 10px); grid-template-rows:64px minmax(0,1fr); border-radius:16px; }
-            .brand-logo-wrap { width:56px; height:56px; }
-            .logo-associacao { max-height:48px; }
-            .login-side { padding:7px 10px; }
-            .login-container { padding:15px 15px; }
-            .login-container h2 { font-size:23px; }
-            .login-intro { margin-bottom:12px; font-size:12px; }
-            .input-group { margin-bottom:10px; }
+            .login-layout { height:calc(100vh - 10px); height:calc(100svh - 10px); border-radius:16px; }
+            .login-side { padding:10px; }
+            .brand-copy h1 { font-size:22px; }
+            .brand-copy p { font-size:11px; }
+            .login-logo { width:min(66%,210px); max-height:78px; margin:9px auto; }
+            .login-container { padding:14px 15px; }
+            .login-container h2 { font-size:22px; }
+            .login-intro { margin-bottom:10px; font-size:12px; }
+            .input-group { margin-bottom:9px; }
             .input-group input { min-height:42px; }
         }
         @media (max-width: 760px) and (max-height: 620px) {
-            .login-layout { grid-template-rows:58px minmax(0,1fr); }
-            .login-container { padding-top:12px; padding-bottom:12px; }
-            .login-intro { margin-top:4px; margin-bottom:9px; }
-            .input-group { margin-bottom:8px; }
-            .input-group label { margin-bottom:4px; }
-            .input-group input { min-height:39px; }
-            .btn-login { min-height:42px; }
-            .password-actions { margin-top:5px; }
-            .password-hint { margin-top:3px; font-size:11px; }
+            .login-side { padding-top:7px; padding-bottom:7px; }
+            .brand-copy h1 { font-size:20px; }
+            .brand-copy p { margin-top:5px; }
+            .login-logo { max-height:62px; margin:6px auto; }
+            .login-container { padding-top:11px; padding-bottom:11px; }
+            .login-intro { margin-top:4px; margin-bottom:8px; }
+            .input-group { margin-bottom:7px; }
+            .input-group label { margin-bottom:3px; }
+            .input-group input { min-height:38px; }
+            .btn-login { min-height:40px; }
+            .password-actions { margin-top:4px; }
+            .install-button { display:none !important; }
         }
         @media (max-width: 760px) and (max-height: 500px) {
-            .login-intro { display:none; }
-            .login-side { padding-top:5px; padding-bottom:5px; }
-            .login-layout { grid-template-rows:48px minmax(0,1fr); }
-            .brand-logo-wrap { width:44px; height:44px; padding:2px; }
-            .logo-associacao { max-height:40px; }
-            .install-button { display:none !important; }
+            .brand-copy p, .login-intro { display:none; }
+            .login-logo { max-height:48px; margin:4px auto; }
         }
         @media (prefers-reduced-motion: reduce) {
             *, *::before, *::after { scroll-behavior: auto !important; animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; }
@@ -196,21 +157,13 @@
 </head>
 <body>
     <main class="login-layout" aria-label="Acesso à Área do Associado">
-        <section class="brand-panel" aria-label="Associação Atarashii">
-            <div class="brand-mark">Associação Atarashii</div>
+        <section class="login-side" aria-label="Entrar na conta">
+            <div class="login-content">
             <div class="brand-copy">
-                <div class="brand-logo-wrap">
-                    <img src="arquivos/ASSOCIAÇÃO-ATARASHII.gif" alt="Logo da Associação Atarashii" class="logo-associacao">
-                </div>
                 <h1>Disciplina, respeito e evolução.</h1>
                 <p>Continue sua jornada no Karate e acompanhe sua trajetória na Associação.</p>
             </div>
-            <div class="brand-footer"><strong>Dojo Atarashii</strong><br>Uma comunidade que cresce pelo caminho do Karate-Do.</div>
-        </section>
-
-        <section class="login-side" aria-label="Entrar na conta">
-            <div class="login-content">
-                <button id="btnInstalarApp" class="install-button" type="button">📲 Instalar aplicativo</button>
+                <img src="arquivos/Atarashii_logo.jpg" alt="Logo da Associação Atarashii" class="login-logo">
                 <div class="login-container">
                     <span class="form-eyebrow">Acesso seguro</span>
                     <h2>Área do Associado</h2>
@@ -232,6 +185,7 @@
                     </div>
                     <p class="login-security"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="10" width="16" height="11" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg>Seus dados são protegidos e usados somente para autenticação.</p>
                 </div>
+                <button id="btnInstalarApp" class="install-button" type="button">📲 Instalar aplicativo</button>
             </div>
         </section>
     </main>
