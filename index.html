@@ -135,29 +135,59 @@
         @keyframes slideUpIOS { from { opacity: 0; transform: translate(-50%, 20px); } to { opacity: 1; transform: translate(-50%, 0); } }
 
         @media (max-width: 760px) {
-            body { padding: 16px; }
-            .login-layout { width: min(100%, 520px); min-height: auto; grid-template-columns: 1fr; border-radius: 23px; }
-            .brand-panel { min-height: 214px; padding: 24px 25px 20px; }
-            .brand-mark { font-size: 10px; }
-            .brand-copy { margin: 18px 0 0; }
-            .brand-logo-wrap { position: absolute; top: 50%; right: 25px; width: 112px; min-height: 112px; margin: 0; padding: 9px; border-radius: 17px; transform: translateY(-50%); }
-            .logo-associacao { width: 100%; max-height: 94px; }
-            .brand-copy h1 { max-width: calc(100% - 118px); margin-bottom: 8px; font-size: clamp(23px, 6vw, 31px); }
-            .brand-copy p { max-width: calc(100% - 116px); font-size: 12px; line-height: 1.5; }
+            body { width:100%; height:100vh; height:100svh; min-height:0; padding:8px; overflow:hidden; }
+            .login-layout { width:min(100%,520px); height:calc(100vh - 16px); height:calc(100svh - 16px); min-height:0; grid-template-columns:minmax(0,1fr); grid-template-rows:clamp(64px,12svh,82px) minmax(0,1fr); border-radius:20px; }
+            .brand-panel { min-height:0; padding:5px 12px; display:grid; place-items:center; }
+            .brand-mark { display:none; }
+            .brand-copy { width:100%; height:100%; margin:0; display:grid; place-items:center; }
+            .brand-logo-wrap { position:static; width:66px; height:66px; min-height:0; margin:0; padding:4px; border-radius:14px; transform:none; }
+            .logo-associacao { width:100%; max-height:56px; }
+            .brand-copy h1, .brand-copy p { display:none; }
             .brand-footer { display: none; }
-            .login-side { padding: 19px; }
-            .login-container { padding: 25px 22px; border-radius: 18px; }
-            .login-intro { margin-bottom: 23px; }
+            .login-side { min-height:0; padding:10px 14px; overflow:hidden; }
+            .login-content { max-height:100%; }
+            .install-button { min-height:38px; margin-bottom:8px; padding:8px 12px; font-size:12px; }
+            .login-container { padding:17px 18px; border-radius:17px; }
+            .form-eyebrow { margin-bottom:6px; font-size:10px; }
+            .login-container h2 { font-size:25px; }
+            .login-intro { margin:6px 0 15px; font-size:13px; }
+            .input-group { margin-bottom:12px; }
+            .input-group label { margin-bottom:6px; font-size:12px; }
+            .input-group input { min-height:44px; padding:10px 12px; font-size:16px; }
+            .btn-login { min-height:46px; }
+            .password-actions { margin-top:10px; }
+            .login-security { display:none; }
         }
         @media (max-width: 390px) {
-            body { padding: 10px; }
-            .brand-panel { min-height: 190px; padding: 20px 18px; }
-            .brand-logo-wrap { right: 17px; width: 88px; min-height: 88px; }
-            .logo-associacao { max-height: 72px; }
-            .brand-copy h1 { max-width: calc(100% - 94px); font-size: 23px; }
-            .brand-copy p { max-width: calc(100% - 90px); font-size: 11px; }
-            .login-side { padding: 13px; }
-            .login-container { padding: 23px 18px; }
+            body { padding:5px; }
+            .login-layout { height:calc(100vh - 10px); height:calc(100svh - 10px); grid-template-rows:64px minmax(0,1fr); border-radius:16px; }
+            .brand-logo-wrap { width:56px; height:56px; }
+            .logo-associacao { max-height:48px; }
+            .login-side { padding:7px 10px; }
+            .login-container { padding:15px 15px; }
+            .login-container h2 { font-size:23px; }
+            .login-intro { margin-bottom:12px; font-size:12px; }
+            .input-group { margin-bottom:10px; }
+            .input-group input { min-height:42px; }
+        }
+        @media (max-width: 760px) and (max-height: 620px) {
+            .login-layout { grid-template-rows:58px minmax(0,1fr); }
+            .login-container { padding-top:12px; padding-bottom:12px; }
+            .login-intro { margin-top:4px; margin-bottom:9px; }
+            .input-group { margin-bottom:8px; }
+            .input-group label { margin-bottom:4px; }
+            .input-group input { min-height:39px; }
+            .btn-login { min-height:42px; }
+            .password-actions { margin-top:5px; }
+            .password-hint { margin-top:3px; font-size:11px; }
+        }
+        @media (max-width: 760px) and (max-height: 500px) {
+            .login-intro { display:none; }
+            .login-side { padding-top:5px; padding-bottom:5px; }
+            .login-layout { grid-template-rows:48px minmax(0,1fr); }
+            .brand-logo-wrap { width:44px; height:44px; padding:2px; }
+            .logo-associacao { max-height:40px; }
+            .install-button { display:none !important; }
         }
         @media (prefers-reduced-motion: reduce) {
             *, *::before, *::after { scroll-behavior: auto !important; animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; }
