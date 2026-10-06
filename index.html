@@ -36,7 +36,10 @@
             overflow-x: hidden;
             color: var(--text);
             font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-            background: radial-gradient(ellipse at 50% 0%, #e6eef9, transparent 48%), #f3f6fa;
+            background:
+                radial-gradient(ellipse at 50% 0%, rgba(59,130,246,.2), transparent 46%),
+                radial-gradient(ellipse at 100% 100%, rgba(14,165,233,.1), transparent 34%),
+                #0f172a;
         }
         button, input { font: inherit; }
         button:focus-visible, input:focus-visible { outline: 3px solid rgba(59,130,246,.38); outline-offset: 2px; }
@@ -46,17 +49,17 @@
             display: grid;
             grid-template-columns: minmax(0, 1fr);
             overflow: hidden;
-            border: 1px solid #e5eaf1;
+            border: 0;
             border-radius: 26px;
-            background: #fff;
-            box-shadow: 0 24px 70px rgba(31,52,79,.13), 0 2px 8px rgba(31,52,79,.05);
+            background: transparent;
+            box-shadow: none;
         }
-        .login-side { display:flex; flex-direction:column; justify-content:center; align-items:center; min-width:0; padding:clamp(28px,6vw,52px); background:#fff; }
+        .login-side { display:flex; flex-direction:column; justify-content:center; align-items:center; min-width:0; padding:clamp(28px,6vw,52px); background:transparent; }
         .login-content { width: min(100%, 390px); }
-        .brand-copy { margin:0 auto; text-align:center; }
-        .brand-copy h1 { margin:0; color:#17253a; font-size:clamp(24px,4vw,30px); line-height:1.18; letter-spacing:-.035em; }
-        .brand-copy p { margin:9px 0 0; color:#68768a; font-size:14px; line-height:1.5; }
-        .login-logo { display:block; width:min(100%,260px); max-height:132px; height:auto; margin:17px auto 16px; object-fit:contain; }
+        .brand-copy { margin:0 auto 18px; padding:0 8px; color:#f8fafc; text-align:center; }
+        .brand-copy h1 { margin:0; color:#f8fafc; font-size:clamp(24px,4vw,30px); line-height:1.18; letter-spacing:-.035em; }
+        .brand-copy p { margin:9px 0 0; color:#cbd5e1; font-size:14px; line-height:1.5; }
+        .login-logo { display:block; width:min(100%,240px); max-height:118px; height:auto; margin:15px auto 0; object-fit:contain; }
         .install-button { display: none; width: 100%; margin: 0 0 16px; padding: 12px 16px; border: 1px solid #bfdbfe; border-radius: 12px; color: #1d4ed8; background: #eff6ff; cursor: pointer; font-size: 13px; font-weight: 700; transition: background .2s, transform .2s; }
         .install-button:hover { background: #dbeafe; transform: translateY(-1px); }
         .login-container { width: 100%; padding: clamp(22px, 4vw, 32px); border: 1px solid #e2e8f0; border-radius: 18px; background: var(--surface); box-shadow: 0 12px 32px rgba(15,23,42,.07); }
@@ -162,8 +165,8 @@
             <div class="brand-copy">
                 <h1>Disciplina, respeito e evolução.</h1>
                 <p>Continue sua jornada no Karate e acompanhe sua trajetória na Associação.</p>
+                <img src="arquivos/Atarashii_logo2.png" alt="Logo da Associação Atarashii" class="login-logo">
             </div>
-                <img src="arquivos/Atarashii_logo.jpg" alt="Logo da Associação Atarashii" class="login-logo">
                 <div class="login-container">
                     <span class="form-eyebrow">Acesso seguro</span>
                     <h2>Área do Associado</h2>
