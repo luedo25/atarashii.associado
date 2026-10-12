@@ -376,6 +376,7 @@
         .nav-btn .icon { position:relative; width: 23px; height: 23px; display: grid; place-items: center; transition: transform 0.2s; }
         .nav-alerta-pendente { position:absolute; top:-5px; right:-9px; display:grid; place-items:center; min-width:17px; height:17px; padding:0 4px; border:2px solid #0f172a; border-radius:999px; background:#ef4444; color:#fff; font-size:9px; line-height:1; font-weight:900; box-shadow:0 2px 8px rgba(239,68,68,.45); animation:piscarAlertaAgenda 1.1s ease-in-out infinite; }
         .nav-alerta-pendente[hidden] { display:none; }
+        .nav-alerta-estudos { min-width:17px; width:17px; padding:0; font-size:12px; }
         .nav-btn .icon svg { width: 21px; height: 21px; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
         .nav-btn .icon img.logo-icon { width: 22px; height: 22px; object-fit: contain; filter: grayscale(100%) opacity(0.6); transition: all 0.2s; }
         .nav-btn.active { color: #bfdbfe; background: rgba(59, 130, 246, 0.17); border-color: rgba(96, 165, 250, 0.2); }
@@ -1504,7 +1505,7 @@
 
 <div class="bottom-nav">
     <button type="button" class="nav-btn active" onclick="mudarAba('exame', this)" aria-label="Painel"><span class="icon" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="2"/><rect x="14" y="3" width="7" height="7" rx="2"/><rect x="3" y="14" width="7" height="7" rx="2"/><rect x="14" y="14" width="7" height="7" rx="2"/></svg></span>Painel</button>
-    <button type="button" class="nav-btn" onclick="mudarAba('conteudo-programatico', this)" aria-label="Exame"><span class="icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M8 4h-2a2 2 0 0 0-2 2v13a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2h-2"/><rect x="8" y="2" width="8" height="4" rx="1.5"/><path d="m8 13 2.5 2.5L16 10"/></svg></span>Exame</button>
+    <button type="button" class="nav-btn" id="navExameAluno" onclick="mudarAba('conteudo-programatico', this)" aria-label="Exame"><span class="icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M8 4h-2a2 2 0 0 0-2 2v13a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2h-2"/><rect x="8" y="2" width="8" height="4" rx="1.5"/><path d="m8 13 2.5 2.5L16 10"/></svg><span class="nav-alerta-pendente nav-alerta-estudos" id="exameNavAlerta" aria-hidden="true" hidden>!</span></span>Exame</button>
     <button type="button" class="nav-btn" id="navAgendaAluno" onclick="mudarAba('comunicados', this)" aria-label="Agenda"><span class="icon" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="16" rx="3"/><path d="M16 3v4M8 3v4M3 10h18M8 14h.01M12 14h.01M16 14h.01M8 17h.01M12 17h.01"/></svg><span class="nav-alerta-pendente" id="agendaNavAlerta" aria-hidden="true" hidden></span></span>Agenda</button>
     <button type="button" class="nav-btn" onclick="mudarAba('galeria', this)" aria-label="Galeria"><span class="icon" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="3"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="m21 15-5-5L5 21"/></svg></span>Galeria</button>
     <button type="button" class="nav-btn" onclick="mudarAba('ebook', this)" aria-label="Ranking"><span class="icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M8 21h8M12 17v4M7 4H4v3a5 5 0 0 0 5 5M17 4h3v3a5 5 0 0 1-5 5"/><path d="M7 3h10v7a5 5 0 0 1-10 0z"/><path d="m12 6 1 2 2 .3-1.5 1.5.4 2.2-1.9-1-1.9 1 .4-2.2L9 8.3l2-.3z"/></svg></span>Ranking</button>
@@ -2210,6 +2211,18 @@
         }
     }
 
+    function atualizarAlertaEstudosExame(temPendencia) {
+        const alerta = document.getElementById('exameNavAlerta');
+        const botao = document.getElementById('navExameAluno');
+        if (!alerta || !botao) return;
+        alerta.hidden = !temPendencia;
+        const descricao = temPendencia
+            ? 'Exame: há estudos obrigatórios pendentes'
+            : 'Exame';
+        botao.setAttribute('aria-label', descricao);
+        botao.title = descricao;
+    }
+
     async function carregarObjetivoEstudos(faixa = faixaAtualAluno) {
         const elemento = document.getElementById('resumoProximoObjetivo');
         const alerta = document.getElementById('alertaPendenciasEstudos');
@@ -2225,6 +2238,7 @@
             };
             const obrigatorios = EstudosRequisitos.niveisObrigatorios(faixa);
             const pendentes = EstudosRequisitos.niveisPendentes(progresso, faixa);
+            atualizarAlertaEstudosExame(pendentes.length > 0);
             const proxima = EstudosRequisitos.proximaFaixa(faixa);
             elemento.classList.toggle('alerta-piscante', pendentes.length > 0);
             const resumoPendencias = pendentes.length
@@ -2239,6 +2253,7 @@
             }
         } catch (error) {
             console.error('Não foi possível carregar o objetivo de estudos:', error);
+            atualizarAlertaEstudosExame(false);
             elemento.textContent = 'Progresso dos estudos indisponível';
             elemento.classList.remove('alerta-piscante');
             if (alerta) {
