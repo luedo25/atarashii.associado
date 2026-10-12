@@ -1509,8 +1509,8 @@
     <button type="button" class="nav-btn" id="navAgendaAluno" onclick="mudarAba('comunicados', this)" aria-label="Agenda"><span class="icon" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="16" rx="3"/><path d="M16 3v4M8 3v4M3 10h18M8 14h.01M12 14h.01M16 14h.01M8 17h.01M12 17h.01"/></svg><span class="nav-alerta-pendente" id="agendaNavAlerta" aria-hidden="true" hidden></span></span>Agenda</button>
     <button type="button" class="nav-btn" onclick="mudarAba('galeria', this)" aria-label="Galeria"><span class="icon" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="3"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="m21 15-5-5L5 21"/></svg></span>Galeria</button>
     <button type="button" class="nav-btn" onclick="mudarAba('ebook', this)" aria-label="Ranking"><span class="icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M8 21h8M12 17v4M7 4H4v3a5 5 0 0 0 5 5M17 4h3v3a5 5 0 0 1-5 5"/><path d="M7 3h10v7a5 5 0 0 1-10 0z"/><path d="m12 6 1 2 2 .3-1.5 1.5.4 2.2-1.9-1-1.9 1 .4-2.2L9 8.3l2-.3z"/></svg></span>Ranking</button>
-    <button type="button" class="nav-btn" onclick="mudarAba('saldo', this)" aria-label="Atarashii">
-        <span class="icon"><img src="./arquivos/atarashii-192.png" alt="Logo Associação" class="logo-icon"></span>Atarashii
+    <button type="button" class="nav-btn" id="navAtarashiiAluno" onclick="mudarAba('saldo', this)" aria-label="Atarashii">
+        <span class="icon"><img src="./arquivos/atarashii-192.png" alt="Logo Associação" class="logo-icon"><span class="nav-alerta-pendente nav-alerta-estudos" id="atarashiiTermosAlerta" aria-hidden="true" hidden>!</span></span>Atarashii
     </button>
 </div>
 
@@ -1526,6 +1526,7 @@
     function atualizarPendenciaResumo(tipo, valor) {
         estadoPendenciasResumoAluno[tipo] = valor;
         if (tipo === 'agenda' && typeof valor === 'number') atualizarAlertaAgenda(valor);
+        if (tipo === 'aceite' && typeof valor === 'boolean') atualizarAlertaAceiteTermos(!valor);
         const linha = document.querySelector(`[data-pendencia-status="${tipo}"]`);
         if (!linha) return;
         linha.classList.remove('is-pending', 'is-ok', 'is-error');
@@ -1578,6 +1579,18 @@
             totalEl.textContent = `${total} pendência${total === 1 ? '' : 's'}`;
             totalEl.classList.add('is-pending');
         }
+    }
+
+    function atualizarAlertaAceiteTermos(temPendencia) {
+        const alerta = document.getElementById('atarashiiTermosAlerta');
+        const botao = document.getElementById('navAtarashiiAluno');
+        if (!alerta || !botao) return;
+        alerta.hidden = !temPendencia;
+        const descricao = temPendencia
+            ? 'Atarashii: aceite das Regras e Normas da Associação pendente'
+            : 'Atarashii';
+        botao.setAttribute('aria-label', descricao);
+        botao.title = descricao;
     }
 
     function atualizarAlertaAgenda(quantidade) {
