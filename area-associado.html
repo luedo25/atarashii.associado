@@ -70,6 +70,14 @@
         @keyframes pulseGlow { 0% { box-shadow: 0 0 10px rgba(248, 250, 252, 0.2); } 100% { box-shadow: 0 0 22px rgba(248, 250, 252, 0.6); } }
 
         .ranking-container { margin-top: 30px; background: rgba(15, 23, 42, 0.6); border: 1px solid var(--border-color); padding: 20px; border-radius: var(--radius-md); box-shadow: 0 4px 15px rgba(0,0,0,0.2); }
+        .ranking-encerramento { display:flex; align-items:center; justify-content:space-between; gap:14px; margin:12px 0 14px; padding:12px 14px; border:1px solid rgba(96,165,250,.28); border-radius:13px; background:linear-gradient(120deg,rgba(30,41,59,.82),rgba(15,23,42,.72)); }
+        .ranking-encerramento-texto { margin:0; color:var(--text-muted); font-size:12px; line-height:1.45; }
+        .ranking-encerramento-texto strong { display:block; margin-bottom:3px; color:var(--text-main); font-size:13px; }
+        .ranking-contagem { display:flex; gap:6px; flex:none; }
+        .ranking-contagem-unidade { min-width:49px; padding:6px 5px; border:1px solid rgba(148,163,184,.17); border-radius:9px; background:rgba(2,6,23,.28); text-align:center; }
+        .ranking-contagem-unidade strong { display:block; color:#bfdbfe; font-size:16px; font-variant-numeric:tabular-nums; line-height:1.1; }
+        .ranking-contagem-unidade small { display:block; margin-top:3px; color:var(--text-muted); font-size:9px; text-transform:uppercase; }
+        .ranking-encerrado { color:#fca5a5; font-size:12px; font-weight:750; }
         .ranking-title { font-size: 18px; color: #fbbf24; margin-bottom: 8px; text-align: center; display: flex; align-items: center; justify-content: center; gap: 8px; text-transform: uppercase; letter-spacing: 1px;}
         .ranking-list { display: flex; flex-direction: column; gap: 10px; margin-top: 20px;}
         .ranking-item { display: flex; align-items: center; background: rgba(30, 41, 59, 0.7); padding: 12px 16px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.05); gap: 15px; transition: transform 0.2s; }
@@ -86,6 +94,7 @@
         .ranking-info { flex: 1; display: flex; flex-direction: column; }
         .ranking-nome { font-size: 15px; font-weight: 700; color: #f8fafc; }
         .ranking-pontos { font-size: 16px; font-weight: 800; color: var(--accent-green); text-align: right; }
+        @media (max-width: 560px) { .ranking-encerramento { align-items:flex-start; flex-direction:column; } .ranking-contagem { width:100%; } .ranking-contagem-unidade { flex:1; min-width:0; } }
         .snake-painel { max-width: 430px; margin: 0 auto; text-align: center; }
         .snake-status { display: flex; justify-content: space-between; gap: 8px; margin-bottom: 12px; }
         .snake-status-card { flex: 1; padding: 10px 8px; border: 1px solid var(--border-color); border-radius: var(--radius-sm); background: rgba(15, 23, 42, .7); }
@@ -606,6 +615,16 @@
             </section>
             <section class="painel-grupo painel-grupo-ranking" aria-labelledby="tituloRankingAssociacao">
                 <h2 class="painel-grupo-titulo" id="tituloRankingAssociacao"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 21h8m-4-4v4M7 4h10v5a5 5 0 0 1-10 0V4Z"/><path d="M7 6H4v2a4 4 0 0 0 4 4m9-6h3v2a4 4 0 0 1-4 4"/><path d="m12 6 1 2 2 .3-1.5 1.5.4 2.2-1.9-1-1.9 1 .4-2.2L9 8.3l2-.3 1-2Z"/></svg>Ranking da Associação</h2>
+                <div class="ranking-encerramento" data-ranking-countdown role="timer" aria-label="Contagem regressiva para o encerramento do ranking">
+                    <p class="ranking-encerramento-texto"><strong>Encerramento do ranking: 06/12/2026</strong>Tempo restante até o fim do dia:</p>
+                    <div class="ranking-contagem" data-ranking-tempo>
+                        <span class="ranking-contagem-unidade"><strong data-ranking-dias>--</strong><small>Dias</small></span>
+                        <span class="ranking-contagem-unidade"><strong data-ranking-horas>--</strong><small>Horas</small></span>
+                        <span class="ranking-contagem-unidade"><strong data-ranking-minutos>--</strong><small>Min</small></span>
+                        <span class="ranking-contagem-unidade"><strong data-ranking-segundos>--</strong><small>Seg</small></span>
+                    </div>
+                    <span class="ranking-encerrado" data-ranking-encerrado hidden>Ranking encerrado.</span>
+                </div>
                 <div class="painel-grupo-grade">
                     <div class="painel-resumo-card resumo-badges"><small>Badges</small><strong id="resumoBadgesRestantes">Carregando...</strong><div id="resumoBadgesMiniaturas" class="badges-miniaturas" aria-label="Badges conquistados"></div></div>
                     <div class="painel-resumo-card resumo-ranking"><small>Minha colocação no ranking</small><strong id="resumoMinhaColocacao">Carregando...</strong></div>
@@ -1066,6 +1085,16 @@
 
     <!-- SEÇÃO 5: ESTUDO E DESAFIOS (MEDALHAS) -->
     <div id="ebook" class="tab-content">
+        <div class="ranking-encerramento" data-ranking-countdown role="timer" aria-label="Contagem regressiva para o encerramento do ranking">
+            <p class="ranking-encerramento-texto"><strong>Encerramento do ranking: 06/12/2026</strong>Tempo restante até o fim do dia:</p>
+            <div class="ranking-contagem" data-ranking-tempo>
+                <span class="ranking-contagem-unidade"><strong data-ranking-dias>--</strong><small>Dias</small></span>
+                <span class="ranking-contagem-unidade"><strong data-ranking-horas>--</strong><small>Horas</small></span>
+                <span class="ranking-contagem-unidade"><strong data-ranking-minutos>--</strong><small>Min</small></span>
+                <span class="ranking-contagem-unidade"><strong data-ranking-segundos>--</strong><small>Seg</small></span>
+            </div>
+            <span class="ranking-encerrado" data-ranking-encerrado hidden>Ranking encerrado.</span>
+        </div>
 
         <div class="card-conquistas">
             <h3 class="titulo-conquistas">🏆 Minhas Conquistas</h3>
@@ -2138,6 +2167,32 @@
             console.error(err);
         }
     }
+
+    const encerramentoRankingMs = Date.parse('2026-12-07T00:00:00-03:00');
+    function atualizarContagemRegressivaRanking() {
+        const agora = Date.now();
+        const restante = Math.max(0, encerramentoRankingMs - agora);
+        const totalSegundos = Math.floor(restante / 1000);
+        const valores = {
+            dias: Math.floor(totalSegundos / 86400),
+            horas: Math.floor((totalSegundos % 86400) / 3600),
+            minutos: Math.floor((totalSegundos % 3600) / 60),
+            segundos: totalSegundos % 60
+        };
+        document.querySelectorAll('[data-ranking-countdown]').forEach(bloco => {
+            Object.entries(valores).forEach(([unidade, valor]) => {
+                const campo = bloco.querySelector(`[data-ranking-${unidade}]`);
+                if (campo) campo.textContent = unidade === 'dias' ? String(valor) : String(valor).padStart(2, '0');
+            });
+            const expirado = restante <= 0;
+            const tempo = bloco.querySelector('[data-ranking-tempo]');
+            const aviso = bloco.querySelector('[data-ranking-encerrado]');
+            if (tempo) tempo.hidden = expirado;
+            if (aviso) aviso.hidden = !expirado;
+        });
+    }
+    atualizarContagemRegressivaRanking();
+    window.setInterval(atualizarContagemRegressivaRanking, 1000);
 
     async function carregarRanking() {
         const container = document.getElementById('listaRanking');
