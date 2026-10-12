@@ -302,6 +302,9 @@
         .painel-grupo-grade { display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:10px; }
         .painel-grupo-ranking .painel-grupo-grade { grid-template-columns:repeat(2,minmax(0,1fr)); }
         .painel-resumo-card { background:rgba(15,23,42,.65); border:1px solid var(--border-color); border-radius:15px; padding:14px; min-height:86px; }
+        .painel-resumo-acao { display:block; width:100%; appearance:none; -webkit-appearance:none; color:inherit; font:inherit; text-align:left; cursor:pointer; transition:transform .18s,border-color .18s,background .18s,box-shadow .18s; }
+        .painel-resumo-acao:hover { transform:translateY(-2px); border-color:rgba(96,165,250,.55); background:rgba(30,41,59,.84); box-shadow:0 8px 18px rgba(2,6,23,.18); }
+        .painel-resumo-acao:focus-visible { outline:3px solid rgba(96,165,250,.75); outline-offset:2px; }
         .painel-resumo-card small { display:block; color:var(--text-muted); font-size:10px; font-weight:bold; text-transform:uppercase; letter-spacing:.045em; margin-bottom:7px; }
         .painel-resumo-card strong { display:block; color:var(--text-main); font-size:14px; line-height:1.35; overflow-wrap:anywhere; }
         .painel-resumo-card strong.alerta { color:#fbbf24; }
@@ -607,10 +610,10 @@
             <section class="painel-grupo" aria-labelledby="tituloResumoAluno">
                 <h2 class="painel-grupo-titulo" id="tituloResumoAluno"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg>Resumo do aluno</h2>
                 <div class="painel-grupo-grade">
-                    <div class="painel-resumo-card"><small>Próximo evento</small><strong id="resumoProximoEvento">Carregando...</strong></div>
-                    <div class="painel-resumo-card"><small>Frequência atual</small><strong id="resumoFrequencia">Carregando...</strong><span id="mensagemFrequencia" class="mensagem-frequencia"></span></div>
-                    <div class="painel-resumo-card"><small>Faixa atual</small><strong id="resumoFaixaAtual">Carregando...</strong><span id="tempoFaixaAtual" class="tempo-faixa-atual"></span><span id="statusParticipacaoExame" class="participacao-exame-status is-pending">Participação em exame: Verificando...</span></div>
-                    <div class="painel-resumo-card"><small>Próximo objetivo</small><strong id="resumoProximoObjetivo">Carregando...</strong></div>
+                    <button type="button" class="painel-resumo-card painel-resumo-acao" data-resumo-acao="agenda" aria-label="Abrir Agenda no próximo evento"><small>Próximo evento</small><strong id="resumoProximoEvento">Carregando...</strong></button>
+                    <button type="button" class="painel-resumo-card painel-resumo-acao" data-resumo-acao="frequencia" aria-label="Ver gráfico de Frequência de Aulas"><small>Frequência atual</small><strong id="resumoFrequencia">Carregando...</strong><span id="mensagemFrequencia" class="mensagem-frequencia"></span></button>
+                    <button type="button" class="painel-resumo-card painel-resumo-acao" data-resumo-acao="exame" aria-label="Abrir a aba Exame: faixa atual"><small>Faixa atual</small><strong id="resumoFaixaAtual">Carregando...</strong><span id="tempoFaixaAtual" class="tempo-faixa-atual"></span><span id="statusParticipacaoExame" class="participacao-exame-status is-pending">Participação em exame: Verificando...</span></button>
+                    <button type="button" class="painel-resumo-card painel-resumo-acao" data-resumo-acao="exame" aria-label="Abrir a aba Exame: próximo objetivo"><small>Próximo objetivo</small><strong id="resumoProximoObjetivo">Carregando...</strong></button>
                 </div>
             </section>
             <section class="painel-grupo painel-grupo-ranking" aria-labelledby="tituloRankingAssociacao">
@@ -645,7 +648,7 @@
             <div id="linhaTempoFrequencia" class="linha-tempo-lista">Carregando frequência mensal...</div>
         </section>
 
-        <div class="grafico-container" style="position: relative; width: 100%; max-width: 420px; margin: 25px auto 0 auto;">
+        <div id="secaoFrequenciaAulas" class="grafico-container" tabindex="-1" style="position: relative; width: 100%; max-width: 420px; margin: 25px auto 0 auto;">
             <h3 style="justify-content: center; margin-bottom: 15px;">📊 Frequência de Aulas</h3>
 
             <div id="filtroFrequencia" style="display: flex; gap: 8px; align-items: center; justify-content: center; margin-bottom: 15px; background: rgba(15, 23, 42, 0.6); padding: 12px; border-radius: var(--radius-md); border: 1px solid var(--border-color); flex-wrap: wrap;">
@@ -2763,6 +2766,27 @@
         }
         if (idDaAba === 'saldo') buscarFinancas();
     }
+
+    document.querySelector('.painel-resumo')?.addEventListener('click', event => {
+        const cartao = event.target.closest('[data-resumo-acao]');
+        if (!cartao) return;
+
+        const acao = cartao.dataset.resumoAcao;
+        if (acao === 'frequencia') {
+            const grafico = document.getElementById('secaoFrequenciaAulas');
+            if (grafico) {
+                grafico.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                grafico.focus({ preventScroll: true });
+            }
+            return;
+        }
+
+        const destino = acao === 'agenda' ? 'comunicados' : acao === 'exame' ? 'conteudo-programatico' : null;
+        if (!destino) return;
+        const rotuloNav = destino === 'comunicados' ? 'Agenda' : 'Exame';
+        const botaoNav = Array.from(document.querySelectorAll('.nav-btn')).find(botao => botao.getAttribute('aria-label') === rotuloNav);
+        mudarAba(destino, botaoNav);
+    });
 
     function buscarFinancas() {
         apiFetch('/api/financas')
