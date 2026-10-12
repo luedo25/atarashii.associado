@@ -314,6 +314,21 @@
         .painel-resumo-card strong .objetivo-estudos-pendente { color:#f87171; }
         .painel-resumo-card strong .objetivo-estudos-concluido { color:#86efac; }
         .painel-resumo-card .tempo-faixa-atual { display:block; margin-top:4px; color:var(--text-muted); font-size:11px; line-height:1.3; }
+        .painel-resumo-pendencias { grid-column:span 2; min-height:0; }
+        .painel-pendencias-cabecalho { display:flex; align-items:center; justify-content:space-between; gap:10px; margin-bottom:10px; }
+        .painel-pendencias-cabecalho small { display:block; margin-bottom:4px; color:var(--text-muted); font-size:9px; font-weight:800; letter-spacing:.08em; text-transform:uppercase; }
+        .painel-pendencias-cabecalho strong { display:block; color:var(--text-main); font-size:14px; }
+        .painel-pendencias-total { flex:none; padding:5px 9px; border:1px solid rgba(148,163,184,.24); border-radius:999px; color:var(--text-muted); background:rgba(15,23,42,.55); font-size:10px; font-weight:750; }
+        .painel-pendencias-total.is-pending { border-color:rgba(248,113,113,.4); color:#fca5a5; background:rgba(127,29,29,.2); }
+        .painel-pendencias-total.is-ok { border-color:rgba(52,211,153,.35); color:#86efac; background:rgba(6,78,59,.2); }
+        .painel-pendencias-lista { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:7px; }
+        .painel-pendencia-linha { display:flex; align-items:center; justify-content:space-between; gap:8px; min-width:0; padding:8px 9px; border:1px solid rgba(148,163,184,.14); border-radius:10px; background:rgba(2,6,23,.22); }
+        .painel-pendencia-label { display:flex; align-items:center; gap:7px; min-width:0; color:var(--text-main); font-size:11px; line-height:1.3; }
+        .painel-pendencia-label svg { width:15px; height:15px; flex:none; color:#93c5fd; fill:none; stroke:currentColor; stroke-width:1.8; stroke-linecap:round; stroke-linejoin:round; }
+        .painel-pendencia-status { flex:none; color:var(--text-muted); font-size:10px; font-weight:750; text-align:right; }
+        .painel-pendencia-status.is-pending { color:#fca5a5; }
+        .painel-pendencia-status.is-ok { color:#86efac; }
+        .painel-pendencia-status.is-error { color:#fcd34d; }
         .participacao-exame-status { display:block; margin-top:7px; font-size:11px; line-height:1.3; font-weight:750; }
         .participacao-exame-status.is-approved { color:#86efac; }
         .participacao-exame-status.is-pending { color:#f87171; }
@@ -346,6 +361,7 @@
         @media (prefers-reduced-motion: reduce) { .mensagem-frequencia.alerta-piscante { animation:none; } }
         @media (max-width: 900px) { .painel-grupo-grade { grid-template-columns:repeat(2,minmax(0,1fr)); } }
         @media (max-width: 520px) { .painel-grupo { padding:14px; border-radius:16px; } .painel-grupo-ranking .painel-grupo-grade { grid-template-columns:1fr; } }
+        @media (max-width: 560px) { .painel-resumo-pendencias { grid-column:1 / -1; } .painel-pendencias-lista { grid-template-columns:1fr; } }
 
         .btn-action { display: flex; align-items: center; justify-content: center; gap: 8px; width: 100%; padding: 14px; background: var(--accent-blue); color: white; border: none; border-radius: var(--radius-md); font-weight: 600; font-size: 14px; cursor: pointer; text-decoration: none; transition: all 0.2s; box-shadow: 0 4px 12px rgba(59, 130, 246, 0.25); }
         .btn-action:active { transform: scale(0.98); opacity: 0.9; }
@@ -614,6 +630,15 @@
                     <button type="button" class="painel-resumo-card painel-resumo-acao" data-resumo-acao="frequencia" aria-label="Ver gráfico de Frequência de Aulas"><small>Frequência atual</small><strong id="resumoFrequencia">Carregando...</strong><span id="mensagemFrequencia" class="mensagem-frequencia"></span></button>
                     <button type="button" class="painel-resumo-card painel-resumo-acao" data-resumo-acao="exame" aria-label="Abrir a aba Exame: faixa atual"><small>Faixa atual</small><strong id="resumoFaixaAtual">Carregando...</strong><span id="tempoFaixaAtual" class="tempo-faixa-atual"></span><span id="statusParticipacaoExame" class="participacao-exame-status is-pending">Participação em exame: Verificando...</span></button>
                     <button type="button" class="painel-resumo-card painel-resumo-acao" data-resumo-acao="exame" aria-label="Abrir a aba Exame: próximo objetivo"><small>Próximo objetivo</small><strong id="resumoProximoObjetivo">Carregando...</strong></button>
+                    <div class="painel-resumo-card painel-resumo-pendencias" aria-labelledby="tituloPendenciasAluno">
+                        <div class="painel-pendencias-cabecalho"><div><small>Acompanhamento</small><strong id="tituloPendenciasAluno">Pendências do aluno</strong></div><span id="resumoPendenciasTotal" class="painel-pendencias-total" aria-live="polite">Verificando...</span></div>
+                        <div class="painel-pendencias-lista">
+                            <div class="painel-pendencia-linha"><span class="painel-pendencia-label"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M16 3v4M8 3v4M3 10h18"/></svg>Eventos da agenda</span><span class="painel-pendencia-status" data-pendencia-status="agenda">Verificando...</span></div>
+                            <div class="painel-pendencia-linha"><span class="painel-pendencia-label"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 3h10l4 4v14H7z"/><path d="M17 3v5h5M4 7v14M10 13h8M10 17h8"/></svg>Justificativas de falta</span><span class="painel-pendencia-status" data-pendencia-status="justificativas">Verificando...</span></div>
+                            <div class="painel-pendencia-linha"><span class="painel-pendencia-label"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="m10 8 6 4-6 4z"/></svg>Desafios enviados</span><span class="painel-pendencia-status" data-pendencia-status="desafios">Verificando...</span></div>
+                            <div class="painel-pendencia-linha"><span class="painel-pendencia-label"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 22s8-4 8-11V5l-8-3-8 3v6c0 7 8 11 8 11Z"/><path d="m9 12 2 2 4-4"/></svg>Regras e Normas</span><span class="painel-pendencia-status" data-pendencia-status="aceite">Verificando...</span></div>
+                        </div>
+                    </div>
                 </div>
             </section>
             <section class="painel-grupo painel-grupo-ranking" aria-labelledby="tituloRankingAssociacao">
@@ -1489,6 +1514,71 @@
     let faixaAtualAluno = 'Branca';
     let PUBLIC_VAPID_KEY = '';
     let listaAgendaAluno = [];
+    const estadoPendenciasResumoAluno = { agenda: null, justificativas: null, desafios: null, aceite: null };
+
+    function atualizarPendenciaResumo(tipo, valor) {
+        estadoPendenciasResumoAluno[tipo] = valor;
+        const linha = document.querySelector(`[data-pendencia-status="${tipo}"]`);
+        if (!linha) return;
+        linha.classList.remove('is-pending', 'is-ok', 'is-error');
+        if (valor === null) {
+            linha.textContent = 'Verificando...';
+            renderizarResumoPendenciasAluno();
+            return;
+        }
+        if (valor === 'erro') {
+            linha.textContent = 'Indisponível';
+            linha.classList.add('is-error');
+            renderizarResumoPendenciasAluno();
+            return;
+        }
+        let pendente = false;
+        if (tipo === 'aceite') {
+            pendente = valor === false;
+            linha.textContent = pendente ? 'Pendente' : 'Aceite registrado';
+        } else {
+            const quantidade = Number(valor) || 0;
+            pendente = quantidade > 0;
+            if (tipo === 'agenda') linha.textContent = pendente ? `${quantidade} sem resposta` : 'Tudo respondido';
+            else linha.textContent = pendente ? `${quantidade} pendente${quantidade === 1 ? '' : 's'}` : 'Nenhuma pendência';
+        }
+        linha.classList.add(pendente ? 'is-pending' : 'is-ok');
+        renderizarResumoPendenciasAluno();
+    }
+
+    function renderizarResumoPendenciasAluno() {
+        const totalEl = document.getElementById('resumoPendenciasTotal');
+        if (!totalEl) return;
+        totalEl.classList.remove('is-pending', 'is-ok');
+        const valores = Object.values(estadoPendenciasResumoAluno);
+        if (valores.some(valor => valor === null)) {
+            totalEl.textContent = 'Verificando...';
+            return;
+        }
+        if (valores.includes('erro')) {
+            totalEl.textContent = 'Dados indisponíveis';
+            return;
+        }
+        const total = Number(estadoPendenciasResumoAluno.agenda || 0)
+            + Number(estadoPendenciasResumoAluno.justificativas || 0)
+            + Number(estadoPendenciasResumoAluno.desafios || 0)
+            + (estadoPendenciasResumoAluno.aceite === false ? 1 : 0);
+        if (total === 0) {
+            totalEl.textContent = 'Tudo em dia';
+            totalEl.classList.add('is-ok');
+        } else {
+            totalEl.textContent = `${total} pendência${total === 1 ? '' : 's'}`;
+            totalEl.classList.add('is-pending');
+        }
+    }
+
+    function contarEventosSemResposta(eventos) {
+        return eventos.filter(evento => {
+            const status = String(evento.status || '').trim().toLowerCase();
+            const resposta = String(evento.minha_confirmacao || '').trim().toLowerCase();
+            return !['concluido', 'cancelado'].includes(status) && !['confirmado', 'recusado'].includes(resposta);
+        }).length;
+    }
 
     function escaparHtml(valor) {
         return String(valor ?? '')
@@ -1844,8 +1934,10 @@
         try {
             const dados = await Agenda.listar();
             listaAgendaAluno = Array.isArray(dados?.eventos) ? dados.eventos : [];
+            atualizarPendenciaResumo('agenda', contarEventosSemResposta(listaAgendaAluno));
             renderizarAgendaAluno();
         } catch (error) {
+            atualizarPendenciaResumo('agenda', 'erro');
             container.innerHTML = `<div class="card-item" style="color:#fca5a5;">${escaparHtml(error.message || 'Não foi possível carregar a agenda.')}</div>`;
         }
     }
@@ -2022,7 +2114,9 @@
                 apiFetch('/api/exames/me'),
                 apiFetch('/api/badges/me')
             ]);
-            const proximo = (agenda?.eventos || []).find(evento => !['concluido', 'cancelado'].includes(evento.status));
+            listaAgendaAluno = Array.isArray(agenda?.eventos) ? agenda.eventos : [];
+            atualizarPendenciaResumo('agenda', contarEventosSemResposta(listaAgendaAluno));
+            const proximo = listaAgendaAluno.find(evento => !['concluido', 'cancelado'].includes(evento.status));
             document.getElementById('resumoProximoEvento').textContent = proximo ? `${proximo.nome_evento} (${String(proximo.data_evento).split('-').reverse().join('/')})` : 'Nenhum agendado';
             const presencas = Number(frequencia?.presencas || 0);
             const faltas = Number(frequencia?.faltas || 0);
@@ -2701,6 +2795,7 @@
         apiFetch('/api/status-termo/me')
             .then(data => {
                 const verificadoNaAPI = (data && (data.aceitou === true || data.sucesso === true || data.status === 'assinado' || data.status === 'aceito'));
+                atualizarPendenciaResumo('aceite', Boolean(verificadoNaAPI));
                 const dataServidor = data.data || data.dataHora || data.updatedAt || new Date().toLocaleString('pt-BR');
                 if (verificadoNaAPI) {
                     localStorage.setItem(`termo_aceito_${usuarioAtivo}`, 'true'); localStorage.setItem(`data_aceite_${usuarioAtivo}`, dataServidor);
@@ -2710,7 +2805,7 @@
                     aplicarLayoutPendente(blocoPendente, blocoAceito, badge, sininho);
                 }
             })
-            .catch(error => console.error('Erro ao verificar termo:', error));
+            .catch(error => { atualizarPendenciaResumo('aceite', 'erro'); console.error('Erro ao verificar termo:', error); });
     }
 
     function aplicarLayoutAceito(blocoPendente, blocoAceito, badge, sininho, dataRegistro, ehGlobal) {
@@ -2909,6 +3004,8 @@
 
         try {
             const dados = await apiFetch('/api/justificativa/me');
+            const justificativas = Array.isArray(dados) ? dados : [];
+            atualizarPendenciaResumo('justificativas', justificativas.filter(item => String(item.status || '').trim().toLowerCase() === 'pendente').length);
             if (!dados || dados.length === 0) return container.innerHTML = "<p style='color: var(--text-muted);'>Nenhuma justificativa enviada até o momento.</p>";
             
             const dadosFiltrados = dados.filter(item => item.data_falta && item.data_falta >= dataInicio && item.data_falta <= dataFim);
@@ -2927,7 +3024,7 @@
                     ${item.comprovante_url ? `<div style="margin-top:6px;"><a href="${escaparHtml(item.comprovante_url)}" target="_blank" rel="noopener" style="color:#93c5fd;font-weight:bold;">📎 Comprovante anexado</a></div>` : ''}
                     <div style="font-size: 11px; color: var(--text-muted); margin-top: 4px;">Solicitado em: ${escaparHtml(item.data_solicitacao)}</div></div>`;
             }).join('');
-        } catch (err) { container.innerHTML = "<p style='color: red;'>Erro ao carregar justificativas.</p>"; }
+        } catch (err) { atualizarPendenciaResumo('justificativas', 'erro'); container.innerHTML = "<p style='color: red;'>Erro ao carregar justificativas.</p>"; }
     }
 
     let envioDesafioEmAndamento = false;
@@ -3031,6 +3128,8 @@
 
         try {
             const dados = await apiFetch('/api/desafio/me');
+            const desafios = Array.isArray(dados) ? dados : [];
+            atualizarPendenciaResumo('desafios', desafios.filter(item => String(item.status || '').trim().toLowerCase() === 'pendente').length);
 
             if (!dados || dados.length === 0) {
                 return container.innerHTML = "<p style='color: var(--text-muted);'>Nenhum desafio enviado até o momento.</p>";
@@ -3051,7 +3150,7 @@
                     </div>
                 `;
             }).join('');
-        } catch (err) { container.innerHTML = "<p style='color: red;'>Erro ao carregar desafios.</p>"; }
+        } catch (err) { atualizarPendenciaResumo('desafios', 'erro'); container.innerHTML = "<p style='color: red;'>Erro ao carregar desafios.</p>"; }
     }
 
     let relatorioFrequenciaAberto = false;
