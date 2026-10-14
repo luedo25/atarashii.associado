@@ -483,7 +483,22 @@
             height: 100%;
             border: none;
         }
-    </style>
+    
+        .convite-preavaliacao { width:min(520px,calc(100% - 28px)); max-height:min(88vh,720px); padding:0; border:1px solid rgba(96,165,250,.35); border-radius:20px; background:#0f172a; color:#f8fafc; box-shadow:0 24px 80px rgba(0,0,0,.55); }
+        .convite-preavaliacao::backdrop { background:rgba(2,6,23,.78); backdrop-filter:blur(5px); }
+        .convite-preavaliacao-conteudo { padding:clamp(20px,5vw,30px); }
+        .convite-preavaliacao-selo { display:inline-flex; align-items:center; gap:7px; padding:6px 10px; border:1px solid rgba(96,165,250,.35); border-radius:999px; color:#bfdbfe; background:rgba(37,99,235,.14); font-size:11px; font-weight:800; letter-spacing:.04em; text-transform:uppercase; }
+        .convite-preavaliacao h2 { margin:14px 0 8px; font-size:clamp(20px,5vw,25px); line-height:1.2; }
+        .convite-preavaliacao p { margin:8px 0; color:#cbd5e1; font-size:14px; line-height:1.55; }
+        .convite-preavaliacao-pendencias { margin:14px 0; padding:12px 14px; border:1px solid rgba(245,158,11,.3); border-radius:12px; background:rgba(120,53,15,.2); color:#fde68a; font-size:13px; line-height:1.6; }
+        .convite-preavaliacao-acoes { display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-top:20px; }
+        .convite-preavaliacao-acoes button { min-height:46px; padding:10px 12px; border-radius:11px; font:inherit; font-size:13px; font-weight:800; cursor:pointer; }
+        .convite-preavaliacao-aceitar { border:1px solid #16a34a; background:#16a34a; color:#fff; }
+        .convite-preavaliacao-recusar { border:1px solid rgba(148,163,184,.4); background:rgba(30,41,59,.8); color:#e2e8f0; }
+        .convite-preavaliacao-acoes button:disabled { cursor:wait; opacity:.6; }
+        .convite-preavaliacao-feedback { min-height:18px; margin-top:9px !important; color:#fca5a5 !important; font-size:12px !important; }
+        @media (max-width:420px) { .convite-preavaliacao-acoes { grid-template-columns:1fr; } }
+</style>
 </head>
 <body>
 
@@ -1503,6 +1518,21 @@
     </div>
 </div>
 
+<dialog id="modalConvitePreAvaliacao" class="convite-preavaliacao" aria-labelledby="tituloConvitePreAvaliacao" aria-describedby="descricaoConvitePreAvaliacao">
+    <div class="convite-preavaliacao-conteudo">
+        <span class="convite-preavaliacao-selo">🥋 Convite da Associação</span>
+        <h2 id="tituloConvitePreAvaliacao">Pré-avaliação no exame de faixa</h2>
+        <p id="descricaoConvitePreAvaliacao">Seu Prontuário Técnico ainda tem itens pendentes. Você pode participar do próximo exame para receber notas e feedback dos professores em uma pré-avaliação.</p>
+        <p id="convitePreAvaliacaoPeriodo" class="convite-preavaliacao-pendencias"></p>
+        <p>A pré-avaliação é orientativa e não substitui a aprovação dos requisitos técnicos para a graduação. Você deseja participar?</p>
+        <div class="convite-preavaliacao-acoes">
+            <button type="button" class="convite-preavaliacao-aceitar" id="btnAceitarPreAvaliacao">Aceito participar</button>
+            <button type="button" class="convite-preavaliacao-recusar" id="btnRecusarPreAvaliacao">Não participar</button>
+        </div>
+        <p id="feedbackConvitePreAvaliacao" class="convite-preavaliacao-feedback" role="status" aria-live="polite"></p>
+    </div>
+</dialog>
+
 <div class="bottom-nav">
     <button type="button" class="nav-btn active" onclick="mudarAba('exame', this)" aria-label="Painel"><span class="icon" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="2"/><rect x="14" y="3" width="7" height="7" rx="2"/><rect x="3" y="14" width="7" height="7" rx="2"/><rect x="14" y="14" width="7" height="7" rx="2"/></svg></span>Painel</button>
     <button type="button" class="nav-btn" id="navExameAluno" onclick="mudarAba('conteudo-programatico', this)" aria-label="Exame"><span class="icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M8 4h-2a2 2 0 0 0-2 2v13a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2h-2"/><rect x="8" y="2" width="8" height="4" rx="1.5"/><path d="m8 13 2.5 2.5L16 10"/></svg><span class="nav-alerta-pendente nav-alerta-estudos" id="exameNavAlerta" aria-hidden="true" hidden>!</span></span>Exame</button>
@@ -1612,6 +1642,56 @@
             return !['concluido', 'cancelado'].includes(status) && !['confirmado', 'recusado'].includes(resposta);
         }).length;
     }
+
+    let convitePreAvaliacaoAtual = null;
+
+    function formatarPeriodoPreAvaliacao(semestre) {
+        const match = String(semestre || '').match(/^(\d{4})-S([12])$/);
+        return match ? `${match[2] === '1' ? '1º' : '2º'} semestre de ${match[1]}` : String(semestre || 'próximo exame');
+    }
+
+    async function carregarConvitePreAvaliacaoAluno() {
+        const modal = document.getElementById('modalConvitePreAvaliacao');
+        if (!modal) return;
+        try {
+            const dados = await apiFetch('/api/pre-avaliacao/me');
+            convitePreAvaliacaoAtual = dados?.convite || null;
+            const pendencias = Array.isArray(dados?.pendencias) ? dados.pendencias : [];
+            if (!convitePreAvaliacaoAtual || convitePreAvaliacaoAtual.status !== 'pendente' || !pendencias.length) return;
+            const faixa = dados.faixa_objetivo ? ` Faixa objetivo: ${escaparHtml(dados.faixa_objetivo)}.` : '';
+            document.getElementById('convitePreAvaliacaoPeriodo').innerHTML = `<strong>Período:</strong> ${escaparHtml(formatarPeriodoPreAvaliacao(convitePreAvaliacaoAtual.semestre))}.${faixa}<br><strong>Itens pendentes:</strong> ${pendencias.map(escaparHtml).join(', ')}.`;
+            document.getElementById('feedbackConvitePreAvaliacao').textContent = '';
+            if (!modal.open) modal.showModal();
+        } catch (error) {
+            console.error('Não foi possível carregar o convite de pré-avaliação:', error);
+        }
+    }
+
+    async function responderConvitePreAvaliacao(resposta) {
+        if (!convitePreAvaliacaoAtual || !['aceito', 'recusado'].includes(resposta)) return;
+        const modal = document.getElementById('modalConvitePreAvaliacao');
+        const botoes = [document.getElementById('btnAceitarPreAvaliacao'), document.getElementById('btnRecusarPreAvaliacao')];
+        const feedback = document.getElementById('feedbackConvitePreAvaliacao');
+        botoes.forEach(botao => { botao.disabled = true; });
+        feedback.textContent = 'Registrando sua resposta...';
+        try {
+            await apiFetch('/api/pre-avaliacao/me/resposta', {
+                method: 'POST',
+                body: JSON.stringify({ resposta })
+            });
+            convitePreAvaliacaoAtual.status = resposta;
+            modal.close();
+        } catch (error) {
+            feedback.textContent = error.message || 'Não foi possível registrar sua resposta. Tente novamente.';
+        } finally {
+            botoes.forEach(botao => { botao.disabled = false; });
+        }
+    }
+
+    const modalConvitePreAvaliacao = document.getElementById('modalConvitePreAvaliacao');
+    modalConvitePreAvaliacao?.addEventListener('cancel', event => event.preventDefault());
+    document.getElementById('btnAceitarPreAvaliacao')?.addEventListener('click', () => responderConvitePreAvaliacao('aceito'));
+    document.getElementById('btnRecusarPreAvaliacao')?.addEventListener('click', () => responderConvitePreAvaliacao('recusado'));
 
     function escaparHtml(valor) {
         return String(valor ?? '')
@@ -3334,6 +3414,7 @@
             if (primeiroBotao) mudarAba('exame', primeiroBotao);
 
             await Promise.allSettled([
+                carregarConvitePreAvaliacaoAluno(),
                 carregarBadgesAluno(),
                 carregarRanking(),
                 carregarNotasAluno(),

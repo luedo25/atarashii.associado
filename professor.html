@@ -875,6 +875,15 @@
                 </div><button class="btn-salvar">Salvar prontuário</button><div id="prontuarioFeedback" class="cadastro-feedback"></div>
             </form>
             <div id="historicoExamesProfessor" class="agenda-lista" style="margin-top:16px;"><div class="card-mensagem">Selecione um aluno para visualizar o histórico.</div></div>
+
+            <section class="filtro-datas-container" style="margin-top:18px;">
+                <div class="chamada-header" style="margin-bottom:10px;">
+                    <div><h3 style="margin:0;">📨 Convites para pré-avaliação</h3><p style="color:#94a3b8;margin:6px 0 0;line-height:1.45;">Alunos com pendências técnicas recebem o convite ao entrar na Área do Associado. Acompanhe aqui quem respondeu.</p></div>
+                    <button type="button" class="btn-agenda-acao" id="btnAtualizarConvitesPreAvaliacao">↻ Atualizar respostas</button>
+                </div>
+                <div id="listaConvitesPreAvaliacaoProfessor" class="agenda-lista" aria-live="polite"><div class="card-mensagem">Abra a aba Exames para carregar os convites.</div></div>
+            </section>
+
         </section>
 
         <section id="aba-ranking" class="tab-content">
@@ -1807,6 +1816,47 @@
             document.getElementById('exameMedia').value = media.toFixed(2).replace('.', ',');
         }
 
+        async function carregarConvitesPreAvaliacaoProfessor() {
+            const container = document.getElementById('listaConvitesPreAvaliacaoProfessor');
+            if (!container) return;
+            container.innerHTML = '<div class="card-mensagem">Carregando convites e respostas...</div>';
+            try {
+                const dados = await apiFetch('/api/professor/pre-avaliacoes');
+                const alunos = Array.isArray(dados?.alunos) ? dados.alunos : [];
+                if (!alunos.length) {
+                    container.innerHTML = '<div class="card-mensagem">Nenhum aluno com pendência técnica ou convite de pré-avaliação neste período.</div>';
+                    return;
+                }
+                const statusConvite = {
+                    aceito: ['✅ Aceitou participar', '#86efac'],
+                    recusado: ['✖ Não participará', '#fca5a5'],
+                    pendente: ['⏳ Aguardando resposta', '#fcd34d'],
+                    nao_exibido: ['🕒 Convite será exibido no próximo acesso', '#cbd5e1']
+                };
+                container.innerHTML = alunos.map(aluno => {
+                    const [rotulo, cor] = statusConvite[aluno.status_convite] || ['Status desconhecido', '#cbd5e1'];
+                    const statusTecnico = [
+                        `Kata: ${aluno.kata_status || 'pendente'}`,
+                        `Kihon: ${aluno.kihon_status || 'pendente'}`,
+                        `Kumite: ${aluno.kumite_status || 'pendente'}`
+                    ].map(escaparHtml).join(' · ');
+                    const dataResposta = aluno.respondido_em
+                        ? new Date(aluno.respondido_em).toLocaleString('pt-BR', { timeZone: 'America/Sao_Paulo' })
+                        : '';
+                    return `<article class="agenda-card">
+                        <div class="agenda-card-topo"><h3>${escaparHtml(aluno.nome || aluno.usuario)}</h3><span class="agenda-status" style="background:rgba(15,23,42,.7);color:${cor};">${rotulo}</span></div>
+                        <p class="agenda-card-descricao">Faixa objetivo: ${escaparHtml(aluno.faixa_objetivo || 'Não definida')}</p>
+                        <p class="agenda-card-info">Prontuário: ${statusTecnico}</p>
+                        ${dataResposta ? `<p class="agenda-card-info">Resposta em: ${escaparHtml(dataResposta)}</p>` : ''}
+                    </article>`;
+                }).join('');
+            } catch (error) {
+                container.innerHTML = `<div class="card-mensagem" style="color:#fecaca;">${escaparHtml(error.message || 'Não foi possível carregar os convites.')}</div>`;
+            }
+        }
+
+        document.getElementById('btnAtualizarConvitesPreAvaliacao')?.addEventListener('click', carregarConvitesPreAvaliacaoProfessor);
+
         async function carregarHistoricoExamesProfessor() {
             const usuario = document.getElementById('exameAluno').value;
             const container = document.getElementById('historicoExamesProfessor');
@@ -1857,7 +1907,7 @@
             event.preventDefault(); const usuario = document.getElementById('prontuarioAluno').value; if (!usuario) return;
             const dados = { faixaObjetivo: document.getElementById('prontuarioFaixa').value, kataObrigatorio: document.getElementById('prontuarioKataObrigatorio').value };
             ['Kata','Kihon','Kumite'].forEach(nome => { dados[`${nome.toLowerCase()}Status`] = document.getElementById(`prontuario${nome}Status`).value; dados[`${nome.toLowerCase()}Observacao`] = document.getElementById(`prontuario${nome}Observacao`).value; });
-            try { await apiFetch(`/api/prontuario/${encodeURIComponent(usuario)}`, { method:'PUT', body:JSON.stringify(dados) }); document.getElementById('prontuarioFeedback').textContent = 'Prontuário salvo. Elegibilidade atualizada.'; }
+            try { await apiFetch(`/api/prontuario/${encodeURIComponent(usuario)}`, { method:'PUT', body:JSON.stringify(dados) }); document.getElementById('prontuarioFeedback').textContent = 'Prontuário salvo. Elegibilidade atualizada.'; await carregarConvitesPreAvaliacaoProfessor(); }
             catch (error) { document.getElementById('prontuarioFeedback').textContent = error.message; }
         });
         atualizarKataObrigatorio();
@@ -2113,7 +2163,7 @@
 
             if (nomeAba === 'visao-geral') carregarDashboardProfessor();
             else if (nomeAba === 'agenda') carregarAgendaProfessor();
-            else if (nomeAba === 'exames') carregarHistoricoExamesProfessor();
+            else if (nomeAba === 'exames') { carregarHistoricoExamesProfessor(); carregarConvitesPreAvaliacaoProfessor(); }
             else if (nomeAba === 'estudos') carregarProgressoEstudosProfessor();
             else if (nomeAba === 'ranking') carregarRankingProfessor();
             else if (nomeAba === 'banners') carregarBannersProfessor();
