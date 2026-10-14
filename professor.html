@@ -878,8 +878,12 @@
 
             <section class="filtro-datas-container" style="margin-top:18px;">
                 <div class="chamada-header" style="margin-bottom:10px;">
-                    <div><h3 style="margin:0;">📨 Convites para pré-avaliação</h3><p style="color:#94a3b8;margin:6px 0 0;line-height:1.45;">Alunos com pendências técnicas recebem o convite ao entrar na Área do Associado. Acompanhe aqui quem respondeu.</p></div>
+                    <div><h3 style="margin:0;">📨 Convites para pré-avaliação</h3><p style="color:#94a3b8;margin:6px 0 0;line-height:1.45;">Habilite os convites quando quiser abrir a pré-avaliação. Acompanhe abaixo as respostas dos alunos com pendências técnicas.</p></div>
                     <button type="button" class="btn-agenda-acao" id="btnAtualizarConvitesPreAvaliacao">↻ Atualizar respostas</button>
+                </div>
+                <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;padding:14px 16px;margin-bottom:12px;border:1px solid rgba(148,163,184,.2);border-radius:14px;background:rgba(15,23,42,.35);">
+                    <p id="statusConfiguracaoConvitePreAvaliacao" role="status" aria-live="polite" style="margin:0;color:#cbd5e1;">Verificando disponibilidade dos convites...</p>
+                    <button type="button" class="btn-novo-aluno" id="btnAlternarConvitePreAvaliacao" disabled>Carregando...</button>
                 </div>
                 <div id="listaConvitesPreAvaliacaoProfessor" class="agenda-lista" aria-live="polite"><div class="card-mensagem">Abra a aba Exames para carregar os convites.</div></div>
             </section>
@@ -1816,12 +1820,37 @@
             document.getElementById('exameMedia').value = media.toFixed(2).replace('.', ',');
         }
 
+        let configuracaoConvitePreAvaliacaoProfessor = { ativo: false, semestre: null };
+
+        function atualizarControleConvitePreAvaliacao(configuracao) {
+            configuracaoConvitePreAvaliacaoProfessor = {
+                ativo: configuracao?.ativo === true,
+                semestre: configuracao?.semestre || null
+            };
+            const status = document.getElementById('statusConfiguracaoConvitePreAvaliacao');
+            const botao = document.getElementById('btnAlternarConvitePreAvaliacao');
+            if (!status || !botao) return;
+            const periodo = configuracaoConvitePreAvaliacaoProfessor.semestre
+                ? ` no semestre ${configuracaoConvitePreAvaliacaoProfessor.semestre}` : '';
+            status.textContent = configuracaoConvitePreAvaliacaoProfessor.ativo
+                ? `Convites habilitados${periodo}. Alunos elegíveis verão o convite ao entrar na Área do Associado.`
+                : `Convites desabilitados${periodo}. Os alunos não verão o convite enquanto estiver pausado.`;
+            status.style.color = configuracaoConvitePreAvaliacaoProfessor.ativo ? '#86efac' : '#fcd34d';
+            botao.disabled = false;
+            botao.textContent = configuracaoConvitePreAvaliacaoProfessor.ativo ? '⏸ Desabilitar convites' : '▶ Habilitar convites';
+            botao.setAttribute('aria-pressed', String(configuracaoConvitePreAvaliacaoProfessor.ativo));
+        }
+
         async function carregarConvitesPreAvaliacaoProfessor() {
             const container = document.getElementById('listaConvitesPreAvaliacaoProfessor');
             if (!container) return;
             container.innerHTML = '<div class="card-mensagem">Carregando convites e respostas...</div>';
             try {
-                const dados = await apiFetch('/api/professor/pre-avaliacoes');
+                const [configuracao, dados] = await Promise.all([
+                    apiFetch('/api/professor/pre-avaliacao/config'),
+                    apiFetch('/api/professor/pre-avaliacoes')
+                ]);
+                atualizarControleConvitePreAvaliacao(configuracao);
                 const alunos = Array.isArray(dados?.alunos) ? dados.alunos : [];
                 if (!alunos.length) {
                     container.innerHTML = '<div class="card-mensagem">Nenhum aluno com pendência técnica ou convite de pré-avaliação neste período.</div>';
@@ -1831,7 +1860,8 @@
                     aceito: ['✅ Aceitou participar', '#86efac'],
                     recusado: ['✖ Não participará', '#fca5a5'],
                     pendente: ['⏳ Aguardando resposta', '#fcd34d'],
-                    nao_exibido: ['🕒 Convite será exibido no próximo acesso', '#cbd5e1']
+                    nao_exibido: ['🕒 Convite será exibido no próximo acesso', '#cbd5e1'],
+                    desabilitado: ['⏸ Convite desabilitado pelo professor', '#cbd5e1']
                 };
                 container.innerHTML = alunos.map(aluno => {
                     const [rotulo, cor] = statusConvite[aluno.status_convite] || ['Status desconhecido', '#cbd5e1'];
@@ -1851,11 +1881,32 @@
                     </article>`;
                 }).join('');
             } catch (error) {
+                const status = document.getElementById('statusConfiguracaoConvitePreAvaliacao');
+                if (status) { status.textContent = error.message || 'Não foi possível consultar a configuração dos convites.'; status.style.color = '#fecaca'; }
+                const botao = document.getElementById('btnAlternarConvitePreAvaliacao');
+                if (botao) { botao.disabled = true; botao.textContent = 'Indisponível'; }
                 container.innerHTML = `<div class="card-mensagem" style="color:#fecaca;">${escaparHtml(error.message || 'Não foi possível carregar os convites.')}</div>`;
             }
         }
 
         document.getElementById('btnAtualizarConvitesPreAvaliacao')?.addEventListener('click', carregarConvitesPreAvaliacaoProfessor);
+        document.getElementById('btnAlternarConvitePreAvaliacao')?.addEventListener('click', async (evento) => {
+            const botao = evento.currentTarget;
+            const status = document.getElementById('statusConfiguracaoConvitePreAvaliacao');
+            const novoEstado = !configuracaoConvitePreAvaliacaoProfessor.ativo;
+            botao.disabled = true;
+            if (status) status.textContent = novoEstado ? 'Habilitando convites...' : 'Desabilitando convites...';
+            try {
+                const configuracao = await apiFetch('/api/professor/pre-avaliacao/config', {
+                    method: 'PUT', body: JSON.stringify({ ativo: novoEstado })
+                });
+                atualizarControleConvitePreAvaliacao(configuracao);
+                await carregarConvitesPreAvaliacaoProfessor();
+            } catch (error) {
+                if (status) { status.textContent = error.message || 'Não foi possível alterar a disponibilidade dos convites.'; status.style.color = '#fecaca'; }
+                botao.disabled = false;
+            }
+        });
 
         async function carregarHistoricoExamesProfessor() {
             const usuario = document.getElementById('exameAluno').value;
