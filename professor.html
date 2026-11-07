@@ -2233,7 +2233,13 @@
             try {
                 const resposta = await fetchAutenticado(`${URL_API_SERVIDOR}/api/professor/estudos/progresso`);
                 const dados = await resposta.json();
-                const alunos = Array.isArray(dados?.alunos) ? dados.alunos : [];
+                
+                let alunos = Array.isArray(dados?.alunos) ? dados.alunos : [];
+                alunos = alunos.filter(aluno => {
+                    const alunoCadastrado = listaAlunos.find(a => a.usuario === aluno.usuario);
+                    return !(alunoCadastrado && alunoCadastrado.ativo === false);
+                });
+                
                 if (!alunos.length) {
                     container.innerHTML = '<div class="card-mensagem">Nenhum aluno cadastrado.</div>';
                     return;
@@ -2329,9 +2335,11 @@
                     return opt;
                 };
 
-                if (selectAlunoResumo) selectAlunoResumo.appendChild(makeOption());
-                if (selectAlunoJustificativa) selectAlunoJustificativa.appendChild(makeOption());
-                if (selectAlunoDesafio) selectAlunoDesafio.appendChild(makeOption());
+                if (aluno.ativo !== false) {
+                    if (selectAlunoResumo) selectAlunoResumo.appendChild(makeOption());
+                    if (selectAlunoJustificativa) selectAlunoJustificativa.appendChild(makeOption());
+                    if (selectAlunoDesafio) selectAlunoDesafio.appendChild(makeOption());
+                }
 
                 if (selectExameAluno && aluno.ativo !== false) {
                     selectExameAluno.appendChild(makeOption());
@@ -2482,6 +2490,9 @@
                 }
 
                 const dadosFiltrados = dados.filter(item => {
+                    const alunoCadastrado = listaAlunos.find(a => a.usuario === item.usuario);
+                    if (alunoCadastrado && alunoCadastrado.ativo === false) return false;
+
                     const dataFalta = item.data_falta ? item.data_falta.substring(0, 10) : '';
                     const dentroDoPeriodo = dataFalta >= dataInicio && dataFalta <= dataFim;
                     const alunoCoincide = (usuarioSelecionado === 'todos') || (item.usuario === usuarioSelecionado);
@@ -2569,9 +2580,14 @@
                     return;
                 }
 
+                const dadosAtivos = dados.filter(item => {
+                    const alunoCadastrado = listaAlunos.find(a => a.usuario === item.usuario);
+                    return !(alunoCadastrado && alunoCadastrado.ativo === false);
+                });
+
                 const dadosFiltrados = (usuarioSelecionado === 'todos') 
-                    ? dados 
-                    : dados.filter(item => item.usuario === usuarioSelecionado);
+                    ? dadosAtivos 
+                    : dadosAtivos.filter(item => item.usuario === usuarioSelecionado);
 
                 if (dadosFiltrados.length === 0) {
                     container.innerHTML = "<div class='card-mensagem'><p>Nenhum desafio para o aluno selecionado.</p></div>";
@@ -2683,7 +2699,7 @@
                 return;
             }
 
-            let alunos = listaAlunos.filter(u => String(u.tipo).toLowerCase() !== 'professor');
+            let alunos = listaAlunos.filter(u => String(u.tipo).toLowerCase() !== 'professor' && u.ativo !== false);
             if (usuarioSelecionado !== 'todos') alunos = alunos.filter(u => u.usuario === usuarioSelecionado);
 
             try {
